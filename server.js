@@ -62,9 +62,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan('tiny'))
 
 app.use('/api', routes)
-app.use('/', (req, res) => {
-    res.send('welcome to app')
-})
+// app.use('/', (req, res) => {
+//     res.send('welcome to app')
+// })
 
 // Deployment Step3
 if (process.env.NODE_ENV === 'production') {
