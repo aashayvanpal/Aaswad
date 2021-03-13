@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 5001 // Deployment Step 1
 // })
 
 // Deployment Step2
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/mern_youtube', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/Aaswad-Caterers-app', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -60,11 +60,14 @@ app.use(express.urlencoded({ extended: false }))
 
 // HTTP request logger
 app.use(morgan('tiny'))
-app.use('/api', routes)
 
+app.use('/api', routes)
+app.use('/', (req, res) => {
+    res.send('welcome to app')
+})
 
 // Deployment Step3
-if(process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'))
 }
 

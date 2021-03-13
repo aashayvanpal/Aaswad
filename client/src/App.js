@@ -7,7 +7,8 @@ export default class App extends React.Component {
   state = {
     title: '',
     body: '',
-    posts: []
+    posts: [],
+    items: []
   }
 
   handleChange = ({ target }) => {
@@ -19,9 +20,24 @@ export default class App extends React.Component {
     axios.get('/api')
       .then((response) => {
         this.setState({
-          posts: response.data
+          posts: response.data,
         })
-        console.log("data has been recieved")
+        console.log("Blog data has been recieved")
+        console.log(response.data)
+
+      })
+      .catch(() => {
+        alert('could not get the data!')
+      })
+  }
+
+  getItemData = () => {
+    axios.get('/api/items')
+      .then((response) => {
+        this.setState({
+          items:response.data
+        })
+        console.log("Item data has been recieved")
         console.log(response.data)
 
       })
@@ -75,15 +91,27 @@ export default class App extends React.Component {
     ))
   }
 
+  displayItems(items){
+    if (!items.length) return null
+
+    return items.map((item, index) => (
+      <div key={index} className="item_display">
+        <h3>{index + 1}. {item.name}</h3>
+        <p>{item.price}</p>
+      </div>
+    ))
+  }
+
   componentDidMount() {
     this.getBlogData()
+    this.getItemData()
   }
 
   render() {
     // console.log('state:', this.state)
     return (
       <div className="app">
-        <h2>This is a MERN deployed App </h2>
+        <h2>Aaswad Caterers App </h2>
         <form onSubmit={this.submit}>
           <div className="form-input">
             <input
@@ -107,7 +135,12 @@ export default class App extends React.Component {
           <button>Submit</button>
         </form>
         <div className="blog-post">
+          blogs
           {this.displayBlogPosts(this.state.posts)}
+        </div>
+        <div>
+          no items
+          {this.displayItems(this.state.items)}
         </div>
       </div>
     )
