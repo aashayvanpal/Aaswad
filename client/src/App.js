@@ -35,7 +35,7 @@ export default class App extends React.Component {
     axios.get('/api/items')
       .then((response) => {
         this.setState({
-          items:response.data
+          items: response.data
         })
         console.log("Item data has been recieved")
         console.log(response.data)
@@ -91,13 +91,12 @@ export default class App extends React.Component {
     ))
   }
 
-  displayItems(items){
+  displayItems(items) {
     if (!items.length) return null
 
     return items.map((item, index) => (
       <div key={index} className="item_display">
-        <h3>{index + 1}. {item.name}</h3>
-        <p>{item.price}</p>
+        <h3>{index + 1}. {item.name} - {item.price}</h3>
       </div>
     ))
   }
