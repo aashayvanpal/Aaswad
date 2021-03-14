@@ -35,6 +35,6 @@ const itemSchema = new Schema({
 
 
 //Create a model called as Category
-const Item = mongoose.model('item', itemSchema)
+const Item = mongoose.model('Items', itemSchema)
 
 module.exports = Item

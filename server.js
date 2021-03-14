@@ -24,8 +24,9 @@ const PORT = process.env.PORT || 5001 // Deployment Step 1
 //     useUnifiedTopology: true
 // })
 
+
 // Deployment Step2
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/AaswadCaterers-app', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/AaswadCaterers-app', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
