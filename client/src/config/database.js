@@ -9,8 +9,13 @@ const mongoose = require('mongoose')
 //     useUnifiedTopology: true
 // })
 
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/AaswadCaterers-app', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// })
+
 mongoose.Promise = global.Promise
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/AaswadCaterers-app', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
