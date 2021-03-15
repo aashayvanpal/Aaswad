@@ -77,7 +77,7 @@ app.use(morgan('tiny'))
 // })
 
 app.use('/', router)
-app.use(router)
+// app.use(router)
 
 // Deployment Step3
 if (process.env.NODE_ENV === 'production') {
