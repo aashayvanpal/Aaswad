@@ -66,9 +66,9 @@ app.use(express.urlencoded({ extended: false }))
 // HTTP request logger
 app.use(morgan('tiny'))
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Aaswad Caterers App !')
-})
+// app.get('/', (req, res) => {
+//     res.send('Welcome to the Aaswad Caterers App !')
+// })
 
 
 // app.use('/api', routes)
