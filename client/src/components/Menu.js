@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from '../config/axios'
-import Cart from './Cart.js'
+// import Cart from './Cart.js'
+import ModelExample from './ModelExample.js'
 
 export default class Menu extends React.Component {
     constructor() {
@@ -23,6 +24,7 @@ export default class Menu extends React.Component {
         this.CartRemoveHandle = this.CartRemoveHandle.bind(this)
         this.favouriteHandle = this.favouriteHandle.bind(this)
         this.checkboxChange = this.checkboxChange.bind(this)
+        this.newCheckboxChange = this.newCheckboxChange.bind(this)
         this.isCheckedValue = this.isCheckedValue.bind(this)
         this.resetIsSelected = this.resetIsSelected.bind(this)
         this.toggleIsSelected = this.toggleIsSelected.bind(this)
@@ -119,6 +121,7 @@ export default class Menu extends React.Component {
 
                         // filteredItems.forEach(item => { item.inCart = false })
 
+                        filteredItems.forEach(item => { item.quantity = 1 })
                         this.setState({ items: filteredItems })
                         this.setState({ searchFilter: this.state.items })
                         console.log("this.state.items:", this.state.items)
@@ -204,6 +207,60 @@ export default class Menu extends React.Component {
 
     }
 
+    // trying to get the cart rendering with newCheckBoxChange
+    newCheckboxChange(item) {
+        console.log('inside newCheckBoxChange function', item)
+        this.toggleIsSelected(item._id)
+        console.log('Checkbox clicked ! add/remove this id to the cart render', item._id, item.name, item.inCart)
+        console.log('The full item ', item)
+
+        this.state.cartItems.push({
+            "id": item._id,
+            "name": item.name,
+            "quantity": item.quantity,
+            inCart: !item.inCart,
+        })
+
+        console.log('this.state.cartItems :', this.state.cartItems)
+
+
+        // Making unique array 
+        var newCartItems = this.state.cartItems
+        // var distinctCartItems = [...new Set(newCartItems.map(item => (item.id && item.name)))]
+
+        // var newCartItems = [{ id: 555, name: "Vada" }, { id: 555, name: "Vada" }, { id: 777, name: "soda" }]
+        var distinctItemsArray = [];
+        newCartItems.filter(function (item) {
+            var i = distinctItemsArray.findIndex(x => x.name === item.name);
+            if (i <= -1) {
+                distinctItemsArray.push({ id: item.id, name: item.name, quantity: item.quantity, inCart: true });
+            }
+            return null;
+        });
+
+        // setState to render the unique array
+        // Add inCart = false property
+
+        this.setState(prevState => ({
+            cartItems: [...prevState.cartItems, { "id": item._id, "name": item.name, "quantity": item.quantity }]
+        }))
+
+        this.setState({ cartItems: distinctItemsArray })
+
+        console.log('cartItems array state:', this.state.cartItems)
+        console.log('newCartItems array variable:', newCartItems)
+        console.log('distinctCartItems array variable:', distinctItemsArray)
+
+        // Delete Item from cartItems
+        // if Item is already in cartItems remove item 
+        // else Add item to the cartItems
+
+
+
+    }
+
+
+
     toggleIsSelected = (id) => {
         // Delete item from the cartItems do setState of cartItems
         console.log('inside the toggleIsSelected function')
@@ -266,8 +323,8 @@ export default class Menu extends React.Component {
         const index = this.state.items.findIndex(item => item._id === id)
         console.log('the index is :', index)
 
-        console.log('state of items :', this.state.items)
-        console.log('spread :', ...this.state.items)
+        // console.log('state of items :', this.state.items)
+        // console.log('spread :', ...this.state.items)
         console.log('spread index :', this.state.items[index])
         console.log('spread index.isSelected before:', this.state.items[index].isSelected)
         // console.log('spread index.isSelected after:', !this.state.items[index].isSelected)
@@ -284,6 +341,11 @@ export default class Menu extends React.Component {
 
         console.log('end of resetIsSelected Function')
         return null
+
+
+
+
+
     }
 
     isCheckedValue(id) {
@@ -291,9 +353,37 @@ export default class Menu extends React.Component {
         return true
     }
 
-    requestOrder() {
+    requestOrder(cartItems) {
+        // console.log('inside request order function')
+        // var cartItems = this.state.items.filter(item => item.isSelected === true)
+        // console.log('Approve these items :', cartItems)
+        // console.log('post request axios ')
+        // // console.log('Approve these items[0].name :', approveOrder[0].name)
+
+        // // var objNames = approveOrder.forEach(item => console.log(item.name))
+        // // console.log(approveOrder.map(item => { item.name, item.price }))
+
+        // const approveOrder = cartItems.map(item => (
+        //     {
+        //         id: item._id,
+        //         name: item.name,
+        //         price: item.price,
+        //         measured: item.measured,
+        //         quantity: 1,
+        //     }
+        // ));
+
+        // console.log(approveOrder)
+        // console.log(Array.isArray(approveOrder))
+        // // console.log('stringify:', JSON.stringify(approveOrder))
+        // localStorage.setItem('orderItems', JSON.stringify(approveOrder))
+
+        // console.log(localStorage.getItem('orderItems'))
+        // console.log(Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
+
+
         console.log('inside request order function')
-        var cartItems = this.state.items.filter(item => item.isSelected === true)
+        // var cartItems = this.state.items.filter(item => item.isSelected === true)
         console.log('Approve these items :', cartItems)
         console.log('post request axios ')
         // console.log('Approve these items[0].name :', approveOrder[0].name)
@@ -301,23 +391,23 @@ export default class Menu extends React.Component {
         // var objNames = approveOrder.forEach(item => console.log(item.name))
         // console.log(approveOrder.map(item => { item.name, item.price }))
 
-        const approveOrder = cartItems.map(item => (
-            {
-                id: item._id,
-                name: item.name,
-                price: item.price,
-                measured: item.measured,
-                quantity: 1,
-            }
-        ));
+        // const approveOrder = cartItems.map(item => (
+        //     {
+        //         id: item._id,
+        //         name: item.name,
+        //         price: item.price,
+        //         measured: item.measured,
+        //         quantity: 1,
+        //     }
+        // ));
 
-        console.log(approveOrder)
-        console.log(Array.isArray(approveOrder))
+        // console.log(approveOrder)
+        // console.log(Array.isArray(approveOrder))
         // console.log('stringify:', JSON.stringify(approveOrder))
-        localStorage.setItem('orderItems', JSON.stringify(approveOrder))
+        localStorage.setItem('orderItems', JSON.stringify(cartItems))
 
-        console.log(localStorage.getItem('orderItems'))
-        console.log(Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
+        console.log('fetching all order items', localStorage.getItem('orderItems'))
+        console.log('items are array ?:', Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
 
     }
 
@@ -362,72 +452,86 @@ export default class Menu extends React.Component {
     render() {
         return (
             <div>
-                <h1>Welcome - {this.state.username} you are - {this.state.userType}</h1>
+
 
                 { this.state.userType === "Admin" ? (
+                    <>
+                        <h1>Welcome - {this.state.username} you are - {this.state.userType}</h1>
+                        <button id="ShowButton" onClick={() => {
+                            var navBarElement = document.getElementById("Nav-bar")
+                            navBarElement.style.display = "block"
 
-                    <div className="Menu-Cart" style={{
-                        "padding": "60px 10px 0px 10px",
-                        "marginTop": "-20px"
-                    }}>
+                            var showElement = document.getElementById("ShowButton")
+                            showElement.style.display = "none"
 
-                        <div className="inner-Menu" >
-                            <h1 id="Menu-style">Choose Your Menu</h1>
+                        }}>Show</button>
+                    </>
 
-                            <div>
-                                <h1 style={{
-                                    "display": "inline-block",
-                                    "margin": "30px"
-                                }}>{this.state.displayType}</h1>
-                                <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" style={{
-                                    "padding": "5px",
+                )
+                    :
+                    (
+                        null
+                    )
+                }
+                < div className="Menu-Cart" style={{
+                    "padding": "60px 10px 0px 10px",
+                    "marginTop": "-20px"
+                }}>
+
+                    <div className="inner-Menu" >
+                        <h1 id="Menu-style">Choose Your Menu</h1>
+
+                        <div id="filteringOptions">
+                            <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
+                            <button style={{ "padding": "12px", "marginRight": "30px" }} onClick={this.clearSearch}>Clear</button>
+
+                            {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
+
+                            <select onChange={this.handleSelect}
+                                style={{
                                     "fontSize": "22px",
-                                    "backgroundColor": "#f5edc0",
-                                    "margin": "10px"
-                                }} /><button style={{ "padding": "12px", "marginRight": "30px" }} onClick={this.clearSearch}>Clear</button>
-                                <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2>
+                                    "padding": "10px",
+                                    "width": "210px"
+                                }}
 
-                                <select onChange={this.handleSelect}
-                                    style={{
-                                        "fontSize": "22px",
-                                        "padding": "10px"
-                                    }}
-
-                                    id="filterItems"
-                                >
-                                    <option value="all">All</option>
-                                    <option value="breakfast">Breakfast</option>
-                                    <option value="lunch">Lunch</option>
-                                    <option value="dinner">Dinner</option>
-                                    <option value="sweets">Sweets</option>
-                                    <option value="snacks">Snacks</option>
-                                    <option value="special">Special</option>
-                                </select>
-                                <hr style={{ "height": "10px" }} />
-                            </div>
+                                id="filterItems"
+                            >
+                                <option value="all">All</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="sweets">Sweets</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="special">Special</option>
+                            </select>
+                            {/* <span className="stepper">Step 1</span>
+                            <span className="stepper">Step 2</span>
+                            <span className="stepper">Step 3</span> */}
+                        </div>
+                        <hr style={{ "height": "10px" }} />
+                        <div>
                             <div>
-                                {
-                                    this.state.searchFilter.map((item, i) => {
-                                        return (
-                                            <div key={item._id} className="card"
-                                                style={{
-                                                    "display": "inline-block",
-                                                    "backgroundColor": "#f5d76c",
-                                                    "borderWidth": "5px",
-                                                    "marginLeft": "10px",
-                                                    "marginBottom": "10px",
-                                                    "width": "300px",
-                                                    "height": "300px"
-                                                }}>
 
-                                                {/* <div key={item._id} className="card"> */}
-                                                <div key={item.id} className='card-body' style={{ "cursor": "pointer", "zIndex": "1" }} onClick={() => { this.checkboxChange(item._id, item.name, item.inCart) }} >
-                                                    <div style={{ "width": "250px", "height": "110px" }}>
-                                                        <img src={item.imgUrl} alt={item.name + " image"} width="250px" height="110px" />
-                                                        {/* <img src={require(item.imgUrl)} alt={item.name + " image"} width="250px" height="110px" /> */}
-                                                    </div>
+                                <h1 id="displayType">{this.state.displayType}</h1>
+                            </div>
+                            {
+                                this.state.searchFilter.map((item, i) => {
+                                    return (
+                                        <div key={item._id} className="card-style">
+
+                                            {/* <div key={item._id} className="card"> */}
+                                            {/* here you have to pass the whole item selected object  */}
+                                            {/* <div key={item.id} className='card-body-style' onClick={() => { this.checkboxChange(item._id, item.name, item.inCart) }} > */}
+                                            <div key={item.id} className='card-body-style' onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }} >
+
+                                                <div className="imageStyling">
+                                                    <img src={item.imgUrl} alt={item.name + " image"} />
+                                                    {/* <img src={require(item.imgUrl)} alt={item.name + " image"} width="250px" height="110px" /> */}
+                                                </div>
+                                                <div>
+
                                                     <div style={{ "height": "100px", "width": "250px", "display": "table-cell", "verticalAlign": "middle" }}>
-                                                        <h1 style={{ "textAlign": "center" }}>{item.name}</h1>
+                                                        <h1 className="itemName">{item.name}</h1>
                                                     </div>
                                                     <input type="checkbox" style={{
                                                         "marginLeft": "40%",
@@ -435,27 +539,32 @@ export default class Menu extends React.Component {
                                                         "height": "40px",
                                                         "cursor": "pointer"
                                                     }} checked={item.isSelected} onChange={() => { }} />
-
                                                 </div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>
-                        <Cart cartItems={this.state.cartItems}
-                            items={this.state.items}
-                            removeItemFromCart={this.removeItemFromCart}
-                            resetIsSelected={this.resetIsSelected}
-                            requestOrder={this.requestOrder} />
-                    </div>
-                )
-                    :
-                    (
-                        null
-                    )
 
-                }
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                    {/* <Cart cartItems={this.state.cartItems}
+                        items={this.state.items}
+                        removeItemFromCart={this.removeItemFromCart}
+                        resetIsSelected={this.resetIsSelected}
+                        requestOrder={this.requestOrder} /> */}
+
+                    <ModelExample buttonLabel={`Cart`}
+                        items={this.state.items}
+                        cartItems={this.state.cartItems}
+                        removeItemFromCart={this.removeItemFromCart}
+                        resetIsSelected={this.resetIsSelected}
+                        requestOrder={this.requestOrder}
+                    />
+
+                </div>
+
+
             </div>
         );
     }

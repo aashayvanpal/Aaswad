@@ -1,14 +1,16 @@
 import React from 'react';
 import axios from '../config/axios';
 import CustomerForm from './customer/Form.js'
-import { Table } from 'reactstrap';
-import { Link } from 'react-router-dom'
+// import { Table } from 'reactstrap';
+// import { Link } from 'react-router-dom'
 
 export default class CustomerRequest extends React.Component {
     constructor() {
         super()
         this.state = {
             reqOrder: [],
+            username: '',
+            userType: ''
         }
 
         this.handleRemove = this.handleRemove.bind(this)
@@ -23,7 +25,7 @@ export default class CustomerRequest extends React.Component {
 
     componentDidMount() {
         // get all orders from /menu find and display all items from that _id
-        console.log('inside componentdidmount')
+        console.log('inside componentdidmount customer request')
         // console.log('local storage render items :')
         // console.log(localStorage.getItem('orderItems'))
         // console.log(localStorage.getItem('orderItems').items)
@@ -33,15 +35,31 @@ export default class CustomerRequest extends React.Component {
         console.log('parsedItems :', parsedItems)
         console.log('parsedItems isArray?:', Array.isArray(parsedItems))
         console.log('before setstate')
+        console.log(this.state.reqOrder)
         this.setState({
             reqOrder: parsedItems
         })
-        console.log(this.state.reqOrder)
 
         console.log('after setstate')
 
         console.log(this.state.reqOrder)
 
+        // Do a get request to /account to get user name , add x-auth as header to it
+        // just set the token in localStorage and get it in x-auth , the code is working fine,,,
+        axios.get('/account', {
+            headers: { 'x-auth': localStorage.getItem('token') }
+        })
+            .then(dataRequest => {
+                console.log("user data :", dataRequest)
+                this.setState({
+                    username: dataRequest.data.username,
+                    userType: dataRequest.data.userType
+
+                })
+            })
+            .catch(err => {
+                console.log(err)
+            })
 
     }
 
@@ -291,55 +309,25 @@ export default class CustomerRequest extends React.Component {
     }
 
     render() {
+        console.log('customer request')
         return (
             <div style={{ "display": "inline" }}>
-                <button id="ShowButton" onClick={() => {
-                    var navBarElement = document.getElementById("Nav-bar")
-                    navBarElement.style.display = "block"
+                {
+                    this.state.userType === "Admin" ? (
+                        <button id="ShowButton" onClick={() => {
+                            var navBarElement = document.getElementById("Nav-bar")
+                            navBarElement.style.display = "block"
 
-                    var showElement = document.getElementById("ShowButton")
-                    showElement.style.display = "none"
+                            var showElement = document.getElementById("ShowButton")
+                            showElement.style.display = "none"
 
-                }}>Show</button>
-                <h1>Listing selected items - {this.state.reqOrder.length}</h1>
-                <br />
-                <div style={{ "display": "flex" }}>
-                    <div style={{ "marginRight": "20px", "width": "70%" }}>
-                        <Table hover style={{ "border": "2px solid black", "background": "darkkhaki" }}>
-                            <thead>
-                                <tr >
-                                    <th scope="row"><h2>Sl No</h2></th>
-                                    <th scope="row" ><h2>Item Name</h2></th>
-                                    <th scope="row" ><h2>Quantity</h2></th>
-                                    {/* <th scope="row" ><h2>Price</h2></th> */}
-                                    <th scope="row" ><h2>Remove</h2></th>
-                                </tr>
+                        }}>Show</button>
+                    ) : (null)
+                }
 
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.reqOrder.map((item, i) => {
-                                        return (
-                                            <tr key={item.name}>
-                                                <td><h2>{i + 1}.</h2></td>
-                                                <td><h2>{item.name}</h2></td>
-                                                <td><button id={i + 1} onClick={() => { this.minusHandle(item.id) }}>-</button><input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item.id) }} value={item.quantity} style={{ "width": "50px", textAlign: "center" }} /><button onClick={(e) => { this.plusHandle(item.id, e) }}>+</button>
-                                                    {/* <h5>{item.measured}</h5> */}
-                                                </td>
-                                                {/* <td><h2>{item.price * item.quantity}</h2></td> */}
-                                                <td><button className="button-color5" style={{ "padding": "10px" }} onClick={() => { this.handleRemove(item.id) }}>Remove</button></td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </Table>
 
-                        <h5 >*For any specific queries please contact through WhatsApp - 9742814239</h5> <br />
-                        <Link to="/Menu"><button style={{ "padding": "15px" }}>Back</button></Link>
-                    </div>
-                    <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
-                </div>
+
+                <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
                 {/* <button onClick={this.handleSubmit}>Submit Enquiry</button> */}
             </div >
         );

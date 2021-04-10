@@ -1,7 +1,6 @@
-// App version 1.0.2
+// App version 1.0.3
 // Add exact path for add details
 /*
-
 Important:
 make form to the right , place image to left
 create logo
@@ -21,19 +20,11 @@ submit enquiry button make button better
 add pop for order has been placed 
 tracking order status 
 user has to see order has been placed (reference numbers)
-
-
-
-
-
 Download menu card pdf file (add to database)
-
 Fixes :
 Front end for home/landing page must be completed 
 All pages must be made responsive
-
 /qurries section , display customer qurries
-
 Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
 Authentication : If not logged in , redirect to Login page
 Authentication to individual paths (/menu,/orders) 
@@ -54,7 +45,6 @@ on click of clear button on /menu page , the cursor must be blinking on the sear
 Make the whole website responsive
 About us page
 Add tool tips for - how it works
-
 Write more test scripts (next update)
 Create contact page(v1.0):
 Bugs :
@@ -62,13 +52,21 @@ Css placement for the map is not perfect , all pages are not responsive
 Fix all fontsizes of contact us page , add the customer querry from the contact us page
 querry CRUD
 querry Validation
-
 HTML5 Link that dials the number:<a href="tel:9742814239">Call us</a>
 HTML5 Link that runs email to <a href="mailto:example@example.com">Send email</a>
 rendering price and measured properties in customer request for caterer-user
 Major Update:(v1.0.1)
 Trying to integrate Google maps in contact us page
 Default error page loading
+Change notes v1.0.3 (only customer view focused): 
+commented ItemCard rendering and Menu having isAdming conditional rendering
+commented burger rendering 
+Commented Link-Navigations
+Placed show button and render only if user is admin
+Cart rendering in 3 steps
+mobile view for customer only 
+check for admin view (pending) 
+added carousel images 
 */
 
 
@@ -92,7 +90,7 @@ import ItemDetailsForm from './components/ItemDetailsForm.js';
 import CustomerRequest from './components/CustomerRequest.js'
 
 import './css/app-css.css'
-import ItemCard from './components/ItemCard';
+// import ItemCard from './components/ItemCard';
 import SignUpForm from './components/SignUpForm.js'
 import SignInForm from './components/SignInForm.js'
 
@@ -132,7 +130,7 @@ function App() {
                   <Link to="/contactus" className="linkEnquiry">Contact Us</Link>
                   <UserButton />
 
-                  <div id="burger" onClick={() => {
+                  {/* <div id="burger" onClick={() => {
                     console.log('burger clicked!')
                     document.getElementById("mySidenavMobile").style.width = "180px";
                     document.getElementById("mySidenavMobile").style.display = "inline";
@@ -140,7 +138,7 @@ function App() {
                     <div id="bar"></div>
                     <div id="bar"></div>
                     <div id="bar"></div>
-                  </div>
+                  </div> */}
 
                   <div className="topNav">
                     <div id="mySidenavMobile">
@@ -210,21 +208,16 @@ function App() {
 
                   <Route path="/Menu" >
                     {/* Render ItemCard for a different view (conditional rendering) */}
-                    <button id="ShowButton" onClick={() => {
-                      var navBarElement = document.getElementById("Nav-bar")
-                      navBarElement.style.display = "block"
+                    {/* show button only for admin */}
 
-                      var showElement = document.getElementById("ShowButton")
-                      showElement.style.display = "none"
-
-                    }}>Show</button>
+                    {/*                     
                     <h1 className="Link-Navigations">
                       <span id="Link"><Link to="/">Home</Link></span>
                       <span id="Link"><Link to="/Menu">Menu</Link></span>
                       <span id="Link"><Link to="/Cart">Cart</Link></span>
-                    </h1>
+                    </h1> */}
                     <Menu />
-                    <ItemCard />
+                    {/* <ItemCard /> */}
                   </Route>
 
                   <Route path="/Cart" >
@@ -334,7 +327,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : 1.0.2v</h1>
+                    <h1 style={{}}>App Version : 1.0.3v</h1>
 
                   </Route>
 

@@ -7,7 +7,7 @@ import whatsApp from '../images/landing-page-images/whatsApp-icon.png'
 export default function Footer() {
     return (
         <footer style={{ "height": "auto" }} >
-            <div style={{ "display": "block" }}>
+            <div style={{ "display": "block", "backgroundColor": "#353535" }}>
                 <div className="footer">
                     <div className="footer-c1" >
                         <div className="footer-c1-box1">
@@ -23,7 +23,7 @@ export default function Footer() {
 
                     </div>
                     <div className="footer-c2">
-                        <h2>Follow us on :-</h2>
+                        <h2 style={{ "color": "#dbc268" }}>Follow us on :-</h2>
                         <div style={{ "display": "flex", "justifyContent": "center" }}>
                             <img alt="facebook-img" src={facebook} height="55px" />
                             <img alt="gmail-img" src={gmail} height="55px" />

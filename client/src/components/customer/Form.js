@@ -1,6 +1,6 @@
 import React from 'react'
 import DatePicker from "react-datepicker";
-
+import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
 
 export default class CustomerForm extends React.Component {
@@ -24,6 +24,7 @@ export default class CustomerForm extends React.Component {
             emailError: "",
             noOfPeopleError: "",
             addressError: '',
+
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -167,10 +168,12 @@ export default class CustomerForm extends React.Component {
         });
     };
 
+
     render() {
         return (
-            <form onSubmit={this.handleSubmit} style={{ "border": "2px solid black", "padding": "50px", "width": "36%" }}>
-                <h1 style={{ "marginTop": "-30px" }}>Add Your Details </h1><br />
+            <form onSubmit={this.handleSubmit} id='detailsForm'>
+
+                <h1 >Add Your Details </h1><br />
                 <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name" />
                 <br />
                 {this.state.nameError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.nameError}</div>) : null}
@@ -185,7 +188,7 @@ export default class CustomerForm extends React.Component {
                 {this.state.emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.emailError}</div>) : null}
 
 
-                <textarea style={{ "width": "280px", "height": "250px" }} name="address" className="form-input" value={this.state.address} onChange={this.handleChange} placeholder="Address" />
+                <textarea style={{ "width": "280px", "height": "250px", "border": "2px solid grey", }} name="address" className="form-input" value={this.state.address} onChange={this.handleChange} placeholder="Address" />
                 <br />
                 {this.state.addressError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.addressError}</div>) : null}
 
@@ -220,9 +223,10 @@ export default class CustomerForm extends React.Component {
                 <label >
                     <span className="form-input">Service</span><input name="service" className="form-input" checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
                 </label><br />
-                <input type="submit" style={{ "padding": "20px", "width": "300px", "background": "#DBC283" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
+                <input type="submit" style={{ "padding": "20px", "width": "300px", "background": "#DBC283", "margin": "5px 0px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
 
             </form>
+
         )
     }
 }
