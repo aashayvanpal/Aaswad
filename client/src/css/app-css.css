@@ -43,7 +43,7 @@
 }
 
 .align {
-  background-color: #f5edc0;
+  background-color: #fff5d2;
   width: 100%;
   display: flex;
 }
@@ -242,8 +242,20 @@
 }
 
 .inner-Menu {
-  background-color: #dbc268;
+  background-color: #fff5d2;
   margin-right: 20px;
+}
+
+#filteringOptions {
+  width: 80%;
+  margin-left: 10%;
+}
+
+@media screen and (max-width: 507px) {
+  #filteringOptions {
+    margin-left: 0px;
+    width: 100%;
+  }
 }
 
 #Menu-style {
@@ -259,12 +271,50 @@
   margin-top: -34px;
 }
 
+#inputSearch {
+  padding: 5px;
+  font-size: 22px;
+  background-color: #f5edc0;
+  margin: 10px;
+  text-align: center;
+}
+#displayType {
+  text-align: center;
+  width: 100%;
+  margin: 10px 0px 20px 0px;
+}
+
+.stepper {
+  background-color: green;
+}
+
+@media screen and (max-width: 507px) {
+  #Menu-style {
+    font-size: 26px;
+    width: 100%;
+    margin-left: 0px;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+  #inputSearch {
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+    border-radius: 5px;
+  }
+  #displayType {
+    margin: 0px 0px 20px 0px;
+    font-size: 20px;
+    margin: 20px;
+    text-align: center;
+    width: 100%;
+  }
+}
+
 .form-input {
   font-size: 1.5rem;
   margin: 5px;
+  border-radius: 5px;
 }
-
-
 
 .Qurrie-form {
   width: 427px;

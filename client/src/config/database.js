@@ -4,17 +4,19 @@ const mongoose = require('mongoose')
 // db configuration - establishing connection to db 
 
 // For only Cloud
+// For local with cloud - paste the connection url here 
 // mongoose.connect(process.env.MONGODB_URI,{
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 // })
 
+// For local database
 // mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/AaswadCaterers-app', {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true
 // })
 
-mongoose.Promise = global.Promise
+
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true

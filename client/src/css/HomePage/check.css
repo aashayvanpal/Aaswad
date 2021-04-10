@@ -1,0 +1,92 @@
+.card-style {
+  display: inline-block;
+  background-color: #f5d76c;
+
+  border-width: 5px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: 300px;
+  height: 300px;
+}
+
+.card-body-style {
+  cursor: pointer;
+  /* z-index: 1; */
+}
+
+.itemName {
+  text-align: "center";
+}
+
+.imageStyling,
+.imageStyling img {
+  width: 250px;
+  height: 110px;
+}
+
+.imageStyling {
+  align-items: center;
+}
+
+#cart-text-style {
+  background-color: rgb(245, 237, 192);
+  border: 2px solid black;
+  text-align: center;
+  /* width: 240px; */
+  height: 50px;
+  /* padding-top: 10px; */
+  /* margin-top: -32px;
+  margin-left: 20px;
+  margin-right: 20px; */
+
+  width: 90%;
+  position: absolute;
+  left: 5%;
+  box-shadow: 6px 6px 6px;
+  border-radius: 5px;
+}
+
+
+
+
+@media screen and (max-width: 507px) {
+  .card-style {
+    /* background-color: green; */
+
+    height: 150px;
+    border-radius: 10px 60px 10px 10px;
+    border: 2px solid #dbc268;
+    width: 100%;
+  }
+  .card-body-style {
+    display: inline-flex;
+    padding: 0px;
+  }
+  .itemName {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .imageStyling,
+  .imageStyling img {
+    width: 100px;
+    height: 130px;
+    border-radius: 5px 25px 25px 5px;
+    margin: 3px;
+  }
+
+  /* #cart-text-style:hover {
+    height: 85%;
+  } */
+
+  
+}
+
+/* image 100 125 */
+
+.cart-button {
+  width: 90%;
+  left: 5%;
+  position: fixed;
+  bottom: 20px;
+}

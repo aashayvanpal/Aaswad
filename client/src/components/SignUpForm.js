@@ -90,10 +90,10 @@ export default class SignUpForm extends React.Component {
                     else {
                         console.log('successfully created user', response.data)
                         // this.props.history.push('/items')
+                        alert('account created successfully')
                     }
                 })
 
-            alert('account created successfully')
 
             // Clear form
             this.setState(initialState)
@@ -150,7 +150,7 @@ export default class SignUpForm extends React.Component {
                         <input type="submit" value="Create Account" id="create-account-button" />
                     </div>
 
-                <h3 id="already-have-account">Already have an account ? <a href="/signin">Sign in</a></h3>
+                    <h3 id="already-have-account">Already have an account ? <a href="/signin">Sign in</a></h3>
                 </form>
             </div>
 

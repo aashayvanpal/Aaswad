@@ -1,4 +1,9 @@
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
+import buffet1 from '../images/landing-page-images/buffet1.jpg'
+import buffet2 from '../images/landing-page-images/buffet2.jpg'
+import buffet3 from '../images/landing-page-images/buffet3.jpg'
+import buffet4 from '../images/landing-page-images/buffet4.jpg'
+import buffet5 from '../images/landing-page-images/buffet5.jpg'
 
 import React, { useState } from 'react';
 import {
@@ -11,29 +16,30 @@ import {
 
 const items = [
   {
-    src: require("../images/landing-page-images/buffet1.jpg"),
+    src: buffet1,
     altText: '',
-    caption: 'Sweet Special'
+    caption: ''
   },
   {
-    src: require("../images/landing-page-images/image 2.png"),
-    altText: 'buffet 2',
-    caption: 'buffet 2'
+    src: buffet2,
+    altText: '',
+    caption: ''
+  },
+
+  {
+    src: buffet3,
+    altText: '',
+    caption: ''
   },
   {
-    src: require("../images/landing-page-images/buffet3.jpg"),
-    altText: 'buffet 3',
-    caption: 'buffet 3'
+    src: buffet4,
+    altText: '',
+    caption: ''
   },
   {
-    src: require("../images/landing-page-images/buffet4.jpg"),
-    altText: 'buffet 4',
-    caption: 'buffet 4'
-  },
-  {
-    src: require("../images/landing-page-images/buffet5.jpg"),
-    altText: 'buffet 5',
-    caption: 'buffet 5'
+    src: buffet5,
+    altText: '',
+    caption: ''
   }
 ];
 
