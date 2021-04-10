@@ -4,7 +4,9 @@ const mongoose = require('./client/src/config/database.js')
 
 const morgan = require('morgan')
 const path = require('path')
-// const cors = require('cors')
+const cors = require('cors')
+app.use(cors())
+
 
 // const routes = require('./routes/api.js')
 const router = require('./client/src/config/routes.js')
@@ -57,7 +59,6 @@ const PORT = process.env.PORT || 5001 // Deployment Step 1
 // //     }
 // // })
 
-// app.use(cors())
 
 // Data parsing
 app.use(express.json())
