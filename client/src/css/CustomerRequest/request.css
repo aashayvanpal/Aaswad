@@ -1,0 +1,12 @@
+#detailsForm {
+    margin: 15px;
+    border-radius: 10px;
+    border: 2px solid black;
+    padding: 50px;
+  }
+  
+  @media screen and (max-width: 507px) {
+    #detailsForm {
+      padding: 15px;
+    }
+  }
