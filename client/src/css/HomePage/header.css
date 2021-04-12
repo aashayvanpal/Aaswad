@@ -78,9 +78,8 @@
 
 @media screen and (max-width: 507px) {
   .header-txt {
-    font-size: 25px;
+    font-size: 22px;
     margin-top: 30px;
-    margin-left: 10px;
-
+    /* margin-left: 10px; */
   }
 }

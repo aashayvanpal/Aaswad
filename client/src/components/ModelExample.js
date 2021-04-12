@@ -24,7 +24,7 @@ const ModalExample = (props) => {
                 "backgroundColor": "#dbc268"
             }} className="cart-button" onClick={toggle}>{buttonLabel} </Button>
             <Modal isOpen={modal} toggle={toggle} className={className} >
-                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Cart Items</ModalHeader>
+                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Cart Items<br />Review your menu</ModalHeader>
                 <ModalBody style={{ "backgroundColor": "#fff5d2" }} >
                     <Cart
                         items={items}

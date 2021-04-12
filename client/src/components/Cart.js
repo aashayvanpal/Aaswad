@@ -251,17 +251,17 @@ export default class Cart extends React.Component {
                                                     <tr key={item._id} >
                                                         <td>{i + 1}</td>
                                                         <td>{item.name}</td>
-                                                        <td><button id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button><input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "50px", textAlign: "center" }} /><button onClick={(e) => { this.plusHandle(item._id, e) }}>+</button>
+                                                        <td style={{ "display": "inline-flex" }}><button id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button><input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "35px", textAlign: "center" }} /><button onClick={(e) => { this.plusHandle(item._id, e) }}>+</button>
 
                                                         </td>
                                                         <td style={{ "alignItems": "center" }}>
-                                                            <Button color="danger" onClick={() => {
+                                                            <Button color="danger" style={{ "height": "33px", "fontWeight": "bold" }} onClick={() => {
                                                                 this.props.resetIsSelected(item._id)
                                                                 this.handleRemove(item._id)
                                                                 // this.props.removeItemFromCart(item.id)
                                                             }}
                                                             >
-                                                                remove
+                                                                X
                                                             </Button>
                                                         </td>
                                                     </tr>
@@ -283,7 +283,7 @@ export default class Cart extends React.Component {
                                         "backgroundColor": "#dbc268", "color": "black", "width": "100%"
                                     }}>
 
-                                        Review Selections
+                                        Proceed
                                 </Button>
 
                                 </Link>

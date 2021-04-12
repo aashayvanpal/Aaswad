@@ -96,3 +96,9 @@
 .content-showcase {
   width: 100%;
 }
+
+@media screen and (max-width: 507) {
+  .content-showcase {
+    margin: 0px;
+  }
+}

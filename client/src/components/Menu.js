@@ -2,6 +2,8 @@ import React from 'react'
 import axios from '../config/axios'
 // import Cart from './Cart.js'
 import ModelExample from './ModelExample.js'
+import cardCurve from '../images/item-curve.svg'
+import '../css/app-css.css'
 
 export default class Menu extends React.Component {
     constructor() {
@@ -474,8 +476,7 @@ export default class Menu extends React.Component {
                     )
                 }
                 < div className="Menu-Cart" style={{
-                    "padding": "60px 10px 0px 10px",
-                    "marginTop": "-20px"
+                    "padding": "10px 10px 0px 10px",
                 }}>
 
                     <div className="inner-Menu" >
@@ -483,7 +484,7 @@ export default class Menu extends React.Component {
 
                         <div id="filteringOptions">
                             <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
-                            <button style={{ "padding": "12px", "marginRight": "30px" }} onClick={this.clearSearch}>Clear</button>
+                            <button style={{ "padding": "12px", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
 
                             {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 
@@ -491,7 +492,8 @@ export default class Menu extends React.Component {
                                 style={{
                                     "fontSize": "22px",
                                     "padding": "10px",
-                                    "width": "210px"
+                                    "width": "210px",
+                                    "borderRadius": "10px"
                                 }}
 
                                 id="filterItems"
@@ -517,30 +519,17 @@ export default class Menu extends React.Component {
                             {
                                 this.state.searchFilter.map((item, i) => {
                                     return (
-                                        <div key={item._id} className="card-style">
+                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                            <div className="card-body-style">
+                                                <div style={{ "height": "150px", "width": "100%" }}>
 
-                                            {/* <div key={item._id} className="card"> */}
-                                            {/* here you have to pass the whole item selected object  */}
-                                            {/* <div key={item.id} className='card-body-style' onClick={() => { this.checkboxChange(item._id, item.name, item.inCart) }} > */}
-                                            <div key={item.id} className='card-body-style' onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }} >
-
-                                                <div className="imageStyling">
-                                                    <img src={item.imgUrl} alt={item.name + " image"} />
-                                                    {/* <img src={require(item.imgUrl)} alt={item.name + " image"} width="250px" height="110px" /> */}
+                                                    <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
+                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "absolute", "left": "5px" }} />
                                                 </div>
-                                                <div>
-
-                                                    <div style={{ "height": "100px", "width": "250px", "display": "table-cell", "verticalAlign": "middle" }}>
-                                                        <h1 className="itemName">{item.name}</h1>
-                                                    </div>
-                                                    <input type="checkbox" style={{
-                                                        "marginLeft": "40%",
-                                                        "width": "40px",
-                                                        "height": "40px",
-                                                        "cursor": "pointer"
-                                                    }} checked={item.isSelected} onChange={() => { }} />
+                                                <div className="contents">
+                                                    <h1 className="itemName">{item.name}</h1>
+                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                 </div>
-
                                             </div>
                                         </div>
                                     )
@@ -562,10 +551,10 @@ export default class Menu extends React.Component {
                         requestOrder={this.requestOrder}
                     />
 
-                </div>
+                </div >
 
 
-            </div>
+            </div >
         );
     }
 } 

@@ -173,7 +173,7 @@ export default class CustomerForm extends React.Component {
         return (
             <form onSubmit={this.handleSubmit} id='detailsForm'>
 
-                <h1 >Add Your Details </h1><br />
+                <h1 style={{ "fontSize": "28px" }}>Add Your Event Details </h1><br />
                 <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name" />
                 <br />
                 {this.state.nameError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.nameError}</div>) : null}
@@ -217,13 +217,33 @@ export default class CustomerForm extends React.Component {
 
                 <input name="eventTime" className="form-input" value={this.state.eventTime} onChange={this.handleChange} placeholder="Event Time" />
                 <br />
-                <label>
-                    <span className="form-input">Home Delivery</span><input name="homeDelivery" className="form-input" checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
-                </label><br />
-                <label >
-                    <span className="form-input">Service</span><input name="service" className="form-input" checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
-                </label><br />
-                <input type="submit" style={{ "padding": "20px", "width": "300px", "background": "#DBC283", "margin": "5px 0px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
+                <table style={{ "width": "70%" }}>
+                    <tr >
+                        <td>
+                            <label>
+                                <span className="form-input">Home Delivery</span>
+                            </label><br />
+                        </td>
+                        <td>
+                            <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <label >
+                                <span className="form-input">Service</span>
+                            </label><br />
+                        </td>
+                        <td>
+
+                            <input name="service" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
+                        </td>
+
+                    </tr>
+
+                </table>
+                <input type="submit" style={{ "padding": "20px", "width": "300px", "background": "#DBC283", "margin": "5px 0px", "border-radius": "10px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
 
             </form>
 
