@@ -1,4 +1,4 @@
-// App version 1.0.3
+// App version 1.0.4
 // Add exact path for add details
 /*
 Important:
@@ -67,6 +67,8 @@ Cart rendering in 3 steps
 mobile view for customer only 
 check for admin view (pending) 
 added carousel images 
+Change notes v1.0.4 :
+items/show axios fixed
 */
 
 
@@ -327,7 +329,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : 1.0.3v</h1>
+                    <h1 style={{}}>App Version : 1.0.4v</h1>
 
                   </Route>
 
