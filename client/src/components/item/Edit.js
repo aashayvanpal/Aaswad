@@ -15,7 +15,7 @@ export default class EditItem extends React.Component {
         console.log('id to edit', window.location.href.split('/')[5])
         const id = window.location.href.split('/')[5]
 
-        axios.get(`http://localhost:3001/items/edit/${id}`, {
+        axios.get(`/items/edit/${id}`, {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }

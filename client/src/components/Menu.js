@@ -1,9 +1,19 @@
 import React from 'react'
 import axios from '../config/axios'
 // import Cart from './Cart.js'
-import ModelExample from './ModelExample.js'
+import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
 import '../css/app-css.css'
+
+
+// for loading from google images :(not working) 
+// <img src={`https://photos.google.com/share/AF1QipMK9yJs7N52kZcsS17jVq8mvLsi3NPhGkyrGv3IUhDOx0WbPcW5-ZVmPnj0MvTg_A${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" /> */}
+
+
+// Use this as replacement v1.0.4 :problem of image loading dynamically is solved
+// <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+
+
 
 export default class Menu extends React.Component {
     constructor() {
@@ -127,6 +137,9 @@ export default class Menu extends React.Component {
                         this.setState({ items: filteredItems })
                         this.setState({ searchFilter: this.state.items })
                         console.log("this.state.items:", this.state.items)
+
+
+
 
                     })
                     .catch(err => {
@@ -543,7 +556,7 @@ export default class Menu extends React.Component {
                         resetIsSelected={this.resetIsSelected}
                         requestOrder={this.requestOrder} /> */}
 
-                    <ModelExample buttonLabel={`Cart`}
+                    <CartModel buttonLabel={`Cart`}
                         items={this.state.items}
                         cartItems={this.state.cartItems}
                         removeItemFromCart={this.removeItemFromCart}

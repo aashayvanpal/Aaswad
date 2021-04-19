@@ -1,4 +1,4 @@
-// App version 1.0.4
+// App version v1.0.5
 // Add exact path for add details
 /*
 Important:
@@ -69,6 +69,12 @@ check for admin view (pending)
 added carousel images 
 Change notes v1.0.4 :
 items/show axios fixed
+task : Download all the images and place in /public/images , remove all images from /src/images and move to /public/images
+
+
+Changes for v1.0.5 :
+Changed all order now links to /SignIn
+
 */
 
 
@@ -128,7 +134,7 @@ function App() {
 
                 <Link to="/" className="header-txt" >Aaswad Caterers</Link>
                 <div className="header-link-container">
-                  <Link to="/Register" className="linkEnquiry">Order Now !</Link>
+                  <Link to="/SignIn" className="linkEnquiry">Order Now !</Link>
                   <Link to="/contactus" className="linkEnquiry">Contact Us</Link>
                   <UserButton />
 
@@ -329,7 +335,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : 1.0.4v</h1>
+                    <h1 style={{}}>App Version : 1.0.5v</h1>
 
                   </Route>
 

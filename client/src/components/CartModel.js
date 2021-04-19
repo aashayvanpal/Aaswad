@@ -3,7 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import '../css/HomePage/check.css'
 import Cart from './Cart.js'
 
-const ModalExample = (props) => {
+const CartModel = (props) => {
     const {
         buttonLabel,
         className,
@@ -40,4 +40,4 @@ const ModalExample = (props) => {
     );
 }
 
-export default ModalExample;
+export default CartModel;
