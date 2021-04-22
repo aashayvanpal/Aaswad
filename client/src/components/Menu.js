@@ -497,7 +497,7 @@ export default class Menu extends React.Component {
 
                         <div id="filteringOptions">
                             <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
-                            <button style={{ "padding": "12px", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
+                            <button style={{ "padding": "12px", "backgroundColor": "#dbc268", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
 
                             {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 
@@ -524,30 +524,33 @@ export default class Menu extends React.Component {
                             <span className="stepper">Step 3</span> */}
                         </div>
                         <hr style={{ "height": "10px" }} />
-                        <div>
+                        <div id="menu-container">
                             <div>
-
-                                <h1 id="displayType">{this.state.displayType}</h1>
+                                <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
                             </div>
-                            {
-                                this.state.searchFilter.map((item, i) => {
-                                    return (
-                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
-                                            <div className="card-body-style">
-                                                <div style={{ "height": "150px", "width": "100%" }}>
+                            <div id="display-cards-container">
 
-                                                    <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
-                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "absolute", "left": "5px" }} />
-                                                </div>
-                                                <div className="contents">
-                                                    <h1 className="itemName">{item.name}</h1>
-                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                {
+                                    this.state.searchFilter.map((item, i) => {
+                                        return (
+                                            <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                <div className="card-body-style">
+                                                    <div style={{ "height": "150px", "width": "100%" }}>
+
+                                                        <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
+                                                        <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "relative", "left": "-7px" }} />
+                                                    </div>
+                                                    <div className="contents">
+                                                        <h1 className="itemName">{item.name}</h1>
+                                                        <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })
-                            }
+                                        )
+                                    })
+                                }
+                            </div>
+
                         </div>
                     </div>
                     {/* <Cart cartItems={this.state.cartItems}

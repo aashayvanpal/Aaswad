@@ -1,4 +1,4 @@
-// App version v1.0.5
+// App version v1.0.5.1
 // Add exact path for add details
 /*
 Important:
@@ -71,10 +71,12 @@ Change notes v1.0.4 :
 items/show axios fixed
 task : Download all the images and place in /public/images , remove all images from /src/images and move to /public/images
 
-
-Changes for v1.0.5 :
+Changes for v1.0.5.1 :
 Changed all order now links to /SignIn
-
+/menu changed to both desktop and mobile screen
+/request focus on the top 
+/request fixed for desktop and mobile , removed and added single datepicker
+css changes
 */
 
 
@@ -335,7 +337,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : 1.0.5v</h1>
+                    <h1 style={{}}>App Version : v1.0.5.1</h1>
 
                   </Route>
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import DatePicker from "react-datepicker";
+import axios from '../../config/axios.js'
 import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -31,6 +32,31 @@ export default class CustomerForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
         this.handleCheckboxChangeService = this.handleCheckboxChangeService.bind(this)
+    }
+
+    componentDidMount() {
+        console.log('Inside customer form')
+        // Adding focus to the fullName on form load
+        // console.log('Check this ============>', this)
+        // console.log('Check this.fullName ============>', this.fullName)
+        this.fullName.focus()
+
+
+        // Filling the form with known 
+        axios.get('/account', {
+            headers: { 'x-auth': localStorage.getItem('token') }
+        })
+            .then(dataRequest => {
+                console.log("user data to fill inside form:", dataRequest)
+                this.setState({
+                    fullName: dataRequest.data.username,
+                    email: dataRequest.data.email,
+                })
+                // userType: dataRequest.data.userType
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     handleChange = e => {
@@ -163,8 +189,14 @@ export default class CustomerForm extends React.Component {
     }
 
     handleDateChange = date => {
+        console.log("Date Changed :", String(date))
+        console.log("Date type :", typeof (String(date)))
+        let eventTime = String(date).substr(16, 5)
+        console.log("eventTime :", eventTime)
+
         this.setState({
-            startDate: date
+            startDate: date,
+            eventTime
         });
     };
 
@@ -173,28 +205,24 @@ export default class CustomerForm extends React.Component {
         return (
             <form onSubmit={this.handleSubmit} id='detailsForm'>
 
-                <h1 style={{ "fontSize": "28px" }}>Add Your Event Details </h1><br />
-                <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name" />
+                <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold" }}>Add Your Event Details </h1><br />
+                <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name"
+                    ref={(input) => { this.fullName = input; }}
+                />
                 <br />
                 {this.state.nameError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.nameError}</div>) : null}
-
-                <input name="phoneNumber" pattern="[1-9]{1}[0-9]{9}" title="The phone number must contain 10 digit numbers only" className="form-input" value={this.state.phoneNumber} onChange={this.handleChange} placeholder="Phone Number" />
-                <br />
-                {this.state.phoneNumberError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.phoneNumberError}</div>) : null}
-
 
                 <input name="email" className="form-input" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
                 <br />
                 {this.state.emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.emailError}</div>) : null}
 
+                <input name="phoneNumber" pattern="[1-9]{1}[0-9]{9}" title="The phone number must contain 10 digit numbers only" className="form-input" value={this.state.phoneNumber} onChange={this.handleChange} placeholder="Phone Number" />
+                <br />
+                {this.state.phoneNumberError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.phoneNumberError}</div>) : null}
 
-                <textarea style={{ "width": "280px", "height": "250px", "border": "2px solid grey", }} name="address" className="form-input" value={this.state.address} onChange={this.handleChange} placeholder="Address" />
+                <textarea style={{ "height": "250px", "border": "2px solid grey", }} name="address" className="form-input" value={this.state.address} onChange={this.handleChange} placeholder="Address" />
                 <br />
                 {this.state.addressError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.addressError}</div>) : null}
-
-
-                <input name="queries" className="form-input" value={this.state.queries} onChange={this.handleChange} placeholder="Queries" />
-                <br />
 
                 <input name="eventName" className="form-input" value={this.state.eventName} onChange={this.handleChange} placeholder="Event Name" />
                 <br />
@@ -207,43 +235,55 @@ export default class CustomerForm extends React.Component {
                 <br /> */}
 
                 {/* date start */}
-                <DatePicker className="form-input"
+                {/* <DatePicker className="form-input"
                     selected={this.state.startDate}
                     onChange={this.handleDateChange}
                     dateFormat="Pp"
                     showTimeSelect
+                /> */}
+                <DatePicker className="form-input"
+                    selected={this.state.startDate}
+                    onChange={this.handleDateChange}
+                    dateFormat="dd/MM/yyyy h:mm aa"
+                    showTimeSelect
                 />
+                <br />
                 {/* date end */}
 
-                <input name="eventTime" className="form-input" value={this.state.eventTime} onChange={this.handleChange} placeholder="Event Time" />
+                {/* <input name="eventTime" className="form-input" value={this.state.eventTime} onChange={this.handleChange} placeholder="Event Time" />
+                <br /> */}
+
+                <textarea name="queries" className="form-input" value={this.state.queries} onChange={this.handleChange} placeholder="Any other queries?"
+                    style={{ "height": "120px" }}
+                />
                 <br />
                 <table style={{ "width": "70%" }}>
-                    <tr >
-                        <td>
-                            <label>
-                                <span className="form-input">Home Delivery</span>
-                            </label><br />
-                        </td>
-                        <td>
-                            <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
-                        </td>
-                    </tr>
-                    <tr>
+                    <tbody>
+                        <tr >
+                            <td>
+                                <label>
+                                    <span className="form-input">Home Delivery</span>
+                                </label><br />
+                            </td>
+                            <td>
+                                <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
+                            </td>
+                        </tr>
+                        <tr>
 
-                        <td>
-                            <label >
-                                <span className="form-input">Service</span>
-                            </label><br />
-                        </td>
-                        <td>
+                            <td>
+                                <label >
+                                    <span className="form-input">Service</span>
+                                </label><br />
+                            </td>
+                            <td>
 
-                            <input name="service" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
-                        </td>
-
-                    </tr>
-
+                                <input name="service" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
-                <input type="submit" style={{ "padding": "20px", "width": "300px", "background": "#DBC283", "margin": "5px 0px", "border-radius": "10px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
+                <input type="submit" style={{ "padding": "20px", "width": "100%", "background": "#DBC283", "margin": "5px 0px", "borderRadius": "10px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
 
             </form>
 

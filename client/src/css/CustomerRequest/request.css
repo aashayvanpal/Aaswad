@@ -1,12 +1,34 @@
 #detailsForm {
+  margin: 20px 25%;
+  border-radius: 10px;
+  border: 2px solid #5d522c;
+  box-shadow: 5px 5px 10px 3px #5d522c;
+  padding: 50px;
+}
+
+#detailsForm textarea {
+  width: 100%;
+}
+
+.form-input {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  width: 100%;
+  border-radius: 5px;
+  text-align: center;
+}
+
+@media screen and (max-width: 507px) {
+  #detailsForm {
     margin: 15px;
-    border-radius: 10px;
-    border: 2px solid black;
-    padding: 50px;
+    padding: 15px;
   }
-  
-  @media screen and (max-width: 507px) {
-    #detailsForm {
-      padding: 15px;
-    }
+
+  #detailsForm textarea {
+    width: 100%;
   }
+
+  /* .form-input {
+    width: unset;
+  } */
+}

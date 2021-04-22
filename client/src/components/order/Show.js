@@ -57,6 +57,8 @@ export default class ItemShow extends React.Component {
                 console.log('numberOfPeople :', this.state.order.customer.numberOfPeople)
 
                 let eventTime = this.state.order.customer.eventTime
+
+
                 let homeDelivery = this.state.order.customer.homeDelivery
                 console.log('homeDelivery', homeDelivery)
                 let phoneNumber = this.state.order.customer.phoneNumber
@@ -73,6 +75,9 @@ export default class ItemShow extends React.Component {
 
                 // const dateConverted = eventDate.subStr(8, 2) + "/" + eventDate.subStr(5, 2) + "/" + eventDate.subStr(0, 4)
                 // console.log("date converted:", dateConverted)
+
+                // let eventTime = eventDate.substr(11, 5)
+
 
                 this.setState({
                     id,
@@ -138,7 +143,7 @@ export default class ItemShow extends React.Component {
                     <h1>Event Name : {this.state.eventName}</h1>
                     <h1>Number of People : {this.state.numberOfPeople}</h1>
                     <h1>Event Date : {this.state.eventDate}</h1>
-                    <h1>Event Time : {this.state.eventTime}</h1>
+                    <h1>Event Time : {this.state.eventTime} (24 hours IST)</h1>
                     <h1>Phone Number : {this.state.phoneNumber}</h1>
                     <h1>Address : {this.state.address}</h1>
                     <h1>Email : {this.state.email}</h1>
