@@ -48,24 +48,13 @@ export default class Form extends React.Component {
 
     render() {
         return (
-            <form style={{ "margin": "150px 10px 0px 50px" }} onSubmit={(e) => { this.formSubmit(e) }}>
+            <form id="messageForm" onSubmit={(e) => { this.formSubmit(e) }}>
                 <input className="Qurrie-form" onChange={this.handleChange} name="email" placeholder="Your Email" /><br />
                 <input className="Qurrie-form" onChange={this.handleChange} name="subject" placeholder="Subject" /><br />
                 <input className="Qurrie-form" onChange={this.handleChange} name="mobile" placeholder="Phone number" /><br />
                 <textarea className="Qurrie-form" style={{ "height": "150px", "border": "2px solid #767676" }}
                     onChange={this.handleChange} name="message" placeholder="Message" /><br />
-                <input
-                    style={{
-                        "background": "#DBC268",
-                        "border": "2px solid #000000",
-                        "boxSizing": "border-box",
-                        "borderRadius": "15px",
-                        "cursor": "pointer",
-                        "padding": "20px 90px 20px 90px",
-                        "fontSize": "36px",
-                        "marginLeft": "12px"
-                    }}
-                    type="submit" value="Send Message" />
+                <input id="sendMessage" type="submit" value="Send Message" />
             </form>
 
         )

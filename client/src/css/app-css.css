@@ -325,14 +325,6 @@
   }
 }
 
-.Qurrie-form {
-  width: 427px;
-  height: 70px;
-  margin: 10px;
-  border-radius: 5px;
-  font-size: 25px;
-}
-
 .container {
   width: 100%;
   height: auto;
@@ -511,11 +503,11 @@
 .footer-c1 {
   width: 70%;
   display: flex;
+  padding-top: 50px;
 }
 
 .footer-c1-box1,
 .footer-c1-box2 {
-  margin-top: 50px;
   width: 100%;
   text-align: center;
 }

@@ -1,4 +1,4 @@
-// App version v1.0.5.1
+// App version v1.0.5.2
 // Add exact path for add details
 /*
 Important:
@@ -77,6 +77,9 @@ Changed all order now links to /SignIn
 /request focus on the top 
 /request fixed for desktop and mobile , removed and added single datepicker
 css changes
+
+Changes for v1.0.5.2:
+fixed /Contactus page and made responsive
 */
 
 
@@ -337,7 +340,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.1</h1>
+                    <h1 style={{}}>App Version : v1.0.5.2</h1>
 
                   </Route>
 
