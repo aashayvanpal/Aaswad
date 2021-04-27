@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Arizonia&display=swap");
+
 .header {
   width: 100%;
   display: inline-flex;
@@ -11,8 +13,10 @@
   font-size: 64px;
   margin-right: 200px;
   margin-left: 20px;
-  font-family: Old Standard TT;
+  font-family: "Arizonia", cursive;
   color: black;
+  font-weight: bold;
+  text-shadow: 1px 1px white;
 }
 
 .header-txt:hover {
@@ -64,10 +68,12 @@
     display: none;
   }
   .header-txt {
-    text-align: left;
-    font-size: 40px;
-    margin-top: 10px;
-    margin-left: 10px;
+    width: 271px;
+    font-size: 32px;
+    margin-top: 20px;
+    text-align: center;
+    position: absolute;
+    left: 0px;
   }
   #burger {
     display: inline-block;
@@ -78,8 +84,11 @@
 
 @media screen and (max-width: 507px) {
   .header-txt {
-    font-size: 22px;
-    margin-top: 30px;
-    /* margin-left: 10px; */
+    width: 271px;
+    font-size: 32px;
+    margin-top: 25px;
+    text-align: center;
+    position: absolute;
+    left: 0px;
   }
 }

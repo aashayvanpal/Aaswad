@@ -49,7 +49,7 @@ export default class ContactUs extends React.Component {
                         </div>
                     </div>
 
-                    <img src={division} alt="division-image" id='division' />
+                    <img src={division} alt="divisionImage" id='division' />
                     <MessageForm />
                 </div>
 

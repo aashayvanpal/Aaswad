@@ -497,7 +497,7 @@ export default class Menu extends React.Component {
 
                         <div id="filteringOptions">
                             <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
-                            <button style={{ "padding": "12px", "backgroundColor": "#dbc268", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
+                            <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
 
                             {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 

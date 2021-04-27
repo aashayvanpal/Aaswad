@@ -1,4 +1,4 @@
-// App version v1.0.5.2
+// App version v1.0.5.3
 // Add exact path for add details
 /*
 Important:
@@ -80,6 +80,9 @@ css changes
 
 Changes for v1.0.5.2:
 fixed /Contactus page and made responsive
+
+Changes for v1.0.5.3:
+added Header font style change
 */
 
 
@@ -340,7 +343,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.2</h1>
+                    <h1 style={{}}>App Version : v1.0.5.3</h1>
 
                   </Route>
 
