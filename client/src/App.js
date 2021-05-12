@@ -1,91 +1,5 @@
-// App version v1.0.5.3
-// Add exact path for add details
-/*
-Important:
-make form to the right , place image to left
-create logo
-remove you are logged in message and place inside the usericon
-make user icon rendering proper
-clear button in /menu change 
-add 3 items (showing 2 items)
-add footer for /menu  (render small footer)
-put all images
-lunch (options) fix the positioning properly
-in cart put table (invisible) to place and fix the cancle option
-review selections button change
-inside menu add pagination showing 20 items only (use slice method)
-dont render item card (not needed for now)
-/request add logged in user details to appear on the form
-submit enquiry button make button better
-add pop for order has been placed 
-tracking order status 
-user has to see order has been placed (reference numbers)
-Download menu card pdf file (add to database)
-Fixes :
-Front end for home/landing page must be completed 
-All pages must be made responsive
-/qurries section , display customer qurries
-Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
-Authentication : If not logged in , redirect to Login page
-Authentication to individual paths (/menu,/orders) 
-  add order now when user is logged out
-  add User icon to the right top corner when logged in 
-put welcome message and add the username to the logout menu options
-show only the user's items , menus , orders 
-in /orders , when remove button is clicked , pop up confirmation message (are you sure you want to delete? message)
-  Update button should select the previous selected items and add to cart
-  Search order and filter by customer name
-  Add a filter to get orders between 2 dates
-Add vendors , transport ,customer backend code 
-settings option
-Dashboard creation - graphs , profits ,incomes
-create settings option from the user icon dropdown
-All all images to items
-on click of clear button on /menu page , the cursor must be blinking on the search bar
-Make the whole website responsive
-About us page
-Add tool tips for - how it works
-Write more test scripts (next update)
-Create contact page(v1.0):
-Bugs :
-Css placement for the map is not perfect , all pages are not responsive 
-Fix all fontsizes of contact us page , add the customer querry from the contact us page
-querry CRUD
-querry Validation
-HTML5 Link that dials the number:<a href="tel:9742814239">Call us</a>
-HTML5 Link that runs email to <a href="mailto:example@example.com">Send email</a>
-rendering price and measured properties in customer request for caterer-user
-Major Update:(v1.0.1)
-Trying to integrate Google maps in contact us page
-Default error page loading
-Change notes v1.0.3 (only customer view focused): 
-commented ItemCard rendering and Menu having isAdming conditional rendering
-commented burger rendering 
-Commented Link-Navigations
-Placed show button and render only if user is admin
-Cart rendering in 3 steps
-mobile view for customer only 
-check for admin view (pending) 
-added carousel images 
-Change notes v1.0.4 :
-items/show axios fixed
-task : Download all the images and place in /public/images , remove all images from /src/images and move to /public/images
-
-Changes for v1.0.5.1 :
-Changed all order now links to /SignIn
-/menu changed to both desktop and mobile screen
-/request focus on the top 
-/request fixed for desktop and mobile , removed and added single datepicker
-css changes
-
-Changes for v1.0.5.2:
-fixed /Contactus page and made responsive
-
-Changes for v1.0.5.3:
-added Header font style change
-*/
-
-
+// App version v1.0.5.4
+// Check version-notes.txt for version updates
 
 import React from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom'
@@ -343,7 +257,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.3</h1>
+                    <h1 style={{}}>App Version : v1.0.5.4</h1>
 
                   </Route>
 
