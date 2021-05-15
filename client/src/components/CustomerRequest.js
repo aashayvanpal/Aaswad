@@ -10,7 +10,8 @@ export default class CustomerRequest extends React.Component {
         this.state = {
             reqOrder: [],
             username: '',
-            userType: ''
+            userType: '',
+            openModal: 'false'
         }
 
         this.handleRemove = this.handleRemove.bind(this)
@@ -189,13 +190,12 @@ export default class CustomerRequest extends React.Component {
                 else {
                     console.log('success', response.data)
                     // this.props.history.push('/items')
+
+                    // Adding confirmation modal
+                    window.alert('Thank you for placing order we will get back')
+                    window.location.href = '/menu'
                 }
             })
-
-
-
-        window.alert('Thank you for placing order we will get back')
-
     }
 
     // handleChange = (id, qty) => {
@@ -311,25 +311,35 @@ export default class CustomerRequest extends React.Component {
     render() {
         console.log('customer request')
         return (
-            <div style={{ "display": "inline" }}>
-                {
-                    this.state.userType === "Admin" ? (
-                        <button id="ShowButton" onClick={() => {
-                            var navBarElement = document.getElementById("Nav-bar")
-                            navBarElement.style.display = "block"
+            <div id="request-div">
+                <div style={{ "display": "inline" }}>
+                    {
+                        this.state.userType === "Admin" ? (
+                            <button id="ShowButton" onClick={() => {
+                                var navBarElement = document.getElementById("Nav-bar")
+                                navBarElement.style.display = "block"
 
-                            var showElement = document.getElementById("ShowButton")
-                            showElement.style.display = "none"
+                                var showElement = document.getElementById("ShowButton")
+                                showElement.style.display = "none"
 
-                        }}>Show</button>
-                    ) : (null)
-                }
+                            }}>Show</button>
+                        ) : (null)
+                    }
 
 
 
-                <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
-                {/* <button onClick={this.handleSubmit}>Submit Enquiry</button> */}
-            </div >
+                    <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
+                    {/* <button onClick={this.handleSubmit}>Submit Enquiry</button> */}
+                </div >
+                <div style={{
+                    "marginTop": "50px",
+                    "textAlign": "center",
+                    "color": "#dbc268",
+                    "backgroundColor": "#353535"
+                }}>
+                    © Copyrights Reserved 2021
+                    </div>
+            </div>
         );
     }
 }

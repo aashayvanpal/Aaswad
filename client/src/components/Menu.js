@@ -3,6 +3,7 @@ import axios from '../config/axios'
 // import Cart from './Cart.js'
 import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
+import noItemFound from '../images/no-item-found.svg'
 import '../css/app-css.css'
 
 
@@ -26,7 +27,7 @@ export default class Menu extends React.Component {
             displayType: '',
             searchFilter: [],
             username: '',
-            userType: ''
+            userType: false
         }
 
         this.incrementHandle = this.incrementHandle.bind(this)
@@ -442,7 +443,7 @@ export default class Menu extends React.Component {
         console.log('You changed the select option')
         console.log('Value is:', e.target.value)
 
-        this.setState({ displayType: e.target.value.toUpperCase() })
+        this.setState({ displayType: true })
         this.setState({
             searchFilter:
                 this.state.items.filter(item => item.category.includes(e.target.value.toLowerCase()))
@@ -462,7 +463,7 @@ export default class Menu extends React.Component {
         console.log(document.getElementById("filterItems").value = "all")
         document.getElementById("inputSearch").value = ""
         document.getElementById("filterItems").value = "all"
-        this.setState({ displayType: "ALL" })
+        this.setState({ displayType: false })
     }
     render() {
         return (
@@ -506,7 +507,8 @@ export default class Menu extends React.Component {
                                     "fontSize": "22px",
                                     "padding": "10px",
                                     "width": "210px",
-                                    "borderRadius": "10px"
+                                    "borderRadius": "10px",
+                                    "backgroundColor": "#dbc268"
                                 }}
 
                                 id="filterItems"
@@ -523,32 +525,42 @@ export default class Menu extends React.Component {
                             <span className="stepper">Step 2</span>
                             <span className="stepper">Step 3</span> */}
                         </div>
+                        <div>
+                            <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
+                        </div>
                         <hr style={{ "height": "10px" }} />
                         <div id="menu-container">
-                            <div>
-                                <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
-                            </div>
                             <div id="display-cards-container">
+                                {this.state.searchFilter.length == 0 ? (
+                                    <div style={{ "textAlign": "center", "width": "100%" }}>
+                                        <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
+                                        <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
+                                        <br />
+                                        <br />
+                                        <br />
+                                    </div>
+                                ) : (
+                                        this.state.searchFilter.map((item, i) => {
+                                            return (
+                                                <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                    <div className="card-body-style">
+                                                        <div style={{ "height": "150px", "width": "100%" }}>
 
-                                {
-                                    this.state.searchFilter.map((item, i) => {
-                                        return (
-                                            <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
-                                                <div className="card-body-style">
-                                                    <div style={{ "height": "150px", "width": "100%" }}>
-
-                                                        <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
-                                                        <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "relative", "left": "-7px" }} />
-                                                    </div>
-                                                    <div className="contents">
-                                                        <h1 className="itemName">{item.name}</h1>
-                                                        <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                            <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
+                                                            <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "relative", "left": "-7px" }} />
+                                                        </div>
+                                                        <div className="contents">
+                                                            <h1 className="itemName">{item.name}</h1>
+                                                            <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )
-                                    })
+                                            )
+                                        })
+                                    )
+
                                 }
+
                             </div>
 
                         </div>

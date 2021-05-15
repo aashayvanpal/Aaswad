@@ -273,9 +273,12 @@
 
 #inputSearch {
   width: 50%;
-  margin: 0px 28px 0px 0px;
+  margin-right: 20px;
   border-radius: 10px;
   text-align: center;
+  background: url("../images/search-icon.svg") no-repeat 95% 0px;
+  background-size: 45px 45px;
+  background-color: white;
 }
 
 #menu-container {

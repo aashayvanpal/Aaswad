@@ -1,6 +1,9 @@
 import React from 'react'
 import DatePicker from "react-datepicker";
 import axios from '../../config/axios.js'
+import HDToolTip from './HDToolTip.js'
+import ServiceToolTip from './ServiceToolTip.js'
+
 import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -205,7 +208,7 @@ export default class CustomerForm extends React.Component {
         return (
             <form onSubmit={this.handleSubmit} id='detailsForm'>
 
-                <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold" }}>Add Your Event Details </h1><br />
+                <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold", "color": "white", "text-decoration": "underline" }}>Add Your Event Details </h1><br />
                 <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name"
                     ref={(input) => { this.fullName = input; }}
                 />
@@ -257,34 +260,33 @@ export default class CustomerForm extends React.Component {
                     style={{ "height": "120px" }}
                 />
                 <br />
-                <table style={{ "width": "70%" }}>
+                <table id="request-table">
                     <tbody>
                         <tr >
-                            <td>
-                                <label>
-                                    <span className="form-input">Home Delivery</span>
+                            <td style={{ "textAlign": "center" }}>
+                                <label style={{ "display": "inline" }}>
+                                    <span className="form-input">Home Delivery   <HDToolTip /> </span>
                                 </label><br />
                             </td>
                             <td>
-                                <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
+                                <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px", "display": "block", "margin": "auto" }} checked={this.state.homeDelivery} onChange={this.handleCheckboxChange} type="checkbox" />
                             </td>
                         </tr>
                         <tr>
 
-                            <td>
+                            <td style={{ "textAlign": "center" }}>
                                 <label >
-                                    <span className="form-input">Service</span>
+                                    <span className="form-input">Service <ServiceToolTip /></span>
                                 </label><br />
                             </td>
                             <td>
-
-                                <input name="service" className="form-input" style={{ "height": "25px", "width": "25px" }} checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
+                                <input name="service" className="form-input" style={{ "height": "25px", "width": "25px", "display": "block", "margin": "auto" }} checked={this.state.service} onChange={this.handleCheckboxChangeService} type="checkbox" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <input type="submit" style={{ "padding": "20px", "width": "100%", "background": "#DBC283", "margin": "5px 0px", "borderRadius": "10px" }} className="form-input" value="Submit Enquiry" onClick={this.props.handleSubmit} />
 
+                <input type="submit" id="submit-request" value="Submit Enquiry" />
             </form>
 
         )

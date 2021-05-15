@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table, Button } from 'reactstrap';
 import NoItemsInCart from '../images/2.jpg'
+import proceedImage from '../images/proceed.svg'
+
 
 export default class Cart extends React.Component {
     constructor(props) {
@@ -249,13 +251,13 @@ export default class Cart extends React.Component {
                                             this.state.cartItems.map((item, i) => {
                                                 return (
                                                     <tr key={item._id} >
-                                                        <td>{i + 1}</td>
+                                                        <td style={{ "textAlign": "center" }}>{i + 1}</td>
                                                         <td>{item.name}</td>
                                                         <td style={{ "display": "inline-flex" }}><button id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button><input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "35px", textAlign: "center" }} /><button onClick={(e) => { this.plusHandle(item._id, e) }}>+</button>
 
                                                         </td>
-                                                        <td style={{ "alignItems": "center" }}>
-                                                            <Button color="danger" style={{ "height": "33px", "fontWeight": "bold" }} onClick={() => {
+                                                        <td>
+                                                            <Button color="danger" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
                                                                 this.props.resetIsSelected(item._id)
                                                                 this.handleRemove(item._id)
                                                                 // this.props.removeItemFromCart(item.id)
@@ -282,12 +284,10 @@ export default class Cart extends React.Component {
                                     <Button style={{
                                         "backgroundColor": "#dbc268", "color": "black", "width": "100%"
                                     }}>
-
+                                        <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
                                         Proceed
                                 </Button>
-
                                 </Link>
-
                             </div>
                         )
                 }

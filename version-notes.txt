@@ -20,6 +20,26 @@ user has to see order has been placed (reference numbers)
 Download menu card pdf file (add to database)
 /qurries section , display customer qurries
 
+
+
+
+Tasks:
+Clean up unwanted images at the end
+
+
+
+Emailing System:
+Creating new account welcome email 
+Order placed email
+Order has been approved 
+Order has been rejected
+Order has been Completed 
+Bill 
+Account deletion
+Forgot password
+
+
+
 Fixes :
 Amount calculation logical error solve
 Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
@@ -73,10 +93,13 @@ All all images to items
 adding all images and applying the change
 adding image inside the search box in /menu
 adding cart image inside the cart in /menu
+Admin : in /orders when remove button clicked , confirm to remove and then remove
 make user icon rendering proper
 submit enquiry button make button better
-add pop for order has been placed
 on click of clear button on /menu page , the cursor must be blinking on the search bar
+Taking mobile number while registering 
+Sending welcome email 
+add pop for order has been placed modal
 
 
 
@@ -100,3 +123,17 @@ added Header font style change
 Changes for v1.0.5.4:
 Small project structural change , created new branch "Template"
 Pushed working code to the master branch
+
+
+Changes for v1.0.5.5:
+after order is placed the user is redirected to /menu
+added search-icon inside search in /menu
+added item could not be found, with image , if searchItem is having length of 0 
+added cart image in /menu
+added proceed image in cart model
+added image for Submit enquiry
+aligned items to center in cart model
+added send request image in /request
+added ToolTips for Home Deliivery and service  in /request
+added background to form in /request 
+added small footer to /request
