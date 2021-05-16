@@ -8,7 +8,7 @@ Important:
 make form to the right , place image to left
 create logo
 remove you are logged in message and place inside the usericon
-clear button in /menu change 
+clear button in /menu 
 add 3 items (showing 2 items)
 add footer for /menu  (render small footer)
 in cart put table (invisible) to place and fix the cancle option
@@ -25,6 +25,7 @@ Download menu card pdf file (add to database)
 
 Tasks:
 Clean up unwanted images at the end
+remove unwanted console.log messages
 
 
 
@@ -91,11 +92,8 @@ added carousel images
 Easy work:
 All all images to items
 adding all images and applying the change
-adding image inside the search box in /menu
-adding cart image inside the cart in /menu
-Admin : in /orders when remove button clicked , confirm to remove and then remove
+Admin : in /items remove button should confirm item to be removed and then only remove
 make user icon rendering proper
-submit enquiry button make button better
 on click of clear button on /menu page , the cursor must be blinking on the search bar
 Taking mobile number while registering 
 Sending welcome email 
@@ -137,3 +135,9 @@ added send request image in /request
 added ToolTips for Home Deliivery and service  in /request
 added background to form in /request 
 added small footer to /request
+
+Changes for v1.0.5.6:
+/menu is pushed bug is resolved
+Admin : aaded window confirmation to delete order 
+added all available images
+added footer in /menu

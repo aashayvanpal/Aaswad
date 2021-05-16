@@ -546,7 +546,9 @@ export default class Menu extends React.Component {
                                                     <div className="card-body-style">
                                                         <div style={{ "height": "150px", "width": "100%" }}>
 
-                                                            <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" />
+                                                            <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+
+                                                            {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
                                                             <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "relative", "left": "-7px" }} />
                                                         </div>
                                                         <div className="contents">
@@ -562,7 +564,7 @@ export default class Menu extends React.Component {
                                 }
 
                             </div>
-
+                            <br />
                         </div>
                     </div>
                     {/* <Cart cartItems={this.state.cartItems}
@@ -579,9 +581,17 @@ export default class Menu extends React.Component {
                         requestOrder={this.requestOrder}
                     />
 
+
                 </div >
 
-
+                <div style={{
+                    "marginTop": "30px",
+                    "textAlign": "center",
+                    "color": "#dbc268",
+                    "backgroundColor": "#353535"
+                }}>
+                    © Copyrights Reserved 2021
+                    </div>
             </div >
         );
     }

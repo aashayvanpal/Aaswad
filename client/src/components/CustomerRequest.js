@@ -193,7 +193,10 @@ export default class CustomerRequest extends React.Component {
 
                     // Adding confirmation modal
                     window.alert('Thank you for placing order we will get back')
-                    window.location.href = '/menu'
+                    // console.log(this.props)
+                    // window.location.href = 'http://localhost:3000/Menu'
+                    this.props.history.push('/menu')
+
                 }
             })
     }

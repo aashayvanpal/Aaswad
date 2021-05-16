@@ -1,4 +1,4 @@
-// App version v1.0.5.5
+// App version v1.0.5.6
 // Check version-notes.txt for version updates
 
 import React from 'react';
@@ -257,7 +257,8 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.5</h1>
+                    <h1 style={{}}>App Version : v1.0.5.6</h1>
+                    <h1 style={{}}>Created By : Aashay S Vanpal</h1>
 
                   </Route>
 
