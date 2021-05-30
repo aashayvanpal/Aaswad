@@ -120,7 +120,7 @@ export default class Menu extends React.Component {
                 })
 
 
-                axios.get('/menu', {
+                axios.get('/api/menu', {
                     headers: {
                         'x-auth': localStorage.getItem('token')
                     }
