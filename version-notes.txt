@@ -157,11 +157,11 @@ added Stepper
 Trying to fix /menu backend error
 
 
-Changes for v1.0.5.7 T3:
+Changes for v1.0.5.7 T4:
 fixed /menu backend error
 fixed /menu alignment of items
+added spinner for loading 
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
 must change for /items backend error
-next update : adding spinner for loading 

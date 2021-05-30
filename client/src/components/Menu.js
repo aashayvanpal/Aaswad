@@ -4,6 +4,7 @@ import axios from '../config/axios'
 import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
 import noItemFound from '../images/no-item-found.svg'
+import LoadingSpinner from './LoadingSpinner.js'
 import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 
@@ -28,7 +29,8 @@ export default class Menu extends React.Component {
             displayType: '',
             searchFilter: [],
             username: '',
-            userType: false
+            userType: false,
+            spinnerLoading: false
         }
 
         this.incrementHandle = this.incrementHandle.bind(this)
@@ -108,6 +110,7 @@ export default class Menu extends React.Component {
 
         // Do a get request to /account to get user name , add x-auth as header to it
         // just set the token in localStorage and get it in x-auth , the code is working fine,,,
+        this.setState({ spinnerLoading: true })
         axios.get('/account', {
             headers: { 'x-auth': localStorage.getItem('token') }
         })
@@ -140,6 +143,7 @@ export default class Menu extends React.Component {
                         this.setState({ searchFilter: this.state.items })
                         console.log("this.state.items:", this.state.items)
 
+                        this.setState({ spinnerLoading: false })
 
 
 
@@ -534,43 +538,57 @@ export default class Menu extends React.Component {
                             activeStep={0}
                         />
                         <hr style={{ "height": "10px" }} />
-                        <div id="menu-container">
-                            <div id="display-cards-container">
-                                {this.state.searchFilter.length == 0 ? (
-                                    <div style={{ "textAlign": "center", "width": "100%" }}>
-                                        <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
-                                        <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
-                                        <br />
-                                        <br />
-                                        <br />
-                                    </div>
-                                ) : (
-                                        this.state.searchFilter.map((item, i) => {
-                                            return (
-                                                <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
-                                                    <div className="card-body-style">
-                                                        <div style={{ "height": "150px", "width": "100%" }}>
-
-                                                            <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
-
-                                                            {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                            <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
-                                                        </div>
-                                                        <div className="contents">
-                                                            <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
-                                                            <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    )
-
-                                }
-
+                        {this.state.spinnerLoading ? (
+                            <div>
+                                <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
                             </div>
-                            <br />
-                        </div>
+                        )
+                            :
+                            (
+                                <div id="menu-container">
+                                    <div id="display-cards-container">
+                                        {this.state.searchFilter.length == 0 ? (
+                                            <div style={{ "textAlign": "center", "width": "100%" }}>
+                                                <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
+                                                <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
+                                                <br />
+                                                <br />
+                                                <br />
+                                            </div>
+                                        ) : (
+
+                                                this.state.searchFilter.map((item, i) => {
+                                                    return (
+                                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                            <div className="card-body-style">
+                                                                <div style={{ "height": "150px", "width": "100%" }}>
+
+                                                                    <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+
+                                                                    {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
+                                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
+                                                                </div>
+                                                                <div className="contents">
+                                                                    <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
+                                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            )
+
+                                        }
+
+                                    </div>
+                                    <br />
+                                </div>
+                            )}
+
                     </div>
                     {/* <Cart cartItems={this.state.cartItems}
                         items={this.state.items}
