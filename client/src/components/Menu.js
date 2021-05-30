@@ -499,7 +499,6 @@ export default class Menu extends React.Component {
 
                         <div id="filteringOptions">
                             <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
-                            <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginRight": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear</button>
 
                             {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 
@@ -507,7 +506,8 @@ export default class Menu extends React.Component {
                                 style={{
                                     "fontSize": "22px",
                                     "padding": "10px",
-                                    "width": "210px",
+                                    "width": "160px",
+                                    "marginLeft": "10px",
                                     "borderRadius": "10px",
                                     "backgroundColor": "#dbc268"
                                 }}
@@ -522,9 +522,8 @@ export default class Menu extends React.Component {
                                 <option value="snacks">Snacks</option>
                                 <option value="special">Special</option>
                             </select>
-                            {/* <span className="stepper">Step 1</span>
-                            <span className="stepper">Step 2</span>
-                            <span className="stepper">Step 3</span> */}
+                            <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear Filters</button>
+
 
                         </div>
                         <div>
@@ -555,10 +554,10 @@ export default class Menu extends React.Component {
                                                             <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
                                                             {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                            <img src={cardCurve} width="305px" height="148px" alt="" style={{ "zIndex": "1", "position": "relative", "left": "-7px" }} />
+                                                            <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
                                                         </div>
                                                         <div className="contents">
-                                                            <h1 className="itemName">{item.name}</h1>
+                                                            <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
                                                             <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                         </div>
                                                     </div>

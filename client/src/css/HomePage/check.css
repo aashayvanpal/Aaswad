@@ -22,12 +22,18 @@
 }
 
 .contents {
+  width: 390px;
   position: absolute;
   margin-left: 150px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .itemName {
+  font-size: 30px;
   text-align: "center";
+
 }
 
 #imageStyling {
@@ -41,9 +47,11 @@
 }
 
 #checkBoxStyling {
+  display: block;
   width: 30px;
   height: 30px;
   cursor: pointer;
+  margin: 0 auto;
 }
 
 #cart-text-style {
@@ -96,6 +104,10 @@
   /* #cart-text-style:hover {
       height: 85%;
     } */
+
+  .contents {
+    width: 160px;
+  }
 }
 
 /* image 100 125 */
