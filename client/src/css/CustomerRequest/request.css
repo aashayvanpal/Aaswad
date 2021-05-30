@@ -38,7 +38,7 @@
   border-radius: 10px;
   background-image: url("../../images/submitRequest.svg");
   background-repeat: no-repeat;
-  background-position: 25% 10px;
+  background-position: 75% 10px;
   background-size: 45px 45px;
   background-color: #ff8300;
   opacity: 0.9;
@@ -60,7 +60,7 @@
   }
 
   #submit-request {
-    background-position: 5% 10px;
+    background-position: 95% 10px;
   }
   #request-div {
     margin-top: -12px;

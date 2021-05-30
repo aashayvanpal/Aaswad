@@ -3,6 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import '../css/HomePage/check.css'
 import cartImage from '../images/cart-image.svg'
 import Cart from './Cart.js'
+import { Stepper } from 'react-form-stepper'
 
 const CartModel = (props) => {
     const {
@@ -30,6 +31,11 @@ const CartModel = (props) => {
             </Button>
             <Modal isOpen={modal} toggle={toggle} className={className} >
                 <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Cart Items<br />Review your menu</ModalHeader>
+
+                <Stepper className="stepper-color" style={{ "backgroundColor": "#fff5d2"}}
+                    steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                    activeStep={1}
+                />
                 <ModalBody style={{ "backgroundColor": "#fff5d2" }} >
                     <Cart
                         items={items}

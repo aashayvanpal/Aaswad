@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 
 import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
+import { Stepper } from 'react-form-stepper'
 
 export default class CustomerForm extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ export default class CustomerForm extends React.Component {
             emailError: "",
             noOfPeopleError: "",
             addressError: '',
+            userId: '',
 
         }
 
@@ -55,6 +57,7 @@ export default class CustomerForm extends React.Component {
                 this.setState({
                     fullName: dataRequest.data.username,
                     email: dataRequest.data.email,
+                    userId: dataRequest.data.id
                 })
                 // userType: dataRequest.data.userType
             })
@@ -180,7 +183,9 @@ export default class CustomerForm extends React.Component {
                 eventDate: this.state.startDate,
                 eventTime: this.state.eventTime,
                 homeDelivery: this.state.homeDelivery,
-                service: this.state.service
+                service: this.state.service,
+                customer_id: this.state.userId
+
             }
             // this.props.item && (item.id = this.props.item._id)
 
@@ -208,8 +213,11 @@ export default class CustomerForm extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit} id='detailsForm'>
-
                 <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold", "color": "white", "text-decoration": "underline" }}>Add Your Event Details </h1><br />
+                <Stepper className="stepper-color"
+                    steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                    activeStep={2}
+                />
                 <input name="fullName" className="form-input" value={this.state.fullName} onChange={this.handleChange} placeholder="Full Name"
                     ref={(input) => { this.fullName = input; }}
                 />

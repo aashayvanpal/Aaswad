@@ -31,6 +31,21 @@ module.exports.list = (req, res) => {
         })
 }
 
+// list
+module.exports.myOrdersList = (req, res) => {
+    console.log("check this params:", req.params.id)
+    const id = req.params.id
+    Order.find({
+        "customer.customer_id": id
+    })
+        .then(order => {
+            res.json(order)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
 
 // destroy
 module.exports.destroy = (req, res) => {

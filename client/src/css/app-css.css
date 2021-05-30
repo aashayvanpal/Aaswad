@@ -559,3 +559,14 @@
     margin-top: 0px;
   }
 }
+
+.stepper-color {
+  font-weight: bold;
+}
+
+.stepper-color > div > div > button.active {
+  background-color: rgb(219, 194, 104);
+}
+.stepper-color > div > div > button.completed {
+  background-color: rgb(219, 194, 104);
+}

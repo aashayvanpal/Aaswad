@@ -29,7 +29,7 @@ router.get('/items/edit/:id', itemController.show)
 router.delete('/items/:id', itemController.destroy)
 
 
-router.get('/Menu', itemController.list)
+router.get('/menu', itemController.list)
 // router.post('/Menu', approveController.createApprove)
 
 router.post('/request', approveController.createApprove)
@@ -40,6 +40,7 @@ router.get('/orders', approveController.list)
 router.put('/orders/:id', approveController.update)
 router.delete('/orders/:id', approveController.destroy)
 router.get('/orders/:id', approveController.show)
+router.get('/myOrders/:id', approveController.myOrdersList)
 
 
 // Registeration 

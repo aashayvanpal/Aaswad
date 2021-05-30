@@ -5,6 +5,7 @@ Front end for home/landing page must be completed
 All pages must be made responsive
 
 Important:
+Fetch latest value for items from the database
 make form to the right , place image to left
 create logo
 remove you are logged in message and place inside the usericon
@@ -19,20 +20,21 @@ tracking order status
 user has to see order has been placed (reference numbers)
 Download menu card pdf file (add to database)
 /qurries section , display customer qurries
-
+Add forgot password and edit functionality 
+create a function getUserDetails to make api call reusable
 
 
 
 Tasks:
 Clean up unwanted images at the end
 remove unwanted console.log messages
-
+in UserProfile the userType is not required 
 
 
 Emailing System:
 Creating new account welcome email 
 Order placed email
-Order has been approved 
+Order has been approved and billing estimation
 Order has been rejected
 Order has been Completed 
 Bill 
@@ -90,6 +92,7 @@ added carousel images
 
 
 Easy work:
+updating MongoDB_Atlas database with the customer_id in database(100records)
 All all images to items
 adding all images and applying the change
 Admin : in /items remove button should confirm item to be removed and then only remove
@@ -141,3 +144,11 @@ Changes for v1.0.5.6:
 Admin : aaded window confirmation to delete order 
 added all available images
 added footer in /menu
+
+
+Changes for v1.0.5.7:
+added new /myOrders path to show users order history (still working on this)
+added profile option in UserButton component - should show user details (still working on this)
+moved cart component and customer form component proceed image to right
+added Stepper
+Trying to fix /menu backend error

@@ -10,6 +10,10 @@ const orderSchema = new Schema({
     },
 
     customer: {
+        customer_id: {
+            type: String,
+            required: true
+        },
         fullName: {
             type: String,
             required: true

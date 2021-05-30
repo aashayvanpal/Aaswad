@@ -3,6 +3,7 @@
   border-radius: 48px;
   padding: 20px;
   border: 2px solid black;
+  margin: 10px;
 }
 
 .signup-form {
@@ -95,7 +96,6 @@
 }
 .content-showcase {
   width: 100%;
-  
 }
 
 @media screen and (max-width: 507) {

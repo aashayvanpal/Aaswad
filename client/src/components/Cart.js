@@ -284,8 +284,7 @@ export default class Cart extends React.Component {
                                     <Button style={{
                                         "backgroundColor": "#dbc268", "color": "black", "width": "100%"
                                     }}>
-                                        <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
-                                        Proceed
+                                        Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
                                 </Button>
                                 </Link>
                             </div>

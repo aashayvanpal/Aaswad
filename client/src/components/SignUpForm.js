@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from '../config/axios.js'
 import '../css/LoginDetails/Signup.css'
+import { Link } from 'react-router-dom'
 
 const initialState = {
     name: "",
@@ -150,7 +151,7 @@ export default class SignUpForm extends React.Component {
                         <input type="submit" value="Create Account" id="create-account-button" />
                     </div>
 
-                    <h3 id="already-have-account">Already have an account ? <a href="/signin">Sign in</a></h3>
+                    <h3 id="already-have-account">Already have an account ? <Link to="/signin">Sign in</Link></h3>
                 </form>
             </div>
 

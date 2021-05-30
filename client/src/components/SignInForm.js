@@ -2,7 +2,7 @@ import React from 'react'
 import axios from '../config/axios.js'
 import { withRouter } from 'react-router';
 import '../css/LoginDetails/Signin.css'
-
+import { Link } from 'react-router-dom'
 
 
 class SignInForm extends React.Component {
@@ -106,12 +106,12 @@ class SignInForm extends React.Component {
                             "width": "100%"
 
                         }}>
-                            <input type="submit" value="Log In" id="logIn"/>
+                            <input type="submit" value="Log In" id="logIn" />
                         </div>
                     </div>
 
                 </form>
-                <h3 id="already-have-account">Don't have an account ? <a href="/register">Sign Up</a></h3>
+                <h3 id="already-have-account">Don't have an account ? <Link to="/register">Sign Up</Link></h3>
             </div>
         )
     }

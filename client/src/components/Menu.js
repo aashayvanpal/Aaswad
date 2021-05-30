@@ -5,6 +5,7 @@ import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
 import noItemFound from '../images/no-item-found.svg'
 import '../css/app-css.css'
+import { Stepper } from 'react-form-stepper'
 
 
 // for loading from google images :(not working) 
@@ -119,7 +120,7 @@ export default class Menu extends React.Component {
                 })
 
 
-                axios.get('/Menu', {
+                axios.get('/menu', {
                     headers: {
                         'x-auth': localStorage.getItem('token')
                     }
@@ -524,10 +525,15 @@ export default class Menu extends React.Component {
                             {/* <span className="stepper">Step 1</span>
                             <span className="stepper">Step 2</span>
                             <span className="stepper">Step 3</span> */}
+
                         </div>
                         <div>
                             <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
                         </div>
+                        <Stepper className="stepper-color"
+                            steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                            activeStep={0}
+                        />
                         <hr style={{ "height": "10px" }} />
                         <div id="menu-container">
                             <div id="display-cards-container">

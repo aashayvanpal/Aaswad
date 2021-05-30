@@ -38,6 +38,8 @@ const UserButton = (props) => {
         <DropdownItem header> (Username)</DropdownItem>
         <DropdownItem disabled>Action</DropdownItem>
         <DropdownItem>Another Action</DropdownItem>
+        <DropdownItem><Link to="/profile">Profile</Link></DropdownItem>
+        <DropdownItem><Link to="/myOrders">My Orders</Link></DropdownItem>
         <DropdownItem><Link to="/settings">Settings</Link></DropdownItem>
         <DropdownItem divider />
         <DropdownItem onClick={logout}>Logout</DropdownItem>

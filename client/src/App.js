@@ -1,9 +1,10 @@
-// App version v1.0.5.6
+// App version v1.0.5.7
 // Check version-notes.txt for version updates
 
 import React from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom'
 import Menu from './components/ItemList';
+import MyOrdersList from './components/MyOrdersList.js'
 import OrderList from './components/OrderList';
 import OrderShow from './components/order/Show.js';
 import OrderPrint from './components/order/Print.js';
@@ -25,6 +26,7 @@ import SignUpForm from './components/SignUpForm.js'
 import SignInForm from './components/SignInForm.js'
 
 import UserButton from './components/UserButton.js'
+import UserProfile from './components/UserProfile.js'
 import Contact from './components/contact/Contact.js'
 // import Footer from './components/Footer.js'
 import HomePage from './components/HomePage.js'
@@ -79,7 +81,7 @@ function App() {
                       }}>&times;</button>
                       <ul>
                         <li><a href="/">Home</a></li>
-                        <li><a href="/Menu">Menu</a></li>
+                        <li><a href="/menu">Menu</a></li>
                         <li><a href="/cart">My Cart</a></li>
                       </ul>
                     </div>
@@ -110,8 +112,8 @@ function App() {
                       showElement.style.display = "block"
                     }}>X</button>
                     <Link to='/' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Home</li></Link>
-                    <Link to='/Dashboard' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Dashboard</li></Link>
-                    <Link to='/Menu' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Menu</li></Link>
+                    <Link to='/dashboard' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Dashboard</li></Link>
+                    <Link to='/menu' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Menu</li></Link>
 
                     <Link to='/orders' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Orders</li></Link>
 
@@ -120,9 +122,9 @@ function App() {
                     <Link to='/users/add' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Labourers</li></Link>
                     <Link to='/users/add' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Customers</li></Link>
                     <Link to='/users/add' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Recipies</li></Link>
-                    <Link to='/Calender' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Calender</li></Link>
-                    <Link to='/Qurries' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Qurries</li></Link>
-                    <Link to='/Deals' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Deals</li></Link>
+                    <Link to='/calender' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Calender</li></Link>
+                    <Link to='/qurries' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Qurries</li></Link>
+                    <Link to='/deals' className="Nav-barLink" style={{ "textDecoration": "none" }}><li>Deals</li></Link>
                   </ul>
                 </div>
 
@@ -136,7 +138,13 @@ function App() {
 
                   </Route>
 
-                  <Route path="/Menu" >
+                  <Route path="/myOrders" >
+                    <h1 style={{ "backgroundColor": "green" }}>Your order history:</h1>
+                    <MyOrdersList />
+
+                  </Route>
+
+                  <Route path="/menu" >
                     {/* Render ItemCard for a different view (conditional rendering) */}
                     {/* show button only for admin */}
 
@@ -257,9 +265,14 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.6</h1>
+                    <h1 style={{}}>App Version : v1.0.5.7</h1>
                     <h1 style={{}}>Created By : Aashay S Vanpal</h1>
 
+                  </Route>
+
+                  <Route path="/profile" >
+                    <h1 style={{ "backgroundColor": "green" }}>Your Profile:</h1>
+                    <UserProfile />
                   </Route>
 
                   <Route path="/aboutus" >
@@ -268,13 +281,13 @@ function App() {
 
                   </Route>
 
-                  <Route path="/Deals" >
+                  <Route path="/deals" >
                     <h1 style={{ "backgroundColor": "gold", "textAlign": "center" }}>Deals Page</h1>
                     <h2 style={{ "color": "green" }}>This page is still under maintenance please wait for the website to be functional soon ...</h2>
 
                   </Route>
 
-                  <Route path="/Qurries" >
+                  <Route path="/qurries" >
                     <h1 style={{ "backgroundColor": "blue" }}>Qurries Page</h1>
 
                   </Route>
