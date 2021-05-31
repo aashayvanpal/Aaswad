@@ -14,8 +14,14 @@ function LoadingSpinner() {
 
     return (
         <div className="sweet-loading">
-
+            <h1 style={{
+                "textAlign": "center",
+            }}>Loading...</h1>
             <CircleLoader color={'rgb(219, 194, 104)'} loading={loading} css={override} size={200} />
+            <br />
+            <br />
+            <br />
+            <br />
         </div>
     );
 }

@@ -1,18 +1,16 @@
 // Routing url inside a function
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 export default function DisplayList(props) {
     console.log('props', props)
     const { name, id, i, display } = props
     console.log('checkbox value here', display)
     return (
-        <Tr className="listing-table" key={i}>
-            <Td className="listing-table">{i + 1}</Td>
-            <Td className="listing-table"><Link to={`/items/show/${id}`}>{name}</Link></Td>
-            <Td className="listing-table">
+        <tr className="listing-table" key={i}>
+            <td className="listing-table">{i + 1}</td>
+            <td className="listing-table"><Link to={`/items/show/${id}`}>{name}</Link></td>
+            <td className="listing-table">
                 <Link to={`/items/edit/${id}`}>
                     <button className="button-color4" onClick={() => {
                         props.updateItem(id)
@@ -20,8 +18,8 @@ export default function DisplayList(props) {
                         Update
                 </button>
                 </Link>
-            </Td>
-            <Td className="listing-table">
+            </td>
+            <td className="listing-table">
 
 
                 <input className="checkbox" type="checkbox" checked={display} onChange={() => {
@@ -34,14 +32,14 @@ export default function DisplayList(props) {
                 }} />
 
 
-            </Td>
-            <Td className="listing-table">
+            </td>
+            <td className="listing-table">
                 <button className="button-color5" onClick={() => {
                     props.deleteItem(id)
                 }}>Delete</button>
-            </Td>
+            </td>
 
-        </Tr>
+        </tr>
     )
 }
 

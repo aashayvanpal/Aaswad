@@ -539,13 +539,7 @@ export default class Menu extends React.Component {
                         />
                         <hr style={{ "height": "10px" }} />
                         {this.state.spinnerLoading ? (
-                            <div>
-                                <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
-                                <br />
-                                <br />
-                                <br />
-                                <br />
-                            </div>
+                            <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
                         )
                             :
                             (

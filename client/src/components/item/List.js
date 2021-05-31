@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom'
 import DisplayItems from './Item.js'
 // import SearchItem from './Search.js'
 import axios from '../../config/axios.js'
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+
 
 export default class AddItems extends Component {
     constructor(props) {
@@ -181,37 +184,38 @@ export default class AddItems extends Component {
                 </div>
                 <Link to='/items/add'> <button className="button-color3">Add new items</button></Link>
 
+                <div style={{ "margin": "10px" }}>
+                    <Table>
+                        <Thead >
+                            <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
+                                <Th className="listing-table">Sl No</Th>
+                                <Th className="listing-table">Name</Th>
+                                <Th className="listing-table"> Update</Th>
+                                <Th className="listing-table"> Active/Inactive</Th>
+                                <Th className="listing-table"> Remove</Th>
+                            </Tr>
+                        </Thead>
 
-                <table className="listing-table" >
-                    <thead className="listing-table" style={{ "fontWeight": "bold" }}>
-                        <tr>
-                            <td className="listing-table">Sl No</td>
-                            <td className="listing-table">Name</td>
-                            <td className="listing-table"> Update</td>
-                            <td className="listing-table"> Active/Inactive</td>
-                            <td className="listing-table"> Remove</td>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {
-                            this.state.searchFilter.map((item, i) => {
-                                return (
-                                    <DisplayItems
-                                        key={i}
-                                        name={item.name}
-                                        deleteItem={this.deleteItem}
-                                        updateItem={this.updateItem}
-                                        updateCheckbox={this.updateCheckbox}
-                                        id={item._id}
-                                        display={item.display}
-                                        i={i}
-                                    />
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
+                        <Tbody>
+                            {
+                                this.state.searchFilter.map((item, i) => {
+                                    return (
+                                        <DisplayItems
+                                            key={i}
+                                            name={item.name}
+                                            deleteItem={this.deleteItem}
+                                            updateItem={this.updateItem}
+                                            updateCheckbox={this.updateCheckbox}
+                                            id={item._id}
+                                            display={item.display}
+                                            i={i}
+                                        />
+                                    )
+                                })
+                            }
+                        </Tbody>
+                    </Table>
+                </div>
             </div>
         )
     }

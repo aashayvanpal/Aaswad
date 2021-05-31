@@ -32,6 +32,7 @@ Tasks:
 Clean up unwanted images at the end
 remove unwanted console.log messages
 in UserProfile the userType is not required 
+delete item2 file in /components/item/item2
 
 
 Emailing System:
@@ -165,3 +166,4 @@ added spinner for loading
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
 must change for /items backend error
+/items table super responsive implementation
