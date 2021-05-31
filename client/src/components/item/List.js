@@ -25,7 +25,7 @@ export default class AddItems extends Component {
 
 
     componentDidMount() {
-        axios.get('/items', {
+        axios.get('/api/items', {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }

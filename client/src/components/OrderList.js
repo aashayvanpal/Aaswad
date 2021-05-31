@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from '../config/axios'
 import { Link } from 'react-router-dom'
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 
 export default class ItemList extends Component {
@@ -18,7 +20,7 @@ export default class ItemList extends Component {
 
     componentDidMount() {
         // get request for all items , filter approves,confirmed and completed
-        axios.get('/orders', {
+        axios.get('/api/orders', {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }
@@ -239,7 +241,6 @@ export default class ItemList extends Component {
     render() {
         return (
             <div>
-
                 <button id="ShowButton" onClick={() => {
                     var navBarElement = document.getElementById("Nav-bar")
                     navBarElement.style.display = "block"
@@ -248,127 +249,127 @@ export default class ItemList extends Component {
                     showElement.style.display = "none"
 
                 }}>Show</button>
+                <div style={{ "margin": "10px" }}>
+                    <div style={{ "backgroundColor": "burlywood" }}>
+                        <h1>Approve orders - {this.state.approves.length}</h1>
 
-                <div style={{ "backgroundColor": "burlywood" }}>
-                    <h1>Approve orders - {this.state.approves.length}</h1>
+                        <Table style={{ "fontWeight": "bold" }}>
+                            <caption>
+                                {/* <h1>Approve orders - {this.state.approves.length}</h1> */}
 
-                    <table className="listing-table" style={{ "fontWeight": "bold" }}>
-                        <caption>
-                            {/* <h1>Approve orders - {this.state.approves.length}</h1> */}
+                            </caption>
+                            <Thead>
+                                <Tr>
+                                    <Th className="listing-table" >Sl no</Th>
+                                    <Th className="listing-table" >Name</Th>
+                                    <Th className="listing-table" >Actions</Th>
+                                    <Th className="listing-table" >Date</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {
+                                    this.state.approves.map((item, i) => {
+                                        return (
+                                            <Tr key={item._id}>
+                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></Td>
+                                                <Td className="listing-table" >
+                                                    <button>Update</button>
 
-                        </caption>
-                        <thead className="listing-table" >
-                            <tr>
-                                <td className="listing-table" >Sl no</td>
-                                <td className="listing-table" >Name</td>
-                                <td className="listing-table" >Actions</td>
-                                <td className="listing-table" >Date</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                this.state.approves.map((item, i) => {
-                                    return (
-                                        <tr key={item._id}>
-                                            <td className="listing-table" >{i + 1}</td>
-                                            <td className="listing-table" style={{ "color": "white" }} ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></td>
-                                            <td className="listing-table" >
-                                                <button>Update</button>
+                                                    <button onClick={() => {
+                                                        this.handleRemoveOrder(item._id, item.customer.fullName)
+                                                    }}>Remove</button>
+                                                    <button onClick={() => {
+                                                        this.handleApproveOrder(item._id)
+                                                    }}>Approve</button>
+                                                </Td>
+                                                <Td className="listing-table" >{
+                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
+                                                }</Td>
+                                            </Tr>
+                                        )
+                                    })
+                                }
+                            </Tbody>
+                        </Table>
+                    </div>
 
-                                                <button onClick={() => {
+                    <div style={{ "backgroundColor": "#2eec4e" }}>
+                        <h1>Confirmed orders - {this.state.confirms.length}</h1>
+                        <input placeholder="Search Order" />
+                        <button>Search</button>
+
+                        <Link to='/menu'><button>Add new Order</button></Link>
+                        <Table>
+                            <Thead>
+                                <Tr>
+                                    <Th className="listing-table" >Sl no</Th>
+                                    <Th className="listing-table" >Name</Th>
+                                    <Th className="listing-table" >Update</Th>
+                                    <Th className="listing-table" >Date</Th>
+                                    <Th className="listing-table" >Remove</Th>
+                                    <Th className="listing-table" >Completed</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {
+                                    this.state.confirms.map((item, i) => {
+                                        return (
+                                            <Tr key={item._id}>
+                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></Td>
+                                                <Td className="listing-table" ><button>update</button></Td>
+                                                <Td className="listing-table" >{
+                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
+                                                }</Td>
+                                                <Td className="listing-table" ><button onClick={() => {
                                                     this.handleRemoveOrder(item._id, item.customer.fullName)
-                                                }}>Remove</button>
-                                                <button onClick={() => {
-                                                    this.handleApproveOrder(item._id)
-                                                }}>Approve</button>
-                                            </td>
-                                            <td className="listing-table" >{
-                                                item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                            }</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                                                }}>Remove</button></Td>
+                                                <Td className="listing-table" ><button onClick={() => {
+                                                    this.handleCompleteOrder(item._id)
+                                                }}>Completed</button></Td>
+                                            </Tr>
+                                        )
+                                    })
+                                }
+                            </Tbody>
+                        </Table>
+                    </div>
 
-                <div style={{ "backgroundColor": "#2eec4e" }}>
-                    <h1>Confirmed orders - {this.state.confirms.length}</h1>
-                    <input placeholder="Search Order" />
-                    <button>Search</button>
+                    <div style={{ "backgroundColor": "yellow" }}>
+                        <h1>Completed orders -{this.state.completed.length}</h1>
+                        <input placeholder="Search Order" />
+                        <button>Search</button>
+                        <Table>
+                            <Thead>
+                                <Tr>
+                                    <Th className="listing-table">Sl no</Th>
+                                    <Th className="listing-table">Name</Th>
+                                    <Th className="listing-table">Date</Th>
+                                    <Th className="listing-table">Remove</Th>
+                                </Tr>
+                            </Thead>
 
-                    <Link to='/menu'><button>Add new Order</button></Link>
-                    <table className="listing-table" >
-                        <thead className="listing-table" >
-                            <tr>
-                                <td className="listing-table" >Sl no</td>
-                                <td className="listing-table" >Name</td>
-                                <td className="listing-table" >Update</td>
-                                <td className="listing-table" >Date</td>
-                                <td className="listing-table" >Remove</td>
-                                <td className="listing-table" >Completed</td>
-                            </tr>
-                        </thead>
-                        <tbody className="listing-table" >
-                            {
-                                this.state.confirms.map((item, i) => {
-                                    return (
-                                        <tr key={item._id}>
-                                            <td className="listing-table" >{i + 1}</td>
-                                            <td className="listing-table" ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></td>
-                                            <td className="listing-table" ><button>update</button></td>
-                                            <td className="listing-table" >{
-                                                item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                            }</td>
-                                            <td className="listing-table" ><button onClick={() => {
-                                                this.handleRemoveOrder(item._id, item.customer.fullName)
-                                            }}>Remove</button></td>
-                                            <td className="listing-table" ><button onClick={() => {
-                                                this.handleCompleteOrder(item._id)
-                                            }}>Completed</button></td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-                <div style={{ "backgroundColor": "yellow" }}>
-                    <h1>Completed orders -{this.state.completed.length}</h1>
-                    <input placeholder="Search Order" />
-                    <button>Search</button>
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <td className="listing-table">Sl no</td>
-                                <td className="listing-table">Name</td>
-                                <td className="listing-table">Date</td>
-                                <td className="listing-table">Remove</td>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {
-                                this.state.completed.map((item, i) => {
-                                    return (
-                                        <tr key={item._id}>
-                                            <td className="listing-table" >{i + 1}</td>
-                                            <td className="listing-table" ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></td>
-                                            <td className="listing-table" >{
-                                                item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                            }</td>
-                                            <td className="listing-table" ><button onClick={() => {
-                                                this.handleRemoveOrder(item._id, item.customer.fullName)
-                                            }}>Remove</button></td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
+                            <Tbody>
+                                {
+                                    this.state.completed.map((item, i) => {
+                                        return (
+                                            <Tr key={item._id}>
+                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}>{item.customer.fullName}</Link></Td>
+                                                <Td className="listing-table" >{
+                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
+                                                }</Td>
+                                                <Td className="listing-table" ><button onClick={() => {
+                                                    this.handleRemoveOrder(item._id, item.customer.fullName)
+                                                }}>Remove</button></Td>
+                                            </Tr>
+                                        )
+                                    })
+                                }
+                            </Tbody>
+                        </Table>
+                    </div>
                 </div>
             </div>
         );
