@@ -57,7 +57,8 @@ export default class CustomerForm extends React.Component {
                 this.setState({
                     fullName: dataRequest.data.username,
                     email: dataRequest.data.email,
-                    userId: dataRequest.data.id
+                    userId: dataRequest.data.id,
+                    phoneNumber: dataRequest.data.phonenumber
                 })
                 // userType: dataRequest.data.userType
             })

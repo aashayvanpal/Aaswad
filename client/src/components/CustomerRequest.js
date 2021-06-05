@@ -11,6 +11,7 @@ export default class CustomerRequest extends React.Component {
             reqOrder: [],
             username: '',
             userType: '',
+            phonenumber: '',
             openModal: 'false'
         }
 
@@ -54,7 +55,8 @@ export default class CustomerRequest extends React.Component {
                 console.log("user data :", dataRequest)
                 this.setState({
                     username: dataRequest.data.username,
-                    userType: dataRequest.data.userType
+                    userType: dataRequest.data.userType,
+                    phonenumber: dataRequest.data.phonenumber,
 
                 })
             })

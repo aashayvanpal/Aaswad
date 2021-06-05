@@ -31,8 +31,12 @@ create a function getUserDetails to make api call reusable
 Tasks:
 Clean up unwanted images at the end
 remove unwanted console.log messages
+remove all the inline styling (if possible)
+remove all the dead code
+Create more reusable components (if possible)
 in UserProfile the userType is not required 
 delete item2 file in /components/item/item2
+
 
 
 Emailing System:
@@ -44,6 +48,7 @@ Order has been Completed
 Bill 
 Account deletion
 Forgot password
+
 
 
 
@@ -155,15 +160,33 @@ added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
 moved cart component and customer form component proceed image to right
 added Stepper
-Trying to fix /menu backend error
+fixed /menu backend error
 
 
 Changes for v1.0.5.7 T6:
 fixed /menu backend error
 fixed /menu alignment of items
 added spinner for loading 
+Fix the rendering if items not found in card (when no item in cart)
+Added mobile number while registering
+super responsive table implementation done on:/items /orders
+fixed /items,/orders,/menu backend error
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
-fixed /items,/orders,/menu backend error
-super responsive table implementation done on:/items /orders
+
+
+
+Clear all the warnings
+Add the loading animation everywhere
+fix /myOrders display no orders been placed if 0 length
+fix validations for all the form submitions
+fix: show the user icon only if logged in
+fix: admin :fetch the Order items values from the database 
+fix: admin :/items being fetched even when not logged in
+show deafault error page
+redirect to login if user is logged out
+/signin fix the background (make it full page)
+/signin make 3 options to buy a caterer account
+Fix in /menu do not render Order now ! if user already logged in(seen in pc)
+reuse user loggrd in function in component did mount 

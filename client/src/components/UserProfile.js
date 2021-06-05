@@ -9,6 +9,7 @@ export default class UserProfile extends React.Component {
         this.state = {
             username: '',
             userType: '',
+            phonenumber: '',
 
         }
     }
@@ -22,7 +23,8 @@ export default class UserProfile extends React.Component {
                 this.setState({
                     username: dataRequest.data.username,
                     userType: dataRequest.data.userType,
-                    email: dataRequest.data.email
+                    email: dataRequest.data.email,
+                    phonenumber: dataRequest.data.phonenumber
 
                 })
             })
@@ -35,6 +37,7 @@ export default class UserProfile extends React.Component {
                 <h1>Name:{this.state.username}</h1>
                 <h1>UserType:{this.state.userType}</h1>
                 <h1>email:{this.state.email}</h1>
+                <h1>phonenumber:{this.state.phonenumber}</h1>
             </div>
         )
     }

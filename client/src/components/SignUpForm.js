@@ -10,6 +10,8 @@ const initialState = {
     userType: 'Customer',
     nameError: '',
     emailError: '',
+    phonenumber: '',
+    phonenumberError: '',
 }
 
 // Make responsive
@@ -23,6 +25,7 @@ export default class SignUpForm extends React.Component {
     validate = () => {
         let nameError = ""
         let emailError = ""
+        let phonenumberError = ""
 
         let specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '~', '_', '`', '(', ')', '+', '-', '/', '.', ',', '[', ']', '{', '}', '?', ':', ';', '\'', '"', "|", ">", "<"]
         let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -39,6 +42,10 @@ export default class SignUpForm extends React.Component {
             nameError = "Error: The full name cannot contain numbers 0-9 "
         }
 
+        if (this.state.phonenumber.length !== 10) {
+            phonenumberError = "Error: There must be 10 digits in your number !"
+        }
+
 
         if (this.state.email.length < 5) {
             emailError = "Error: The email addess cannot be less than 5 characters"
@@ -49,8 +56,8 @@ export default class SignUpForm extends React.Component {
             emailError = "Error: The email address should contain @ symbol"
         }
 
-        if (emailError || nameError) {
-            this.setState({ emailError, nameError })
+        if (emailError || nameError || phonenumberError) {
+            this.setState({ emailError, nameError, phonenumberError })
             return false
         }
 
@@ -75,6 +82,7 @@ export default class SignUpForm extends React.Component {
                 "username": this.state.name.toUpperCase(),
                 "email": this.state.email,
                 "password": this.state.password,
+                "phonenumber": this.state.phonenumber,
                 "userType": this.state.userType
             }
 
@@ -90,8 +98,9 @@ export default class SignUpForm extends React.Component {
                     }
                     else {
                         console.log('successfully created user', response.data)
-                        // this.props.history.push('/items')
                         alert('account created successfully')
+                        window.location.href = '/signin'
+
                     }
                 })
 
@@ -135,6 +144,9 @@ export default class SignUpForm extends React.Component {
 
                         <input id="inputEmail2" placeholder="Email" name="email" onChange={this.handleChange} value={this.state.email} /><br />
                         {this.state.emailError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{this.state.emailError}</div>) : null}
+
+                        <input id="inputPhonenumber" placeholder="Phone number" name="phonenumber" onChange={this.handleChange} value={this.state.phonenumber} /><br />
+                        {this.state.phonenumberError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{this.state.phonenumberError}</div>) : null}
 
                         <input id="inputPassword2" type="password" placeholder="Password" name="password" onChange={this.handleChange} value={this.state.password} /><br />
                     </div>

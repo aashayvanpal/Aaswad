@@ -78,7 +78,6 @@ class SignInForm extends React.Component {
                     <input id="inputPassword" type="password" placeholder="Password" name="password" onChange={this.handleChange} value={this.state.password} /><br />
                     <div style={{
                         "alignItems": "center"
-
                     }}>
                         <div style={{
                             "position": "relative",
@@ -88,15 +87,18 @@ class SignInForm extends React.Component {
                             "width": "238px"
 
                         }}>
-                            <input type="checkbox" id="caterer" name="isCaterer" onChange={this.handleCheckboxChange} checked={this.state.isCaterer}
-
+                            {/* <input type="checkbox"
+                                id="caterer"
+                                name="isCaterer"
+                                onChange={this.handleCheckboxChange} checked={this.state.isCaterer}
                                 style={{
                                 }} />
                             <label style={{
 
                                 "fontSize": "32px",
                                 "marginLeft": "30px",
-                            }} htmlFor="caterer" > I am Caterer</label><br />
+                            }} htmlFor="caterer" > I am Caterer</label>
+                            <br /> */}
                         </div>
                         <div style={{
                             "position": "relative",

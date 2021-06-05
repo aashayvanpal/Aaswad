@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Table, Button } from 'reactstrap';
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
+import { Stepper } from 'react-form-stepper'
+
 
 
 export default class Cart extends React.Component {
@@ -235,6 +237,10 @@ export default class Cart extends React.Component {
                         :
                         (
                             <div>
+                                <Stepper className="stepper-color" style={{ "backgroundColor": "#fff5d2" }}
+                                    steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                                    activeStep={1}
+                                />
                                 <Table>
                                     <thead>
                                         <tr>
@@ -285,7 +291,7 @@ export default class Cart extends React.Component {
                                         "backgroundColor": "#dbc268", "color": "black", "width": "100%"
                                     }}>
                                         Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
-                                </Button>
+                                    </Button>
                                 </Link>
                             </div>
                         )

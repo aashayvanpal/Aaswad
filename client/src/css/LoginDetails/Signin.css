@@ -18,6 +18,11 @@
   background-size: 50px 50px;
 }
 
+#inputPhonenumber {
+  background: url(../../images/Mobile-icon.svg) no-repeat 40px 15px;
+  background-size: 50px 50px;
+}
+
 #inputPassword {
   background: url(../../images/password-icon.png) no-repeat 40px 15px;
   background-size: 50px 50px;
