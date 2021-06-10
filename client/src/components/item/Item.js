@@ -1,7 +1,7 @@
 // Routing url inside a function
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import { Tr, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 
 export default function DisplayList(props) {

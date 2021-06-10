@@ -1,4 +1,4 @@
-// App version v1.0.5.7 T7
+// App version v1.0.5.7 T8
 // Check version-notes.txt for version updates
 
 import React from 'react';
@@ -72,7 +72,7 @@ function App() {
                     <div id="bar"></div>
                   </div> */}
 
-                  <div className="topNav">
+                  {/* <div className="topNav">
                     <div id="mySidenavMobile">
                       <button id="x-mark" className="closebtn" onClick={() => {
                         console.log('clicked on close button')
@@ -86,7 +86,7 @@ function App() {
                       </ul>
                     </div>
 
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -139,7 +139,7 @@ function App() {
                   </Route>
 
                   <Route path="/myOrders" >
-                    <h1 style={{ "backgroundColor": "green" }}>Your order history:</h1>
+                    <h1 style={{ "textAlign": "center" }}>Your order history:</h1>
                     <MyOrdersList />
 
                   </Route>
@@ -265,7 +265,7 @@ function App() {
 
                   <Route path="/settings" >
                     <h1 style={{ "backgroundColor": "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.7 T7</h1>
+                    <h1 style={{}}>App Version : v1.0.5.7 T8</h1>
                     <h1 style={{}}>Created By : Aashay S Vanpal</h1>
 
                   </Route>

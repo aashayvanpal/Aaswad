@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import axios from '../config/axios'
 import { Link } from 'react-router-dom'
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import LoadingSpinner from './LoadingSpinner.js'
+
 
 
 export default class MyOrdersList extends Component {
     constructor() {
         super()
         this.state = {
-            userFilteredItems:[],
-            userId:'none'
+            userFilteredItems: [],
+            userId: 'none',
+            spinnerLoading: false
+
         }
         this.getUserOrders = this.getUserOrders.bind(this)
     }
 
-    getUserOrders(){
+    getUserOrders() {
         // Getting all the orders of the user
         axios.get(`/myOrders/${this.state.userId}`, {
             headers: {
@@ -40,6 +46,8 @@ export default class MyOrdersList extends Component {
     componentDidMount() {
         // Get all the orders, filter orders with customers id , display it
         // getting customer id
+        this.setState({ spinnerLoading: true })
+
         axios.get('/account', {
             headers: { 'x-auth': localStorage.getItem('token') }
         })
@@ -50,56 +58,74 @@ export default class MyOrdersList extends Component {
                 })
 
                 this.getUserOrders()
-            
+                this.setState({ spinnerLoading: false })
+
             })
             .catch(err => {
                 console.log(err)
-            })
+                this.setState({ spinnerLoading: false })
 
-        
+            })
     }
 
     render() {
         return (
             <div>
-                my orders list
-                
+                <div style={{ "margin": "10px" }}>
+                    <Link to='/menu'><button style={{
+                        "padding": "10px",
+                        "fontWeight": "bold",
+                        "backgroundColor": "#dbc268",
+                        "cursor": "pointer",
+                        "marginBottom": "10px",
+                        "borderRadius": "5px"
+                    }}>Add new Order</button></Link>
 
-                <div style={{ "backgroundColor": "#2eec4e" }}>
+                    {this.state.spinnerLoading ? (
+                        <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
+                    ) :
+                        (
+                            <div>
+                                {
+                                    this.state.userFilteredItems.length !== 0 ?
+                                        (
+                                            <Table>
+                                                <Thead>
+                                                    <Tr>
+                                                        <Th className="listing-table" >Event Name</Th>
+                                                        <Th className="listing-table" >Order Date</Th>
+                                                        <Th className="listing-table" >Address</Th>
+                                                        <Th className="listing-table" >status</Th>
+                                                        <Th className="listing-table" >Feedback</Th>
+                                                    </Tr>
+                                                </Thead>
+                                                <Tbody className="listing-table" >
+                                                    {
+                                                        this.state.userFilteredItems.map((item, i) => {
+                                                            return (
+                                                                <Tr key={item._id}>
+                                                                    <Td className="listing-table" >{item.customer.eventName}</Td>
+                                                                    <Td className="listing-table" >{
+                                                                        item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
+                                                                    }</Td>
+                                                                    <Td className="listing-table" >{item.customer.address}</Td>
+                                                                    <Td className="listing-table" >{item.status}</Td>
+                                                                    <Td className="listing-table" >Star Rating</Td>
+                                                                    {/* <td className="listing-table" >{item.customer.fullName}</td> */}
 
-                    <Link to='/menu'><button>Add new Order</button></Link>
-                    <table className="listing-table" >
-                        <thead className="listing-table" >
-                            <tr>
-                                <td className="listing-table" >Event Name</td>
-                                <td className="listing-table" >Order Date</td>
-                                <td className="listing-table" >Address</td>
-                                <td className="listing-table" >status</td>
-                                <td className="listing-table" >Feedback</td>
-                            </tr>
-                        </thead>
-                        <tbody className="listing-table" >
-                            {
-                                this.state.userFilteredItems.map((item, i) => {
-                                    return (
-                                        <tr key={item._id}>
-                                            <td className="listing-table" >{item.customer.eventName}</td>
-                                            <td className="listing-table" >{
-                                                item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                            }</td>
-                                            <td className="listing-table" >{item.customer.address}</td>
-                                            <td className="listing-table" >{item.status}</td>
-                                            <td className="listing-table" >Star Rating</td>
-                                            {/* <td className="listing-table" >{item.customer.fullName}</td> */}
-                                           
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
+                                                                </Tr>
+                                                            )
+                                                        })
+                                                    }
+                                                </Tbody>
+                                            </Table>
+                                        ) : (<h1 style={{ "textAlign": "center" }}>No orders have been placed yet</h1>)
+                                }
+                            </div>
+                        )
+                    }
                 </div>
             </div>
-        );
+        )
     }
 }

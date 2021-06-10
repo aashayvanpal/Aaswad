@@ -3,7 +3,6 @@ import DatePicker from "react-datepicker";
 import axios from '../../config/axios.js'
 import HDToolTip from './HDToolTip.js'
 import ServiceToolTip from './ServiceToolTip.js'
-import { Link } from 'react-router-dom'
 
 import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
@@ -122,7 +121,7 @@ export default class CustomerForm extends React.Component {
             emailError = "Error: The email address should contain @ symbol"
         }
 
-        if (this.state.phoneNumber.length !== 10) {
+        if (this.state.phoneNumber.toString().length !== 10) {
             phoneNumberError = "Error: There must be 10 digits in your number !"
         }
 

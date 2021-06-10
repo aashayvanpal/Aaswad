@@ -11,7 +11,7 @@ export default class ItemForm extends Component {
             price: props.item ? props.item.price : "",
             category: props.item ? props.item.category : "",
             measured: props.item ? props.item.measured : "",
-            imgUrl: props.item ? props.item.imgUrl : "",
+            imgUrl: props.item ? props.item.imgUrl : "default.png",
             display: props.item ? props.item.display : "",
             ingredients: props.item ? props.item.ingredients : "",
             recipie: props.item ? props.item.recipie : "",

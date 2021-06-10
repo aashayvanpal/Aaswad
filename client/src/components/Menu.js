@@ -545,7 +545,7 @@ export default class Menu extends React.Component {
                             (
                                 <div id="menu-container">
                                     <div id="display-cards-container">
-                                        {this.state.searchFilter.length == 0 ? (
+                                        {this.state.searchFilter.length === 0 ? (
                                             <div style={{ "textAlign": "center", "width": "100%" }}>
                                                 <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
                                                 <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
