@@ -21,7 +21,7 @@ router.post('/items/add', itemController.create)
 router.get('/api/items', itemController.list)
 // router.put('/api/items', itemController.update)
 
-router.get('/items/show/:id', itemController.show)
+router.get('/api/items/show/:id', itemController.show)
 
 router.put('/items/edit/:id', itemController.update)
 router.get('/items/edit/:id', itemController.show)
@@ -39,8 +39,9 @@ router.post('/request', approveController.createApprove)
 router.get('/api/orders', approveController.list)
 router.put('/orders/:id', approveController.update)
 router.delete('/orders/:id', approveController.destroy)
-router.get('/orders/:id', approveController.show)
+router.get('/api/orders/:id', approveController.show)
 router.get('/myOrders/:id', approveController.myOrdersList)
+router.get('/myOrders/show/:id', approveController.show)
 
 
 // Registeration 

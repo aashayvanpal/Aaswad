@@ -72,15 +72,6 @@ export default class MyOrdersList extends Component {
         return (
             <div>
                 <div style={{ "margin": "10px" }}>
-                    <Link to='/menu'><button style={{
-                        "padding": "10px",
-                        "fontWeight": "bold",
-                        "backgroundColor": "#dbc268",
-                        "cursor": "pointer",
-                        "marginBottom": "10px",
-                        "borderRadius": "5px"
-                    }}>Add new Order</button></Link>
-
                     {this.state.spinnerLoading ? (
                         <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
                     ) :
@@ -92,11 +83,11 @@ export default class MyOrdersList extends Component {
                                             <Table>
                                                 <Thead>
                                                     <Tr>
-                                                        <Th className="listing-table" >Event Name</Th>
-                                                        <Th className="listing-table" >Order Date</Th>
-                                                        <Th className="listing-table" >Address</Th>
-                                                        <Th className="listing-table" >status</Th>
-                                                        <Th className="listing-table" >Feedback</Th>
+                                                        <Th style={{ "fontSize": "30px" }} className="listing-table" >Event Name</Th>
+                                                        <Th style={{ "fontSize": "30px" }} className="listing-table" >Order Date</Th>
+                                                        <Th style={{ "fontSize": "30px" }} className="listing-table" >Address</Th>
+                                                        <Th style={{ "fontSize": "30px" }} className="listing-table" >Status</Th>
+                                                        <Th style={{ "fontSize": "30px" }} className="listing-table" >Feedback</Th>
                                                     </Tr>
                                                 </Thead>
                                                 <Tbody className="listing-table" >
@@ -104,7 +95,7 @@ export default class MyOrdersList extends Component {
                                                         this.state.userFilteredItems.map((item, i) => {
                                                             return (
                                                                 <Tr key={item._id}>
-                                                                    <Td className="listing-table" >{item.customer.eventName}</Td>
+                                                                    <Td className="listing-table" ><Link to={`/myOrders/show/${item._id}`}>{item.customer.eventName}</Link></Td>
                                                                     <Td className="listing-table" >{
                                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                                     }</Td>
@@ -124,6 +115,15 @@ export default class MyOrdersList extends Component {
                             </div>
                         )
                     }
+                    <Link to='/menu'><button style={{
+                        "padding": "10px",
+                        "fontWeight": "bold",
+                        "backgroundColor": "#dbc268",
+                        "cursor": "pointer",
+                        "marginTop": "30px",
+                        "marginLeft": "30px",
+                        "borderRadius": "5px"
+                    }}>Add new Order</button></Link>
                 </div>
             </div>
         )

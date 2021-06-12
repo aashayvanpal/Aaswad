@@ -15,7 +15,7 @@ export default class ItemShow extends React.Component {
         console.log('this.params', this.params)
         console.log('id to show', window.location.href.split('/')[5])
         const id = window.location.href.split('/')[5]
-        axios.get(`/items/show/${id}`, {
+        axios.get(`/api/items/show/${id}`, {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }

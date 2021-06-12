@@ -229,7 +229,7 @@ export default class Cart extends React.Component {
                                 "margin": "30px",
                                 "textAlign": "center",
                                 "marginTop": "70px"
-                            }}>No items in cart</h1>
+                            }}>No items in Cart</h1>
                             <img src={NoItemsInCart} alt="NoItemsInCart" height="100%" width="100%" />
                         </>
 

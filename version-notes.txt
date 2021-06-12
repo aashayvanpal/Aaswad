@@ -161,15 +161,17 @@ added Stepper
 fixed /menu backend error
 
 
-Changes for v1.0.5.7 T8:
+Changes for v1.0.5.7 T8 /Dashboard:
 fixed /menu alignment of items
 added spinner for loading 
 Fix the rendering if items not found in card (when no item in cart)
 Added mobile number while registering
 super responsive table implementation done on:/items /orders /myOrders
 fixed /items,/orders,/menu backend error
+fixed /orders/:id /items/:id backend error
 important fixed: /request mobile number validation to 10 digits (review this in validation)
 added default image if image is not found
+fixed /myOrders display no orders been placed if 0 length
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
@@ -181,7 +183,6 @@ Add the loading animation everywhere:
 /items
 /orders
 
-fix /myOrders display no orders been placed if 0 length
 fix validations for all the form submitions
 fix: show the user icon only if logged in
 fix: admin :fetch the Order items values from the database 
@@ -192,7 +193,6 @@ redirect to login if user is logged out
 /signin make 3 options to buy a caterer account
 Fix in /menu do not render Order now ! if user already logged in(seen in pc)
 reuse user loggrd in function in component did mount 
-fix : /myOrders make super responsive
 fix : admin delete item , it deletes , it does not call render function 
 important fix: admin :/items,/orders being fetched even when not logged in
 important fix: admin : saving the total of the order in database and retrieving it (it should not calculate in react) 

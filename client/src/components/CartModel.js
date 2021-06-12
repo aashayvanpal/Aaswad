@@ -29,7 +29,7 @@ const CartModel = (props) => {
                 {buttonLabel}
             </Button>
             <Modal isOpen={modal} toggle={toggle} className={className} >
-                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Cart Items<br />Review your menu</ModalHeader>
+                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Review your menu</ModalHeader>
 
                 
                 <ModalBody style={{ "backgroundColor": "#fff5d2" }} >

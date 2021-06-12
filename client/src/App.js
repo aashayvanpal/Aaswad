@@ -3,11 +3,15 @@
 
 import React from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom'
+import Dashboard from './components/Dashboard.js'
 import Menu from './components/ItemList';
 import MyOrdersList from './components/MyOrdersList.js'
 import OrderList from './components/OrderList';
 import OrderShow from './components/order/Show.js';
 import OrderPrint from './components/order/Print.js';
+
+import myOrdersShow from './components/myOrdersShow.js';
+
 
 import AddUserData from './components/AddUserData.js';
 // import Calender from './GUI/Calender.js';
@@ -135,11 +139,11 @@ function App() {
 
                   <Route path="/dashboard" >
                     <h1 style={{ "backgroundColor": "green" }}>Dashboard:</h1>
-
+                    <Dashboard />
                   </Route>
 
-                  <Route path="/myOrders" >
-                    <h1 style={{ "textAlign": "center" }}>Your order history:</h1>
+                  <Route exact path="/myOrders" >
+                    <h1 style={{ "textAlign": "center" }}>Your order history:</h1><br />
                     <MyOrdersList />
 
                   </Route>
@@ -231,12 +235,13 @@ function App() {
 
                     <OrderList />
                   </Route>
+
+
+
                   <Route exact path="/orders/:id" component={OrderShow} />
+                  <Route exact path="/orders/:id/print" component={OrderPrint} />
 
-
-
-                  <Route path="/orders/:id/print" component={OrderPrint} />
-
+                  <Route path="/myOrders/show/:id" component={myOrdersShow} />
 
                   <Route path="/Register" >
                     {/* <Container fluid>
