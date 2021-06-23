@@ -1,4 +1,4 @@
-// App version v1.0.5.7 T8
+// App version v1.0.5.7 T8 userDetails function
 // Check version-notes.txt for version updates
 
 import React from 'react';

@@ -1,7 +1,8 @@
 //User type is not required 
 
 import React from 'react'
-import axios from '../config/axios.js'
+// import axios from '../config/axios.js'
+import { getUserDetails, test } from '../assets/user-functions.js'
 
 export default class UserProfile extends React.Component {
     constructor() {
@@ -15,20 +16,24 @@ export default class UserProfile extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('/account', {
-            headers: { 'x-auth': localStorage.getItem('token') }
-        })
-            .then(dataRequest => {
-                console.log("user data :", dataRequest)
+        getUserDetails()
+            .then(res => {
+                console.log("user data inside component did mount :", res)
                 this.setState({
-                    username: dataRequest.data.username,
-                    userType: dataRequest.data.userType,
-                    email: dataRequest.data.email,
-                    phonenumber: dataRequest.data.phonenumber
+                    username: res.username,
+                    userType: res.userType,
+                    email: res.email,
+                    phonenumber: res.phonenumber
 
                 })
+
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                window.alert('Please login ,you will be redirected')
+                window.location.href='/signin'
+            })
+
     }
 
     render() {

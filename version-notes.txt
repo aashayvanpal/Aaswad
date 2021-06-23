@@ -7,7 +7,7 @@ All pages must be made responsive
 Important:
 Fetch latest value for items from the database
 Take reference of the id from the items and updates should reflect on the order too
-add clear button on /items
+Admin:add clear button on /items
 Admin: sort all items in /items
 make form to the right , place image to left
 create logo
@@ -23,38 +23,39 @@ tracking order status
 user has to see order has been placed (reference numbers)
 Download menu card pdf file (add to database)
 /qurries section , display customer qurries
-Add forgot password and edit functionality 
 create a function getUserDetails to make api call reusable
+Add a backup reminder for every 2 orders
 
 
-
-Tasks:
+Tasks for final deployment:
 Clean up unwanted images at the end
+Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
 remove unwanted console.log messages
 remove all the inline styling (if possible)
 remove all the dead code
 Create more reusable components (if possible)
 in UserProfile the userType is not required 
 delete item2 file in /components/item/item2
+important fixed: /request mobile number validation to 10 digits (review this in validation)
 
 
 
 Emailing System:
 Creating new account welcome email 
 Order placed email
+Admin notification :New Order recieved email
 Order has been approved and billing estimation
 Order has been rejected
 Order has been Completed 
 Bill 
 Account deletion
-Forgot password
+Forgot password and edit functionality
 
 
 
 
 Fixes :
 Amount calculation logical error solve
-Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
 Authentication : If not logged in , redirect to Login page
 Authentication to individual paths (/menu,/orders) 
   add order now when user is logged out
@@ -68,9 +69,7 @@ in /orders , when remove button is clicked , pop up confirmation message (are yo
 Add vendors , transport ,customer backend code 
 settings option
 Dashboard creation - graphs , profits ,incomes
-create settings option from the user icon dropdown
 
-Make the whole website responsive
 About us page
 Add tool tips for - how it works
 Write more test scripts (next update)
@@ -86,17 +85,6 @@ rendering price and measured properties in customer request for caterer-user
 Major Update:(v1.0.1)
 Trying to integrate Google maps in contact us page
 Default error page loading
-Change notes v1.0.3 (only customer view focused): 
-commented ItemCard rendering and Menu having isAdming conditional rendering
-commented burger rendering 
-Commented Link-Navigations
-Placed show button and render only if user is admin
-Cart rendering in 3 steps
-mobile view for customer only 
-check for admin view (pending) 
-added carousel images
-
-
 
 
 
@@ -110,7 +98,24 @@ on click of clear button on /menu page , the cursor must be blinking on the sear
 Taking mobile number while registering 
 Sending welcome email 
 add pop for order has been placed modal
+adding default images to items with no image yet
 Check all spellings for items
+Clear all the warnings
+Add the loading animation everywhere:
+/items
+/orders
+
+
+-------------------------------------------------------------------------------
+Change notes v1.0.3 (only customer view focused): 
+commented ItemCard rendering and Menu having isAdming conditional rendering
+commented burger rendering 
+Commented Link-Navigations
+Placed show button and render only if user is admin
+Cart rendering in 3 steps
+mobile view for customer only 
+check for admin view (pending) 
+added carousel images
 
 
 Change notes v1.0.4 :
@@ -164,7 +169,7 @@ fixed /menu backend error
 Changes for v1.0.5.7 T8 /Dashboard:
 fixed /menu alignment of items
 added spinner for loading 
-Fix the rendering if items not found in card (when no item in cart)
+Fixed the rendering if items not found in card (when no item in cart)
 Added mobile number while registering
 super responsive table implementation done on:/items /orders /myOrders
 fixed /items,/orders,/menu backend error
@@ -199,3 +204,5 @@ important fix: admin : saving the total of the order in database and retrieving 
 was checking on the default image loading when nothing is given
 important fix: back recovery for cart
 update : admin entering name to get orders , from and to date - lists all orders
+
+added function for getting userDetails
