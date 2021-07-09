@@ -237,11 +237,12 @@
 }
 
 .user {
-  background-image: url("../images/User.png");
-  height: 63px;
-  width: 49px;
-  margin-top: 15px;
-  border: none;
+  background-image: url("../images/usr-icon.svg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  margin-top:10px;
+  height: 70px;
+  width: 70px;
 }
 
 /* .inner-Menu { */
@@ -570,4 +571,22 @@
 }
 .stepper-color > div > div > button.completed {
   background-color: rgb(219, 194, 104);
+}
+
+#carosel-styling{
+  height:550px;
+  width:100%;
+} 
+
+@media screen and (max-width: 900px) {
+  #carosel-styling{
+    height:300px;
+    /* display:none; */
+  }
+  .user {
+    margin-top:15px;
+    height: 55px;
+    width: 55px;
+  }
+  
 }

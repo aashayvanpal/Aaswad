@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose')
 
 // db configuration - establishing connection to db 

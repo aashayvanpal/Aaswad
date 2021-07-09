@@ -12,7 +12,7 @@ const override = css`
 function LoadingSpinner() {
     // let [loading, setLoading] = useState(true);
 
-    let [loading, ] = useState(true);
+    let [loading,] = useState(true);
 
     return (
         <div className="sweet-loading">

@@ -3,8 +3,8 @@ import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 import axios from '../config/axios';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-
-
+import ReactAnime from 'react-animejs'
+const { Anime, stagger } = ReactAnime
 
 const UserButton = (props) => {
 
@@ -31,11 +31,21 @@ const UserButton = (props) => {
 
   return (
     <ButtonDropdown direction="left" isOpen={dropdownOpen} toggle={toggle}>
-      <DropdownToggle className="user" style={{ "backgroundColor": "#dbc268", "border": "none" }}>
-
-      </DropdownToggle>
+      <Anime
+        initial={[
+          {
+            targets: ".user",
+            translateX: [10, 0],
+            easing: "easeInOutSine",
+            opacity: [0, 1],
+            delay: 500
+          }
+        ]}
+      >
+        <DropdownToggle className="user" style={{ "border": "none", "backgroundColor": "#dbc268" }} />
+      </Anime>
       <DropdownMenu>
-        <DropdownItem header> (Username)</DropdownItem>
+        <DropdownItem header>Username</DropdownItem>
         <DropdownItem disabled>Action</DropdownItem>
         <DropdownItem>Another Action</DropdownItem>
         <DropdownItem><Link to="/profile">Profile</Link></DropdownItem>

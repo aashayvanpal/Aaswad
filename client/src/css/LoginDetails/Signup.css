@@ -89,6 +89,27 @@
   margin-top: 20px;
 }
 
+#signinImg {
+  height: 1000px;
+  width: 50%;
+  margin-bottom: 20px;
+  background: url(../../images/signIn.svg);
+}
+
+#leftContainerImg {
+  width: 50%;
+}
+
+@media screen and (max-width: 1002px) {
+  #leftContainerImg {
+    display: none;
+  }
+
+  .SignUpCard {
+    width: 100%;
+  }
+}
+
 @media screen and (max-width: 514px) {
   #already-have-account {
     font-size: 15px;

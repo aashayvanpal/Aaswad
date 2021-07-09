@@ -7,6 +7,8 @@ import noItemFound from '../images/no-item-found.svg'
 import LoadingSpinner from './LoadingSpinner.js'
 import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
+import { getUserDetails } from '../assets/user-functions.js'
+
 
 
 // for loading from google images :(not working) 
@@ -48,6 +50,7 @@ export default class Menu extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
         this.clearSearch = this.clearSearch.bind(this)
+        this.getUserMenu = this.getUserMenu.bind(this)
 
 
 
@@ -110,56 +113,52 @@ export default class Menu extends React.Component {
 
         // Do a get request to /account to get user name , add x-auth as header to it
         // just set the token in localStorage and get it in x-auth , the code is working fine,,,
-        this.setState({ spinnerLoading: true })
-        axios.get('/account', {
-            headers: { 'x-auth': localStorage.getItem('token') }
-        })
-            .then(dataRequest => {
-                console.log("user data :", dataRequest)
+
+        getUserDetails()
+            .then(res => {
+                console.log("user data inside component did mount new :", res)
                 this.setState({
-                    username: dataRequest.data.username,
-                    userType: dataRequest.data.userType
-
+                    username: res.username,
+                    userType: res.userType
                 })
+                this.getUserMenu()
 
+            })
+            .catch(err => {
+                console.log(err)
+                window.alert('Please login ,you will be redirected')
+                window.location.href = '/signin'
+            })
+    }
 
-                axios.get('/api/menu', {
-                    headers: {
-                        'x-auth': localStorage.getItem('token')
-                    }
-                })
-                    .then(response => {
-                        console.log('Data : ', response.data)
-                        const items = response.data
-                        console.log('items after request :', items)
-                        console.log('items after filtering :')
-                        var filteredItems = itemsFilter(items)
-                        filteredItems.forEach(item => { item.isSelected = false })
+    getUserMenu() {
+        axios.get('/api/menu', {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                console.log('Data : ', response.data)
+                const items = response.data
+                console.log('items after request :', items)
+                console.log('items after filtering :')
+                let filteredItems = items.filter(item => item.display === true)
+                filteredItems.forEach(item => {
+                    item.isSelected = false
+                    item.quantity = 1
+                }
+                )
 
-                        // filteredItems.forEach(item => { item.inCart = false })
+                this.setState({ items: filteredItems })
+                this.setState({ searchFilter: this.state.items })
+                console.log("this.state.items:", this.state.items)
 
-                        filteredItems.forEach(item => { item.quantity = 1 })
-                        this.setState({ items: filteredItems })
-                        this.setState({ searchFilter: this.state.items })
-                        console.log("this.state.items:", this.state.items)
+                this.setState({ spinnerLoading: false })
 
-                        this.setState({ spinnerLoading: false })
-
-
-
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
             })
             .catch(err => {
                 console.log(err)
             })
-
-        function itemsFilter(items) {
-            return (items.filter(item => item.display === true))
-        }
-
     }
 
 
@@ -475,7 +474,7 @@ export default class Menu extends React.Component {
             <div>
 
 
-                { this.state.userType === "Admin" ? (
+                {this.state.userType === "Admin" ? (
                     <>
                         <h1>Welcome - {this.state.username} you are - {this.state.userType}</h1>
                         <button id="ShowButton" onClick={() => {
@@ -555,26 +554,26 @@ export default class Menu extends React.Component {
                                             </div>
                                         ) : (
 
-                                                this.state.searchFilter.map((item, i) => {
-                                                    return (
-                                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
-                                                            <div className="card-body-style">
-                                                                <div style={{ "height": "150px", "width": "100%" }}>
+                                            this.state.searchFilter.map((item, i) => {
+                                                return (
+                                                    <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                        <div className="card-body-style">
+                                                            <div style={{ "height": "150px", "width": "100%" }}>
 
-                                                                    <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+                                                                <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
-                                                                    {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
-                                                                </div>
-                                                                <div className="contents">
-                                                                    <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
-                                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
-                                                                </div>
+                                                                {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
+                                                                <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
+                                                            </div>
+                                                            <div className="contents">
+                                                                <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
+                                                                <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                             </div>
                                                         </div>
-                                                    )
-                                                })
-                                            )
+                                                    </div>
+                                                )
+                                            })
+                                        )
 
                                         }
 
@@ -608,8 +607,8 @@ export default class Menu extends React.Component {
                     "backgroundColor": "#353535"
                 }}>
                     © Copyrights Reserved 2021
-                    </div>
+                </div>
             </div >
         );
     }
-} 
+}

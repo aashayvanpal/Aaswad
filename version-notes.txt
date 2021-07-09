@@ -166,7 +166,7 @@ added Stepper
 fixed /menu backend error
 
 
-Changes for v1.0.5.7 T8 /Dashboard:
+Changes for v1.0.5.7 T8 Contactus validation,animejs animation:
 fixed /menu alignment of items
 added spinner for loading 
 Fixed the rendering if items not found in card (when no item in cart)
@@ -180,7 +180,7 @@ fixed /myOrders display no orders been placed if 0 length
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
-
+added contact us validation(still needs work)
 
 
 Clear all the warnings
@@ -206,3 +206,11 @@ important fix: back recovery for cart
 update : admin entering name to get orders , from and to date - lists all orders
 
 added function for getting userDetails
+implemented login function on /profile , /myorders
+added logo image in /signin
+fix: UserButton when logged in make inside another class component 
+fix: UserButton when logged in show , (currently need to refresh)
+fix: All form submission must become blank after submission
+fix: /items /orders when not logged in is loading the page (redirect should be applied)
+
+Session management cart order variable creation

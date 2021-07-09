@@ -71,7 +71,7 @@ const ShowCarousel = (props) => {
         onExited={() => setAnimating(false)}
         key={item.src}
       >
-        <img src={item.src} alt={item.altText} height="550" width="100%" />
+        <img src={item.src} alt={item.altText} id="carosel-styling"/>
         <CarouselCaption captionText={item.caption} captionHeader={item.caption} />
       </CarouselItem>
     );

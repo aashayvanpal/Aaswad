@@ -10,7 +10,7 @@ import deliver from '../images/landing-page-images/deliver.svg'
 // import left from '../images/landing-page-images/left.svg'
 import designLeft from '../images/landing-page-images/left-design.png'
 import vegImage from '../images/landing-page-images/Veg-image.png'
-
+import '../css/app-css.css'
 
 // making responsive: 
 // problem with footer
@@ -85,4 +85,4 @@ export default function HomePage() {
         </Container >
 
     )
-} 
+}

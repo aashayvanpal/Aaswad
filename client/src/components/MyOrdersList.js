@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import LoadingSpinner from './LoadingSpinner.js'
+import { getUserDetails } from '../assets/user-functions.js'
 
 
 
@@ -48,24 +49,35 @@ export default class MyOrdersList extends Component {
         // getting customer id
         this.setState({ spinnerLoading: true })
 
-        axios.get('/account', {
-            headers: { 'x-auth': localStorage.getItem('token') }
-        })
-            .then(dataRequest => {
-                console.log("user id :", dataRequest.data.id)
-                this.setState({
-                    userId: dataRequest.data.id
+        getUserDetails()
+            .then(res => {
+                console.log("user data inside component did mount :", res)
+                axios.get('/account', {
+                    headers: { 'x-auth': localStorage.getItem('token') }
                 })
+                    .then(dataRequest => {
+                        console.log("user id :", dataRequest.data.id)
+                        this.setState({
+                            userId: dataRequest.data.id
+                        })
 
-                this.getUserOrders()
-                this.setState({ spinnerLoading: false })
+                        this.getUserOrders()
+                        this.setState({ spinnerLoading: false })
+
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        this.setState({ spinnerLoading: false })
+
+                    })
 
             })
             .catch(err => {
                 console.log(err)
-                this.setState({ spinnerLoading: false })
-
+                window.alert('Please login ,you will be redirected')
+                window.location.href = '/signin'
             })
+
     }
 
     render() {

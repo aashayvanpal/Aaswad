@@ -1,94 +1,83 @@
 @import url("https://fonts.googleapis.com/css2?family=Arizonia&display=swap");
-
 .header {
-  width: 100%;
-  display: inline-flex;
-  background-color: #dbc268;
-  margin-bottom: 13px;
-  box-shadow: 5px 10px 6px;
+    width: 100%;
+    display: inline-flex;
+    background-color: #dbc268;
+    margin-bottom: 13px;
+    box-shadow: 5px 10px 6px;
+}
+#header-logo{
+    height:100px;
+    margin-left: 20px;
 }
 
-.header-txt {
-  text-align: left;
-  font-size: 64px;
-  margin-right: 200px;
-  margin-left: 20px;
-  font-family: "Arizonia", cursive;
-  color: black;
-  font-weight: bold;
-  text-shadow: 1px 1px white;
-}
-
-.header-txt:hover {
-  text-decoration: none;
-  color: #353535;
-}
 .header-link-container {
-  display: flex;
-  position: absolute;
-  right: 15px;
+    display: flex;
+    position: absolute;
+    right: 15px;
 }
 
 .linkEnquiry {
-  margin: 40px 20px;
-  font-size: 32px;
-  background-color: #dbc268;
-  border: none;
-  cursor: pointer;
-  color: green;
+    margin: 40px 20px;
+    font-size: 32px;
+    background-color: #dbc268;
+    border: none;
+    cursor: pointer;
+    color: green;
 }
 
 .linkEnquiry:hover {
-  text-decoration: none;
-  color: #353535;
+    text-decoration: none;
+    color: #353535;
 }
 
 #burger {
-  cursor: pointer;
-  display: none;
-  float: right;
+    cursor: pointer;
+    display: none;
+    float: right;
 }
 
 #bar {
-  height: 5px;
-  background-color: white;
-  width: 40px;
-
-  margin-top: 8px;
+    height: 5px;
+    background-color: white;
+    width: 40px;
+    margin-top: 8px;
 }
+
+#signinImage {
+    /* background-image: url('../images/food-items-images/3.jpg'); */
+    background-repeat: no-repeat;
+    width: 50%;
+    /* background-color: green; */
+}
+
 
 /* Media qurry for mobile view*/
-@media screen and (max-width: 900px) {
-  /* Work around for the user image ,because image is position:absolute */
-  .header {
-    height: 80px;
-    margin-left: 0px;
-  }
-  .linkEnquiry {
-    display: none;
-  }
-  .header-txt {
-    width: 271px;
-    font-size: 32px;
-    margin-top: 20px;
-    text-align: center;
-    position: absolute;
-    left: 0px;
-  }
-  #burger {
-    display: inline-block;
-    margin-top: 20px;
-    margin-left: 30px;
-  }
-}
 
-@media screen and (max-width: 507px) {
-  .header-txt {
-    width: 271px;
-    font-size: 32px;
-    margin-top: 25px;
-    text-align: center;
-    position: absolute;
-    left: 0px;
-  }
+@media screen and (max-width: 900px) {
+    /* Work around for the user image ,because image is position:absolute */
+    .header {
+        height: 80px;
+        margin-left: 0px;
+    }
+    .linkEnquiry {
+        display: none;
+    }
+    .header-txt {
+        width: 271px;
+        font-size: 32px;
+        margin-top: 20px;
+        text-align: center;
+        position: absolute;
+        left: 0px;
+    }
+    #burger {
+        display: inline-block;
+        margin-top: 20px;
+        margin-left: 30px;
+    }
+    #header-logo{
+        height:70px;
+        margin-top: 5px;
+      }
 }

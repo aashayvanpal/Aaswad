@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const validator = require('validator')
 
 const Schema = mongoose.Schema
 // Create a categories Schema - with fields like name of type string and required true
@@ -6,7 +7,15 @@ const Schema = mongoose.Schema
 const querreySchema = new Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        validate:{
+            validator: function (value){
+                return validator.isEmail(value)
+            },
+            message: function (){
+                return 'Invalid email format'
+            }
+        }
     },
     subject: {
         type: String,

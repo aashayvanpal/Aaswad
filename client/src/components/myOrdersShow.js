@@ -24,7 +24,7 @@ export default class myOrdersShow extends React.Component {
 
     }
 
-    
+
     componentDidMount() {
         console.log('Order Show component mounted !')
         console.log('this.params', this.params)
@@ -104,6 +104,7 @@ export default class myOrdersShow extends React.Component {
             .catch(err => {
                 console.log(err)
             })
+
     }
 
     render() {
