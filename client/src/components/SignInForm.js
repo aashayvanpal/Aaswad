@@ -3,6 +3,7 @@ import axios from "../config/axios.js";
 import { withRouter } from "react-router";
 import "../css/LoginDetails/Signin.css";
 import { Link } from "react-router-dom";
+import { getUserDetails } from '../assets/user-functions.js'
 
 class SignInForm extends React.Component {
   constructor(props) {
@@ -60,6 +61,29 @@ class SignInForm extends React.Component {
     this.setState({ isCaterer: change });
     console.log("this.state.isCaterer after:", this.state.isCaterer);
   };
+
+  componentDidMount() {
+    getUserDetails()
+      .then(res => {
+        console.log("user data inside component did mount :", res)
+        console.log("Redirect user to /menu")
+        // this.setState({
+        //     username: res.username,
+        //     userType: res.userType,
+        //     email: res.email,
+        //     phonenumber: res.phonenumber
+
+        // })
+        window.location.href = '/menu'
+
+      })
+    // .catch(err => {
+    //   console.log(err)
+    //   window.alert('Please login ,you will be redirected')
+    //   window.location.href = '/signin'
+    // })
+
+  }
 
   render() {
     return (

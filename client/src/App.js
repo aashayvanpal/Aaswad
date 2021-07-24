@@ -1,4 +1,4 @@
-// App version v1.0.5.7 T8 Contactus validation,animejs animation 
+// App version v1.0.5.7 T8 user_redirect 
 // Check version-notes.txt for version updates
 
 import React from "react";

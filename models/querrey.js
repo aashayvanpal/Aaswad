@@ -28,7 +28,7 @@ const querreySchema = new Schema({
     message: {
         type: String,
         required: true
-    } 
+    }
 })
 
 

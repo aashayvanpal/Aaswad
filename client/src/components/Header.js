@@ -3,7 +3,8 @@ import logo from '../images/aaswad-logo.svg'
 import UserOptions from "./UserOptions.js";
 import { Link } from "react-router-dom";
 import ReactAnime from 'react-animejs'
-const { Anime, stagger } = ReactAnime
+// const { Anime, stagger } = ReactAnime
+const { Anime } = ReactAnime
 
 export default function Header() {
     return (

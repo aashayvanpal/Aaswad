@@ -10,6 +10,7 @@ export default function SignupCenterContainer() {
           width="400px"
           height="400px"
           style={{ marginLeft: "100px", marginTop: "30px" }}
+          alt="signinimage"
         />
       </div>
       <SignInForm />

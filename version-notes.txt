@@ -166,7 +166,7 @@ added Stepper
 fixed /menu backend error
 
 
-Changes for v1.0.5.7 T8 Contactus validation,animejs animation:
+Changes for v1.0.5.7 T8 user_redirect:
 fixed /menu alignment of items
 added spinner for loading 
 Fixed the rendering if items not found in card (when no item in cart)
@@ -177,6 +177,7 @@ fixed /orders/:id /items/:id backend error
 important fixed: /request mobile number validation to 10 digits (review this in validation)
 added default image if image is not found
 fixed /myOrders display no orders been placed if 0 length
+user is redirected to /menu if user has already logged in (/singin page)
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)

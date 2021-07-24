@@ -1,10 +1,10 @@
 import React from 'react'
 
 export default class Dashboard extends React.Component {
-    constructor() {
-        super()
+    // constructor() {
+    //     super()
 
-    }
+    // }
 
     render() {
         return (

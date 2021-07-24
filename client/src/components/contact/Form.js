@@ -24,7 +24,7 @@ export default class Form extends React.Component {
     }
     validate() {
         let emailError, subjectError, mobileError, messageError = ''
-        let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        // let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 
         if (!this.state.email.includes('@')) {

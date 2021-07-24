@@ -2,7 +2,7 @@
 
 import React from 'react'
 // import axios from '../config/axios.js'
-import { getUserDetails, test } from '../assets/user-functions.js'
+import { getUserDetails } from '../assets/user-functions.js'
 
 export default class UserProfile extends React.Component {
     constructor() {
@@ -31,7 +31,7 @@ export default class UserProfile extends React.Component {
             .catch(err => {
                 console.log(err)
                 window.alert('Please login ,you will be redirected')
-                window.location.href='/signin'
+                window.location.href = '/signin'
             })
 
     }
