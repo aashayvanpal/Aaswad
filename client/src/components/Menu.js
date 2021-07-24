@@ -8,6 +8,7 @@ import LoadingSpinner from './LoadingSpinner.js'
 import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
+import Header from "./Header.js"
 
 
 
@@ -473,7 +474,7 @@ export default class Menu extends React.Component {
         return (
             <div>
 
-
+                <Header />
                 {this.state.userType === "Admin" ? (
                     <>
                         <h1>Welcome - {this.state.username} you are - {this.state.userType}</h1>

@@ -21,7 +21,7 @@ export default class UserOptions extends React.Component {
 
     render() {
         return (
-            <>{this.state.showUserButton ? (<UserButton />) : (null)}</>
+            <div>{this.state.showUserButton && <UserButton />}</div>
         )
     }
 }

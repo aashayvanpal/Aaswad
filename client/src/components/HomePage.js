@@ -10,16 +10,19 @@ import deliver from '../images/landing-page-images/deliver.svg'
 // import left from '../images/landing-page-images/left.svg'
 import designLeft from '../images/landing-page-images/left-design.png'
 import vegImage from '../images/landing-page-images/Veg-image.png'
+import Header from './Header.js'
 import '../css/app-css.css'
 
 // making responsive: 
 // problem with footer
 // Can add recent events
-export default function HomePage() {
+export default function HomePage(props) {
     return (
-        <Container fluid>
+        <Container fluid key={props.pageId}>
             <Row>
                 <Col style={{ "paddingRight": "0px", "paddingLeft": "0px" }}>
+                    <Header />
+
                     <div className="homepage" >
                         <Carousel />
 

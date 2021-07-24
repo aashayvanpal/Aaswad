@@ -23,9 +23,11 @@ const UserButton = (props) => {
       .then((response) => {
         // console.log("response after logout :", response)
         console.log("response after logout :", response.data.notice)
+        // props.history.push("/")
+        window.location.href = '/'
       })
       .catch(err => { console.log(err) })
-    props.history.push("/")
+    // window.alert('you have logged out successfully!')
 
   }
 

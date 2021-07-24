@@ -1,8 +1,8 @@
-// App version v1.0.5.7 T8 user_redirect 
+// App version v1.0.5.7 T8 userIconRender
 // Check version-notes.txt for version updates
 
 import React from "react";
-import { BrowserRouter, Link, Route } from "react-router-dom";
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import Dashboard from "./components/Dashboard.js";
 import Header from './components/Header.js'
 import Menu from "./components/ItemList";
@@ -11,7 +11,7 @@ import OrderList from "./components/OrderList";
 import OrderShow from "./components/order/Show.js";
 import OrderPrint from "./components/order/Print.js";
 
-import myOrdersShow from "./components/myOrdersShow.js";
+import MyOrdersShow from "./components/myOrdersShow.js";
 
 import AddUserData from "./components/AddUserData.js";
 // import Calender from './GUI/Calender.js';
@@ -37,6 +37,7 @@ import "./css/HomePage/header.css";
 // make header as a component
 import { Container, Row, Col } from "reactstrap";
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
+import NotFoundPage from './components/NotFoundPage.js'
 
 function App() {
   return (
@@ -61,11 +62,6 @@ function App() {
         <Row>
           <Col style={{ paddingRight: "0px", paddingLeft: "0px" }}>
             <BrowserRouter>
-                <Header />
-
-              <Route exact path="/">
-                <HomePage />
-              </Route>
 
               <div className="align">
                 <div id="Nav-bar">
@@ -178,172 +174,210 @@ function App() {
                 </div>
 
                 <div className="content-showcase">
-                  <Route path="/dashboard">
-                    <h1 style={{ backgroundColor: "green" }}>Dashboard:</h1>
-                    <Dashboard />
-                  </Route>
+                  <Switch>
+                    <Route exact path="/">
+                      <HomePage />
+                    </Route>
+                    <Route path="/dashboard">
+                      <Header />
+                      <h1 style={{ backgroundColor: "green" }}>Dashboard:</h1>
+                      <Dashboard />
+                    </Route>
 
-                  <Route exact path="/myOrders">
-                    <h1 style={{ textAlign: "center" }}>Your order history:</h1>
-                    <br />
-                    <MyOrdersList />
-                  </Route>
+                    <Route exact path="/myOrders">
+                      <Header />
+                      <h1 style={{ textAlign: "center" }}>Your order history:</h1>
+                      <br />
+                      <MyOrdersList />
+                    </Route>
 
-                  <Route path="/menu">
-                    {/* Render ItemCard for a different view (conditional rendering) */}
-                    {/* show button only for admin */}
+                    <Route exact path="/menu">
+                      {/* Render ItemCard for a different view (conditional rendering) */}
+                      {/* show button only for admin */}
 
-                    {/*                     
+                      {/*                     
                     <h1 className="Link-Navigations">
                       <span id="Link"><Link to="/">Home</Link></span>
                       <span id="Link"><Link to="/Menu">Menu</Link></span>
                       <span id="Link"><Link to="/Cart">Cart</Link></span>
                     </h1> */}
-                    <Menu />
-                    {/* <ItemCard /> */}
-                  </Route>
+                      {/* <Header /> */}
+                      <Menu />
+                      {/* <ItemCard /> */}
+                    </Route>
 
-                  <Route path="/Cart">
-                    {/* Must show current cart details */}
-                    <h1 style={{ backgroundColor: "green" }}>Cart:</h1>
-                  </Route>
+                    <Route path="/Cart">
+                      <Header />
+                      {/* Must show current cart details */}
+                      <h1 style={{ backgroundColor: "green" }}>Cart:</h1>
+                    </Route>
 
-                  <Route path="/users/add">
-                    <h1>Add User :</h1>
-                  </Route>
+                    <Route path="/users/add">
+                      <h1>Add User :</h1>
+                    </Route>
 
-                  <Route
-                    exact
-                    path="/users/add"
-                    render={() => <AddUserData />}
-                  />
+                    <Route
+                      exact
+                      path="/users/add"
+                      render={() => <AddUserData />}
+                    />
 
-                  {/* <Route exact path="/Transport/add" >
-            <h1>Add Transport</h1>
-            {/* <AddTransport /> */}
+                    {/* <Route exact path="/Transport/add" >
+                       <h1>Add Transport</h1>
+                    {/* <AddTransport /> */}
 
-                  {/* </Route> */}
-                  {/*           
-          <Route exact path="/vendor/add" >
-            <h1>Add Vendor</h1>
-            <AddVendor /> */}
+                    {/* </Route> */}
+                    {/*           
+                    <Route exact path="/vendor/add" >
+                     <h1>Add Vendor</h1>
+                         <AddVendor /> */}
 
-                  {/* </Route>  */}
+                    {/* </Route>  */}
 
-                  <Route path="/request" component={CustomerRequest} />
+                    <Route path="/request">
+                      <Header />
+                      <CustomerRequest />
+                    </Route>
 
-                  <Route exact={true} path="/items">
-                    <button
-                      id="ShowButton"
-                      onClick={() => {
-                        var navBarElement = document.getElementById("Nav-bar");
-                        navBarElement.style.display = "block";
+                    <Route exact={true} path="/items">
+                      <button
+                        id="ShowButton"
+                        onClick={() => {
+                          var navBarElement = document.getElementById("Nav-bar");
+                          navBarElement.style.display = "block";
 
-                        var showElement = document.getElementById("ShowButton");
-                        showElement.style.display = "none";
-                      }}
-                    >
-                      Show
-                    </button>
-                    <ItemList />
-                  </Route>
+                          var showElement = document.getElementById("ShowButton");
+                          showElement.style.display = "none";
+                        }}
+                      >
+                        Show
+                      </button>
+                      <Header />
+                      <ItemList />
+                    </Route>
 
-                  <Route path="/items/add" component={ItemNew} exact={true} />
+                    <Route exact={true} path="/items/add">
+                      <Header />
+                      <ItemNew />
+                    </Route>
 
-                  <Route path={"/items/edit/:id"}>
-                    <ItemEdit />
-                  </Route>
+                    <Route path={"/items/edit/:id"}>
+                      <ItemEdit />
+                    </Route>
 
-                  <Route path="/items/show/:id" component={ItemShow} />
+                    <Route path="/items/show/:id">
+                      <Header />
+                      <ItemShow />
+                    </Route>
 
-                  <Route path="/items/add/adddetails">
-                    <h1>Listing Details :</h1>
-                    <ItemDetailsForm />
-                  </Route>
+                    <Route path="/items/add/adddetails">
+                      <Header />
+                      <h1>Listing Details :</h1>
+                      <ItemDetailsForm />
+                    </Route>
 
-                  {/* <Route path="/orders/add" >
+                    {/* <Route path="/orders/add" >
             <h1>Add Orders :</h1>
           </Route> */}
 
-                  <Route path="/Calender">
-                    <h1>Calender : </h1>
-                    {/* <Calender  /> */}
-                  </Route>
-                  <Route exact path="/orders">
-                    <OrderList />
-                  </Route>
+                    <Route path="/Calender">
+                      <Header />
+                      <h1>Calender : </h1>
+                      {/* <Calender  /> */}
+                    </Route>
 
-                  <Route exact path="/orders/:id" component={OrderShow} />
-                  <Route
-                    exact
-                    path="/orders/:id/print"
-                    component={OrderPrint}
-                  />
+                    <Route exact path="/orders">
+                      <Header />
+                      <OrderList />
+                    </Route>
 
-                  <Route path="/myOrders/show/:id" component={myOrdersShow} />
+                    <Route exact path="/orders/:id">
+                      <Header />
+                      <OrderShow />
+                    </Route>
+                    <Route
+                      exact
+                      path="/orders/:id/print"
+                    >
+                      <Header />
+                      <OrderPrint />
+                    </Route>
 
-                  <Route path="/Register">
-                    {/* <Container fluid>
-                <Row>
-                  <Col> */}
-                    <div className="SignUpCard">
-                      <h1 style={{ fontSize: "36px", textAlign: "center" }}>
-                        {" "}
-                        Sign Up{" "}
+                    <Route path="/myOrders/show/:id">
+                      <Header />
+                      <MyOrdersShow />
+                    </Route>
+
+                    <Route path="/Register">
+                      <Header />
+                      <div className="SignUpCard">
+                        <h1 style={{ fontSize: "36px", textAlign: "center" }}>
+                          {" "}
+                          Sign Up{" "}
+                        </h1>
+                        <SignUpForm />
+                      </div>
+                    </Route>
+
+                    <Route path="/Signin">
+                      <Header />
+                      <SignupCenterContainer />
+                    </Route>
+
+                    <Route path="/contactus">
+                      <Header />
+                      <Contact />
+                    </Route>
+
+                    <Route path="/settings">
+                      <Header />
+                      <h1 style={{ backgroundColor: "blue" }}>Settings:</h1>
+                      <h1 style={{}}>App Version : v1.0.5.7 T8</h1>
+                      <h1 style={{}}>Created By : Aashay S Vanpal</h1>
+                    </Route>
+
+                    <Route exact path="/profile">
+                      <Header />
+                      <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1>
+                      <UserProfile />
+                    </Route>
+
+                    <Route path="/aboutus">
+                      <Header />
+
+                      <h1
+                        style={{ backgroundColor: "gold", textAlign: "center" }}
+                      >
+                        About us Page
                       </h1>
-                      <SignUpForm />
-                    </div>
-                    {/* </Col>
-                </Row>
-              </Container> */}
-                  </Route>
+                      <h2 style={{ color: "green" }}>
+                        This page is still under maintenance please wait for the
+                        website to be functional soon ...
+                      </h2>
+                    </Route>
 
-                  <Route path="/Signin">
-                    <SignupCenterContainer />
-                  </Route>
+                    <Route path="/deals">
+                      <h1
+                        style={{ backgroundColor: "gold", textAlign: "center" }}
+                      >
+                        Deals Page
+                      </h1>
+                      <h2 style={{ color: "green" }}>
+                        This page is still under maintenance please wait for the
+                        website to be functional soon ...
+                      </h2>
+                    </Route>
 
-                  <Route path="/contactus">
-                    <Contact />
-                  </Route>
+                    <Route path="/qurries">
+                      <Header />
+                      <h1 style={{ backgroundColor: "blue" }}>Qurries Page</h1>
+                    </Route>
 
-                  <Route path="/settings">
-                    <h1 style={{ backgroundColor: "blue" }}>Settings:</h1>
-                    <h1 style={{}}>App Version : v1.0.5.7 T8</h1>
-                    <h1 style={{}}>Created By : Aashay S Vanpal</h1>
-                  </Route>
-
-                  <Route path="/profile">
-                    <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1>
-                    <UserProfile />
-                  </Route>
-
-                  <Route path="/aboutus">
-                    <h1
-                      style={{ backgroundColor: "gold", textAlign: "center" }}
-                    >
-                      About us Page
-                    </h1>
-                    <h2 style={{ color: "green" }}>
-                      This page is still under maintenance please wait for the
-                      website to be functional soon ...
-                    </h2>
-                  </Route>
-
-                  <Route path="/deals">
-                    <h1
-                      style={{ backgroundColor: "gold", textAlign: "center" }}
-                    >
-                      Deals Page
-                    </h1>
-                    <h2 style={{ color: "green" }}>
-                      This page is still under maintenance please wait for the
-                      website to be functional soon ...
-                    </h2>
-                  </Route>
-
-                  <Route path="/qurries">
-                    <h1 style={{ backgroundColor: "blue" }}>Qurries Page</h1>
-                  </Route>
+                    <Route path="*">
+                      <Header />
+                      <NotFoundPage />
+                    </Route>
+                  </Switch>
                 </div>
               </div>
             </BrowserRouter>
