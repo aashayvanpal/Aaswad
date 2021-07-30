@@ -28,7 +28,8 @@ export default function HomePage(props) {
 
                         <div style={{ "position": "relative" }}>
                             <img src={designLeft} alt="designleft" id="designLeft" />
-                            <div style={{ "display": "block", "height": "1000px", "width": "100%", "backgroundColor": "#F5EDC0" }}>
+                            <div className="Center-content"
+                            >
                                 <div className="center-align">
                                     <h1 className="h1-heading" id="txt1">Home is where,</h1>
                                     <h1 className="h1-heading" id="txt2">I'm with food</h1>
@@ -46,13 +47,7 @@ export default function HomePage(props) {
                             <div style={{
                                 "position": "relative",
                             }}>
-                                <h1 style={{
-                                    "textAlign": "center",
-                                    "marginBottom": "80px",
-                                    "fontFamily": 'Playball',
-                                    "fontSize": "90px"
-                                }}>Benefits and Features</h1>
-
+                                <h1 id='mini-heading'>Benefits and Features</h1>
                                 <div className="container">
                                     <div className="realCard">
                                         <img alt="orderfood-img" src={orderfood} />

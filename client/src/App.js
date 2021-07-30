@@ -1,4 +1,4 @@
-// App version v1.0.5.7 T8 userIconRender
+// App version v1.0.5.7 T8 Home page CSS mobile view changes
 // Check version-notes.txt for version updates
 
 import React from "react";

@@ -33,7 +33,7 @@ export default function Footer() {
                 </div>
 
                 <div style={{
-                    "marginTop": "50px",
+                    "marginTop": "30px",
                     "textAlign": "center",
                     "color": "#dbc268",
                 }}>

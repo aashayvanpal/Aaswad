@@ -9,7 +9,8 @@ import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
 import Header from "./Header.js"
-
+import { Toast, ToastBody, ToastHeader } from 'reactstrap';
+import { Link } from 'react-router-dom'
 
 
 // for loading from google images :(not working) 
@@ -499,6 +500,15 @@ export default class Menu extends React.Component {
                 }}>
 
                     <div className="inner-Menu" >
+                        {/* <div style={{
+                            "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
+                        }}>
+                            <Toast delay={300} autohide>
+                                <ToastBody>
+                                    Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
+                                </ToastBody>
+                            </Toast>
+                        </div> */}
                         <h1 id="Menu-style">Choose Your Menu</h1>
 
                         <div id="filteringOptions">
