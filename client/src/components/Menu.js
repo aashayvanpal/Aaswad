@@ -9,6 +9,7 @@ import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
 import Header from "./Header.js"
+import NavigationBar from './NavigationBar'
 import { Toast, ToastBody, ToastHeader } from 'reactstrap';
 import { Link } from 'react-router-dom'
 
@@ -478,7 +479,7 @@ export default class Menu extends React.Component {
                 <Header />
                 {this.state.userType === "Admin" ? (
                     <>
-                        <h1>Welcome - {this.state.username} you are - {this.state.userType}</h1>
+                        <h2 style={{ "textAlign": "center" }}>Welcome - {this.state.username} you are - {this.state.userType}</h2>
                         <button id="ShowButton" onClick={() => {
                             var navBarElement = document.getElementById("Nav-bar")
                             navBarElement.style.display = "block"
@@ -495,121 +496,115 @@ export default class Menu extends React.Component {
                         null
                     )
                 }
-                < div className="Menu-Cart" style={{
-                    "padding": "10px 10px 0px 10px",
-                }}>
+                <div style={{ "display": "flex" }}>
+                    <NavigationBar />
+                    <div className="Menu-Cart" >
 
-                    <div className="inner-Menu" >
-                        {/* <div style={{
-                            "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
-                        }}>
+                        <div className="inner-Menu" >
+                            {/* <div style={{
+                             "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
+                            }}>
                             <Toast delay={300} autohide>
                                 <ToastBody>
                                     Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
                                 </ToastBody>
                             </Toast>
-                        </div> */}
-                        <h1 id="Menu-style">Choose Your Menu</h1>
+                            </div> */}
+                            <h1 id="Menu-style">Choose Your Menu</h1>
 
-                        <div id="filteringOptions">
-                            <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
+                            <div id="filteringOptions">
+                                <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
 
-                            {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
+                                {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 
-                            <select onChange={this.handleSelect}
-                                style={{
-                                    "fontSize": "22px",
-                                    "padding": "10px",
-                                    "width": "160px",
-                                    "marginLeft": "10px",
-                                    "borderRadius": "10px",
-                                    "backgroundColor": "#dbc268"
-                                }}
+                                <select onChange={this.handleSelect}
+                                    style={{
+                                        "fontSize": "22px",
+                                        "padding": "10px",
+                                        "width": "160px",
+                                        "marginLeft": "10px",
+                                        "borderRadius": "10px",
+                                        "backgroundColor": "#dbc268"
+                                    }}
 
-                                id="filterItems"
-                            >
-                                <option value="all">All</option>
-                                <option value="breakfast">Breakfast</option>
-                                <option value="lunch">Lunch</option>
-                                <option value="dinner">Dinner</option>
-                                <option value="sweets">Sweets</option>
-                                <option value="snacks">Snacks</option>
-                                <option value="special">Special</option>
-                            </select>
-                            <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear Filters</button>
+                                    id="filterItems"
+                                >
+                                    <option value="all">All</option>
+                                    <option value="breakfast">Breakfast</option>
+                                    <option value="lunch">Lunch</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="sweets">Sweets</option>
+                                    <option value="snacks">Snacks</option>
+                                    <option value="special">Special</option>
+                                </select>
+                                <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear Filters</button>
 
 
-                        </div>
-                        <div>
-                            <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
-                        </div>
-                        <Stepper className="stepper-color"
-                            steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
-                            activeStep={0}
-                        />
-                        <hr style={{ "height": "10px" }} />
-                        {this.state.spinnerLoading ? (
-                            <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
-                        )
-                            :
-                            (
-                                <div id="menu-container">
-                                    <div id="display-cards-container">
-                                        {this.state.searchFilter.length === 0 ? (
-                                            <div style={{ "textAlign": "center", "width": "100%" }}>
-                                                <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
-                                                <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
-                                                <br />
-                                                <br />
-                                                <br />
-                                            </div>
-                                        ) : (
+                            </div>
+                            <div>
+                                <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
+                            </div>
+                            <Stepper className="stepper-color"
+                                steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                                activeStep={0}
+                            />
+                            <hr style={{ "height": "10px" }} />
+                            {this.state.spinnerLoading ? (
+                                <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
+                            )
+                                :
+                                (
+                                    <div id="menu-container">
+                                        <div id="display-cards-container">
+                                            {this.state.searchFilter.length === 0 ? (
+                                                <div style={{ "textAlign": "center", "width": "100%" }}>
+                                                    <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
+                                                    <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
+                                                    <br />
+                                                    <br />
+                                                    <br />
+                                                </div>
+                                            ) : (
 
-                                            this.state.searchFilter.map((item, i) => {
-                                                return (
-                                                    <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
-                                                        <div className="card-body-style">
-                                                            <div style={{ "height": "150px", "width": "100%" }}>
+                                                this.state.searchFilter.map((item, i) => {
+                                                    return (
+                                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                            <div className="card-body-style">
+                                                                <div style={{ "height": "150px", "width": "100%" }}>
 
-                                                                <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+                                                                    <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
-                                                                {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                                <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
-                                                            </div>
-                                                            <div className="contents">
-                                                                <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
-                                                                <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                                    {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
+                                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
+                                                                </div>
+                                                                <div className="contents">
+                                                                    <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
+                                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )
-                                            })
-                                        )
+                                                    )
+                                                })
+                                            )
 
-                                        }
+                                            }
 
+                                        </div>
+                                        <br />
                                     </div>
-                                    <br />
-                                </div>
-                            )}
+                                )}
 
-                    </div>
-                    {/* <Cart cartItems={this.state.cartItems}
-                        items={this.state.items}
-                        removeItemFromCart={this.removeItemFromCart}
-                        resetIsSelected={this.resetIsSelected}
-                        requestOrder={this.requestOrder} /> */}
+                        </div>
+                        <CartModel buttonLabel={`Cart`}
+                            items={this.state.items}
+                            cartItems={this.state.cartItems}
+                            removeItemFromCart={this.removeItemFromCart}
+                            resetIsSelected={this.resetIsSelected}
+                            requestOrder={this.requestOrder}
+                        />
+                    </div >
+                </div>
 
-                    <CartModel buttonLabel={`Cart`}
-                        items={this.state.items}
-                        cartItems={this.state.cartItems}
-                        removeItemFromCart={this.removeItemFromCart}
-                        resetIsSelected={this.resetIsSelected}
-                        requestOrder={this.requestOrder}
-                    />
-
-
-                </div >
 
                 <div style={{
                     "marginTop": "30px",

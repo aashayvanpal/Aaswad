@@ -1,4 +1,4 @@
-// App version v1.0.5.7 T8 Home page CSS mobile view changes
+// App version v1.0.5.7 T8 NavBar CSS mobile view changes
 // Check version-notes.txt for version updates
 
 import React from "react";
@@ -36,6 +36,7 @@ import HomePage from "./components/HomePage.js";
 import "./css/HomePage/header.css";
 // make header as a component
 import { Container, Row, Col } from "reactstrap";
+import NavigationBar from './components/NavigationBar.js'
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
 
@@ -64,115 +65,8 @@ function App() {
             <BrowserRouter>
 
               <div className="align">
-                <div id="Nav-bar">
-                  <ul style={{ listStyleType: "none" }}>
-                    <button
-                      style={{
-                        marginLeft: "109px",
-                        background: "#0e235f",
-                        border: "none",
-                        color: "white",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        var navBarElement = document.getElementById("Nav-bar");
-                        navBarElement.style.display = "none";
 
-                        var showElement = document.getElementById("ShowButton");
-                        showElement.style.display = "block";
-                      }}
-                    >
-                      X
-                    </button>
-                    <Link
-                      to="/"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Home</li>
-                    </Link>
-                    <Link
-                      to="/dashboard"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Dashboard</li>
-                    </Link>
-                    <Link
-                      to="/items"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Items</li>
-                    </Link>
-                    <Link
-                      to="/menu"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Menu</li>
-                    </Link>
-
-                    <Link
-                      to="/orders"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Orders</li>
-                    </Link>
-
-                    <Link
-                      to="/users/add"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Vendors</li>
-                    </Link>
-                    <Link
-                      to="/users/add"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Labourers</li>
-                    </Link>
-                    <Link
-                      to="/users/add"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Customers</li>
-                    </Link>
-                    <Link
-                      to="/users/add"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Recipies</li>
-                    </Link>
-                    <Link
-                      to="/calender"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Calender</li>
-                    </Link>
-                    <Link
-                      to="/qurries"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Qurries</li>
-                    </Link>
-                    <Link
-                      to="/deals"
-                      className="Nav-barLink"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <li>Deals</li>
-                    </Link>
-                  </ul>
-                </div>
-
+                {/* <NavigationBar /> */}
                 <div className="content-showcase">
                   <Switch>
                     <Route exact path="/">
@@ -240,6 +134,7 @@ function App() {
                     </Route>
 
                     <Route exact={true} path="/items">
+                      <Header />
                       <button
                         id="ShowButton"
                         onClick={() => {
@@ -252,8 +147,11 @@ function App() {
                       >
                         Show
                       </button>
-                      <Header />
-                      <ItemList />
+                      {/* <div style={{ 'display': 'flex' }}> */}
+                      <div style={{ "width": "100%", "display": "flex" }}>
+                        <NavigationBar />
+                        <ItemList />
+                      </div>
                     </Route>
 
                     <Route exact={true} path="/items/add">
