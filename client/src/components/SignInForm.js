@@ -4,6 +4,8 @@ import { withRouter } from "react-router";
 import "../css/LoginDetails/Signin.css";
 import { Link } from "react-router-dom";
 import { getUserDetails } from '../assets/user-functions.js'
+import ReactAnime from 'react-animejs'
+const { Anime } = ReactAnime
 
 class SignInForm extends React.Component {
   constructor(props) {
@@ -87,43 +89,54 @@ class SignInForm extends React.Component {
 
   render() {
     return (
-      <div className="SignUpCard">
-        <div>
-          <h1 style={{ fontSize: "36px", textAlign: "center" }}> Sign In </h1>
+      <Anime
+        initial={[
+          {
+            targets: ".SignUpCard",
+            easing: "easeInOutSine",
+            opacity: [0, 1],
+            delay: 100
+          }
+        ]}
+        style={{ "margin": "10px" }}
+      >
+        <div className="SignUpCard">
+          <div>
+            <h1 style={{ fontSize: "36px", textAlign: "center" }}> Sign In </h1>
 
-          <form onSubmit={this.handleSubmit}>
-            <input
-              id="inputEmail"
-              placeholder="Email"
-              name="email"
-              onChange={this.handleChange}
-              value={this.state.email}
-            />
-            <br />
-            <input
-              id="inputPassword"
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={this.handleChange}
-              value={this.state.password}
-            />
-            <br />
-            <div
-              style={{
-                alignItems: "center",
-              }}
-            >
+            <form onSubmit={this.handleSubmit}>
+              <input
+                id="inputEmail"
+                placeholder="Email"
+                name="email"
+                onChange={this.handleChange}
+                value={this.state.email}
+              />
+              <br />
+              <input
+                id="inputPassword"
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={this.handleChange}
+                value={this.state.password}
+              />
+              <br />
               <div
                 style={{
-                  position: "relative",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  display: "flex",
-                  width: "238px",
+                  alignItems: "center",
                 }}
               >
-                {/* <input type="checkbox"
+                <div
+                  style={{
+                    position: "relative",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                    width: "238px",
+                  }}
+                >
+                  {/* <input type="checkbox"
                                 id="caterer"
                                 name="isCaterer"
                                 onChange={this.handleCheckboxChange} checked={this.state.isCaterer}
@@ -135,25 +148,26 @@ class SignInForm extends React.Component {
                                 "marginLeft": "30px",
                             }} htmlFor="caterer" > I am Caterer</label>
                             <br /> */}
+                </div>
+                <div
+                  style={{
+                    position: "relative",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    display: "flex",
+                    width: "100%",
+                  }}
+                >
+                  <input type="submit" value="Log In" id="logIn" />
+                </div>
               </div>
-              <div
-                style={{
-                  position: "relative",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  display: "flex",
-                  width: "100%",
-                }}
-              >
-                <input type="submit" value="Log In" id="logIn" />
-              </div>
-            </div>
-          </form>
-          <h3 id="already-have-account">
-            Don't have an account ? <Link to="/register">Sign Up</Link>
-          </h3>
+            </form>
+            <h3 id="already-have-account">
+              Don't have an account ? <Link to="/register">Sign Up</Link>
+            </h3>
+          </div>
         </div>
-      </div>
+      </Anime>
     );
   }
 }

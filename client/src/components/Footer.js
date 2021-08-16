@@ -12,7 +12,7 @@ export default function Footer() {
                     <div className="footer-c1" >
                         <div className="footer-c1-box1">
                             <h2><Link to="/SignIn" >Order Now!</Link></h2>
-                            <h2><Link to="/Deals" >Deals</Link></h2>
+                            {/* <h2><Link to="/Deals" >Deals</Link></h2> */}
                         </div>
 
                         <div className="footer-c1-box2">

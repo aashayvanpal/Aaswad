@@ -23,7 +23,8 @@ export default class ItemNew extends React.Component {
                 }
                 else {
                     console.log('success', response.data)
-                    this.props.history.push('/items')
+                    // this.props.history.push('/items')
+                    window.location.href = '/items'
                 }
             })
     }

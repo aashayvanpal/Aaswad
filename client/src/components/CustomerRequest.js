@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from '../config/axios';
 import CustomerForm from './customer/Form.js'
+import NavigationBar from './NavigationBar.js'
 // import { Table } from 'reactstrap';
 // import { Link } from 'react-router-dom'
 
@@ -196,8 +197,8 @@ export default class CustomerRequest extends React.Component {
                     // Adding confirmation modal
                     window.alert('Thank you for placing order we will get back')
                     // console.log(this.props)
-                    // window.location.href = 'http://localhost:3000/Menu'
-                    this.props.history.push('/menu')
+                    // this.props.history.push('/menu')
+                    window.location.href = '/menu'
 
                 }
             })
@@ -331,9 +332,10 @@ export default class CustomerRequest extends React.Component {
                         ) : (null)
                     }
 
-
-
-                    <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
+                    <div style={{ "display": "flex" }}>
+                        <NavigationBar />
+                        <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
+                    </div>
                     {/* <button onClick={this.handleSubmit}>Submit Enquiry</button> */}
                 </div >
                 <div style={{
@@ -343,7 +345,7 @@ export default class CustomerRequest extends React.Component {
                     "backgroundColor": "#353535"
                 }}>
                     © Copyrights Reserved 2021
-                    </div>
+                </div>
             </div>
         );
     }

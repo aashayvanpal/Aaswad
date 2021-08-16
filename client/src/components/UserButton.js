@@ -7,7 +7,6 @@ import ReactAnime from 'react-animejs'
 const { Anime, stagger } = ReactAnime
 
 const UserButton = (props) => {
-
   const [dropdownOpen, setOpen] = useState(false);
 
   const toggle = () => setOpen(!dropdownOpen);
@@ -47,14 +46,65 @@ const UserButton = (props) => {
         <DropdownToggle className="user" style={{ "border": "none", "backgroundColor": "#dbc268" }} />
       </Anime>
       <DropdownMenu>
-        <DropdownItem header>Username</DropdownItem>
-        <DropdownItem disabled>Action</DropdownItem>
-        <DropdownItem>Another Action</DropdownItem>
-        <DropdownItem><Link to="/profile">Profile</Link></DropdownItem>
-        <DropdownItem><Link to="/myOrders">My Orders</Link></DropdownItem>
-        <DropdownItem><Link to="/settings">Settings</Link></DropdownItem>
+        <DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px",
+          "padding": "10px"
+
+        }} header>
+          {props.userName}
+        </DropdownItem>
+        {/* <DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px"
+        }} disabled>
+          Action
+        </DropdownItem>
+        <DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px"
+        }} >Another
+          Action
+        </DropdownItem> */}
+        <Link style={{ "textDecoration": "none" }} to="/profile"><DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px",
+          "cursor": "pointer",
+          "padding": "10px"
+        }}  >Profile</DropdownItem></Link>
+        <Link style={{ "textDecoration": "none" }} to="/myOrders"><DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px",
+          "cursor": "pointer",
+          "padding": "10px"
+        }}> My Orders</DropdownItem></Link>
+        <Link style={{ "textDecoration": "none" }} to="/settings"><DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px",
+          "cursor": "pointer",
+          "padding": "10px"
+        }}>Settings</DropdownItem></Link>
         <DropdownItem divider />
-        <DropdownItem onClick={logout}>Logout</DropdownItem>
+        <DropdownItem style={{
+          "color": "green",
+          "fontWeight": "bold",
+          "textAlign": "center",
+          "fontSize": "22px",
+          "cursor": "pointer",
+          "padding": "10px"
+        }} onClick={logout}>Logout</DropdownItem>
       </DropdownMenu>
     </ButtonDropdown>
   );

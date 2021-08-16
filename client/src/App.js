@@ -1,6 +1,6 @@
-// App version v1.0.5.7 T8 NavBar CSS mobile view changes
+// App version v1.0.5.8 T8 Profile CSS changes
 // Check version-notes.txt for version updates
-
+// Working on css for both desktop and mobile(only customer view)
 import React from "react";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import Dashboard from "./components/Dashboard.js";
@@ -79,10 +79,12 @@ function App() {
                     </Route>
 
                     <Route exact path="/myOrders">
-                      <Header />
-                      <h1 style={{ textAlign: "center" }}>Your order history:</h1>
-                      <br />
-                      <MyOrdersList />
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <h1 style={{ textAlign: "center" }}>Your order history:</h1>
+                        <br />
+                        <MyOrdersList />
+                      </div>
                     </Route>
 
                     <Route exact path="/menu">
@@ -218,8 +220,10 @@ function App() {
                     </Route>
 
                     <Route path="/Signin">
-                      <Header />
-                      <SignupCenterContainer />
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <SignupCenterContainer />
+                      </div>
                     </Route>
 
                     <Route path="/contactus">
@@ -228,15 +232,21 @@ function App() {
                     </Route>
 
                     <Route path="/settings">
-                      <Header />
-                      <h1 style={{ backgroundColor: "blue" }}>Settings:</h1>
-                      <h1 style={{}}>App Version : v1.0.5.7 T8</h1>
-                      <h1 style={{}}>Created By : Aashay S Vanpal</h1>
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <div style={{
+                          "textAlign": "center",
+                        }}>
+                          <h1>Settings:</h1>
+                          <h1>App Version : v1.0.5.8 T8</h1>
+                          <h1>Created By : Aashay S Vanpal</h1>
+                        </div>
+                      </div>
                     </Route>
 
                     <Route exact path="/profile">
                       <Header />
-                      <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1>
+                      {/* <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1> */}
                       <UserProfile />
                     </Route>
 

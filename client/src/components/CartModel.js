@@ -23,13 +23,14 @@ const CartModel = (props) => {
         <div >
             <Button style={{
                 "backgroundColor": "#dbc268",
-                "color": "black"
+                "color": "black",
+                "fontSize":"22px"
             }} className="cart-button" onClick={toggle}>
                 <img src={cartImage} alt="" style={{ "marginRight": "20px" }} />
                 {buttonLabel}
             </Button>
             <Modal isOpen={modal} toggle={toggle} className={className} >
-                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Review your menu</ModalHeader>
+                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Review your Selections</ModalHeader>
 
                 
                 <ModalBody style={{ "backgroundColor": "#fff5d2" }} >

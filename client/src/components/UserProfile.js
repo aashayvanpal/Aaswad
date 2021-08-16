@@ -2,7 +2,10 @@
 
 import React from 'react'
 // import axios from '../config/axios.js'
+import heroUser from '../images/heroUser.svg'
 import { getUserDetails } from '../assets/user-functions.js'
+import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+import "../css/profile.css"
 
 export default class UserProfile extends React.Component {
     constructor() {
@@ -38,11 +41,61 @@ export default class UserProfile extends React.Component {
 
     render() {
         return (
-            <div>
-                <h1>Name:{this.state.username}</h1>
-                <h1>UserType:{this.state.userType}</h1>
-                <h1>email:{this.state.email}</h1>
-                <h1>phonenumber:{this.state.phonenumber}</h1>
+            <div id="profile-container">
+                <div id="profile-Overlap">
+                    <img src={heroUser} alt="image" style={{
+                        "display": "block",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "height": "100px",
+                    }} />
+                    <h2 style={{
+                        "textAlign": "center"
+                    }}
+                    >{this.state.username}</h2>
+
+                </div>
+
+                <div id="profile-inner-container">
+                    <div id="profileDiv">
+                        <table >
+                            <tbody>
+                                {/* <tr>
+                                    <td style={{ "padding": "10px" }}>UserType</td>
+                                    <td style={{ "padding": "10px" }}>{this.state.userType}</td>
+                                </tr> */}
+                                <tr style={{ "width": "100%" }}>
+                                    <td style={{ "padding": "10px" }}>Email</td>
+                                    <td style={{ "padding": "10px" }}>{this.state.email}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ "padding": "10px" }}>Phone Number</td>
+                                    <td style={{ "padding": "10px" }}>{this.state.phonenumber}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ "padding": "10px" }}>Address</td>
+                                    {/* <td style={{ "padding": "10px" }}>{this.state.address}</td> */}
+                                    <td style={{ "padding": "10px", "maxWidth": "50px" }}></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button style={{
+                        "display": "block",
+                        "margin": "10px auto",
+                        "padding": "10px 40px",
+                        "borderRadius": "10px",
+                        "fontSize": "20px",
+                        "fontWeight": "bold",
+                        "cursor": "pointer",
+                        "backgroundColor": "#ff881a",
+                        "boxShadow": "0px 4px 4px rgba(0, 0, 0, 0.25)"
+
+                    }}>Change Password</button>
+                </div>
+                <h5 id="footer-style">
+                    © Copyrights Reserved 2021
+                </h5>
             </div>
         )
     }

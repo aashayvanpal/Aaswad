@@ -8,6 +8,7 @@ export default class UserOptions extends React.Component {
         super()
         this.state = {
             showUserButton: false,
+            username: ''
         }
     }
 
@@ -15,13 +16,14 @@ export default class UserOptions extends React.Component {
         getUserDetails()
             .then(res => {
                 this.setState({ showUserButton: true })
+                this.state.username = res.username
             })
 
     }
 
     render() {
         return (
-            <div>{this.state.showUserButton && <UserButton />}</div>
+            <div>{this.state.showUserButton && <UserButton userName={this.state.username} />}</div>
         )
     }
 }

@@ -252,9 +252,9 @@ export default class ItemList extends Component {
                 }}>Show</button>
                 <div style={{ 'display': 'flex' }}>
                     <NavigationBar />
-                    <div style={{ "margin": "10px","width":"100%" }}>
-                        <div style={{ "backgroundColor": "burlywood" }}>
-                            <h1>Approve orders - {this.state.approves.length}</h1>
+                    <div style={{ "margin": "10px", "width": "100%" }}>
+                        <div style={{ "backgroundColor": "burlywood", "marginBottom": "20px" }}>
+                            <h1 style={{ 'textAlign': 'center' }}>Approve orders - {this.state.approves.length}</h1>
 
                             <Table style={{ "fontWeight": "bold" }}>
                                 <caption>
@@ -281,7 +281,7 @@ export default class ItemList extends Component {
 
                                                         <button onClick={() => {
                                                             this.handleRemoveOrder(item._id, item.customer.fullName)
-                                                        }}>Remove</button>
+                                                        }}>Delete</button>
                                                         <button onClick={() => {
                                                             this.handleApproveOrder(item._id)
                                                         }}>Approve</button>
@@ -297,8 +297,8 @@ export default class ItemList extends Component {
                             </Table>
                         </div>
 
-                        <div style={{ "backgroundColor": "#2eec4e" }}>
-                            <h1>Confirmed orders - {this.state.confirms.length}</h1>
+                        <div style={{ "backgroundColor": "#2eec4e", "marginBottom": "20px" }}>
+                            <h1 style={{ 'textAlign': 'center' }}>Confirmed orders - {this.state.confirms.length}</h1>
                             <input placeholder="Search Order" />
                             <button>Search</button>
 
@@ -310,7 +310,7 @@ export default class ItemList extends Component {
                                         <Th className="listing-table" >Name</Th>
                                         <Th className="listing-table" >Update</Th>
                                         <Th className="listing-table" >Date</Th>
-                                        <Th className="listing-table" >Remove</Th>
+                                        <Th className="listing-table" >Delete</Th>
                                         <Th className="listing-table" >Completed</Th>
                                     </Tr>
                                 </Thead>
@@ -327,7 +327,7 @@ export default class ItemList extends Component {
                                                     }</Td>
                                                     <Td className="listing-table" ><button onClick={() => {
                                                         this.handleRemoveOrder(item._id, item.customer.fullName)
-                                                    }}>Remove</button></Td>
+                                                    }}>Delete</button></Td>
                                                     <Td className="listing-table" ><button onClick={() => {
                                                         this.handleCompleteOrder(item._id)
                                                     }}>Completed</button></Td>
@@ -340,7 +340,7 @@ export default class ItemList extends Component {
                         </div>
 
                         <div style={{ "backgroundColor": "yellow" }}>
-                            <h1>Completed orders -{this.state.completed.length}</h1>
+                            <h1 style={{ 'textAlign': 'center' }}>Completed orders -{this.state.completed.length}</h1>
                             <input placeholder="Search Order" />
                             <button>Search</button>
                             <Table>
@@ -349,7 +349,7 @@ export default class ItemList extends Component {
                                         <Th className="listing-table">Sl no</Th>
                                         <Th className="listing-table">Name</Th>
                                         <Th className="listing-table">Date</Th>
-                                        <Th className="listing-table">Remove</Th>
+                                        <Th className="listing-table">Delete</Th>
                                     </Tr>
                                 </Thead>
 
@@ -365,7 +365,7 @@ export default class ItemList extends Component {
                                                     }</Td>
                                                     <Td className="listing-table" ><button onClick={() => {
                                                         this.handleRemoveOrder(item._id, item.customer.fullName)
-                                                    }}>Remove</button></Td>
+                                                    }}>Delete</button></Td>
                                                 </Tr>
                                             )
                                         })

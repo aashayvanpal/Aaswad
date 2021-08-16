@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from '../config/axios.js'
 import { Link } from 'react-router-dom'
+import '../css/myOrdersShow.css'
 
 export default class myOrdersShow extends React.Component {
     constructor() {
@@ -132,30 +133,43 @@ export default class myOrdersShow extends React.Component {
         //         <Link to='/items'><button>Back</button></Link>
 
         return (
-            <div style={{ "display": "flex" }}>
-                <div>
-                    <h1>Showing myOrders details:-</h1>
-                    <h1>OrderID : {this.state.id}</h1>
-                    <h1>Customer Name : {this.state.fullName}</h1>
-                    <h1>Event Name : {this.state.eventName}</h1>
-                    <h1>Number of People : {this.state.numberOfPeople}</h1>
-                    <h1>Event Date : {this.state.eventDate}</h1>
+            <div id="OrderShowContainer">
+                <div id="ShowContainer1">
+                    {/* <h1>Showing myOrders details:-</h1> */}
+                    <h1 id="OrderDetails">Your Order Details:-</h1><hr />
+                    <h2><b>OrderID :</b> {this.state.id}</h2>
+                    <h2><b>Customer Name :</b> {this.state.fullName}</h2>
+                    <h2><b>Event Name :</b> {this.state.eventName}</h2>
+                    <h2><b>Number of People :</b> {this.state.numberOfPeople}</h2>
+                    <h2><b>Event Date :</b> {this.state.eventDate}</h2>
                     {/* <h1>Event Time : {this.state.eventTime} (24 hours IST)</h1> */}
                     {/* <h1>Phone Number : {this.state.phoneNumber}</h1> */}
-                    <h1>Address : {this.state.address}</h1>
+                    <h2><b>Address :</b> {this.state.address}</h2>
                     {/* <h1>Email : {this.state.email}</h1> */}
-                    <h1>Service : {this.state.service ? "Yes" : "No"}</h1>
-                    <h1>Home Delivery : {this.state.homeDelivery ? "Yes" : "No"}</h1>
-                    <h1>Status : {this.state.status}</h1>
-                    <h1><Link to="/myOrders"><button>Back</button></Link></h1>
+                    <h2><b>Service :</b> {this.state.service ? "Yes" : "No"}</h2>
+                    <h2><b>Home Delivery :</b> {this.state.homeDelivery ? "Yes" : "No"}</h2>
+                    <h2><b>Status :</b> {this.state.status}</h2>
+                    <h2><Link to="/myOrders"><button style={{
+                        "backgroundColor": "#ff881a",
+                        "borderRadius": "10px",
+                        "padding": "10px",
+                        "cursor": "pointer",
+                    }}>Back</button></Link></h2>
                 </div>
 
-                <div style={{ "border": "2px solid black", "padding": "20px" }}>
-                    <h1>Listing Items - {this.state.items.length}</h1>
+                <div id="ShowContainer2">
+                    <h1><b>Order Items - {this.state.items.length}</b></h1>
 
-                    <table style={{ "borderCollapse": "collapse", "border": "2px solid black" }}>
+                    <table style={{
+                        "borderCollapse": "collapse",
+                        "border": "2px solid black",
+                        "padding": "10px",
+                        // "backgroundColor": "green",
+                        "margin": "10px 0px",
+                        "width": "100%",
+                    }}>
                         <thead style={{ "border": "2px solid black" }}>
-                            <tr>
+                            <tr style={{ "fontWeight": "bold" }}>
                                 <td>Sl No.</td>
                                 <td>Item Name</td>
                                 <td>Quantity</td>
@@ -174,8 +188,8 @@ export default class myOrdersShow extends React.Component {
                                             <td>{i + 1}</td>
                                             <td>{item.name}</td>
                                             <td>{item.quantity} {item.measured}</td>
-                                            <td>{item.price}</td>
-                                            <td>{item.quantity * item.price}</td>
+                                            <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.price}</td>
+                                            <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.quantity * item.price}</td>
                                         </tr>
                                     )
 
@@ -184,7 +198,7 @@ export default class myOrdersShow extends React.Component {
                             }
                         </tbody>
                     </table>
-                    <h1>Grand Total = {this.state.total}</h1>
+                    <h2>Grand Total = <span style={{ "fontFamily": "Arial" }}>&#8377;</span>{this.state.total}</h2>
                     {/* <h1>Per plate cost = {this.state.total / this.state.numberOfPeople}</h1> */}
                 </div>
             </div>

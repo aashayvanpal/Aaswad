@@ -9,7 +9,9 @@
 }
 
 #detailsForm {
-  margin: 20px 25%;
+  /* margin: 20px 25%; */
+  margin: 20px 200px;
+  width:100%;
   border-radius: 10px;
   border: 3px solid #5d522c;
   box-shadow: 5px 5px 10px 3px #5d522c;
