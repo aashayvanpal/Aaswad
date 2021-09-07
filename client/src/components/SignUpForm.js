@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom'
 const initialState = {
     name: "",
     email: '',
+    address: '',
     password: '',
     userType: 'Customer',
     nameError: '',
     emailError: '',
     phonenumber: '',
     phonenumberError: '',
+    addressError: '',
 }
 
 // Make responsive
@@ -83,7 +85,8 @@ export default class SignUpForm extends React.Component {
                 "email": this.state.email,
                 "password": this.state.password,
                 "phonenumber": this.state.phonenumber,
-                "userType": this.state.userType
+                "userType": this.state.userType,
+                "address": this.state.address
             }
 
             axios.post('/register', user, {
@@ -149,6 +152,9 @@ export default class SignUpForm extends React.Component {
                         {this.state.phonenumberError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{this.state.phonenumberError}</div>) : null}
 
                         <input id="inputPassword2" type="password" placeholder="Password" name="password" onChange={this.handleChange} value={this.state.password} /><br />
+
+                        <textarea id="inputName" placeholder="Address" name="address" onChange={this.handleChange} value={this.state.address} /><br />
+                        {this.state.addressError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{this.state.addressError}</div>) : null}
                     </div>
 
                     <div className="signup-form-center">

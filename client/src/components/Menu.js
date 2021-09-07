@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from '../config/axios'
-// import Cart from './Cart.js'
 import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
 import noItemFound from '../images/no-item-found.svg'
@@ -31,24 +30,21 @@ export default class Menu extends React.Component {
             items: [],
             cartItems: [],
             inputSearch: '',
-            displayType: '',
             searchFilter: [],
             username: '',
             userType: false,
             spinnerLoading: false
         }
 
-        this.incrementHandle = this.incrementHandle.bind(this)
-        this.decrementHandle = this.decrementHandle.bind(this)
-        this.resetHandle = this.resetHandle.bind(this)
-        this.CartHandle = this.CartHandle.bind(this)
+        // this.CartHandle = this.CartHandle.bind(this)
         this.CartRemoveHandle = this.CartRemoveHandle.bind(this)
         this.favouriteHandle = this.favouriteHandle.bind(this)
-        this.checkboxChange = this.checkboxChange.bind(this)
+        // this.checkboxChange = this.checkboxChange.bind(this)
         this.newCheckboxChange = this.newCheckboxChange.bind(this)
         this.isCheckedValue = this.isCheckedValue.bind(this)
         this.resetIsSelected = this.resetIsSelected.bind(this)
         this.toggleIsSelected = this.toggleIsSelected.bind(this)
+        this.newtoggleIsSelected = this.newtoggleIsSelected.bind(this)
         this.requestOrder = this.requestOrder.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleSelect = this.handleSelect.bind(this)
@@ -58,40 +54,6 @@ export default class Menu extends React.Component {
 
 
     }
-
-    incrementHandle() {
-        console.log('+ button was clicked!')
-        this.setState({ num: this.state.num + 1 })
-    }
-
-    CartHandle() {
-        console.log('Add to cart button was clicked!')
-        console.log('state now :', this.state)
-        console.log('state.items[0] now :', this.state.items[0])
-        console.log('state.items[0].showItemQtyBar now :', this.state.items[0].showItemQtyBar)
-
-        this.setState((prevState) => {
-            console.log('prevState items[0]', prevState.items[0].showItemQtyBar = true)
-            // prevState.showItemQtyBar=true
-
-            // return {
-            //     showItemQtyBar: true
-            // }
-        })
-
-
-
-        // this.setState(prevState => ({
-        //     guests: [newPerson, ...prevState.guests],
-        //     pendingGuest: ""
-        //   }));
-
-
-        console.log('state.items[0].showItemQtyBar after setState :', this.state.items[0].showItemQtyBar)
-
-        console.log('Crossed setstate!')
-    }
-
 
     favouriteHandle() {
         this.setState({
@@ -141,19 +103,40 @@ export default class Menu extends React.Component {
             }
         })
             .then(response => {
-                console.log('Data : ', response.data)
-                const items = response.data
-                console.log('items after request :', items)
-                console.log('items after filtering :')
-                let filteredItems = items.filter(item => item.display === true)
-                filteredItems.forEach(item => {
-                    item.isSelected = false
-                    item.quantity = 1
-                }
-                )
+                if (localStorage.getItem("cartItems")) {
+                    console.log("using localstorage to set the state")
+                    const items = response.data
+                    let filteredItems = items.filter(item => item.display === true)
+                    filteredItems.forEach(item => {
+                        item.isSelected = false
+                        item.quantity = 1
+                    })
+                    this.setState({
+                        items: filteredItems,
+                    })
 
-                this.setState({ items: filteredItems })
-                this.setState({ searchFilter: this.state.items })
+                    var oldSelectedItems = JSON.parse(localStorage.getItem("cartItems")).filter(item => this.state.items.find(i => item._id === i._id))
+                    console.log(oldSelectedItems)
+                    this.setState({
+                        searchFilter: oldSelectedItems,
+                        items: oldSelectedItems
+                    })
+                } else {
+                    console.log('Data : ', response.data)
+                    const items = response.data
+                    console.log('items after request :', items)
+                    console.log('items after filtering :')
+                    let filteredItems = items.filter(item => item.display === true)
+                    filteredItems.forEach(item => {
+                        item.isSelected = false
+                        item.quantity = 1
+                    })
+                    this.setState({
+                        items: filteredItems,
+                        searchFilter: filteredItems
+                    })
+                }
+
                 console.log("this.state.items:", this.state.items)
 
                 this.setState({ spinnerLoading: false })
@@ -164,125 +147,13 @@ export default class Menu extends React.Component {
             })
     }
 
-
-    decrementHandle(i) {
-        console.log('- button was clicked!')
-        // this.setState((prevState) => {
-        //     return {
-        //         quantity: this.state.items[i].quantity - 1
-        //     }
-        // }
-        // )
-        console.log('clicked item is :', this.state.items[i])
-        console.log('items :', this.state.items)
-
-    }
-
-    resetHandle() {
-        console.log('reset button was clicked!')
-        this.setState({ num: 0 })
-    }
-
-    checkboxChange(id, name, inCart) {
-        this.toggleIsSelected(id)
-        console.log('Checkbox clicked ! add/remove this id to the cart render', id, name)
-        // add to cart array , if already present remove from the cart array
-        // -------------------------
-
-        // console.log('Checkbox clicked ! add/remove this id to the cart render', id, name)
-
-        this.state.cartItems.push({
-            "id": id,
-            "name": name,
-            inCart: !inCart,
-        })
-        console.log("change the state here only :", this.state)
-        // Making unique array 
-        var newCartItems = this.state.cartItems
-        // var distinctCartItems = [...new Set(newCartItems.map(item => (item.id && item.name)))]
-
-        // var newCartItems = [{ id: 555, name: "Vada" }, { id: 555, name: "Vada" }, { id: 777, name: "soda" }]
-        var distinctItemsArray = [];
-        newCartItems.filter(function (item) {
-            var i = distinctItemsArray.findIndex(x => x.name === item.name);
-            if (i <= -1) {
-                distinctItemsArray.push({ id: item.id, name: item.name, inCart: true });
-            }
-            return null;
-        });
-
-        // setState to render the unique array
-        // Add inCart = false property
-
-        this.setState(prevState => ({
-            cartItems: [...prevState.cartItems, { "id": id, "name": name }]
-        }))
-
-        this.setState({ cartItems: distinctItemsArray })
-
-        console.log('cartItems array state:', this.state.cartItems)
-        console.log('newCartItems array variable:', newCartItems)
-        console.log('distinctCartItems array variable:', distinctItemsArray)
-
-        // Delete Item from cartItems
-        // if Item is already in cartItems remove item 
-        // else Add item to the cartItems
-
-    }
-
+    
     // trying to get the cart rendering with newCheckBoxChange
     newCheckboxChange(item) {
         console.log('inside newCheckBoxChange function', item)
-        this.toggleIsSelected(item._id)
-        console.log('Checkbox clicked ! add/remove this id to the cart render', item._id, item.name, item.inCart)
-        console.log('The full item ', item)
-
-        this.state.cartItems.push({
-            "id": item._id,
-            "name": item.name,
-            "quantity": item.quantity,
-            inCart: !item.inCart,
-        })
-
-        console.log('this.state.cartItems :', this.state.cartItems)
-
-
-        // Making unique array 
-        var newCartItems = this.state.cartItems
-        // var distinctCartItems = [...new Set(newCartItems.map(item => (item.id && item.name)))]
-
-        // var newCartItems = [{ id: 555, name: "Vada" }, { id: 555, name: "Vada" }, { id: 777, name: "soda" }]
-        var distinctItemsArray = [];
-        newCartItems.filter(function (item) {
-            var i = distinctItemsArray.findIndex(x => x.name === item.name);
-            if (i <= -1) {
-                distinctItemsArray.push({ id: item.id, name: item.name, quantity: item.quantity, inCart: true });
-            }
-            return null;
-        });
-
-        // setState to render the unique array
-        // Add inCart = false property
-
-        this.setState(prevState => ({
-            cartItems: [...prevState.cartItems, { "id": item._id, "name": item.name, "quantity": item.quantity }]
-        }))
-
-        this.setState({ cartItems: distinctItemsArray })
-
-        console.log('cartItems array state:', this.state.cartItems)
-        console.log('newCartItems array variable:', newCartItems)
-        console.log('distinctCartItems array variable:', distinctItemsArray)
-
-        // Delete Item from cartItems
-        // if Item is already in cartItems remove item 
-        // else Add item to the cartItems
-
-
-
+        // this.toggleIsSelected(item._id)
+        this.newtoggleIsSelected(item._id)
     }
-
-
 
     toggleIsSelected = (id) => {
         // Delete item from the cartItems do setState of cartItems
@@ -294,34 +165,62 @@ export default class Menu extends React.Component {
         // Reset the items.isSelected to false
         // find the item in items[] then change isSelected to false
         console.log('items state:', this.state.items)
+        console.log('searchfilter state:', this.state.searchFilter)
+        // If below line is removed , the filtering works ,else it removes everything after the checkbox is selected
+        this.setState({ searchFilter: this.state.items })
+
+
         const foundItem = this.state.items.find(item => item._id === id)
-
-
         console.log('Item found :', foundItem)
         console.log('Item found\'s  items.isSelected before:', foundItem.isSelected)
-
         console.log('Edit item.isSelected to false : ', foundItem)
-
-
         const index = this.state.items.findIndex(item => item._id === id)
         console.log('the index is :', index)
-
         console.log('state of items :', this.state.items)
-        console.log('spread :', ...this.state.items)
+        // console.log('spread :', ...this.state.items)
         console.log('spread index :', this.state.items[index])
         console.log('spread index.isSelected before:', this.state.items[index].isSelected)
         // console.log('spread index.isSelected after:', !this.state.items[index].isSelected)
-
         var changedItems = this.state.items
         changedItems[index].isSelected = !changedItems[index].isSelected
+        // this.setState({ items: changedItems })
+        this.setState({ searchFilter: changedItems })
 
-        this.setState({ items: changedItems })
-
+        // localStorage.setItem('cartItems', JSON.stringify(this.state.items))
+        localStorage.setItem('cartItems', JSON.stringify(this.state.searchFilter))
         console.log('Items found\'s isSelected after:', this.state.items)
+
         // // console.log('Item found\'s display after:', foundItem.display)
+
+        // this.clearSearch()
 
         console.log('end of toggleIsSelected Function')
         return null
+    }
+
+    newtoggleIsSelected = (id) => {
+        console.log('inside newToggleIsSelected')
+        console.log('items state:', this.state.items)
+        console.log('searchfilter state:', this.state.searchFilter)
+
+        const foundItem = this.state.items.find(item => item._id === id)
+        console.log('Found the item:', foundItem)
+
+
+        var newVal = this.state.items.map(item => [foundItem].find(o => {
+            if (o._id === item._id) {
+                foundItem.isSelected = !foundItem.isSelected
+                // foundItem.quantity = 1
+                return foundItem
+            }
+        }) || item);
+
+        console.log('newVal:', newVal)
+        this.setState({ filteredItems: newVal })
+        this.setState({ items: newVal })
+        localStorage.setItem("cartItems", JSON.stringify(newVal))
+        console.log('end of  newToggleIsSelected')
+
     }
 
     resetIsSelected = (id) => {
@@ -355,8 +254,10 @@ export default class Menu extends React.Component {
         var changedItems = this.state.items
         changedItems[index].isSelected = false
 
-        this.setState({ items: changedItems })
+        this.setState({ items: changedItems, searchFilter: this.state.items })
 
+        // this.setState({ filteredItems: changedItems })
+        localStorage.setItem("cartItems", JSON.stringify(this.state.items))
 
 
         console.log('Items found\'s isSelected after:', this.state.items)
@@ -364,11 +265,6 @@ export default class Menu extends React.Component {
 
         console.log('end of resetIsSelected Function')
         return null
-
-
-
-
-
     }
 
     isCheckedValue(id) {
@@ -377,38 +273,10 @@ export default class Menu extends React.Component {
     }
 
     requestOrder(cartItems) {
-        // console.log('inside request order function')
+        console.log('inside request order function')
         // var cartItems = this.state.items.filter(item => item.isSelected === true)
         // console.log('Approve these items :', cartItems)
         // console.log('post request axios ')
-        // // console.log('Approve these items[0].name :', approveOrder[0].name)
-
-        // // var objNames = approveOrder.forEach(item => console.log(item.name))
-        // // console.log(approveOrder.map(item => { item.name, item.price }))
-
-        // const approveOrder = cartItems.map(item => (
-        //     {
-        //         id: item._id,
-        //         name: item.name,
-        //         price: item.price,
-        //         measured: item.measured,
-        //         quantity: 1,
-        //     }
-        // ));
-
-        // console.log(approveOrder)
-        // console.log(Array.isArray(approveOrder))
-        // // console.log('stringify:', JSON.stringify(approveOrder))
-        // localStorage.setItem('orderItems', JSON.stringify(approveOrder))
-
-        // console.log(localStorage.getItem('orderItems'))
-        // console.log(Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
-
-
-        console.log('inside request order function')
-        // var cartItems = this.state.items.filter(item => item.isSelected === true)
-        console.log('Approve these items :', cartItems)
-        console.log('post request axios ')
         // console.log('Approve these items[0].name :', approveOrder[0].name)
 
         // var objNames = approveOrder.forEach(item => console.log(item.name))
@@ -427,7 +295,10 @@ export default class Menu extends React.Component {
         // console.log(approveOrder)
         // console.log(Array.isArray(approveOrder))
         // console.log('stringify:', JSON.stringify(approveOrder))
-        localStorage.setItem('orderItems', JSON.stringify(cartItems))
+
+        console.log('Approve these items :', cartItems)
+        var desiredCartItems = cartItems.filter(item => item.quantity > 0)
+        localStorage.setItem('orderItems', JSON.stringify(desiredCartItems))
 
         console.log('fetching all order items', localStorage.getItem('orderItems'))
         console.log('items are array ?:', Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
@@ -450,7 +321,6 @@ export default class Menu extends React.Component {
         console.log('You changed the select option')
         console.log('Value is:', e.target.value)
 
-        this.setState({ displayType: true })
         this.setState({
             searchFilter:
                 this.state.items.filter(item => item.category.includes(e.target.value.toLowerCase()))
@@ -470,12 +340,10 @@ export default class Menu extends React.Component {
         console.log(document.getElementById("filterItems").value = "all")
         document.getElementById("inputSearch").value = ""
         document.getElementById("filterItems").value = "all"
-        this.setState({ displayType: false })
     }
     render() {
         return (
             <div>
-
                 <Header />
                 {this.state.userType === "Admin" ? (
                     <>
@@ -488,18 +356,20 @@ export default class Menu extends React.Component {
                             showElement.style.display = "none"
 
                         }}>Show</button>
+                        <button id="ShowButton" onClick={() => {
+                            if (localStorage.getItem("cartItems")) {
+                                JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
+                                    this.resetIsSelected(item._id)
+                                })
+                                localStorage.removeItem("cartItems")
+                            }
+                        }}>Clear Local</button>
                     </>
-
-                )
-                    :
-                    (
-                        null
-                    )
+                ) : null
                 }
                 <div style={{ "display": "flex" }}>
                     <NavigationBar />
                     <div className="Menu-Cart" >
-
                         <div className="inner-Menu" >
                             {/* <div style={{
                              "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
@@ -538,11 +408,6 @@ export default class Menu extends React.Component {
                                     <option value="special">Special</option>
                                 </select>
                                 <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear Filters</button>
-
-
-                            </div>
-                            <div>
-                                <h2 style={{ "textAlign": "center" }}>{this.state.displayType}</h2>
                             </div>
                             <Stepper className="stepper-color"
                                 steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
@@ -556,6 +421,7 @@ export default class Menu extends React.Component {
                                 (
                                     <div id="menu-container">
                                         <div id="display-cards-container">
+                                            {/* total length -{this.state.searchFilter.length} */}
                                             {this.state.searchFilter.length === 0 ? (
                                                 <div style={{ "textAlign": "center", "width": "100%" }}>
                                                     <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
@@ -565,10 +431,11 @@ export default class Menu extends React.Component {
                                                     <br />
                                                 </div>
                                             ) : (
-
                                                 this.state.searchFilter.map((item, i) => {
                                                     return (
-                                                        <div className="card-style" onClick={() => { this.newCheckboxChange({ ...item, 'quantity': 1 }) }}>
+                                                        <div key={i} className="card-style" onClick={() => {
+                                                            this.newCheckboxChange(item)
+                                                        }}>
                                                             <div className="card-body-style">
                                                                 <div style={{ "height": "150px", "width": "100%" }}>
 
@@ -585,26 +452,18 @@ export default class Menu extends React.Component {
                                                         </div>
                                                     )
                                                 })
-                                            )
-
-                                            }
-
+                                            )}
                                         </div>
                                         <br />
                                     </div>
                                 )}
-
                         </div>
-                        <CartModel buttonLabel={`Cart`}
-                            items={this.state.items}
-                            cartItems={this.state.cartItems}
-                            removeItemFromCart={this.removeItemFromCart}
+                        <CartModel buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
                             resetIsSelected={this.resetIsSelected}
                             requestOrder={this.requestOrder}
                         />
                     </div >
                 </div>
-
 
                 <div style={{
                     "marginTop": "30px",

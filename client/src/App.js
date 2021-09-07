@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T8 Profile CSS changes
+// App version v1.0.5.8 T9 Back and Edit order
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -238,7 +238,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T8</h1>
+                          <h1>App Version : v1.0.5.8 T9</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                         </div>
                       </div>

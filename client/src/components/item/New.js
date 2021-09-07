@@ -23,6 +23,8 @@ export default class ItemNew extends React.Component {
                 }
                 else {
                     console.log('success', response.data)
+                    localStorage.removeItem('cartItems')
+                    console.log('Local storage cleared')
                     // this.props.history.push('/items')
                     window.location.href = '/items'
                 }

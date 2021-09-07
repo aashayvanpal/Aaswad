@@ -166,7 +166,7 @@ added Stepper
 fixed /menu backend error
 
 
-Changes for v1.0.5.8 T8 Profile Css changes:
+Changes for v1.0.5.8 T9 Back and Edit order changes:
 fixed /menu alignment of items
 added spinner for loading 
 Fixed the rendering if items not found in card (when no item in cart)
@@ -188,6 +188,14 @@ fix: UserButton(rendering username wrong on some ) mobile view size for admin vi
 show button fixed errors and made pop up on top
 Css fixes to profile , myorders show made responsive
 (working on this )add loading spinner to all
+minor fix: after filtering , when an item is selected , the render is lost (but the item is selected)
+Back feature and quantity updates added , fix bug : quantity becoming 0 or below , must add correct validation
+found a small bug in /menu , in the menu component the filteredSearch state is rerendered when X button is pressed in the Cart Component 
+adding profile address 
+reordered myOrdersShow in mobile css changes
+Edit order feature added
+bug fix: if item is edited , the new value of the item.price will not reflect in /menu
+bug fix: /items after deleting ,it is filtering from the default(this.state.items)
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)

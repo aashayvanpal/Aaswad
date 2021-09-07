@@ -14,6 +14,7 @@ export default class UserProfile extends React.Component {
             username: '',
             userType: '',
             phonenumber: '',
+            address: ''
 
         }
     }
@@ -26,7 +27,8 @@ export default class UserProfile extends React.Component {
                     username: res.username,
                     userType: res.userType,
                     email: res.email,
-                    phonenumber: res.phonenumber
+                    phonenumber: res.phonenumber,
+                    address: res.address
 
                 })
 
@@ -74,7 +76,7 @@ export default class UserProfile extends React.Component {
                                 </tr>
                                 <tr>
                                     <td style={{ "padding": "10px" }}>Address</td>
-                                    {/* <td style={{ "padding": "10px" }}>{this.state.address}</td> */}
+                                    <td style={{ "padding": "10px" }}>{this.state.address}</td>
                                     <td style={{ "padding": "10px", "maxWidth": "50px" }}></td>
                                 </tr>
                             </tbody>

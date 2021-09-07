@@ -2,8 +2,6 @@ import React from 'react';
 import axios from '../config/axios';
 import CustomerForm from './customer/Form.js'
 import NavigationBar from './NavigationBar.js'
-// import { Table } from 'reactstrap';
-// import { Link } from 'react-router-dom'
 
 export default class CustomerRequest extends React.Component {
     constructor() {
@@ -12,6 +10,7 @@ export default class CustomerRequest extends React.Component {
             reqOrder: [],
             username: '',
             userType: '',
+            address: '',
             phonenumber: '',
             openModal: 'false'
         }
@@ -58,6 +57,7 @@ export default class CustomerRequest extends React.Component {
                     username: dataRequest.data.username,
                     userType: dataRequest.data.userType,
                     phonenumber: dataRequest.data.phonenumber,
+                    address: dataRequest.data.address,
 
                 })
             })
@@ -198,61 +198,12 @@ export default class CustomerRequest extends React.Component {
                     window.alert('Thank you for placing order we will get back')
                     // console.log(this.props)
                     // this.props.history.push('/menu')
+                    localStorage.removeItem("cartItems")
                     window.location.href = '/menu'
 
                 }
             })
     }
-
-    // handleChange = (id, qty) => {
-    //     console.log('inside handleChange')
-    //     console.log('change quantity of this id:', id)
-
-    //     const foundItem = this.state.reqOrder.find(item => item.id === id)
-    //     console.log('Item found :', foundItem)
-    //     console.log('Item found\'s quantity before:', foundItem.quantity)
-
-    //     // this.setState(prevState => ({
-    //     //     display: !prevState.display
-    //     //   }));
-
-    //     // console.log('current state id',this.state.items.id[itemToToggle])
-    //     console.log('Edit item : ', foundItem)
-
-
-    //     const index = this.state.reqOrder.findIndex(item => item.id === id)
-    //     console.log('the index is :', index)
-
-    //     console.log('state of reqOrder :', this.state.reqOrder)
-    //     console.log('spread :', ...this.state.reqOrder)
-    //     // console.log('spread index 2:', this.state.items[2])
-    //     // console.log('spread index 2 display before:', this.state.items[2].display)
-    //     // console.log('spread index 2 display after:', !this.state.items[2].display)
-
-    //     var changedItems = this.state.reqOrder
-    //     console.log('quantity :', qty)
-    //     // changedItems[index].quantity = 'confirmed'
-
-    //     // this.setState((prevState) => ({
-    //     //     confirms: [changedItems[index], ...prevState.confirms]
-    //     // }))
-
-    //     // this.setState({
-    //     //     approves: changedItems.filter(item => item.status === 'approve')
-    //     // })
-
-    //     // // this.setState(prevState => ({
-    //     // //     confirms: [
-    //     // //         prevState.confirms[index].status = !prevState.confirms[index].status,
-    //     // //         ...prevState.confirms
-    //     // //     ]
-    //     // // }))
-    //     // // put request
-
-    //     // // this.setState({
-    //     // //     reqOrder[1].quantity: e.target.value
-    //     // // })
-    // }
 
     handleChange(e, qty, id) {
         console.log('inside the new handleChange')
@@ -268,11 +219,6 @@ export default class CustomerRequest extends React.Component {
         console.log('Item found :', foundItem)
         console.log('Item found\'s quantity before:', foundItem.quantity)
 
-        // this.setState(prevState => ({
-        //     display: !prevState.display
-        //   }));
-
-        // console.log('current state id',this.state.items.id[itemToToggle])
         console.log('Edit item : ', foundItem)
 
 
@@ -299,19 +245,6 @@ export default class CustomerRequest extends React.Component {
         } else {
             this.EnableButton(index)
         }
-
-
-        // this.setState(prevState => ({
-        //     confirms: [
-        //         prevState.confirms[index].status = !prevState.confirms[index].status,
-        //         ...prevState.confirms
-        //     ]
-        // }))
-        // put request
-
-        // this.setState({
-        //     reqOrder[1].quantity: e.target.value
-        // })
     }
 
     render() {
@@ -321,14 +254,16 @@ export default class CustomerRequest extends React.Component {
                 <div style={{ "display": "inline" }}>
                     {
                         this.state.userType === "Admin" ? (
-                            <button id="ShowButton" onClick={() => {
-                                var navBarElement = document.getElementById("Nav-bar")
-                                navBarElement.style.display = "block"
+                            <>
+                                <button id="ShowButton" onClick={() => {
+                                    var navBarElement = document.getElementById("Nav-bar")
+                                    navBarElement.style.display = "block"
 
-                                var showElement = document.getElementById("ShowButton")
-                                showElement.style.display = "none"
+                                    var showElement = document.getElementById("ShowButton")
+                                    showElement.style.display = "none"
 
-                            }}>Show</button>
+                                }}>Show</button>
+                            </>
                         ) : (null)
                     }
 
@@ -336,7 +271,6 @@ export default class CustomerRequest extends React.Component {
                         <NavigationBar />
                         <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
                     </div>
-                    {/* <button onClick={this.handleSubmit}>Submit Enquiry</button> */}
                 </div >
                 <div style={{
                     "marginTop": "50px",

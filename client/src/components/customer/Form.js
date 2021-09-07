@@ -37,6 +37,7 @@ export default class CustomerForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
         this.handleCheckboxChangeService = this.handleCheckboxChangeService.bind(this)
+
     }
 
     componentDidMount() {
@@ -56,6 +57,7 @@ export default class CustomerForm extends React.Component {
                 this.setState({
                     fullName: dataRequest.data.username,
                     email: dataRequest.data.email,
+                    address: dataRequest.data.address,
                     userId: dataRequest.data.id,
                     phoneNumber: dataRequest.data.phonenumber
                 })
@@ -208,7 +210,6 @@ export default class CustomerForm extends React.Component {
             eventTime
         });
     };
-
 
     render() {
         return (

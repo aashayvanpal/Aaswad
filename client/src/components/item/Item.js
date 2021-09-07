@@ -14,11 +14,9 @@ export default function DisplayList(props) {
             <Td className="listing-table"><Link to={`/items/show/${id}`}>{name}</Link></Td>
             <Td className="listing-table">
                 <Link to={`/items/edit/${id}`}>
-                    <button className="button-color4" onClick={() => {
-                        props.updateItem(id)
-                    }}>
+                    <button className="button-color4">
                         Update
-                </button>
+                    </button>
                 </Link>
             </Td>
             <Td className="listing-table">

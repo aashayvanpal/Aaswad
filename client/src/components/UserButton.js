@@ -22,6 +22,9 @@ const UserButton = (props) => {
       .then((response) => {
         // console.log("response after logout :", response)
         console.log("response after logout :", response.data.notice)
+        // clearing localStorage of the cartItems
+        localStorage.removeItem("cartItems")
+
         // props.history.push("/")
         window.location.href = '/'
       })

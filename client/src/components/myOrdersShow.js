@@ -173,8 +173,8 @@ export default class myOrdersShow extends React.Component {
                                 <td>Sl No.</td>
                                 <td>Item Name</td>
                                 <td>Quantity</td>
-                                <td>Price</td>
-                                <td>Total</td>
+                                {/* <td>Price</td>
+                                <td>Total</td> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -188,8 +188,12 @@ export default class myOrdersShow extends React.Component {
                                             <td>{i + 1}</td>
                                             <td>{item.name}</td>
                                             <td>{item.quantity} {item.measured}</td>
-                                            <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.price}</td>
-                                            <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.quantity * item.price}</td>
+                                            
+                                            {/* <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.price}</td>
+                                            {!this.state.status ? (<>
+                                                <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.quantity * item.price}</td>
+                                            </>
+                                            ) : (null)} */}
                                         </tr>
                                     )
 
@@ -198,7 +202,8 @@ export default class myOrdersShow extends React.Component {
                             }
                         </tbody>
                     </table>
-                    <h2>Grand Total = <span style={{ "fontFamily": "Arial" }}>&#8377;</span>{this.state.total}</h2>
+                    <h3>Billing estimate will be added here after order approval</h3>
+                    {/* <h2>Grand Total = <span style={{ "fontFamily": "Arial" }}>&#8377;</span>{this.state.total}</h2> */}
                     {/* <h1>Per plate cost = {this.state.total / this.state.numberOfPeople}</h1> */}
                 </div>
             </div>

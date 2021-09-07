@@ -6,26 +6,18 @@ import proceedImage from '../images/proceed.svg'
 import { Stepper } from 'react-form-stepper'
 
 
-
 export default class Cart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             cartItems: [],
-            reqOrder: []
+            reqOrder: [],
+            defaultItems: []
         }
 
         this.plusHandle = this.plusHandle.bind(this)
 
     }
-
-
-
-    // componentDidMount() {
-    //     console.log('inside componentdidmount')
-    //     var filteredItems = this.props.items.filter(item => item.isSelected === true)
-    //     this.setState({ cartItems: filteredItems })
-    // }
 
 
     componentDidMount() {
@@ -49,11 +41,15 @@ export default class Cart extends React.Component {
 
         // console.log(this.state.reqOrder)
 
-        this.setState({
-            cartItems: this.props.items.filter(item => item.isSelected === true)
-        })
-
-
+        if (localStorage.getItem("cartItems")) {
+            var trueValues = JSON.parse(localStorage.getItem("cartItems")).filter(item => item.isSelected === true)
+            this.setState({
+                cartItems: trueValues,
+                defaultItems: JSON.parse(localStorage.getItem("cartItems"))
+            })
+        }
+        else
+            this.setState({ cartItems: [] })
     }
 
     handleRemove = (id) => {
@@ -61,6 +57,8 @@ export default class Cart extends React.Component {
         this.setState((prevState) => ({
             cartItems: prevState.cartItems.filter(item => item._id !== id)
         }))
+
+        // localStorage.setItem("cartItems", JSON.stringify([...this.state.cartItems, ...this.state.defaultItems]))
     }
 
     disableButton = (index) => {
@@ -80,7 +78,7 @@ export default class Cart extends React.Component {
     minusHandle = (id) => {
         console.log('clicked on - button for id :', id)
 
-        console.log('reqOrder state:', this.state.cartItems)
+        console.log('reqOrder/cartItems state:', this.state.cartItems)
         const foundItem = this.state.cartItems.find(item => item._id === id)
 
         console.log('Item found :', foundItem)
@@ -90,65 +88,103 @@ export default class Cart extends React.Component {
         const index = this.state.cartItems.findIndex(item => item._id === id)
         console.log('the index is :', index)
 
-        console.log('state of reqOrders :', this.state.cartItems)
+        console.log('state of reqOrders/cartItems :', this.state.cartItems)
         console.log('spread :', ...this.state.cartItems)
         console.log('spread index :', this.state.cartItems[index])
         console.log('spread index.quantity before:', this.state.cartItems[index].quantity)
 
         var changedItems = this.state.cartItems
-        changedItems[index].quantity = changedItems[index].quantity - 1
+        changedItems[index].quantity = Number(changedItems[index].quantity) - 1
 
-
-
-        this.setState({ reqOrder: changedItems })
-        // If the quantity goes below 0 disable the - button 
-
-        if (changedItems[index].quantity <= 0) {
-            this.disableButton(index)
-        } else {
-            this.EnableButton(index)
-        }
-
-
-        console.log('Items found\'s quantity after:', this.state.reqOrder)
-        console.log('end of - Function')
-
-    }
-
-    plusHandle = (id, e) => {
-        console.log('clicked on + button for id :', id)
-
-        console.log('reqOrder state:', this.state.cartItems)
-        const foundItem = this.state.cartItems.find(item => item._id === id)
-
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  reqOrder.quantity before:', foundItem.quantity)
-
-
-        const index = this.state.cartItems.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of reqOrders :', this.state.cartItems)
-        console.log('spread :', ...this.state.cartItems)
-        console.log('spread index :', this.state.cartItems[index])
-        console.log('spread index.quantity before:', this.state.cartItems[index].quantity)
-        console.log('e.target.value:', e.target)
-        console.log('e.target.quantity:', e.target['quantity'])
-        console.log('e:', e)
-
-        var changedItems = this.state.cartItems
-        changedItems[index].quantity = Number(changedItems[index].quantity) + 1
 
         this.setState({ cartItems: changedItems })
+        // here the array is correct , it needs all the other isSelected:false 
 
-        if (changedItems[index].quantity <= 0) {
+
+        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
+        if (changedItems[index].quantity <= 1) {
             this.disableButton(index)
+            // this.handleRemove(id)
+            // this.props.resetIsSelected(id)
+            // changedItems[index].quantity = 1
+            // this.setState({ cartItems: changedItems })
         } else {
             this.EnableButton(index)
         }
 
 
         console.log('Items found\'s quantity after:', this.state.cartItems)
+        console.log("==DEBUG==")
+        console.log("Default items:")
+        console.log(this.state.defaultItems)
+        console.log("this.state.cartItems:")
+        console.log(this.state.cartItems)
+
+        var updatedCart = this.state.cartItems.filter(obj => this.state.defaultItems.find(p => p.id === obj.id) || obj);
+        console.log("check here")
+        console.log(updatedCart)//here is correct , the not true values are not present 
+        console.log("false filter")
+        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
+        var falseFilter = this.state.defaultItems.filter(item => item.isSelected === false)
+        var desiredResult = [...updatedCart, ...falseFilter]
+        console.log(desiredResult)
+
+        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
+        console.log('end of - Function')
+    }
+
+    plusHandle = (id) => {
+        console.log('clicked on + button for id :', id)
+
+        console.log('reqOrder/cartItems state:', this.state.cartItems)
+        const foundItem = this.state.cartItems.find(item => item._id === id)
+
+        console.log('Item found :', foundItem)
+        console.log('Item found\'s  reqOrder.quantity before:', foundItem.quantity)
+
+
+        const index = this.state.cartItems.findIndex(item => item._id === id)
+        console.log('the index is :', index)
+
+        console.log('state of reqOrders/cartItems :', this.state.cartItems)
+        console.log('spread :', ...this.state.cartItems)
+        console.log('spread index :', this.state.cartItems[index])
+        console.log('spread index.quantity before:', this.state.cartItems[index].quantity)
+
+        var changedItems = this.state.cartItems
+        changedItems[index].quantity = Number(changedItems[index].quantity) + 1
+
+
+        this.setState({ cartItems: changedItems })
+        // here the array is correct , it needs all the other isSelected:false 
+
+
+        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
+        if (changedItems[index].quantity <= 0) {
+            this.disableButton(index)
+
+        } else {
+            this.EnableButton(index)
+        }
+
+
+        console.log('Items found\'s quantity after:', this.state.cartItems)
+        console.log("==DEBUG==")
+        console.log("Default items:")
+        console.log(this.state.defaultItems)
+        console.log("this.state.cartItems:")
+        console.log(this.state.cartItems)
+
+        var updatedCart = this.state.cartItems.filter(obj => this.state.defaultItems.find(p => p.id === obj.id) || obj);
+        console.log("check here")
+        console.log(updatedCart)//here is correct , the not true values are not present 
+        console.log("false filter")
+        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
+        var falseFilter = this.state.defaultItems.filter(item => item.isSelected === false)
+        var desiredResult = [...updatedCart, ...falseFilter]
+        console.log(desiredResult)
+
+        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
         console.log('end of + Function')
 
     }
@@ -168,13 +204,7 @@ export default class Cart extends React.Component {
         console.log('Item found :', foundItem)
         console.log('Item found\'s quantity before:', foundItem.quantity)
 
-        // this.setState(prevState => ({
-        //     display: !prevState.display
-        //   }));
-
-        // console.log('current state id',this.state.items.id[itemToToggle])
         console.log('Edit item : ', foundItem)
-
 
         const index = this.state.cartItems.findIndex(item => item._id === id)
         console.log('the index is :', index)
@@ -194,26 +224,41 @@ export default class Cart extends React.Component {
             cartItems: changedItems
         })
 
+        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
+
+
+        // console.log("==DEBUG==")
+        console.log("Default items:")
+        console.log(this.state.defaultItems)
+        console.log("this.state.cartItems:")
+        console.log(this.state.cartItems)
+
+        var updatedCart = this.state.cartItems.filter(obj => this.state.defaultItems.find(p => p.id === obj.id) || obj);
+        console.log("check here")
+        console.log(updatedCart)//here is correct , the not true values are not present 
+        console.log("false filter")
+        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
+        var falseFilter = this.state.defaultItems.filter(item => item.isSelected === false)
+        var desiredResult = [...updatedCart, ...falseFilter]
+        console.log(desiredResult)
+
+        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
+
+
         if (changedItems[index].quantity <= 0) {
             this.disableButton(index)
         } else {
             this.EnableButton(index)
         }
-
-
-        // this.setState(prevState => ({
-        //     confirms: [
-        //         prevState.confirms[index].status = !prevState.confirms[index].status,
-        //         ...prevState.confirms
-        //     ]
-        // }))
-        // put request
-
-        // this.setState({
-        //     reqOrder[1].quantity: e.target.value
-        // })
     }
 
+    clearCart() {
+        JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
+            this.props.resetIsSelected(item._id)
+        })
+        localStorage.removeItem("cartItems")
+        this.setState({ cartItems: [] })
+    }
 
     render() {
         // console.log("check props for cart items to show :", this.props.items.length)
@@ -221,9 +266,10 @@ export default class Cart extends React.Component {
         console.log("check props for cart items to show :", this.props.cartItems)
         return (
             <div id="inner-Cart" >
+
                 {/* <h1 id="cart-text-style" > Cart :</h1> */}
                 {
-                    this.props.items.filter(item => item.isSelected === true).length === 0 ? (
+                    this.state.cartItems.filter(item => item.isSelected === true).length === 0 ? (
                         <>
                             <h1 style={{
                                 "margin": "30px",
@@ -232,7 +278,6 @@ export default class Cart extends React.Component {
                             }}>No items in Cart</h1>
                             <img src={NoItemsInCart} alt="NoItemsInCart" height="100%" width="100%" />
                         </>
-
                     )
                         :
                         (
@@ -259,16 +304,21 @@ export default class Cart extends React.Component {
                                                     <tr key={item._id} >
                                                         <td style={{ "textAlign": "center" }}>{i + 1}</td>
                                                         <td>{item.name}</td>
-                                                        <td style={{ "display": "inline-flex" }}><button id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button><input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "35px", textAlign: "center" }} /><button onClick={(e) => { this.plusHandle(item._id, e) }}>+</button>
+                                                        <td style={{ "display": "inline-flex" }}>
+                                                            {(item.quantity <= 1) ? (
+                                                                <button disabled="true" id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button>
+                                                            ) : (
+                                                                <button id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button>
+                                                            )}
+                                                            <input name="quantity" onChange={(e) => { this.handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "35px", textAlign: "center" }} />
+                                                            <button onClick={(e) => { this.plusHandle(item._id) }}>+</button>
 
                                                         </td>
                                                         <td>
                                                             <Button color="danger" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
                                                                 this.props.resetIsSelected(item._id)
                                                                 this.handleRemove(item._id)
-                                                                // this.props.removeItemFromCart(item.id)
-                                                            }}
-                                                            >
+                                                            }}>
                                                                 X
                                                             </Button>
                                                         </td>
@@ -278,26 +328,27 @@ export default class Cart extends React.Component {
                                         }
                                     </tbody>
                                 </Table>
-
                                 <hr />
-                                <Link to='/request'
+                                <div style={{ "display": "flex", "justifyContent": "space-evenly" }}>
+                                    <Button color="danger" style={{ "fontWeight": "bold" }} onClick={() => this.clearCart()}>Clear Cart</Button>
+                                    <Link to='/request'
+                                        onClick={() => {
+                                            // console.log('request button clicked!')
+                                            // window.alert('request button clicked')
+                                            this.props.requestOrder(this.state.cartItems)
+                                        }}>
 
-                                    onClick={() => {
-                                        // console.log('request button clicked!')
-                                        // window.alert('request button clicked')
-                                        this.props.requestOrder(this.state.cartItems)
-                                    }}>
-                                    <Button style={{
-                                        "backgroundColor": "#dbc268", "color": "black", "width": "100%"
-                                    }}>
-                                        Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
-                                    </Button>
-                                </Link>
-                            </div>
+                                        <Button style={{
+                                            "backgroundColor": "#dbc268", "color": "black", "width": "100%", "fontWeight": "bold"
+                                        }}>
+                                            Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
+                                        </Button>
+
+                                    </Link>
+                                </div >
+                            </div >
                         )
                 }
-
-
             </div >
         );
     }

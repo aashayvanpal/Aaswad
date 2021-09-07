@@ -8,11 +8,9 @@ const CartModel = (props) => {
     const {
         buttonLabel,
         className,
-        cartItems,
-        removeItemFromCart,
         resetIsSelected,
         requestOrder,
-        items,
+
     } = props;
 
     const [modal, setModal] = useState(false);
@@ -24,27 +22,24 @@ const CartModel = (props) => {
             <Button style={{
                 "backgroundColor": "#dbc268",
                 "color": "black",
-                "fontSize":"22px"
+                "fontSize": "22px"
             }} className="cart-button" onClick={toggle}>
                 <img src={cartImage} alt="" style={{ "marginRight": "20px" }} />
                 {buttonLabel}
             </Button>
             <Modal isOpen={modal} toggle={toggle} className={className} >
-                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Review your Selections</ModalHeader>
 
-                
+                <ModalHeader style={{ "backgroundColor": "#fff5d2" }} toggle={toggle}>Review your Selections</ModalHeader>
                 <ModalBody style={{ "backgroundColor": "#fff5d2" }} >
                     <Cart
-                        items={items}
-                        cartItems={cartItems}
-                        removeItemFromCart={removeItemFromCart}
+                        items={localStorage.getItem("cartItems")}
                         resetIsSelected={resetIsSelected}
                         requestOrder={requestOrder}
                     />
                 </ModalBody>
 
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     );
 }
 

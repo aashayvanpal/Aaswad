@@ -32,7 +32,9 @@
 
 @media screen and (max-width:900px) {
     #OrderShowContainer{
-        display: block;
+        display:flex;
+        flex-direction: column-reverse;
+
     }
 
     #ShowContainer1{

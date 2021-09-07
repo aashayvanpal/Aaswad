@@ -75,39 +75,24 @@ export default class AddItems extends Component {
                 console.log('response data', response.data)
                 console.log('Inside the .then promise')
 
-                this.setState((prevState) => ({
-                    items: prevState.items.filter(item => item._id !== response.data._id)
-                }))
+                // this.setState((prevState) => ({
+                //     searchFilter: prevState.searchFilter.filter(item => item._id !== response.data._id),
+                // }))
+                var filteredItems = this.state.searchFilter.filter(item => item._id !== response.data._id)
+                this.setState({ searchFilter: filteredItems })
 
-
-
-                // var NewItems = this.props.items.filter(item => {
-                //     return item !== itemToDelete
-                // })
-
-                // this.setState({
-                //     items: NewItems
-                // })
-                // console.log("items after []:", NewItems)
-                // console.log("item deleted :", this.props.items.splice(this.props.items.indexOf(itemToDelete), 1))
-
+                // this.setState({ items: this.state.searchFilter })
 
             })
             .catch((err) => {
                 console.log(err)
             })
 
-
         // this.setState(
         //     prevState => ({
         //         items: prevState.items.filter(item => item !== itemToDelete)
         //     })
         // )
-    }
-
-
-    updateItem = (itemtoUpdate) => {
-        console.log("inside update item check here")
     }
 
     updateCheckbox = (itemToToggle) => {
@@ -117,14 +102,7 @@ export default class AddItems extends Component {
         const foundItem = this.state.items.find(item => item._id === itemToToggle)
         console.log('Item found :', foundItem)
         console.log('Item found\'s display before:', foundItem.display)
-
-        // this.setState(prevState => ({
-        //     display: !prevState.display
-        //   }));
-
-        // console.log('current state id',this.state.items.id[itemToToggle])
         console.log('Edit item : ', foundItem)
-
 
         const index = this.state.items.findIndex(item => item._id === itemToToggle)
         console.log('the index is :', index)
@@ -140,14 +118,6 @@ export default class AddItems extends Component {
 
         this.setState({ items: changedItems })
 
-        // this.setState(prevState => ({
-        //     items: [
-        //         prevState.items[index].display = !prevState.items[index].display,
-        //         ...prevState.items
-        //     ]
-        // }))
-
-
         axios.put(`/items/edit/${foundItem._id}`, foundItem, {
             headers: {
                 "x-auth": localStorage.getItem('token')
@@ -162,7 +132,6 @@ export default class AddItems extends Component {
                     console.log('success', response.data)
                     // this.props.history.push(`/items/show/${response.data._id}`)
                     // window.location.href = '/items'
-
                 }
             })
 
@@ -177,7 +146,7 @@ export default class AddItems extends Component {
                 <div className="search-align">
                     <h2>Listing items - {this.state.searchFilter.length}</h2>
 
-                    <input type="text" name="item" onChange={this.handleChange} />&nbsp;&nbsp;
+                    <input type="text" placeholder="Search" name="item" onChange={this.handleChange} />&nbsp;&nbsp;
                     <input type="submit" value="Search" />
 
 
@@ -204,7 +173,6 @@ export default class AddItems extends Component {
                                             key={i}
                                             name={item.name}
                                             deleteItem={this.deleteItem}
-                                            updateItem={this.updateItem}
                                             updateCheckbox={this.updateCheckbox}
                                             id={item._id}
                                             display={item.display}

@@ -3,7 +3,8 @@
 }
 
 .content-primary {
-  background-color: #bbe1fa;
+  /* background-color: #bbe1fa; */
+  background-color: #e7e2c7;
   border: 2px solid black;
   width: 100%;
   border-radius: 5px;
@@ -315,10 +316,11 @@
   }
 
   #filteringOptions {
-    display: block;
+    display: flex;
     width: 100%;
-    /* justify-content: center; */
+    justify-content: space-evenly;
     margin: 0px;
+    flex-flow: wrap;
   }
 
   #inputSearch {

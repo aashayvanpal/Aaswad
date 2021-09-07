@@ -65,7 +65,7 @@ router.post('/login', function (req, res) {
 router.get('/account', authenticateUser, function (req, res) {
     const { user } = req
     console.log("user-data: ", user.userType)
-    res.send({ username: user.username, email: user.email, phonenumber: user.phonenumber, userType: user.userType, id: user._id })
+    res.send({ username: user.username, email: user.email, phonenumber: user.phonenumber, address: user.address, userType: user.userType, id: user._id })
 })
 
 // localhost:3001/users/logout
@@ -82,4 +82,4 @@ router.delete('/logout', authenticateUser, function (req, res) {
 
 module.exports = {
     usersRouter: router
-} 
+}
