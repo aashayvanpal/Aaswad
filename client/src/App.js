@@ -1,115 +1,288 @@
-import React from 'react'
-import axios from 'axios'
-import './App.css'
+// App version v1.0.5.8 T10 Back and Edit order
+// Check version-notes.txt for version updates
+// Working on css for both desktop and mobile(only customer view)
+import React from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Dashboard from "./components/Dashboard.js";
+import Header from './components/Header.js'
+import Menu from "./components/ItemList";
+import MyOrdersList from "./components/MyOrdersList.js";
+import OrderList from "./components/OrderList";
+import OrderShow from "./components/order/Show.js";
+import OrderPrint from "./components/order/Print.js";
 
-export default class App extends React.Component {
+import MyOrdersShow from "./components/myOrdersShow.js";
 
-  state = {
-    title: '',
-    body: '',
-    posts: []
-  }
+import AddUserData from "./components/AddUserData.js";
+// import Calender from './GUI/Calender.js';
+import ItemList from "./components/item/List.js";
+import ItemEdit from "./components/item/Edit.js";
+import ItemShow from "./components/item/Show.js";
+// import ItemForm from './components/item/Form.js';
+import ItemNew from "./components/item/New.js";
+import ItemDetailsForm from "./components/ItemDetailsForm.js";
 
-  handleChange = ({ target }) => {
-    const { name, value } = target
-    this.setState({ [name]: value })
-  }
+import CustomerRequest from "./components/CustomerRequest.js";
 
-  getBlogData = () => {
-    axios.get('/api')
-      .then((response) => {
-        this.setState({
-          posts: response.data
-        })
-        console.log("data has been recieved")
-        console.log(response.data)
+import "./css/app-css.css";
+// import ItemCard from './components/ItemCard';
+import SignUpForm from "./components/SignUpForm.js";
 
-      })
-      .catch(() => {
-        alert('could not get the data!')
-      })
-  }
+import UserProfile from "./components/UserProfile.js";
+import Contact from "./components/contact/Contact.js";
+// import Footer from './components/Footer.js'
+import HomePage from "./components/HomePage.js";
+// import Qurries from './components/Qurries.js'
+import "./css/HomePage/header.css";
+// make header as a component
+import { Container, Row, Col } from "reactstrap";
+import NavigationBar from './components/NavigationBar.js'
+import SignupCenterContainer from "./components/SignupCenterContainer.js";
+import NotFoundPage from './components/NotFoundPage.js'
+import ShowBtn from "./assets/ShowBtn.js";
 
-  submit = (event) => {
-    event.preventDefault()
+function App() {
+  return (
+    <div className="app">
+      <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        crossOrigin="anonymous"
+      ></link>
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playball&display=swap"
+        rel="stylesheet"
+      ></link>
+      <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossOrigin="anonymous"
+      ></script>
 
-    const payload = {
-      title: this.state.title,
-      body: this.state.body
-    }
+      <Container fluid>
+        <Row>
+          <Col style={{ paddingRight: "0px", paddingLeft: "0px" }}>
+            <BrowserRouter>
 
-    axios({
-      url: '/api/save',
-      data: payload,
-      method: 'POST'
-    })
-      .then(() => {
-        console.log("data has been sent to the server")
-        this.resetUserInputs()
-        this.getBlogData()
+              <div className="align">
 
-      })
-      .catch(() => {
-        console.log("error in sending the data")
+                {/* <NavigationBar /> */}
+                <div className="content-showcase">
+                  <Switch>
+                    <Route exact path="/">
+                      <HomePage />
+                    </Route>
+                    <Route path="/dashboard">
+                      <Header />
+                      <h1 style={{ backgroundColor: "green" }}>Dashboard:</h1>
+                      <Dashboard />
+                    </Route>
 
-      })
+                    <Route exact path="/myOrders">
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <h1 style={{ textAlign: "center" }}>Your order history:</h1>
+                        <br />
+                        <MyOrdersList />
+                      </div>
+                    </Route>
 
-  }
+                    <Route exact path="/menu">
+                      {/* Render ItemCard for a different view (conditional rendering) */}
+                      {/* show button only for admin */}
 
-  resetUserInputs = () => {
-    this.setState({
-      title: '',
-      body: ''
-    })
-  }
+                      {/*                     
+                    <h1 className="Link-Navigations">
+                      <span id="Link"><Link to="/">Home</Link></span>
+                      <span id="Link"><Link to="/Menu">Menu</Link></span>
+                      <span id="Link"><Link to="/Cart">Cart</Link></span>
+                    </h1> */}
+                      {/* <Header /> */}
+                      <Menu />
+                      {/* <ItemCard /> */}
+                    </Route>
 
-  displayBlogPosts(posts) {
+                    <Route path="/Cart">
+                      <Header />
+                      {/* Must show current cart details */}
+                      <h1 style={{ backgroundColor: "green" }}>Cart:</h1>
+                    </Route>
 
-    if (!posts.length) return null
+                    <Route path="/users/add">
+                      <h1>Add User :</h1>
+                    </Route>
 
-    return posts.map((post, index) => (
-      <div key={index} className="blog-post_display">
-        <h3>{index + 1}. {post.title}</h3>
-        <p>{post.body}</p>
-      </div>
-    ))
-  }
+                    <Route
+                      exact
+                      path="/users/add"
+                      render={() => <AddUserData />}
+                    />
 
-  componentDidMount() {
-    this.getBlogData()
-  }
+                    {/* <Route exact path="/Transport/add" >
+                       <h1>Add Transport</h1>
+                    {/* <AddTransport /> */}
 
-  render() {
-    // console.log('state:', this.state)
-    return (
-      <div className="app">
-        <h2>This is a MERN deployed App </h2>
-        <form onSubmit={this.submit}>
-          <div className="form-input">
-            <input
-              type="text"
-              name="title"
-              value={this.state.title}
-              placeholder="title"
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="form-input">
-            <textarea
-              name="body"
-              placeholder="body"
-              cols="30" rows="10"
-              value={this.state.body}
-              onChange={this.handleChange}>
+                    {/* </Route> */}
+                    {/*           
+                    <Route exact path="/vendor/add" >
+                     <h1>Add Vendor</h1>
+                         <AddVendor /> */}
 
-            </textarea>
-          </div>
-          <button>Submit</button>
-        </form>
-        <div className="blog-post">
-          {this.displayBlogPosts(this.state.posts)}
-        </div>
-      </div>
-    )
-  }
+                    {/* </Route>  */}
+
+                    <Route path="/request">
+                      <Header />
+                      <CustomerRequest />
+                    </Route>
+
+                    <Route exact={true} path="/items">
+                      <Header />
+                      <ShowBtn />
+                      <div style={{ "width": "100%", "display": "flex" }}>
+                        <NavigationBar />
+                        <ItemList />
+                      </div>
+                    </Route>
+
+                    <Route exact={true} path="/items/add">
+                      <Header />
+                      <ItemNew />
+                    </Route>
+
+                    <Route path={"/items/edit/:id"}>
+                      <ItemEdit />
+                    </Route>
+
+                    <Route path="/items/show/:id">
+                      <Header />
+                      <ItemShow />
+                    </Route>
+
+                    <Route path="/items/add/adddetails">
+                      <Header />
+                      <h1>Listing Details :</h1>
+                      <ItemDetailsForm />
+                    </Route>
+
+                    {/* <Route path="/orders/add" >
+            <h1>Add Orders :</h1>
+          </Route> */}
+
+                    <Route path="/Calender">
+                      <Header />
+                      <h1>Calender : </h1>
+                      {/* <Calender  /> */}
+                    </Route>
+
+                    <Route exact path="/orders">
+                      <Header />
+                      <OrderList />
+                    </Route>
+
+                    <Route exact path="/orders/:id">
+                      <Header />
+                      <OrderShow />
+                    </Route>
+                    <Route
+                      exact
+                      path="/orders/:id/print"
+                    >
+                      <OrderPrint />
+                    </Route>
+
+                    <Route path="/myOrders/show/:id">
+                      <Header />
+                      <MyOrdersShow />
+                    </Route>
+
+                    <Route path="/Register">
+                      <Header />
+                      <div className="SignUpCard">
+                        <h1 style={{ fontSize: "36px", textAlign: "center" }}>
+                          {" "}
+                          Sign Up{" "}
+                        </h1>
+                        <SignUpForm />
+                      </div>
+                    </Route>
+
+                    <Route path="/Signin">
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <SignupCenterContainer />
+                      </div>
+                    </Route>
+
+                    <Route path="/contactus">
+                      <Header />
+                      <Contact />
+                    </Route>
+
+                    <Route path="/settings">
+                      <div style={{ "height": "100vh" }}>
+                        <Header />
+                        <div style={{
+                          "textAlign": "center",
+                        }}>
+                          <h1>Settings:</h1>
+                          <h1>App Version : v1.0.5.8 T10</h1>
+                          <h1>Created By : Aashay S Vanpal</h1>
+                          <h1>Contact : 9743419673 for any issues in app</h1>
+                        </div>
+                      </div>
+                    </Route>
+
+                    <Route exact path="/profile">
+                      <Header />
+                      {/* <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1> */}
+                      <UserProfile />
+                    </Route>
+
+                    <Route path="/aboutus">
+                      <Header />
+
+                      <h1
+                        style={{ backgroundColor: "gold", textAlign: "center" }}
+                      >
+                        About us Page
+                      </h1>
+                      <h2 style={{ color: "green" }}>
+                        This page is still under maintenance please wait for the
+                        website to be functional soon ...
+                      </h2>
+                    </Route>
+
+                    <Route path="/deals">
+                      <h1
+                        style={{ backgroundColor: "gold", textAlign: "center" }}
+                      >
+                        Deals Page
+                      </h1>
+                      <h2 style={{ color: "green" }}>
+                        This page is still under maintenance please wait for the
+                        website to be functional soon ...
+                      </h2>
+                    </Route>
+
+                    <Route path="/qurries">
+                      <Header />
+                      <h1 style={{ backgroundColor: "blue" }}>Qurries Page</h1>
+                    </Route>
+
+                    <Route path="*">
+                      <Header />
+                      <NotFoundPage />
+                    </Route>
+                  </Switch>
+                </div>
+              </div>
+            </BrowserRouter>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }
+
+export default App;

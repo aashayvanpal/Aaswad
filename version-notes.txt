@@ -1,0 +1,246 @@
+// Add exact path for add details
+Done:
+/request add logged in user details to appear on the form
+Front end for home/landing page must be completed
+All pages must be made responsive
+
+Important:
+Fetch latest value for items from the database
+Take reference of the id from the items and updates should reflect on the order too
+Admin:add clear button on /items
+Admin: sort all items in /items
+make form to the right , place image to left
+create logo
+remove you are logged in message and place inside the usericon
+clear button in /menu 
+add 3 items (showing 2 items)
+add footer for /menu  (render small footer)
+in cart put table (invisible) to place and fix the cancle option
+inside menu add pagination showing 20 items only (use slice method)
+dont render item card (not needed for now)
+ 
+tracking order status 
+user has to see order has been placed (reference numbers)
+Download menu card pdf file (add to database)
+/qurries section , display customer qurries
+create a function getUserDetails to make api call reusable
+Add a backup reminder for every 2 orders
+
+
+Tasks for final deployment:
+Clean up unwanted images at the end
+Clear the code clutter ,clean up unwated comments and also refine the code with comments on each function
+remove unwanted console.log messages
+remove all the inline styling (if possible)
+remove all the dead code
+Create more reusable components (if possible)
+in UserProfile the userType is not required 
+delete item2 file in /components/item/item2
+important fixed: /request mobile number validation to 10 digits (review this in validation)
+
+
+
+Emailing System:
+Creating new account welcome email 
+Order placed email
+Admin notification :New Order recieved email
+Order has been approved and billing estimation
+Order has been rejected
+Order has been Completed 
+Bill 
+Account deletion
+Forgot password and edit functionality
+
+
+
+
+Fixes :
+Amount calculation logical error solve
+Authentication : If not logged in , redirect to Login page
+Authentication to individual paths (/menu,/orders) 
+  add order now when user is logged out
+  add User icon to the right top corner when logged in 
+put welcome message and add the username to the logout menu options
+show only the user's items , menus , orders 
+in /orders , when remove button is clicked , pop up confirmation message (are you sure you want to delete? message)
+  Update button should select the previous selected items and add to cart
+  Search order and filter by customer name
+  Add a filter to get orders between 2 dates
+Add vendors , transport ,customer backend code 
+settings option
+Dashboard creation - graphs , profits ,incomes
+
+About us page
+Add tool tips for - how it works
+Write more test scripts (next update)
+Create contact page(v1.0):
+Bugs :
+Css placement for the map is not perfect , all pages are not responsive 
+Fix all fontsizes of contact us page , add the customer querry from the contact us page
+querry CRUD
+querry Validation
+HTML5 Link that dials the number:<a href="tel:9742814239">Call us</a>
+HTML5 Link that runs email to <a href="mailto:example@example.com">Send email</a>
+rendering price and measured properties in customer request for caterer-user
+Major Update:(v1.0.1)
+Trying to integrate Google maps in contact us page
+Default error page loading
+
+
+
+Easy work:
+updating MongoDB_Atlas database with the customer_id in database(100records)
+All all images to items
+adding all images and applying the change
+Admin : in /items remove button should confirm item to be removed and then only remove
+make user icon rendering proper
+on click of clear button on /menu page , the cursor must be blinking on the search bar
+Taking mobile number while registering 
+Sending welcome email 
+add pop for order has been placed modal
+adding default images to items with no image yet
+Check all spellings for items
+Clear all the warnings
+Add the loading animation everywhere:
+/items
+/orders
+
+
+-------------------------------------------------------------------------------
+Change notes v1.0.3 (only customer view focused): 
+commented ItemCard rendering and Menu having isAdming conditional rendering
+commented burger rendering 
+Commented Link-Navigations
+Placed show button and render only if user is admin
+Cart rendering in 3 steps
+mobile view for customer only 
+check for admin view (pending) 
+added carousel images
+
+
+Change notes v1.0.4 :
+items/show axios fixed
+task : Download all the images and place in /public/images , remove all images from /src/images and move to /public/images
+
+Changes for v1.0.5.1 :
+Changed all order now links to /SignIn
+/menu changed to both desktop and mobile screen
+/request focus on the top 
+/request fixed for desktop and mobile , removed and added single datepicker
+css changes
+
+Changes for v1.0.5.2:
+fixed /Contactus page and made responsive
+
+Changes for v1.0.5.3:
+added Header font style change
+
+Changes for v1.0.5.4:
+Small project structural change , created new branch "Template"
+Pushed working code to the master branch
+
+
+Changes for v1.0.5.5:
+after order is placed the user is redirected to /menu
+added search-icon inside search in /menu
+added item could not be found, with image , if searchItem is having length of 0 
+added cart image in /menu
+added proceed image in cart model
+added image for Submit enquiry
+aligned items to center in cart model
+added send request image in /request
+added ToolTips for Home Deliivery and service  in /request
+added background to form in /request 
+added small footer to /request
+
+Changes for v1.0.5.6:
+/menu is pushed bug is resolved
+Admin : aaded window confirmation to delete order 
+added all available images
+added footer in /menu
+
+
+Changes for v1.0.5.7:
+moved cart component and customer form component proceed image to right
+added Stepper
+fixed /menu backend error
+
+
+Changes for v1.0.5.8 T10 Back and Edit order changes:
+fixed /menu alignment of items
+added spinner for loading 
+Fixed the rendering if items not found in card (when no item in cart)
+Added mobile number while registering
+super responsive table implementation done on:/items /orders /myOrders
+fixed /items,/orders,/menu backend error
+fixed /orders/:id /items/:id backend error
+important fixed: /request mobile number validation to 10 digits (review this in validation)
+added default image if image is not found
+fixed /myOrders display no orders been placed if 0 length
+user is redirected to /menu if user has already logged in (/singin page)
+404 Error page created
+UserIcon rendering completed
+home page css changes for mobile view
+NavBar changes in CSS
+UserButton CSS changes
+fix: UserButton(rendering username wrong on some ) mobile view size for admin view
+/profile fixed and made responsive
+show button fixed errors and made pop up on top
+Css fixes to profile , myorders show made responsive
+(working on this )add loading spinner to all
+minor fix: after filtering , when an item is selected , the render is lost (but the item is selected)
+Back feature and quantity updates added , fix bug : quantity becoming 0 or below , must add correct validation
+found a small bug in /menu , in the menu component the filteredSearch state is rerendered when X button is pressed in the Cart Component 
+adding profile address 
+reordered myOrdersShow in mobile css changes
+Edit order feature added
+bug fix: if item is edited , the new value of the item.price will not reflect in /menu
+bug fix: /items after deleting ,it is filtering from the default(this.state.items)
+bug fix(admin): when seeing an order /order/:id - it will populate the cart (through localStorage), in /menu
+Adding confirm model for window.confirm :
+added confirm modal to /orders,/items delete
+added query display 
+Fixed the billing system
+added images to buttons
+
+added new /myOrders path to show users order history (still working on this)
+added profile option in UserButton component - should show user details (still working on this)
+added contact us validation(still needs work)
+
+
+Clear all the warnings
+Add the loading animation everywhere:
+/items
+/orders
+
+fix validations for all the form submitions
+fix: show the user icon only if logged in
+fix: admin :fetch the Order items values from the database 
+add failed to load data message 
+show default error page
+redirect to login if user is logged out
+/signin fix the background (make it full page)
+/signin make 3 options to buy a caterer account
+Fix in /menu do not render Order now ! if user already logged in(seen in pc)
+reuse user loggrd in function in component did mount 
+fix : admin delete item , it deletes , it does not call render function 
+important fix: admin :/items,/orders being fetched even when not logged in
+important fix: admin : saving the total of the order in database and retrieving it (it should not calculate in react) 
+was checking on the default image loading when nothing is given
+important fix: back recovery for cart
+update : admin entering name to get orders , from and to date - lists all orders
+
+added function for getting userDetails
+implemented login function on /profile , /myorders
+added logo image in /signin
+fix: UserButton when logged in make inside another class component 
+fix: UserButton when logged in show , (currently need to refresh)
+fix: All form submission must become blank after submission
+fix: /items /orders when not logged in is loading the page (redirect should be applied)
+
+Session management cart order variable creation
+cookies to store temp cart items
+pagination 
+toasts
+giving focus on top to user
+selecting time compulsary

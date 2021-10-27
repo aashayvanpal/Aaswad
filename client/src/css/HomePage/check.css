@@ -1,0 +1,121 @@
+.card-style {
+  /* background-color: green; */
+  /* background-color: #DBC268; */
+  /* border-radius: 5px; */
+  /* margin-left: 10px; */
+  margin: 10px;
+  width: 48%;
+  height: 152px;
+  border: 2px solid #dbc268;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px 0px #dbc268;
+}
+
+.card-body-style {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  /* background-color: blue; */
+  border-radius: 10x 60px 10px 10px;
+  display: inline-flex;
+}
+
+.contents {
+  width: 390px;
+  position: absolute;
+  margin-left: 150px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.itemName {
+  font-size: 30px;
+  text-align: "center";
+
+}
+
+#imageStyling {
+  height: 130px;
+  width: 105px;
+  position: absolute;
+  /* top:0px; */
+  z-index: 2;
+  border-radius: 10px 30px 30px 10px;
+  margin: 10px 0px 0px 5px;
+}
+
+#checkBoxStyling {
+  display: block;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+#cart-text-style {
+  background-color: rgb(245, 237, 192);
+  border: 2px solid black;
+  text-align: center;
+  /* width: 240px; */
+  height: 50px;
+  /* padding-top: 10px; */
+  /* margin-top: -32px;
+    margin-left: 20px;
+    margin-right: 20px; */
+
+  width: 90%;
+  position: absolute;
+  left: 5%;
+  box-shadow: 6px 6px 6px;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 507px) {
+  .card-style {
+    /* background-color: green; */
+    margin-bottom: 10px;
+    height: 150px;
+    width: 100%;
+    border-radius: 10px 60px 10px 10px;
+    border: 2px solid #dbc268;
+  }
+  .card-body-style {
+    /* display: inline-flex; */
+    /* padding: 0px; */
+
+    /* margin: 3px; */
+    height: 150px;
+    width: 100%;
+    border-radius: 10px 60px 10px 10px;
+  }
+  .itemName {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  #checkBoxStyling {
+    margin-left: 30%;
+    margin-top: 20px;
+  }
+
+  /* #cart-text-style:hover {
+      height: 85%;
+    } */
+
+  .contents {
+    width: 160px;
+  }
+}
+
+/* image 100 125 */
+
+.cart-button {
+  width: 90%;
+  left: 5%;
+  position: fixed;
+  bottom: 20px;
+  z-index: 10;
+}
