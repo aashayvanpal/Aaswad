@@ -9,6 +9,8 @@ import confirm from 'reactstrap-confirm'
 import ShowBtn from '../assets/ShowBtn';
 import deleteImg from '../images/delete-icon.png'
 import approveImg from '../images/approve-icon.png'
+import homeDeliveryMan from '../images/home-delivery-man.png'
+import serviceGif from '../images/service.gif'
 
 export default class ItemList extends Component {
     constructor() {
@@ -290,7 +292,9 @@ export default class ItemList extends Component {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName}</h3></Link></Td>
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
+                                                    </h3></Link></Td>
                                                     <Td className="listing-table">
                                                         {/* Responsiveness lost if displayed as flex */}
                                                         {/* <div style={{
@@ -337,7 +341,7 @@ export default class ItemList extends Component {
                                     <Tr>
                                         <Th className="listing-table" >Sl no</Th>
                                         <Th className="listing-table" >Name</Th>
-                                        <Th className="listing-table" >Update</Th>
+                                        {/* <Th className="listing-table" >Update</Th> */}
                                         <Th className="listing-table" >Date</Th>
                                         <Th className="listing-table" >Delete</Th>
                                         <Th className="listing-table" >Completed</Th>
@@ -349,8 +353,10 @@ export default class ItemList extends Component {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName}</h3></Link></Td>
-                                                    <Td className="listing-table" ><button>update</button></Td>
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
+                                                    </h3></Link></Td>
+                                                    {/* <Td className="listing-table" ><button>update</button></Td> */}
                                                     <Td className="listing-table" >{
                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                     }</Td>
@@ -392,7 +398,9 @@ export default class ItemList extends Component {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName}</h3></Link></Td>
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
+                                                    </h3></Link></Td>
                                                     <Td className="listing-table" >{
                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                     }</Td>

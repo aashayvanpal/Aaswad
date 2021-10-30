@@ -170,14 +170,13 @@ export default class AddItems extends Component {
                 <div className="search-align">
                     <h2>Listing items - {this.state.searchFilter.length}</h2>
 
-                    <input type="text" placeholder="Search" name="item" onChange={this.handleChange} />&nbsp;&nbsp;
-                    <input type="submit" value="Search" />
+                    <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={this.handleChange} />&nbsp;&nbsp;
 
 
                 </div>
                 <Link to='/items/add'> <button className="button-color3">
                     <img src={addIcon} height="35px" width="30px" />
-                    Add new items
+                    Add new item
                 </button></Link>
 
                 <div style={{ "margin": "10px" }}>

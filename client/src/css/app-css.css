@@ -264,14 +264,7 @@
   }
 }
 
-.user {
-  background-image: url("../images/usr-icon.svg");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  margin-top:10px;
-  height: 70px;
-  width: 70px;
-}
+
 
 /* .inner-Menu { */
 /* background-color: #dbc268;

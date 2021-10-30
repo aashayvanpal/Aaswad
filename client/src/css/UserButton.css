@@ -1,0 +1,24 @@
+.user {
+    background-image: url("../images/usr-icon.svg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    margin-top:10px;
+    height: 70px;
+    width: 70px;
+}
+
+#dropdown-item{
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    font-size: 22px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#dropdown-item > img{
+    float: left;
+    margin-top: 5px;
+    height:20px;
+    width:20px;
+}

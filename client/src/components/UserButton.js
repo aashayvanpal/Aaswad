@@ -4,6 +4,8 @@ import axios from '../config/axios';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import ReactAnime from 'react-animejs'
+
+import '../css/UserButton.css'
 import profileImg from '../images/profile-icon.png'
 import myOrdersImg from '../images/myOrders-icon.png'
 import settingsImg from '../images/settings-icon.png'
@@ -55,14 +57,7 @@ const UserButton = (props) => {
         <DropdownToggle className="user" style={{ "border": "none", "backgroundColor": "#dbc268" }} />
       </Anime>
       <DropdownMenu>
-        <DropdownItem style={{
-          "color": "green",
-          "fontWeight": "bold",
-          "textAlign": "center",
-          "fontSize": "22px",
-          "padding": "10px"
-
-        }} header>
+        <DropdownItem id="dropdown-item" header>
           {props.userName}
         </DropdownItem>
         {/* <DropdownItem style={{
@@ -81,47 +76,29 @@ const UserButton = (props) => {
         }} >Another
           Action
         </DropdownItem> */}
-        <Link style={{ "textDecoration": "none" }} to="/profile"><DropdownItem style={{
-          "color": "green",
-          "fontWeight": "bold",
-          "textAlign": "center",
-          "fontSize": "22px",
-          "cursor": "pointer",
-          "padding": "10px"
-        }}  >
-          <img src={profileImg} alt="" height="20px" width="20px"/>
-          Profile</DropdownItem></Link>
-        <Link style={{ "textDecoration": "none" }} to="/myOrders"><DropdownItem style={{
-          "color": "green",
-          "fontWeight": "bold",
-          "textAlign": "center",
-          "fontSize": "22px",
-          "cursor": "pointer",
-          "padding": "10px"
-        }}> 
-          <img src={myOrdersImg} alt="" height="20px" width="20px"/>
-        My Orders</DropdownItem></Link>
-        <Link style={{ "textDecoration": "none" }} to="/settings"><DropdownItem style={{
-          "color": "green",
-          "fontWeight": "bold",
-          "textAlign": "center",
-          "fontSize": "22px",
-          "cursor": "pointer",
-          "padding": "10px"
-        }}>
-          <img src={settingsImg} alt="" height="20px" width="20px"/>
-          Settings</DropdownItem></Link>
+        <Link style={{ "textDecoration": "none" }} to="/profile">
+          <DropdownItem id="dropdown-item">
+            <img src={profileImg} alt="" />
+            Profile
+          </DropdownItem>
+        </Link>
+        <Link style={{ "textDecoration": "none" }} to="/myOrders">
+          <DropdownItem id="dropdown-item">
+            <img src={myOrdersImg} alt="" />
+            My Orders
+          </DropdownItem>
+        </Link>
+        <Link style={{ "textDecoration": "none" }} to="/settings">
+          <DropdownItem id="dropdown-item">
+            <img src={settingsImg} alt="" />
+            Settings
+          </DropdownItem>
+        </Link>
         <DropdownItem divider />
-        <DropdownItem style={{
-          "color": "green",
-          "fontWeight": "bold",
-          "textAlign": "center",
-          "fontSize": "22px",
-          "cursor": "pointer",
-          "padding": "10px"
-        }} onClick={logout}>
-          <img src={logoutImg} alt="" height="20px" width="20px"/>
-          Logout</DropdownItem>
+        <DropdownItem id="dropdown-item" onClick={logout}>
+          <img src={logoutImg} alt="" height="20px" width="20px" />
+          Logout
+        </DropdownItem>
       </DropdownMenu>
     </ButtonDropdown>
   );
