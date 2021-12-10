@@ -41,6 +41,7 @@ export default class CustomerForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this)
         this.handleCheckboxChangeService = this.handleCheckboxChangeService.bind(this)
+        this.clearForm = this.clearForm.bind(this)
 
     }
 
@@ -58,6 +59,7 @@ export default class CustomerForm extends React.Component {
         })
             .then(dataRequest => {
                 console.log("user data to fill inside form:", dataRequest)
+                // if localstorage found user that data for edit
                 this.setState({
                     fullName: dataRequest.data.username,
                     email: dataRequest.data.email,
@@ -76,6 +78,7 @@ export default class CustomerForm extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         })
+        // this.validate()
     }
 
     handleCheckboxChange = () => {
@@ -108,6 +111,8 @@ export default class CustomerForm extends React.Component {
         let specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '~', '_', '`', '(', ')', '+', '-', '/', '.', ',', '[', ']', '{', '}', '?', ':', ';', '\'', '"', "|", ">", "<"]
         let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+        // Regex for name validation
+        // name max length 20 characters
         if (this.state.fullName.length < 5) {
             nameError = "Error: The full name cannot be less than 5 characters"
         }
@@ -215,9 +220,20 @@ export default class CustomerForm extends React.Component {
         });
     };
 
+    clearForm() {
+        this.setState({
+            fullName: '',
+            email: 'test@gmail.com',
+            phoneNumber: '',
+            address: '',
+        })
+    }
+
     render() {
         return (
             <form id='detailsForm' onSubmit={this.handleSubmit}>
+                {this.props.userType === 'Admin' ? <button onClick={this.clearForm}>Clear form</button> : null}
+
                 <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold", "color": "white", "text-decoration": "underline" }}>Add Your Event Details </h1><br />
                 <Stepper className="stepper-color"
                     steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
@@ -311,7 +327,7 @@ export default class CustomerForm extends React.Component {
                         window.location.href = '/menu'
                     }}
                 />
-            </form>
+            </form >
         )
     }
 }

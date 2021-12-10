@@ -12,6 +12,8 @@ export default class ItemShow extends React.Component {
         this.state = {
             order: {},
             id: '',
+            // rate: '',
+            // medium: '',
             fullName: '',
             address: '',
             email: '',
@@ -33,6 +35,16 @@ export default class ItemShow extends React.Component {
     generateBill() {
         console.log("Print button clicked!")
         window.open(window.location.href + "/print", '_blank')
+
+    }
+    generateBillDelivery() {
+        console.log("Print Delivery button clicked!")
+        console.log("Find order id and assign to orderid")
+        console.log(this.state.id)
+        const orderid = this.state.id
+
+        // window.open(window.location.href + `/printDelivery/${orderid}`, '_blank')
+        window.open(window.location.href + `/printDelivery`, '_blank')
 
     }
 
@@ -87,22 +99,48 @@ export default class ItemShow extends React.Component {
                 // let eventTime = eventDate.substr(11, 5)
 
 
-                this.setState({
-                    id,
-                    fullName,
-                    address,
-                    email,
-                    eventDate,
-                    eventName,
-                    numberOfPeople,
-                    eventTime,
-                    queries,
-                    homeDelivery,
-                    phoneNumber,
-                    service,
-                    items,
-                    status,
-                })
+                if (this.state.order.transport) {
+                    console.log('inside transport condition')
+                    let medium = this.state.order.transport.medium
+                    let rate = this.state.order.transport.rate
+                    this.setState({
+                        id,
+                        fullName,
+                        address,
+                        email,
+                        eventDate,
+                        eventName,
+                        numberOfPeople,
+                        eventTime,
+                        queries,
+                        homeDelivery,
+                        phoneNumber,
+                        service,
+                        items,
+                        status,
+                        rate,
+                        medium
+                    })
+                } else {
+                    console.log('outside transport condition')
+                    this.setState({
+                        id,
+                        fullName,
+                        address,
+                        email,
+                        eventDate,
+                        eventName,
+                        numberOfPeople,
+                        eventTime,
+                        queries,
+                        homeDelivery,
+                        phoneNumber,
+                        service,
+                        items,
+                        status,
+                    })
+                }
+
 
                 const orderPrint = {
                     fullName: this.state.fullName,
@@ -172,7 +210,9 @@ export default class ItemShow extends React.Component {
                 //     items: oldSelectedItems
                 // })
 
+
             })
+        console.log('set user here')
     }
 
     render() {
@@ -220,7 +260,7 @@ export default class ItemShow extends React.Component {
                     <h1>Showing order details:-</h1>
                     <h2>Customer Name : {this.state.fullName}</h2>
                     <h2>Event Name : {this.state.eventName}</h2>
-                    {this.state.queries ? (<h2 style={{ "backgroundColor": "red" }}>Queries : {this.state.queries}</h2>) : (null)}
+                    {this.state.queries ? (<h2 style={{ "backgroundColor": "red", "color": "white" }}>Queries : {this.state.queries}</h2>) : (null)}
 
                     <h2>Number of People : {this.state.numberOfPeople}</h2>
                     <h2>Event Date : {this.state.eventDate}</h2>
@@ -272,6 +312,28 @@ export default class ItemShow extends React.Component {
                     <h1>Grand Total = {this.state.total}</h1>
                     <h1>Per plate cost = {this.state.total / this.state.numberOfPeople}</h1>
                     <button onClick={this.generateBill}>Generate Bill</button>
+                    <button onClick={() => this.generateBillDelivery(this.state.id)}>Generate Bill Delivery</button>
+
+                    {this.state.medium ? (
+                        <>
+                            <hr />
+                            <table style={{ "borderCollapse": "collapse", "border": "2px solid black" }}>
+                                <thead style={{ "border": "2px solid black" }}>
+                                    <tr>
+                                        <td>Transport</td>
+                                        <td>Rate</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{this.state.medium}</td>
+                                        <td>{this.state.rate}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </>
+                    ) : null}
+
                 </div>
             </div>
         )

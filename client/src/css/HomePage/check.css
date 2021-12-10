@@ -118,4 +118,5 @@
   position: fixed;
   bottom: 20px;
   z-index: 10;
+  opacity: 0.9;
 }

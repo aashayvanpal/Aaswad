@@ -11,6 +11,8 @@ import deleteImg from '../images/delete-icon.png'
 import approveImg from '../images/approve-icon.png'
 import homeDeliveryMan from '../images/home-delivery-man.png'
 import serviceGif from '../images/service.gif'
+import upArrow from '../images/up-arrow.png'
+import downArrow from '../images/down-arrow.png'
 
 export default class ItemList extends Component {
     constructor() {
@@ -263,6 +265,20 @@ export default class ItemList extends Component {
             })
     }
 
+    sortAscending = () => {
+        this.setState({
+            approves: this.state.approves.sort(function (a, b) {
+                return (a.customer.eventDate < b.customer.eventDate) ? -1 : ((a.customer.eventDate > b.customer.eventDate) ? 1 : 0);
+            })
+        })
+    }
+    sortDescending = () => {
+        this.setState({
+            approves: this.state.approves.sort(function (a, b) {
+                return (a.customer.eventDate > b.customer.eventDate) ? -1 : ((a.customer.eventDate < b.customer.eventDate) ? 1 : 0);
+            })
+        })
+    }
     render() {
         return (
             <div>
@@ -281,9 +297,11 @@ export default class ItemList extends Component {
                                 <Thead>
                                     <Tr>
                                         <Th className="listing-table" >Sl no</Th>
+                                        <Th className="listing-table" >Date <button onClick={this.sortAscending}><img src={upArrow} height="15px" width="15px" /></button>
+                                            <button onClick={this.sortDescending}><img src={downArrow} height="15px" width="15px" /></button>
+                                        </Th>
                                         <Th className="listing-table" >Name</Th>
                                         <Th className="listing-table" >Actions</Th>
-                                        <Th className="listing-table" >Date</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -292,9 +310,17 @@ export default class ItemList extends Component {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
+
+                                                    <Td className="listing-table" >{
+                                                        item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
+                                                    }</Td>
                                                     <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
                                                         {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
-                                                    </h3></Link></Td>
+                                                    </h3></Link>
+                                                        {item.customer.queries && <>Notes - {item.customer.queries}</>}
+
+                                                    </Td>
+
                                                     <Td className="listing-table">
                                                         {/* Responsiveness lost if displayed as flex */}
                                                         {/* <div style={{
@@ -310,18 +336,18 @@ export default class ItemList extends Component {
                                                         <button className="button-color5" onClick={() => {
                                                             this.handleRemoveOrder(item._id, item.customer.fullName)
                                                         }}>
-                                                            <img src={deleteImg} alt="" height='20px' width='20px' />
-                                                            Delete</button>
+                                                            <img src={deleteImg} alt="" style={{
+                                                                "filter": "brightness(0) invert(1)", height: '30px', width: '30px'
+                                                            }} />
+                                                        </button>
                                                         <button className="button-color6" onClick={() => {
                                                             this.handleApproveOrder(item._id)
                                                         }}>
-                                                            <img src={approveImg} alt="" height='20px' width='20px' />
-                                                            Approve</button>
+                                                            <img src={approveImg} alt="" height='25px' width='25px' />
+                                                        </button>
                                                         {/* </div> */}
                                                     </Td>
-                                                    <Td className="listing-table" >{
-                                                        item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                                    }</Td>
+
                                                 </Tr>
                                             )
                                         })

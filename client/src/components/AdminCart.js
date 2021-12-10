@@ -5,14 +5,16 @@ import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import { Stepper } from 'react-form-stepper'
 import clearCartImg from '../images/clear-cart-icon.png'
+import '../css/AdminCart.css'
 
-export default class Cart extends React.Component {
+export default class AdminCart extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             cartItems: [],
             reqOrder: [],
-            defaultItems: []
+            defaultItems: [],
+            total: 0
         }
 
         this.plusHandle = this.plusHandle.bind(this)
@@ -189,6 +191,67 @@ export default class Cart extends React.Component {
 
     }
 
+    handlePriceChange(e, price, id) {
+        console.log('inside the handlePrice')
+        console.log('e :', e)
+        console.log('e.target :', e.target)
+        console.log('e.target.value :', e.target.value)
+        console.log('price :', price)
+
+
+        console.log('change quantity of this id:', id)
+
+        const foundItem = this.state.cartItems.find(item => item._id === id)
+        console.log('Item found :', foundItem)
+        console.log('Item found\'s price before:', foundItem.price)
+
+        console.log('Edit item : ', foundItem)
+
+        const index = this.state.cartItems.findIndex(item => item._id === id)
+        console.log('the index is :', index)
+
+        console.log('state of reqOrder :', this.state.cartItems)
+        console.log('spread :', ...this.state.cartItems)
+        // console.log('spread index 2:', this.state.items[2])
+        // console.log('spread index 2 display before:', this.state.items[2].display)
+        // console.log('spread index 2 display after:', !this.state.items[2].display)
+
+        var changedItems = this.state.cartItems
+        console.log('price :', price)
+        console.log('price should become :', e.target.value)
+        changedItems[index].price = e.target.value
+
+        this.setState({
+            cartItems: changedItems
+        })
+
+        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
+
+
+        // console.log("==DEBUG==")
+        console.log("Default items:")
+        console.log(this.state.defaultItems)
+        console.log("this.state.cartItems:")
+        console.log(this.state.cartItems)
+
+        var updatedCart = this.state.cartItems.filter(obj => this.state.defaultItems.find(p => p.id === obj.id) || obj);
+        console.log("check here")
+        console.log(updatedCart)//here is correct , the not true values are not present 
+        console.log("false filter")
+        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
+        var falseFilter = this.state.defaultItems.filter(item => item.isSelected === false)
+        var desiredResult = [...updatedCart, ...falseFilter]
+        console.log(desiredResult)
+
+        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
+
+
+        if (changedItems[index].quantity <= 0) {
+            this.disableButton(index)
+        } else {
+            this.EnableButton(index)
+        }
+    }
 
     handleChange(e, qty, id) {
         console.log('inside the new handleChange')
@@ -265,7 +328,7 @@ export default class Cart extends React.Component {
         // console.log("check props for cart items to show :", this.props.items)
         console.log("check props for cart items to show :", this.props.cartItems)
         return (
-            <div id="inner-Cart">
+            <div id="inner-Cart" >
 
                 {/* <h1 id="cart-text-style" > Cart :</h1> */}
                 {
@@ -282,18 +345,22 @@ export default class Cart extends React.Component {
                         :
                         (
                             <div>
-                                <Stepper style={{ "backgroundColor": "#green" }}
-                                    className="stepper-color"
+                                <Stepper className="stepper-color" style={{ "backgroundColor": "#fff5d2", marginTop: "10px", padding: "0px" }}
                                     steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
                                     activeStep={1}
                                 />
+                                <h2 style={{ textAlign: "center", }}>Total amount - {
+                                    this.state.cartItems.reduce((sum, i) => (
+                                        sum += i.quantity * i.price
+                                    ), 0)}
+                                </h2>
                                 <Table>
                                     <thead>
                                         <tr>
                                             <th>Sl No</th>
                                             <th>Item Name</th>
+                                            <th>Price<br />Amt</th>
                                             <th>Quantity</th>
-                                            {/* <th scope="row" ><h2>Price</h2></th> */}
                                             <th>Remove</th>
                                         </tr>
                                     </thead>
@@ -301,10 +368,18 @@ export default class Cart extends React.Component {
                                         {
                                             // this.props.items.filter(item => item.isSelected === true).map((item, i) => {
                                             this.state.cartItems.map((item, i) => {
+                                                this.state.total += item.quantity * item.price
+                                                this.setState(prevState => { prevState.total += item.quantity * item.price })
                                                 return (
                                                     <tr key={item._id} >
                                                         <td style={{ "textAlign": "center" }}>{i + 1}</td>
-                                                        <td>{item.name}</td>
+                                                        <td><h5>{item.name}</h5></td>
+
+                                                        <td style={{ textAlign: "center" }}>
+                                                            <input name="price" value={item.price} onChange={(e) => { this.handlePriceChange(e, item.price, item._id) }} style={{ "width": "35px", textAlign: "center" }} />
+                                                            <br />{item.price * item.quantity}
+                                                        </td>
+
                                                         <td style={{ "display": "inline-flex" }}>
                                                             {(item.quantity <= 1) ? (
                                                                 <button disabled="true" id={i + 1} onClick={() => { this.minusHandle(item._id) }}>-</button>
@@ -329,26 +404,28 @@ export default class Cart extends React.Component {
                                         }
                                     </tbody>
                                 </Table>
+
                                 <hr />
-                                <div style={{ "display": "flex", "justifyContent": "space-evenly" }}>
+                                <div style={{ "display": "flex", "justifyContent": "space-evenly", padding: "10px" }}>
                                     <Button color="danger" style={{ "fontWeight": "bold" }} onClick={() => this.clearCart()}>
                                         <img src={clearCartImg} alt="" height="25px" width="25px" />
                                         Clear Cart
                                     </Button>
+
                                     <Link to='/request'
+                                        id="proceed-btn"
                                         onClick={() => {
                                             // console.log('request button clicked!')
                                             // window.alert('request button clicked')
                                             this.props.requestOrder(this.state.cartItems)
                                         }}>
-
-                                        <Button style={{
-                                            "backgroundColor": "#dbc268", "color": "black", "width": "100%", "fontWeight": "bold"
-                                        }}>
-                                            Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />
-                                        </Button>
-
+                                        <Button
+                                            style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }}
+                                        >
+                                            Proceed admin &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />
+                                        </Button >
                                     </Link>
+
                                 </div >
                             </div >
                         )

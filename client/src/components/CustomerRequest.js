@@ -121,6 +121,7 @@ export default class CustomerRequest extends React.Component {
                         <NavigationBar />
                         <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit}
                             openSubmitEnquiryModal={this.state.openSubmitEnquiryModal}
+                            userType={this.state.userType}
                         />
                     </div>
                 </div >

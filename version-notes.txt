@@ -212,6 +212,11 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
+Changes for v1.0.5.8 T12:
+Table sorting
+Added Admin Cart component , Clear form button , transport table in /show/:id
+added button for delivery
+
 Clear all the warnings
 Add the loading animation everywhere:
 /items
@@ -241,6 +246,9 @@ fix: UserButton when logged in make inside another class component
 fix: UserButton when logged in show , (currently need to refresh)
 fix: All form submission must become blank after submission
 fix: /items /orders when not logged in is loading the page (redirect should be applied)
+fix: /items Admin user should be fetching all items and not filtering ,(customer gets the Active/inactive)
+fix: adding trasnport price inside the order before 1/11/2021
+fix: /items css in mobile screen
 
 Session management cart order variable creation
 cookies to store temp cart items
@@ -248,3 +256,4 @@ pagination
 toasts
 giving focus on top to user
 selecting time compulsary
+when internet is lost , keeping data and updating when internet is back up

@@ -9,10 +9,11 @@ import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
 import Header from "./Header.js"
 import NavigationBar from './NavigationBar'
-import { Alert, Button} from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import { Link } from 'react-router-dom'
 import ShowBtn from '../assets/ShowBtn'
 import clearIcon from '../images/clear-icon.png'
+import '../css/AdminCart.css'
 
 // for loading from google images :(not working) 
 // <img src={`https://photos.google.com/share/AF1QipMK9yJs7N52kZcsS17jVq8mvLsi3NPhGkyrGv3IUhDOx0WbPcW5-ZVmPnj0MvTg_A${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" /> */}
@@ -467,9 +468,12 @@ export default class Menu extends React.Component {
                                     </div>
                                 )}
                         </div>
-                        <CartModel buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
+                        <CartModel
+
+                            buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
                             resetIsSelected={this.resetIsSelected}
                             requestOrder={this.requestOrder}
+                            userType={this.state.userType}
                         />
                     </div >
                 </div>

@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T11 home delivery and service icons
+// App version v1.0.5.8 T12 table sorting
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -10,6 +10,7 @@ import MyOrdersList from "./components/MyOrdersList.js";
 import OrderList from "./components/OrderList";
 import OrderShow from "./components/order/Show.js";
 import OrderPrint from "./components/order/Print.js";
+import OrderPrintDelivery from "./components/order/PrintDelivery";
 
 import MyOrdersShow from "./components/myOrdersShow.js";
 
@@ -190,6 +191,12 @@ function App() {
                     >
                       <OrderPrint />
                     </Route>
+                    <Route
+                      exact
+                      path="/orders/:id/printDelivery"
+                    >
+                      <OrderPrintDelivery />
+                    </Route>
 
                     <Route path="/myOrders/show/:id">
                       <Header />
@@ -226,7 +233,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T11</h1>
+                          <h1>App Version : v1.0.5.8 T12</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                           <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>
