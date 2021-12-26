@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T13:
+Changes for v1.0.5.8 T14:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery

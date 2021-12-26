@@ -17,18 +17,18 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true)
 
 
-    useEffect(async () => {
+    useEffect(() => {
         console.log('inside use effect')
 
         setTimeout(() => setLoading(true), 3000)
 
-        await axios.get('/api/orders', {
+        axios.get('/api/orders', {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }
         })
             .then(response => {
-                console.log('Data : ', response.data)
+                // console.log('Data : ', response.data)
                 const items = response.data
                 console.log('items after request :', items)
                 setOrders(items)
@@ -47,8 +47,6 @@ const Dashboard = () => {
                 console.log('completed filtered:', completed)
                 setCompleted(completed)
 
-                console.log('approves state:', approves)
-
                 setLoading(false)
             })
 
@@ -56,13 +54,13 @@ const Dashboard = () => {
                 console.log(err)
             })
 
-        await axios.get('/api/items', {
+        axios.get('/api/items', {
             headers: {
                 'x-auth': localStorage.getItem('token')
             }
         })
             .then(response => {
-                console.log('Data : ', response.data)
+                // console.log('Data : ', response.data)
                 const items = response.data
                 console.log('items after request :', items)
                 setItems(items)
