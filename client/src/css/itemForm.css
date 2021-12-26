@@ -1,0 +1,21 @@
+#itemForm{
+    width: 60%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#formGroup{
+    width: 100%;
+}
+
+
+@media screen and (max-width: 507px){
+    #itemForm{
+        width: 100%;
+    }
+    #formGroup{
+        padding: 0px;
+        margin: 10px 0px;
+    }
+}

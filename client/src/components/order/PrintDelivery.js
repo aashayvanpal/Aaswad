@@ -20,6 +20,8 @@ export default class OrderPrintDelivery extends React.Component {
             eventDate: '',
             phoneNumber: '',
             id: '',
+            medium: '',
+            rate: 0,
         }
 
     }
@@ -42,13 +44,16 @@ export default class OrderPrintDelivery extends React.Component {
         console.log("order :", order)
         console.log("state of order :", this.state.order)
 
-        const { fullName, items, eventDate, phoneNumber, id } = JSON.parse(localStorage.getItem('order'))
+        const { fullName, items, eventDate, phoneNumber, id, medium, rate } = JSON.parse(localStorage.getItem('order'))
         this.setState({
             fullName,
             items,
             eventDate,
             phoneNumber,
-            id
+            id,
+            medium,
+            rate,
+
         })
         console.log("items", items)
         console.log("isArray items", Array.isArray(items))
@@ -69,18 +74,20 @@ export default class OrderPrintDelivery extends React.Component {
                 <h3>
                     <table id='table-style'>
                         <thead className='td-style' style={{ "fontWeight": "bold" }}>
-                            <td className='td-style'>Sl No.</td>
-                            <td className='td-style'>Particulars</td>
-                            <td className='td-style'>Quantity</td>
-                            <td className='td-style'>Rate</td>
-                            <td className='td-style'>Amount (in INR)</td>
+                            <tr>
+                                <td className='td-style'>Sl No.</td>
+                                <td className='td-style'>Particulars</td>
+                                <td className='td-style'>Quantity</td>
+                                <td className='td-style'>Rate</td>
+                                <td className='td-style'>Amount (in INR)</td>
+                            </tr>
                         </thead>
                         <tbody>
                             {
                                 this.state.items.map((item, i) => {
                                     this.setState()
                                     return (
-                                        <tr>
+                                        <tr key={i}>
                                             <td className='td-style'>{i + 1}</td>
                                             <td className='td-style' style={{
                                                 "textAlign": "left",
@@ -94,8 +101,8 @@ export default class OrderPrintDelivery extends React.Component {
                                 })
                             }
                             <tr>
-                                <td colSpan={4} >Swiggy Genie</td>
-                                <td>&#x20B9; 0 /-</td>
+                                <td colSpan={4} >{this.state.medium}</td>
+                                <td>&#x20B9; {this.state.rate} /-</td>
                             </tr>
                             <tr>
                                 <td style={{
@@ -103,10 +110,10 @@ export default class OrderPrintDelivery extends React.Component {
                                     "textAlign": "right",
                                     "paddingRight": "80px",
                                     "fontWeight": "bold",
-                                }} colspan="5">Total:
+                                }} colSpan="5">Total:
                                     &#x20B9; {this.state.items.reduce((sum, i) => (
                                         sum += i.quantity * i.price
-                                    ), 0)}/-</td>
+                                    ), Number(this.state.rate))}/-</td>
                             </tr>
                         </tbody>
                     </table >

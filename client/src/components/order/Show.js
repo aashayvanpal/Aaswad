@@ -2,7 +2,8 @@ import React from 'react'
 import axios from '../../config/axios.js'
 import { Link } from 'react-router-dom'
 import '../../css/myOrdersShow.css'
-
+import TransportForm from './TransportForm.js'
+import TransportTable from './TransportTable.js'
 
 // bug fix: Orderid must be same when the order is edited 
 
@@ -12,8 +13,6 @@ export default class ItemShow extends React.Component {
         this.state = {
             order: {},
             id: '',
-            // rate: '',
-            // medium: '',
             fullName: '',
             address: '',
             email: '',
@@ -26,7 +25,8 @@ export default class ItemShow extends React.Component {
             phoneNumber: '',
             service: false,
             items: [],
-            total: 0
+            total: 0,
+            ShowTransportForm: false,
         }
         this.EditOrder = this.EditOrder.bind(this)
 
@@ -61,7 +61,6 @@ export default class ItemShow extends React.Component {
             .then(response => {
                 const order = response.data
                 this.setState({ order })
-
                 console.log('Showing :', this.state.order)
                 console.log('fullname :', this.state.order.customer.fullName)
                 console.log('id :', this.state.order._id)
@@ -98,11 +97,11 @@ export default class ItemShow extends React.Component {
 
                 // let eventTime = eventDate.substr(11, 5)
 
-
                 if (this.state.order.transport) {
                     console.log('inside transport condition')
                     let medium = this.state.order.transport.medium
                     let rate = this.state.order.transport.rate
+
                     this.setState({
                         id,
                         fullName,
@@ -121,6 +120,22 @@ export default class ItemShow extends React.Component {
                         rate,
                         medium
                     })
+                    const orderPrint = {
+                        fullName: this.state.fullName,
+                        eventDate: this.state.eventDate,
+                        phoneNumber: this.state.phoneNumber,
+                        items: this.state.items,
+                        total: this.state.total,
+                        id: this.state.id,
+                        medium,
+                        rate
+
+                    }
+
+                    console.log('orderPrint', orderPrint)
+                    localStorage.setItem("order", JSON.stringify(orderPrint))
+                    console.log('inside transport condition end')
+
                 } else {
                     console.log('outside transport condition')
                     this.setState({
@@ -139,19 +154,21 @@ export default class ItemShow extends React.Component {
                         items,
                         status,
                     })
+                    const orderPrint = {
+                        fullName: this.state.fullName,
+                        eventDate: this.state.eventDate,
+                        phoneNumber: this.state.phoneNumber,
+                        items: this.state.items,
+                        total: this.state.total,
+                        id: this.state.id
+
+                    }
+
+                    console.log('orderPrint', orderPrint)
+                    localStorage.setItem("order", JSON.stringify(orderPrint))
+
                 }
 
-
-                const orderPrint = {
-                    fullName: this.state.fullName,
-                    eventDate: this.state.eventDate,
-                    phoneNumber: this.state.phoneNumber,
-                    items: this.state.items,
-                    total: this.state.total,
-                    id: this.state.id
-
-                }
-                localStorage.setItem("order", JSON.stringify(orderPrint))
             })
             .catch(err => {
                 console.log(err)
@@ -215,6 +232,42 @@ export default class ItemShow extends React.Component {
         console.log('set user here')
     }
 
+    ShowTransportForm = () => {
+        this.setState({ ShowTransportForm: false })
+    }
+
+    ShowTransportTable = (medium, rate) => {
+        // change the order model
+        // create controller
+        // post request to update transport
+        console.log('id to edit', window.location.href.split('/')[4])
+        const id = window.location.href.split('/')[4]
+
+        axios.put(`/orders/${id}`, { "transport": { "medium": medium, "rate": rate } }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+                // this.setState({ item })
+
+                console.log('Edited order :', item)
+                this.setState({ medium, rate })
+                const oldmedium = JSON.parse(localStorage.getItem('order'))
+                oldmedium.medium = this.state.medium
+                oldmedium.rate = this.state.rate
+                localStorage.setItem('order', JSON.stringify(oldmedium))
+                console.log('orer to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }
+
+
     render() {
         // const { customer.fullName } = this.state.order
         // console.log("state of order :", this.state.order)
@@ -255,7 +308,7 @@ export default class ItemShow extends React.Component {
                             "borderRadius": "10px",
                             "padding": "10px",
                             "cursor": "pointer",
-                        }} onClick={this.EditOrder()}>Edit</button></Link></h2>
+                        }} onClick={() => this.EditOrder()}>Edit</button></Link></h2>
                     </div>
                     <h1>Showing order details:-</h1>
                     <h2>Customer Name : {this.state.fullName}</h2>
@@ -278,7 +331,7 @@ export default class ItemShow extends React.Component {
                 <div id="ShowContainer2" style={{ "border": "2px solid black", "padding": "20px" }}>
                     <h1>Listing Items - {this.state.items.length}</h1>
 
-                    <table style={{ "borderCollapse": "collapse", "border": "2px solid black" }}>
+                    <table style={{ "borderCollapse": "collapse", "border": "2px solid black", width: "100%" }}>
                         <thead style={{ "border": "2px solid black" }}>
                             <tr>
                                 <td>Sl No.</td>
@@ -309,33 +362,37 @@ export default class ItemShow extends React.Component {
                             }
                         </tbody>
                     </table>
-                    <h1>Grand Total = {this.state.total}</h1>
-                    <h1>Per plate cost = {this.state.total / this.state.numberOfPeople}</h1>
-                    <button onClick={this.generateBill}>Generate Bill</button>
+                    <h1>Grand Total = {this.state.items.reduce((sum, i) => (
+                        sum += i.quantity * i.price
+                    ), 0)}</h1>
+
+
+                    <h1>Per plate cost = {this.state.items.reduce((sum, i) => (
+                        sum += i.quantity * i.price
+                    ), 0) / this.state.numberOfPeople}</h1>
+                    <button onClick={() => this.generateBill()}>Generate Bill</button>
                     <button onClick={() => this.generateBillDelivery(this.state.id)}>Generate Bill Delivery</button>
 
+                    {this.state.homeDelivery ? (
+                        <div>
+                            <button onClick={() => this.setState({ ShowTransportForm: !this.state.ShowTransportForm })}>Enter Transport</button>
+                        </div>
+
+                    ) : (null)}
+                    {this.state.ShowTransportForm && <TransportForm
+                        ShowTransportForm={this.ShowTransportForm}
+                        ShowTransportTable={this.ShowTransportTable}
+                        price={this.state.rate}
+                        medium={this.state.medium}
+                    />}
+
                     {this.state.medium ? (
-                        <>
-                            <hr />
-                            <table style={{ "borderCollapse": "collapse", "border": "2px solid black" }}>
-                                <thead style={{ "border": "2px solid black" }}>
-                                    <tr>
-                                        <td>Transport</td>
-                                        <td>Rate</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{this.state.medium}</td>
-                                        <td>{this.state.rate}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </>
+                        <TransportTable medium={this.state.medium}
+                            rate={this.state.rate} />
                     ) : null}
 
                 </div>
-            </div>
+            </div >
         )
     }
 }

@@ -212,10 +212,16 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T12:
+Changes for v1.0.5.8 T13:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
+responsive add item form added
+Generate bill with delivery completed
+print delivery add the item total with the transport and display total
+Center align tables in /orders/:id
+
+Add items /items/add made responsive
 
 Clear all the warnings
 Add the loading animation everywhere:
@@ -249,6 +255,11 @@ fix: /items /orders when not logged in is loading the page (redirect should be a
 fix: /items Admin user should be fetching all items and not filtering ,(customer gets the Active/inactive)
 fix: adding trasnport price inside the order before 1/11/2021
 fix: /items css in mobile screen
+fix: remove all backend validation and display meaningful message to user(it is showing like an alert message)
+fix: add remove transport button for /orders/:id
+fix: generate bill delivery should render final amount with advance payment
+fix: /menu Search bar and the selection and the clear filters should become sticky while scrolling the menu
+fix: make button to reach top of page
 
 Session management cart order variable creation
 cookies to store temp cart items
@@ -257,3 +268,32 @@ toasts
 giving focus on top to user
 selecting time compulsary
 when internet is lost , keeping data and updating when internet is back up
+
+
+
+
+==========================
+Currently Working :
+Edit order feature that should display in order form
+===========================
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+important Fixes ! :
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
++++++++++++++++++++++++++++
+Additional features : 
++++++++++++++++++++++++++++
+
+
+-----------------------------
+Fixes : 
+-----------------------------
+
+
+
+(((((((((((((((((((((((((((((
+Completed :
+)))))))))))))))))))))))))))))

@@ -8,7 +8,16 @@ const orderSchema = new Schema({
         type: Array,
         required: true
     },
-
+    transport: {
+        medium: {
+            type: String,
+            reqiured: true,
+        },
+        rate: {
+            type: Number,
+            reqiured: true,
+        }
+    },
     customer: {
         customer_id: {
             type: String,

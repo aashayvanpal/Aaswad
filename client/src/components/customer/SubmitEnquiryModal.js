@@ -26,7 +26,7 @@ const ModalExample = (props) => {
                     Your enquiry has been submitted , we will get back soon!
                 </ModalBody>
                 <ModalFooter style={{ "backgroundColor": "#dbc268", }}>
-                    <Button style={{
+                    <Button id="ok" style={{
                         "backgroundColor": "rgb(196 153 0)", "color": "black",
                         "fontWeight": "bold"
                     }} onClick={closeModal}>OK</Button>

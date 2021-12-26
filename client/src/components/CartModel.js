@@ -25,7 +25,7 @@ const CartModel = (props) => {
                 "backgroundColor": "#dbc268",
                 "color": "black",
                 "fontSize": "22px"
-            }} className="cart-button" onClick={toggle}>
+            }} className="cart-button" id="cartBtn" onClick={toggle}>
                 <img src={cartImage} alt="" style={{ "marginRight": "20px" }} />
                 {buttonLabel}
             </Button>
