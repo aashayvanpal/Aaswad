@@ -12,8 +12,8 @@ const Dashboard = () => {
     const [confirms, setConfirms] = useState([])
     const [completed, setCompleted] = useState([])
 
-    const [items, setItems] = useState([])
-    const [itemsDisplay, setItemsDisplay] = useState([])
+    // const [items, setItems] = useState([])
+    // const [itemsDisplay, setItemsDisplay] = useState([])
     const [loading, setLoading] = useState(true)
 
 
@@ -29,21 +29,21 @@ const Dashboard = () => {
         })
             .then(response => {
                 // console.log('Data : ', response.data)
-                const items = response.data
-                console.log('items after request :', items)
-                setOrders(items)
+                const orders = response.data
+                console.log('orders after request :', orders)
+                setOrders(orders)
                 // filter for approve 
-                const approves = items.filter(item => item.status === 'approve')
+                const approves = orders.filter(order => order.status === 'approve')
                 console.log('approves filtered:', approves)
                 setApproves(approves)
                 // filter for confirmed 
-                const confirms = items.filter(item => item.status === 'confirmed')
+                const confirms = orders.filter(order => order.status === 'confirmed')
                 console.log('confirms filtered:', confirms)
                 setConfirms(confirms)
 
 
                 // filter for completed 
-                const completed = items.filter(item => item.status === 'completed')
+                const completed = orders.filter(order => order.status === 'completed')
                 console.log('completed filtered:', completed)
                 setCompleted(completed)
 
@@ -54,23 +54,23 @@ const Dashboard = () => {
                 console.log(err)
             })
 
-        axios.get('/api/items', {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                // console.log('Data : ', response.data)
-                const items = response.data
-                console.log('items after request :', items)
-                setItems(items)
-                const DisplayingCount = items.filter(item => item.display === true)
-                setItemsDisplay(DisplayingCount)
+        // axios.get('/api/items', {
+        //     headers: {
+        //         'x-auth': localStorage.getItem('token')
+        //     }
+        // })
+        //     .then(response => {
+        //         // console.log('Data : ', response.data)
+        //         const items = response.data
+        //         console.log('items after request :', items)
+        //         setItems(items)
+        //         const DisplayingCount = items.filter(item => item.display === true)
+        //         setItemsDisplay(DisplayingCount)
 
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
     }, [1])
 
     return (
@@ -95,7 +95,7 @@ const Dashboard = () => {
                         <h2>Completed orders :{completed.length}</h2>
                     </div>
                 </div>
-                <h1>Items</h1>
+                {/* <h1>Items</h1>
                 <div style={{ display: "inline-flex" }}>
                     <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
                         <h2>Total items : {items.length}</h2>
@@ -106,7 +106,7 @@ const Dashboard = () => {
                     <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
                         <h2>Non-Displaying items : {items.length - itemsDisplay.length}</h2>
                     </div>
-                </div>
+                </div> */}
             </div>) : (<LoadingSpinner />)}
         </div>
     )
