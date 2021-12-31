@@ -22,7 +22,7 @@ export default class CustomerForm extends React.Component {
             address: '',
             queries: '',
             eventName: '',
-            numberOfPeople: '',
+            numberOfPeople: 1,
             eventDate: '',
             eventTime: time,
             homeDelivery: false,
@@ -53,25 +53,56 @@ export default class CustomerForm extends React.Component {
         this.fullName.focus()
 
 
-        // Filling the form with known 
-        axios.get('/account', {
-            headers: { 'x-auth': localStorage.getItem('token') }
-        })
-            .then(dataRequest => {
-                console.log("user data to fill inside form:", dataRequest)
-                // if localstorage found user that data for edit
-                this.setState({
-                    fullName: dataRequest.data.username,
-                    email: dataRequest.data.email,
-                    address: dataRequest.data.address,
-                    userId: dataRequest.data.id,
-                    phoneNumber: dataRequest.data.phonenumber
+        // Filling the form with known data , if editing ,use that localstorage.order ,else /account api
+        if (JSON.parse(localStorage.getItem('order'))) {
+            console.log('order found from localstorage details edit feature')
+            console.log(JSON.parse(localStorage.getItem('order')))
+            const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, eventTime, _id, address, eventName } = JSON.parse(localStorage.getItem('order'))
+
+            console.log('eventDate:', eventDate)
+            // console.log('eventTime to set:', eventTime)
+            // console.log('eventTime to first:', eventTime.split(':')[0])
+            // console.log('eventTime to second:', eventTime.split(':')[1])
+            // also set date here , or else the default date is 12:00 am
+            var dateParts = eventDate.split("/");
+            // month is 0-based, that's why we need dataParts[1] - 1
+            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+            dateObject.setHours(eventTime.split(':')[0], eventTime.split(':')[1])
+            console.log('here is debug for dateObject:', dateObject)
+            this.setState({
+                startDate: dateObject,
+                userId: customer_id,
+                fullName,
+                phoneNumber,
+                eventTime,
+                email,
+                address,
+                eventName,
+                numberOfPeople: String(numberOfPeople),
+                id: _id
+            })
+        } else {
+            console.log('getting /account api')
+            axios.get('/account', {
+                headers: { 'x-auth': localStorage.getItem('token') }
+            })
+                .then(dataRequest => {
+                    console.log("user data to fill inside form:", dataRequest)
+                    // if localstorage found user that data for edit
+                    this.setState({
+                        fullName: dataRequest.data.username,
+                        email: dataRequest.data.email,
+                        address: dataRequest.data.address,
+                        userId: dataRequest.data.id,
+                        phoneNumber: dataRequest.data.phonenumber
+                    })
+                    // userType: dataRequest.data.userType
                 })
-                // userType: dataRequest.data.userType
-            })
-            .catch(err => {
-                console.log(err)
-            })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+
     }
 
     handleChange = e => {
@@ -145,8 +176,8 @@ export default class CustomerForm extends React.Component {
         // if (regex.test(this.state.numberOfPeople)) {
         //     noOfPeopleError = "Error: Number of People cannot contain alphabets !"
         // }
-
-        if (!digits.some(digit => this.state.numberOfPeople.includes(digit))) {
+        console.log('validation check this.state.numberOfPeople:', this.state.numberOfPeople)
+        if (!digits.some(digit => this.state.numberOfPeople.toString().includes(digit))) {
             noOfPeopleError = "Error: Number of people cannot contain alphabets"
         }
 
@@ -210,7 +241,7 @@ export default class CustomerForm extends React.Component {
 
     handleDateChange = date => {
         console.log("Date Changed :", String(date))
-        console.log("Date type :", typeof (String(date)))
+        console.log("Date Changed :", date)
         let eventTime = String(date).substr(16, 5)
         console.log("eventTime :", eventTime)
 
@@ -234,7 +265,7 @@ export default class CustomerForm extends React.Component {
             <form id='detailsForm' onSubmit={this.handleSubmit}>
                 {this.props.userType === 'Admin' ? <button onClick={this.clearForm}>Clear form</button> : null}
 
-                <h1 style={{ "fontSize": "28px", "textAlign": "center", "font-weight": "bold", "color": "white", "text-decoration": "underline" }}>Add Your Event Details </h1><br />
+                <h1 style={{ "fontSize": "28px", "textAlign": "center", "fontWeight": "bold", "color": "white", "textDecoration": "underline" }}>Add Your Event Details </h1><br />
                 <Stepper className="stepper-color"
                     steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
                     activeStep={2}

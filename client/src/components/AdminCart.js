@@ -420,7 +420,7 @@ export default class AdminCart extends React.Component {
                                             this.props.requestOrder(this.state.cartItems)
                                         }}>
                                         <Button
-                                            style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }} 
+                                            style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }}
                                         >
                                             Proceed admin &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />
                                         </Button >

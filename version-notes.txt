@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T15 Dashboard deploy 3:
+Changes for v1.0.5.8 T16 Edit order:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -244,6 +244,8 @@ important fix: admin : saving the total of the order in database and retrieving 
 was checking on the default image loading when nothing is given
 important fix: back recovery for cart
 update : admin entering name to get orders , from and to date - lists all orders
+Edit order feature added
+Contactus focus on top of page
 
 added function for getting userDetails
 implemented login function on /profile , /myorders
@@ -260,6 +262,7 @@ fix: add remove transport button for /orders/:id
 fix: generate bill delivery should render final amount with advance payment
 fix: /menu Search bar and the selection and the clear filters should become sticky while scrolling the menu
 fix: make button to reach top of page
+bug fix: /menu ,changing price in admin cart ,and then selecting new item is resetting the price in admin cart , fix this bug
 
 Session management cart order variable creation
 cookies to store temp cart items
@@ -274,7 +277,6 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
-Edit order feature that should display in order form
 ===========================
 
 

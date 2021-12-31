@@ -88,6 +88,10 @@
   text-align: center;
   margin-top: 20px;
 }
+#sign-in-container {
+  display: flex;
+  align-items: center;
+}
 
 #signinImg {
   height: 1000px;
@@ -96,13 +100,38 @@
   background: url(../../images/signIn.svg);
 }
 
+
 #leftContainerImg {
   width: 50%;
 }
 
+#downloadBtn{
+  border-radius: 20px;
+  background-color: #dbc268;
+  font-weight: bold;
+  color: green;
+  cursor: pointer;
+  opacity: 0.9;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 25px;
+  padding: 10px;
+  box-shadow: 5px 5px #e2dbc2;
+}
+
+#downloadBtn:hover {
+  opacity: 1;
+}
+
+
+
 @media screen and (max-width: 1002px) {
   #leftContainerImg {
-    display: none;
+    width: 100%;
+  }
+  #sign-in-container{
+    flex-direction: column;
   }
 
   .SignUpCard {

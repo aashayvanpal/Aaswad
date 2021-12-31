@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-// import { useState } from 'react/cjs/react.development'
 import ShowBtn from '../assets/ShowBtn'
 import NavigationBar from './NavigationBar'
 import axios from 'axios'

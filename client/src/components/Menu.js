@@ -46,7 +46,6 @@ export default class Menu extends React.Component {
         this.newCheckboxChange = this.newCheckboxChange.bind(this)
         this.isCheckedValue = this.isCheckedValue.bind(this)
         this.resetIsSelected = this.resetIsSelected.bind(this)
-        this.toggleIsSelected = this.toggleIsSelected.bind(this)
         this.newtoggleIsSelected = this.newtoggleIsSelected.bind(this)
         this.requestOrder = this.requestOrder.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -154,52 +153,9 @@ export default class Menu extends React.Component {
     // trying to get the cart rendering with newCheckBoxChange
     newCheckboxChange(item) {
         console.log('inside newCheckBoxChange function', item)
-        // this.toggleIsSelected(item._id)
         this.newtoggleIsSelected(item._id)
     }
 
-    toggleIsSelected = (id) => {
-        // Delete item from the cartItems do setState of cartItems
-        console.log('inside the toggleIsSelected function')
-        console.log('toggle this id from the items :', id)
-        // this.removeItemFromCart(id)
-        // console.log('Id removed from the cart check...')
-
-        // Reset the items.isSelected to false
-        // find the item in items[] then change isSelected to false
-        console.log('items state:', this.state.items)
-        console.log('searchfilter state:', this.state.searchFilter)
-        // If below line is removed , the filtering works ,else it removes everything after the checkbox is selected
-        this.setState({ searchFilter: this.state.items })
-
-
-        const foundItem = this.state.items.find(item => item._id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  items.isSelected before:', foundItem.isSelected)
-        console.log('Edit item.isSelected to false : ', foundItem)
-        const index = this.state.items.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-        console.log('state of items :', this.state.items)
-        // console.log('spread :', ...this.state.items)
-        console.log('spread index :', this.state.items[index])
-        console.log('spread index.isSelected before:', this.state.items[index].isSelected)
-        // console.log('spread index.isSelected after:', !this.state.items[index].isSelected)
-        var changedItems = this.state.items
-        changedItems[index].isSelected = !changedItems[index].isSelected
-        // this.setState({ items: changedItems })
-        this.setState({ searchFilter: changedItems })
-
-        // localStorage.setItem('cartItems', JSON.stringify(this.state.items))
-        localStorage.setItem('cartItems', JSON.stringify(this.state.searchFilter))
-        console.log('Items found\'s isSelected after:', this.state.items)
-
-        // // console.log('Item found\'s display after:', foundItem.display)
-
-        // this.clearSearch()
-
-        console.log('end of toggleIsSelected Function')
-        return null
-    }
 
     newtoggleIsSelected = (id) => {
         console.log('inside newToggleIsSelected')
@@ -219,8 +175,7 @@ export default class Menu extends React.Component {
         }) || item);
 
         console.log('newVal:', newVal)
-        this.setState({ filteredItems: newVal })
-        this.setState({ items: newVal })
+        this.setState({ filteredItems: newVal, items: newVal })
         localStorage.setItem("cartItems", JSON.stringify(newVal))
         console.log('end of  newToggleIsSelected')
 
@@ -358,6 +313,7 @@ export default class Menu extends React.Component {
                                     this.resetIsSelected(item._id)
                                 })
                                 localStorage.removeItem("cartItems")
+                                localStorage.removeItem("order")
                             }
                         }}>Clear Local</button>
                         <button onClick={() => this.setState({ showAlert: true })}>Toast +</button>

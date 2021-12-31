@@ -52,18 +52,16 @@ export default class CustomerRequest extends React.Component {
                     userType: dataRequest.data.userType,
                     phonenumber: dataRequest.data.phonenumber,
                     address: dataRequest.data.address,
-
                 })
             })
             .catch(err => {
                 console.log(err)
             })
-
     }
 
     handleCustomerSubmit(customerData) {
         // e.preventDefault()
-        console.log('clicked on submit enquiry button lol fail')
+        console.log('clicked on submit enquiry button')
         console.log('Send these items for approval :', this.state.reqOrder)
         console.log('Submit this customer data :', customerData)
 
@@ -74,38 +72,74 @@ export default class CustomerRequest extends React.Component {
         }
 
         console.log('order :', order)
-
-        // post request -> order 
-        axios.post('/request', order, {
-            headers: {
-                "x-auth": localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data.errors) {
-                    console.log('Validation Error : ', response.data.errors)
-                    window.alert(response.data.message)
-                }
-                else {
-                    console.log('success', response.data)
-                    // this.props.history.push('/items')
-
-                    // Adding confirmation modal
-                    // window.alert('Thank you for placing order we will get back')
-                    // console.log(this.props)
-                    // this.props.history.push('/menu')
-                    this.setState({ openSubmitEnquiryModal: true })
-                    // console.log('success check for trueeee', this.state.openSubmitEnquiryModal)
-                    localStorage.removeItem("cartItems")
-
-                    // window.location.href = '/menu'
-
+        // post request if new order , put request if old-edit order
+        if (localStorage.getItem('order')) {
+            console.log('execute the put request')
+            axios.put(`/orders/${JSON.parse(localStorage.order).id}`, order, {
+                headers: {
+                    "x-auth": localStorage.getItem('token')
                 }
             })
+                .then(response => {
+                    if (response.data.errors) {
+                        console.log('Validation Error : ', response.data.errors)
+                        window.alert(response.data.message)
+                    }
+                    else {
+                        console.log('put request success', response.data)
+                        // this.props.history.push('/items')
+
+                        // Adding confirmation modal
+                        // window.alert('Thank you for placing order we will get back')
+                        // console.log(this.props)
+                        // this.props.history.push('/menu')
+                        this.setState({ openSubmitEnquiryModal: true })
+                        // console.log('success check for trueeee', this.state.openSubmitEnquiryModal)
+                        localStorage.removeItem("cartItems")
+                        localStorage.removeItem("order")
+
+                        // window.location.href = '/menu'
+
+                    }
+                })
+                .catch(err => console.log(err))
+        } else {
+            console.log('execute the post request for new order')
+            // post request -> order 
+            axios.post('/request', order, {
+                headers: {
+                    "x-auth": localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (response.data.errors) {
+                        console.log('Validation Error : ', response.data.errors)
+                        window.alert(response.data.message)
+                    }
+                    else {
+                        console.log('success', response.data)
+                        // this.props.history.push('/items')
+
+                        // Adding confirmation modal
+                        // window.alert('Thank you for placing order we will get back')
+                        // console.log(this.props)
+                        // this.props.history.push('/menu')
+                        this.setState({ openSubmitEnquiryModal: true })
+                        // console.log('success check for trueeee', this.state.openSubmitEnquiryModal)
+                        localStorage.removeItem("cartItems")
+                        localStorage.removeItem("order")
+
+                        // window.location.href = '/menu'
+
+                    }
+                })
+                .catch(err => console.log(err))
+        }
+
     }
 
     render() {
-        console.log('customer request')
+        console.log('customer request render')
         return (
             <div id="request-div">
                 <div style={{ "display": "inline" }}>

@@ -17,7 +17,7 @@ export default function Footer() {
 
                         <div className="footer-c1-box2">
                             <h2><Link to="/aboutus"   >About Us</Link></h2>
-                            <h2><Link to="/contactus" >Contact Us</Link></h2>
+                            <h2><Link to="/contactus" onClick={window.scrollTo(0, 0)}>Contact Us</Link></h2>
                         </div>
 
 
@@ -38,7 +38,7 @@ export default function Footer() {
                     "color": "#dbc268",
                 }}>
                     © Copyrights Reserved 2021
-                    </div>
+                </div>
             </div>
         </footer>
     )

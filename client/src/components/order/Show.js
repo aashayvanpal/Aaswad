@@ -13,6 +13,7 @@ export default class ItemShow extends React.Component {
         this.state = {
             order: {},
             id: '',
+            customer_id: '',
             fullName: '',
             address: '',
             email: '',
@@ -61,12 +62,13 @@ export default class ItemShow extends React.Component {
             .then(response => {
                 const order = response.data
                 this.setState({ order })
-                console.log('Showing :', this.state.order)
+                console.log('Showing check here :', this.state.order)
                 console.log('fullname :', this.state.order.customer.fullName)
                 console.log('id :', this.state.order._id)
 
                 let id = this.state.order._id
                 let fullName = this.state.order.customer.fullName
+                let customer_id = this.state.order.customer.customer_id
                 let address = this.state.order.customer.address
                 let email = this.state.order.customer.email
                 let eventName = this.state.order.customer.eventName
@@ -104,6 +106,7 @@ export default class ItemShow extends React.Component {
 
                     this.setState({
                         id,
+                        customer_id,
                         fullName,
                         address,
                         email,
@@ -122,17 +125,22 @@ export default class ItemShow extends React.Component {
                     })
                     const orderPrint = {
                         fullName: this.state.fullName,
+                        email: this.state.email,
                         eventDate: this.state.eventDate,
+                        eventTime: this.state.eventTime,
                         phoneNumber: this.state.phoneNumber,
                         items: this.state.items,
                         total: this.state.total,
                         id: this.state.id,
+                        customer_id: this.state.customer_id,
+                        address: this.state.address,
+                        eventName: this.state.eventName,
+                        numberOfPeople: this.state.numberOfPeople,
                         medium,
-                        rate
-
+                        rate,
                     }
 
-                    console.log('orderPrint', orderPrint)
+                    console.log('orderPrint to check', orderPrint)
                     localStorage.setItem("order", JSON.stringify(orderPrint))
                     console.log('inside transport condition end')
 
@@ -140,6 +148,7 @@ export default class ItemShow extends React.Component {
                     console.log('outside transport condition')
                     this.setState({
                         id,
+                        customer_id,
                         fullName,
                         address,
                         email,
@@ -157,11 +166,16 @@ export default class ItemShow extends React.Component {
                     const orderPrint = {
                         fullName: this.state.fullName,
                         eventDate: this.state.eventDate,
+                        eventTime: this.state.eventTime,
                         phoneNumber: this.state.phoneNumber,
+                        email: this.state.email,
                         items: this.state.items,
                         total: this.state.total,
-                        id: this.state.id
-
+                        address: this.state.address,
+                        eventName: this.state.eventName,
+                        id: this.state.id,
+                        customer_id: this.state.customer_id,
+                        numberOfPeople: this.state.numberOfPeople,
                     }
 
                     console.log('orderPrint', orderPrint)
@@ -302,7 +316,9 @@ export default class ItemShow extends React.Component {
                             "padding": "10px",
                             "marginRight": "10px",
                             "cursor": "pointer",
-                        }}>Back</button></Link></h2>
+                        }}
+                            onClick={() => { localStorage.removeItem('order') }}
+                        >Back</button></Link></h2>
                         <h2 ><Link to="/menu"><button style={{
                             "backgroundColor": "#ff881a",
                             "borderRadius": "10px",
