@@ -18,6 +18,9 @@ const orderSchema = new Schema({
             reqiured: true,
         }
     },
+    AdvanceAmount: {
+        type: Number,
+    },
     customer: {
         customer_id: {
             type: String,

@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T16 Edit order:
+Changes for v1.0.5.8 T17 Edit order:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -246,6 +246,9 @@ important fix: back recovery for cart
 update : admin entering name to get orders , from and to date - lists all orders
 Edit order feature added
 Contactus focus on top of page
+Advance Payment feature inside order(done)
+generating bill according to advance payment(done)
+
 
 added function for getting userDetails
 implemented login function on /profile , /myorders
@@ -277,6 +280,15 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
+home deliver and service should be checked and  with the queries updated for the edit order
+edit order  , setItem for order
+set the value of the order ,
+delete the home delivery transport amount if home delivery false  
+
+
+/orders sorting orders for both confirmed and completed orders  
+/order search order by name
+bug: edit order , if the advance payment is present in the order , it will render the table , if home deliver and service are unchecked they must be removed from the edited order also
 ===========================
 
 

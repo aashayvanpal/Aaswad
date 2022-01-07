@@ -185,6 +185,7 @@ export default class AddItems extends Component {
                             <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
                                 <Th className="listing-table">Sl No</Th>
                                 <Th className="listing-table">Name</Th>
+                                <Th className="listing-table">Price</Th>
                                 <Th className="listing-table"> Update</Th>
                                 <Th className="listing-table"> Active/Inactive</Th>
                                 <Th className="listing-table"> Remove</Th>
@@ -198,6 +199,7 @@ export default class AddItems extends Component {
                                         <DisplayItems
                                             key={i}
                                             name={item.name}
+                                            price={item.price}
                                             deleteItem={this.deleteItem}
                                             updateCheckbox={this.updateCheckbox}
                                             id={item._id}

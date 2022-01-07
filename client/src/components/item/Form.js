@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 // import { Table } from 'reactstrap';
-import { Button, Col, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import '../../css/itemForm.css'
 
 export default class ItemForm extends Component {

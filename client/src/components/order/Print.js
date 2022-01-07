@@ -20,6 +20,7 @@ export default class OrderPrint extends React.Component {
             eventDate: '',
             phoneNumber: '',
             id: '',
+            advanceAmount: 0,
         }
 
     }
@@ -42,17 +43,22 @@ export default class OrderPrint extends React.Component {
         console.log("order :", order)
         console.log("state of order :", this.state.order)
 
-        const { fullName, items, eventDate, phoneNumber, id } = JSON.parse(localStorage.getItem('order'))
+        const { fullName, items, eventDate, phoneNumber, id, advanceAmount } = JSON.parse(localStorage.getItem('order'))
         this.setState({
             fullName,
             items,
             eventDate,
             phoneNumber,
-            id
+            id,
+            advanceAmount
         })
         console.log("items", items)
         console.log("isArray items", Array.isArray(items))
-        console.log("this.state.order", this.state.order)
+        // SET state for advance payment here
+        console.log("------Debug------:", this.state.advanceAmount)
+
+        console.log("this.state.advancePayment:", this.state.advanceAmount)
+
     }
 
     render() {
@@ -93,17 +99,54 @@ export default class OrderPrint extends React.Component {
                                         </tr>)
                                 })
                             }
-                            <tr>
-                                <td style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right",
-                                    "paddingRight": "80px",
-                                    "fontWeight": "bold",
-                                }} colspan="5">Total:
-                                    &#x20B9; {this.state.items.reduce((sum, i) => (
+
+
+                            {this.state.advanceAmount ? (<>
+                                <tr>
+                                    <td colSpan="4" style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right", fontWeight: "bold"
+                                    }}> Total</td>
+                                    <td style={{
+                                        "border": "1px solid black"
+                                    }}>   &#x20B9; {this.state.items.reduce((sum, i) => (
                                         sum += i.quantity * i.price
-                                    ), 0)}/-</td>
-                            </tr>
+                                    ), 0)} /-</td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="4" style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right", fontWeight: "bold"
+                                    }}> Advance payment(-)</td>
+                                    <td>  &#x20B9; {this.state.advanceAmount}/-</td>
+                                </tr>
+
+                                <tr>
+                                    <td style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right",
+                                        "paddingRight": "80px",
+                                        "fontWeight": "bold",
+                                    }} colSpan="5">Balance:
+                                        &#x20B9; {this.state.items.reduce((sum, i) => (
+                                            sum += i.quantity * i.price
+                                        ), -this.state.advanceAmount)} /-</td>
+                                </tr>
+                            </>
+                            ) :
+                                (
+                                    <tr>
+                                        <td style={{
+                                            "border": "1px solid black",
+                                            "textAlign": "right",
+                                            "paddingRight": "80px",
+                                            "fontWeight": "bold",
+                                        }} colSpan="5">Total:
+                                            &#x20B9; {this.state.items.reduce((sum, i) => (
+                                                sum += i.quantity * i.price
+                                            ), 0)} /-</td>
+                                    </tr>
+                                )}
                         </tbody>
                     </table >
                 </h3>
@@ -138,7 +181,7 @@ export default class OrderPrint extends React.Component {
                 <h5 style={{ "textAlign": "right" }}><b>
                     OrderID :{this.state.id}</b>
                 </h5>
-            </div>
+            </div >
         )
     }
 }

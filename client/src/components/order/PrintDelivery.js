@@ -22,6 +22,7 @@ export default class OrderPrintDelivery extends React.Component {
             id: '',
             medium: '',
             rate: 0,
+            advanceAmount: "",
         }
 
     }
@@ -44,7 +45,7 @@ export default class OrderPrintDelivery extends React.Component {
         console.log("order :", order)
         console.log("state of order :", this.state.order)
 
-        const { fullName, items, eventDate, phoneNumber, id, medium, rate } = JSON.parse(localStorage.getItem('order'))
+        const { fullName, items, eventDate, phoneNumber, id, medium, rate, advanceAmount } = JSON.parse(localStorage.getItem('order'))
         this.setState({
             fullName,
             items,
@@ -53,6 +54,7 @@ export default class OrderPrintDelivery extends React.Component {
             id,
             medium,
             rate,
+            advanceAmount
 
         })
         console.log("items", items)
@@ -101,22 +103,46 @@ export default class OrderPrintDelivery extends React.Component {
                                 })
                             }
                             <tr>
-                                <td colSpan={4} >{this.state.medium}</td>
-                                <td>&#x20B9; {this.state.rate} /-</td>
+                                <td colSpan={4}>{this.state.medium}</td>
+                                <td style={{ border: "1px solid black" }}>&#x20B9; {this.state.rate} /-</td>
                             </tr>
-                            <tr>
-                                <td style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right",
-                                    "paddingRight": "80px",
-                                    "fontWeight": "bold",
-                                }} colSpan="5">Total:
-                                    &#x20B9; {this.state.items.reduce((sum, i) => (
-                                        sum += i.quantity * i.price
-                                    ), Number(this.state.rate))}/-</td>
-                            </tr>
+                            {this.state.advanceAmount ? (<>
+                                <tr>
+                                    <td colSpan="4" style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right", fontWeight: "bold"
+                                    }}> Advance payment(-)</td>
+                                    <td>  &#x20B9; {this.state.advanceAmount}/-</td>
+                                </tr>
+
+                                <tr>
+                                    <td style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right",
+                                        "paddingRight": "80px",
+                                        "fontWeight": "bold",
+                                    }} colSpan="5">Total:
+                                        &#x20B9; {this.state.items.reduce((sum, i) => (
+                                            sum += i.quantity * i.price
+                                        ), (Number(this.state.rate) - this.state.advanceAmount))} /-</td>
+                                </tr>
+                            </>
+                            ) :
+                                (
+                                    <tr>
+                                        <td style={{
+                                            "border": "1px solid black",
+                                            "textAlign": "right",
+                                            "paddingRight": "80px",
+                                            "fontWeight": "bold",
+                                        }} colSpan="5">Total:
+                                            &#x20B9; {this.state.items.reduce((sum, i) => (
+                                                sum += i.quantity * i.price
+                                            ), (Number(this.state.rate)))} /-</td>
+                                    </tr>
+                                )}
                         </tbody>
-                    </table >
+                    </table>
                 </h3>
                 {/* <h3 style={{ fontWeight: "bold" }}>Special consession : Total: &#x20B9; 5350/-</h3> */}
 
@@ -150,7 +176,7 @@ export default class OrderPrintDelivery extends React.Component {
                 <h5 style={{ "textAlign": "right" }}><b>
                     OrderID :{this.state.id}</b>
                 </h5>
-            </div>
+            </div >
         )
     }
 }

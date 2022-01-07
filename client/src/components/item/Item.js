@@ -8,16 +8,17 @@ import updateIcon from '../../images/update-icon.jpg'
 
 export default function DisplayList(props) {
     // console.log('props', props)
-    const { name, id, i, display } = props
+    const { name, id, i, display, price } = props
     // console.log('checkbox value here', display)
     return (
         <Tr className="listing-table" key={i}>
             <Td className="listing-table">{i + 1}</Td>
             <Td className="listing-table"><Link to={`/items/show/${id}`}><h3>{name}</h3></Link></Td>
+            <Td className="listing-table">{price}</Td>
             <Td className="listing-table">
                 <Link to={`/items/edit/${id}`}>
                     <button className="button-color4"
-                        style={{ width: "100%",fontWeight:"bold" }}
+                        style={{ width: "100%", fontWeight: "bold" }}
                     >
                         <img src={updateIcon} alt="" height="30px" width="30px" />
                         Update
