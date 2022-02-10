@@ -175,7 +175,7 @@ export default class AddItems extends Component {
 
                 </div>
                 <Link to='/items/add'> <button className="button-color3">
-                    <img src={addIcon} height="35px" width="30px" />
+                    <img src={addIcon} alt="addIcon" height="35px" width="30px" />
                     Add new item
                 </button></Link>
 

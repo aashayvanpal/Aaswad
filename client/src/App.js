@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T17 Transport Billing feature 
+// App version v1.0.5.8 T18 AdvancePayments + order sorting 
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -233,7 +233,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T17</h1>
+                          <h1>App Version : v1.0.5.8 T18</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                           <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>

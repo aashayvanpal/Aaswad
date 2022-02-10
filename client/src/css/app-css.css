@@ -24,6 +24,7 @@
   font-size: 30px;
   display: none;
   z-index: 2;
+  border-radius: 20px;
 }
 
 #Nav-bar ul li:hover {

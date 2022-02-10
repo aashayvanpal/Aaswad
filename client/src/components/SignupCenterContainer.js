@@ -8,7 +8,7 @@ export default function SignupCenterContainer() {
       <div id="leftContainerImg">
         <Link to="/AaswadMenuCard-2022.pdf" target="_blank" download>
           <button id="downloadBtn"
-          >Download Menu Card <img src={downloadIcon} height="50px" /></button></Link>
+          >Download Menu Card <img src={downloadIcon} alt="downloadIcon" height="50px" /></button></Link>
       </div>
       <SignInForm />
 

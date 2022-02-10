@@ -1,0 +1,34 @@
+.order-container{
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px;
+}
+
+.order-functions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding:20px;
+}
+
+.order-search{
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
+    text-align:center;
+}
+
+.order-button-styling{
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.table-styling{
+    border-collapse: collapse;
+    border-radius: 10px;
+    border-style: hidden;
+    box-shadow: 0 0 0 2px #000;
+}

@@ -95,6 +95,7 @@ export default class ItemShow extends React.Component {
                 console.log("====debug items====", items)
                 let status = this.state.order.status
                 let eventDate = this.state.order.customer.eventDate.toString()
+                let advanceAmount = this.state.order.AdvanceAmount
                 // console.log("Event Date check:", eventDate)
                 // console.log("Event Date check typeof:", typeof (eventDate))
                 // console.log("Event Date check here:", eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4))
@@ -111,7 +112,6 @@ export default class ItemShow extends React.Component {
                     console.log('inside transport condition')
                     let medium = this.state.order.transport.medium
                     let rate = this.state.order.transport.rate
-                    let advanceAmount = this.state.order.AdvanceAmount
 
                     this.setState({
                         id,
@@ -131,7 +131,7 @@ export default class ItemShow extends React.Component {
                         status,
                         rate,
                         medium,
-                        advanceAmount
+                        advanceAmount,
                     })
                     const orderPrint = {
                         fullName: this.state.fullName,
@@ -148,7 +148,10 @@ export default class ItemShow extends React.Component {
                         numberOfPeople: this.state.numberOfPeople,
                         medium,
                         rate,
-                        advanceAmount
+                        advanceAmount,
+                        service: this.state.service,
+                        homeDelivery: this.state.homeDelivery,
+                        queries: this.state.queries
                     }
 
                     console.log('orderPrint to check', orderPrint)
@@ -173,6 +176,7 @@ export default class ItemShow extends React.Component {
                         service,
                         items,
                         status,
+                        advanceAmount,
                     })
                     const orderPrint = {
                         fullName: this.state.fullName,
@@ -187,6 +191,10 @@ export default class ItemShow extends React.Component {
                         id: this.state.id,
                         customer_id: this.state.customer_id,
                         numberOfPeople: this.state.numberOfPeople,
+                        homeDelivery: this.state.homeDelivery,
+                        service: this.state.service,
+                        queries: this.state.queries,
+                        advanceAmount
                     }
 
                     console.log('orderPrint', orderPrint)
@@ -325,12 +333,77 @@ export default class ItemShow extends React.Component {
     }
 
 
+    deleteTransportTable = () => {
+        console.log('inside parent to delete the transport table')
+        // put request to delete the transport table
+        console.log('check for state here', this.state.order)
+        const { _id } = this.state.order
+
+        axios.put(`/orders/${_id}`, { transport: {} }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                this.setState({ medium: '', rate: '' })
+
+                const oldTransport = JSON.parse(localStorage.getItem('order'))
+                delete oldTransport.transport
+                localStorage.setItem('order', JSON.stringify(oldTransport))
+                console.log('order amount to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    deleteAdvancePaymentTable = () => {
+        console.log('inside parent to delete the AdvancePayment table')
+        // put request to delete the transport table
+        console.log('check for state here', this.state.order)
+        const { _id } = this.state.order
+
+        axios.put(`/orders/${_id}`, { AdvanceAmount: '' }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                this.setState({ advanceAmount: null })
+
+                delete item.AdvanceAmount
+                console.log("--Debug-- latest:", { ...item.customer })
+                const newObj = { ...item.customer, items: item.items, status: item.status, ...item.transport, _id: item._id }
+                console.log("--Debug-- latest check for flat:", newObj)
+                localStorage.setItem('order', JSON.stringify(newObj))
+                console.log('order amount to check', localStorage.getItem('order'))
+
+                // const oldAdvanceAmount = JSON.parse(localStorage.getItem('order'))
+                // delete oldAdvanceAmount.AdvanceAmount
+                // console.log("--Debug-- latest:", oldAdvanceAmount)
+                // localStorage.setItem('order', JSON.stringify(oldAdvanceAmount))
+                // console.log('order amount to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+
     render() {
         // const { customer.fullName } = this.state.order
         // console.log("state of order :", this.state.order)
-        console.log("state of order.customer :", this.state.order.customer)
-        let customer = this.state.order.customer
-        console.log('customer :', customer)
+        // console.log("state of order.customer :", this.state.order.customer)
+        // let customer = this.state.order.customer
+        // console.log('customer :', customer)
 
         // console.log('customer.fullName :', customer.fullName)
         // console.log('customer spread :', ...customer)
@@ -362,7 +435,7 @@ export default class ItemShow extends React.Component {
                         }}
                             onClick={() => { localStorage.removeItem('order') }}
                         >
-                            <img src={backIcon} height="30px" width="30px" />
+                            <img src={backIcon} alt="backIcon" height="30px" width="30px" />
                             Back</button></Link></h2>
                         <h2 ><Link to="/menu"><button style={{
                             "backgroundColor": "#ff881a",
@@ -370,7 +443,7 @@ export default class ItemShow extends React.Component {
                             "padding": "10px",
                             "cursor": "pointer",
                         }} onClick={() => this.EditOrder()}>
-                            <img src={updateIcon} height="30px" width="30px" />
+                            <img src={updateIcon} alt="updateIcon" height="30px" width="30px" />
                             Edit</button></Link></h2>
                     </div>
                     <h1>Showing order details:-</h1>
@@ -407,7 +480,7 @@ export default class ItemShow extends React.Component {
                             {
                                 this.state.items.map((item, i) => {
                                     // This line shows the total for rates (must fix the bug here)
-                                    this.state.total += item.quantity * item.price
+                                    // this.state.total += item.quantity * item.price
                                     this.setState(prevState => { prevState.total += item.quantity * item.price })
                                     return (
                                         <tr key={i}>
@@ -443,8 +516,9 @@ export default class ItemShow extends React.Component {
                             console.log('Enter transport clicked')
                             this.setState({ ShowTransportForm: !this.state.ShowTransportForm })
                         }}>
-                            <img src={transportIcon} height="30px" width="30px" />
-                            Enter Transport</button>
+                            <img src={transportIcon} alt="transportIcon" height="30px" width="30px" />
+                            Enter Transport
+                        </button>
                     ) : (null)}
 
                     <button style={{
@@ -453,7 +527,7 @@ export default class ItemShow extends React.Component {
                         "padding": "10px",
                         "cursor": "pointer",
                     }} onClick={() => this.setState({ ShowAdvancePaymentForm: !this.state.ShowAdvancePaymentForm })}>
-                        <img src={advanceIcon} height="30px" width="30px" />
+                        <img src={advanceIcon} alt="advanceIcon" height="30px" width="30px" />
                         Enter Advance payment</button>
                     {this.state.ShowAdvancePaymentForm && <AdvancePaymentForm
                         ShowAdvancePaymentTable={this.ShowAdvancePaymentTable}
@@ -469,11 +543,16 @@ export default class ItemShow extends React.Component {
                     />}
 
                     {this.state.medium ? (
-                        <TransportTable medium={this.state.medium}
+                        <TransportTable
+                            deleteTable={this.deleteTransportTable}
+                            medium={this.state.medium}
                             rate={this.state.rate} />
                     ) : null}
 
-                    {this.state.advanceAmount && <AdvanceTable advanceAmount={this.state.advanceAmount} />}
+                    {this.state.advanceAmount && <AdvanceTable
+                        deleteTable={this.deleteAdvancePaymentTable}
+                        advanceAmount={this.state.advanceAmount}
+                    />}
                     <hr />
                     <button style={{
                         "backgroundColor": "#ff881a",
@@ -482,9 +561,9 @@ export default class ItemShow extends React.Component {
                         "marginRight": "10px",
                         "cursor": "pointer",
                     }} onClick={() => this.generateBill()}>
-                        <img src={billIcon} width="30px" height="30px" />
+                        <img src={billIcon} alt="billIcon" width="30px" height="30px" />
                         Generate Bill</button>
-                    {this.state.homeDelivery ? (
+                    {this.state.medium ? (
 
                         <button style={{
                             "backgroundColor": "#ff881a",
@@ -493,7 +572,7 @@ export default class ItemShow extends React.Component {
                             "marginRight": "10px",
                             "cursor": "pointer",
                         }} onClick={() => this.generateBillDelivery(this.state.id)}>
-                            <img src={billIcon} width="30px" height="30px" />
+                            <img src={billIcon} alt="billIcon" width="30px" height="30px" />
                             Generate Bill Delivery</button>) : (null)}
                 </div>
             </div >

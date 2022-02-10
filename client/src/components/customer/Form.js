@@ -57,7 +57,7 @@ export default class CustomerForm extends React.Component {
         if (JSON.parse(localStorage.getItem('order'))) {
             console.log('order found from localstorage details edit feature')
             console.log(JSON.parse(localStorage.getItem('order')))
-            const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, eventTime, _id, address, eventName } = JSON.parse(localStorage.getItem('order'))
+            const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, eventTime, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
 
             console.log('eventDate:', eventDate)
             // console.log('eventTime to set:', eventTime)
@@ -79,7 +79,10 @@ export default class CustomerForm extends React.Component {
                 address,
                 eventName,
                 numberOfPeople: String(numberOfPeople),
-                id: _id
+                id: _id,
+                homeDelivery,
+                service,
+                queries
             })
         } else {
             console.log('getting /account api')

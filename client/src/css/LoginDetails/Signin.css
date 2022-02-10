@@ -38,17 +38,17 @@
   width: 300px;
   border-radius: 50px;
   color: white;
-  background-color: #dbc268;
+  background-color: rgba(219, 194, 104,0.9);
   font-size: 32px;
   box-shadow: 5px;
   border: 2px solid black;
+  cursor: pointer;
 }
 #logIn:hover {
   color: "black";
-  background-color: #b5900b;
+  background-color: rgba(219, 194, 104,1);
   box-shadow: 5px 5px grey;
-  transition: 1s;
-  font-weight: bold;
+  transition: 0.5s;
 }
 
 @media screen and (max-width: 514px) {

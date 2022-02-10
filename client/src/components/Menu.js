@@ -36,7 +36,7 @@ export default class Menu extends React.Component {
             username: '',
             userType: false,
             spinnerLoading: false,
-            showAlert: false
+            showAlert: false,
         }
 
         // this.CartHandle = this.CartHandle.bind(this)
@@ -425,7 +425,6 @@ export default class Menu extends React.Component {
                                 )}
                         </div>
                         <CartModel
-
                             buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
                             resetIsSelected={this.resetIsSelected}
                             requestOrder={this.requestOrder}

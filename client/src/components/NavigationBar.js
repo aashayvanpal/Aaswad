@@ -12,13 +12,16 @@ export default function NavigationBar() {
                 <button
                     style={{
                         marginLeft: "160px",
-                        background: "#0e235f",
+                        background: "#04045f",
                         border: "none",
                         color: "white",
                         cursor: "pointer",
+                        borderRadius: "20px",
+                        fontWeight: 'bold'
                     }}
                     onClick={() => {
                         var navBarElement = document.getElementById("Nav-bar");
+                        // navBarElement.style.width = "0%";
                         navBarElement.style.display = "none";
 
                         var showElement = document.getElementById("ShowButton");

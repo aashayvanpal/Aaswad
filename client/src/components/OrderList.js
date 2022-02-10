@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import '../css/app-css.css'
+import '../css/OrderList.css'
 import NavigationBar from './NavigationBar';
 import confirm from 'reactstrap-confirm'
 import ShowBtn from '../assets/ShowBtn';
@@ -18,13 +19,15 @@ export default class ItemList extends Component {
     constructor() {
         super()
         this.state = {
+            orders: [],
             approves: [],
-            confirms: [],
+            confirmed: [],
             completed: []
         }
         this.handleRemoveOrder = this.handleRemoveOrder.bind(this)
         this.handleApproveOrder = this.handleApproveOrder.bind(this)
         this.handleCompleteOrder = this.handleCompleteOrder.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
@@ -36,20 +39,22 @@ export default class ItemList extends Component {
         })
             .then(response => {
                 console.log('Data : ', response.data)
-                const items = response.data
-                console.log('items after request :', items)
+                const orders = response.data
+                console.log('items after request :', orders)
+                this.setState({ orders })
+
                 // filter for approve 
-                const approves = items.filter(item => item.status === 'approve')
+                const approves = orders.filter(order => order.status === 'approve')
                 console.log('approves filtered:', approves)
                 this.setState({ approves })
 
                 // filter for confirmed 
-                const confirms = items.filter(item => item.status === 'confirmed')
-                console.log('confirms filtered:', confirms)
-                this.setState({ confirms })
+                const confirmed = orders.filter(order => order.status === 'confirmed')
+                console.log('confirmed filtered:', confirmed)
+                this.setState({ confirmed })
 
                 // filter for completed 
-                const completed = items.filter(item => item.status === 'completed')
+                const completed = orders.filter(order => order.status === 'completed')
                 console.log('completed filtered:', completed)
                 this.setState({ completed })
 
@@ -58,6 +63,16 @@ export default class ItemList extends Component {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    handleChange = (e, status) => {
+        console.log('inside search handleChange')
+        console.log(e.target.value)
+        const statusFilter = this.state.orders.filter(order => order.status === status)
+        console.log('filtered:', statusFilter)
+        const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
+        this.setState({ [status]: nameFilter })
+
     }
 
     async handleRemoveOrder(id, name) {
@@ -100,11 +115,15 @@ export default class ItemList extends Component {
                     }))
                     // remove if not required
                     this.setState((prevState) => ({
-                        confirms: prevState.confirms.filter(item => item._id !== response.data._id)
+                        confirmed: prevState.confirmed.filter(item => item._id !== response.data._id)
                     }))
 
                     this.setState((prevState) => ({
                         completed: prevState.completed.filter(item => item._id !== response.data._id)
+                    }))
+
+                    this.setState((prevState) => ({
+                        orders: prevState.orders.filter(item => item._id !== response.data._id)
                     }))
 
                     // var NewItems = this.props.items.filter(item => {
@@ -165,7 +184,7 @@ export default class ItemList extends Component {
         changedItems[index].status = 'confirmed'
 
         this.setState((prevState) => ({
-            confirms: [changedItems[index], ...prevState.confirms]
+            confirmed: [changedItems[index], ...prevState.confirmed]
         }))
 
         this.setState({
@@ -173,9 +192,9 @@ export default class ItemList extends Component {
         })
 
         // this.setState(prevState => ({
-        //     confirms: [
-        //         prevState.confirms[index].status = !prevState.confirms[index].status,
-        //         ...prevState.confirms
+        //     confirmed: [
+        //         prevState.confirmed[index].status = !prevState.confirmed[index].status,
+        //         ...prevState.confirmed
         //     ]
         // }))
         console.log('put request for /orders')
@@ -205,7 +224,7 @@ export default class ItemList extends Component {
         console.log('Approve this order id: ', id)
         // change status from approve to confirmed
         // you have found the id, you have to get the whole item 
-        const foundItem = this.state.confirms.find(item => item._id === id)
+        const foundItem = this.state.confirmed.find(item => item._id === id)
         console.log('Item found :', foundItem)
         console.log('Item found\'s status before:', foundItem.status)
 
@@ -217,16 +236,16 @@ export default class ItemList extends Component {
         console.log('Edit item : ', foundItem)
 
 
-        const index = this.state.confirms.findIndex(item => item._id === id)
+        const index = this.state.confirmed.findIndex(item => item._id === id)
         console.log('the index is :', index)
 
-        console.log('state of confirms :', this.state.confirms)
-        console.log('spread :', ...this.state.confirms)
+        console.log('state of confirmed :', this.state.confirmed)
+        console.log('spread :', ...this.state.confirmed)
         // console.log('spread index 2:', this.state.items[2])
         // console.log('spread index 2 display before:', this.state.items[2].display)
         // console.log('spread index 2 display after:', !this.state.items[2].display)
 
-        var changedItems = this.state.confirms
+        var changedItems = this.state.confirmed
         changedItems[index].status = 'completed'
 
         this.setState((prevState) => ({
@@ -234,13 +253,13 @@ export default class ItemList extends Component {
         }))
 
         this.setState({
-            confirms: changedItems.filter(item => item.status === 'confirmed')
+            confirmed: changedItems.filter(item => item.status === 'confirmed')
         })
 
         // this.setState(prevState => ({
-        //     confirms: [
-        //         prevState.confirms[index].status = !prevState.confirms[index].status,
-        //         ...prevState.confirms
+        //     confirmed: [
+        //         prevState.confirmed[index].status = !prevState.confirmed[index].status,
+        //         ...prevState.confirmed
         //     ]
         // }))
         console.log('put request for /orders')
@@ -265,16 +284,17 @@ export default class ItemList extends Component {
             })
     }
 
-    sortAscending = () => {
+    sortAscending = (key) => {
+        console.log(this.state[key])
         this.setState({
-            approves: this.state.approves.sort(function (a, b) {
+            key: this.state[key].sort(function (a, b) {
                 return (a.customer.eventDate < b.customer.eventDate) ? -1 : ((a.customer.eventDate > b.customer.eventDate) ? 1 : 0);
             })
         })
     }
-    sortDescending = () => {
+    sortDescending = (key) => {
         this.setState({
-            approves: this.state.approves.sort(function (a, b) {
+            key: this.state[key].sort(function (a, b) {
                 return (a.customer.eventDate > b.customer.eventDate) ? -1 : ((a.customer.eventDate < b.customer.eventDate) ? 1 : 0);
             })
         })
@@ -286,10 +306,10 @@ export default class ItemList extends Component {
                 <div style={{ 'display': 'flex' }}>
                     <NavigationBar />
                     <div style={{ "margin": "10px", "width": "100%" }}>
-                        <div style={{ "backgroundColor": "#e3c57e", "marginBottom": "20px" }}>
-                            <h1 style={{ 'textAlign': 'center' }}>Approve orders - {this.state.approves.length}</h1>
+                        <div className='order-container' style={{ "backgroundColor": "#e3c57e" }}>
+                            <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Approve orders - {this.state.approves.length}</h2>
 
-                            <Table style={{ "fontWeight": "bold" }}>
+                            <Table className='table-styling' style={{ "fontWeight": "bold" }}>
                                 <caption>
                                     {/* <h1>Approve orders - {this.state.approves.length}</h1> */}
 
@@ -297,8 +317,8 @@ export default class ItemList extends Component {
                                 <Thead>
                                     <Tr>
                                         <Th className="listing-table" >Sl no</Th>
-                                        <Th className="listing-table" >Date <button onClick={this.sortAscending}><img src={upArrow} height="15px" width="15px" /></button>
-                                            <button onClick={this.sortDescending}><img src={downArrow} height="15px" width="15px" /></button>
+                                        <Th className="listing-table" >Date <button onClick={() => this.sortAscending('approves')}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
+                                            <button onClick={() => this.sortDescending('approves')}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
                                         </Th>
                                         <Th className="listing-table" >Name</Th>
                                         <Th className="listing-table" >Actions</Th>
@@ -314,8 +334,8 @@ export default class ItemList extends Component {
                                                     <Td className="listing-table" >{
                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                     }</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
-                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
                                                     </h3></Link>
                                                         {item.customer.queries && <>Notes - {item.customer.queries}</>}
 
@@ -356,36 +376,41 @@ export default class ItemList extends Component {
                             </Table>
                         </div>
 
-                        <div style={{ "backgroundColor": "#98c8ab", "marginBottom": "20px" }}>
-                            <h1 style={{ 'textAlign': 'center' }}>Confirmed orders - {this.state.confirms.length}</h1>
-                            <input placeholder="Search Order" />
-                            <button>Search</button>
-
-                            <Link to='/menu'><button>Add new Order</button></Link>
-                            <Table>
+                        <div className='order-container' style={{ "backgroundColor": "#98c8ab" }}>
+                            <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Confirmed orders - {this.state.confirmed.length}</h2>
+                            <div className='order-functions'>
+                                <input placeholder="Search Order" onChange={(e) => this.handleChange(e, 'confirmed')} className='order-search' />
+                                <button className='order-button-styling' > Clear</button>
+                                <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
+                            </div>
+                            <Table className='table-styling'>
                                 <Thead>
                                     <Tr>
                                         <Th className="listing-table" >Sl no</Th>
-                                        <Th className="listing-table" >Name</Th>
+                                        <Th className="listing-table" >Date
+                                            <button onClick={() => this.sortAscending('confirmed')}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
+                                            <button onClick={() => this.sortDescending('confirmed')}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
+                                        </Th>
                                         {/* <Th className="listing-table" >Update</Th> */}
-                                        <Th className="listing-table" >Date</Th>
+                                        <Th className="listing-table" >Name</Th>
                                         <Th className="listing-table" >Delete</Th>
                                         <Th className="listing-table" >Completed</Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
                                     {
-                                        this.state.confirms.map((item, i) => {
+                                        this.state.confirmed.map((item, i) => {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
-                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
-                                                    </h3></Link></Td>
-                                                    {/* <Td className="listing-table" ><button>update</button></Td> */}
                                                     <Td className="listing-table" >{
                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                     }</Td>
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
+                                                    </h3></Link></Td>
+                                                    {/* <Td className="listing-table" ><button>update</button></Td> */}
+
                                                     <Td className="listing-table" ><button className='button-color5' onClick={() => {
                                                         this.handleRemoveOrder(item._id, item.customer.fullName)
                                                     }}>
@@ -404,16 +429,21 @@ export default class ItemList extends Component {
                             </Table>
                         </div>
 
-                        <div style={{ "backgroundColor": "#d7c7aa" }}>
-                            <h1 style={{ 'textAlign': 'center' }}>Completed orders -{this.state.completed.length}</h1>
-                            <input placeholder="Search Order" />
-                            <button>Search</button>
-                            <Table>
+                        <div className='order-container' style={{ "backgroundColor": "#d7c7aa" }}>
+                            <h2 style={{ 'textAlign': 'center', margin: '0px', fontWeight: 'bold' }}>Completed orders -{this.state.completed.length}</h2>
+                            <div className='order-functions'>
+                                <input placeholder="Search Order" className='order-search' onChange={(e) => this.handleChange(e, 'completed')} />
+                                <button className='order-button-styling'>Clear</button>
+                            </div>
+                            <Table className='table-styling'>
                                 <Thead>
                                     <Tr>
                                         <Th className="listing-table">Sl no</Th>
                                         <Th className="listing-table">Name</Th>
-                                        <Th className="listing-table">Date</Th>
+                                        <Th className="listing-table">Date
+                                            <button onClick={() => this.sortAscending('completed')}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
+                                            <button onClick={() => this.sortDescending('completed')}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
+                                        </Th>
                                         <Th className="listing-table">Delete</Th>
                                     </Tr>
                                 </Thead>
@@ -424,8 +454,8 @@ export default class ItemList extends Component {
                                             return (
                                                 <Tr key={item._id}>
                                                     <Td className="listing-table" >{i + 1}</Td>
-                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} height='35px' width='35px' />) : null}
-                                                        {item.customer.service ? (<img src={serviceGif} height='35px' width='35px' />) : null}
+                                                    <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
+                                                        {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
                                                     </h3></Link></Td>
                                                     <Td className="listing-table" >{
                                                         item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
@@ -444,7 +474,7 @@ export default class ItemList extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }

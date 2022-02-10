@@ -20,7 +20,7 @@ export default class OrderPrint extends React.Component {
             eventDate: '',
             phoneNumber: '',
             id: '',
-            advanceAmount: 0,
+            advanceAmount: '',
         }
 
     }
