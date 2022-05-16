@@ -113,7 +113,7 @@ export default class MyOrdersList extends Component {
                                                                     }</Td>
                                                                     <Td className="listing-table" >{item.customer.address}</Td>
                                                                     <Td className="listing-table" >{item.status}</Td>
-                                                                    <Td className="listing-table" >Star Rating</Td>
+                                                                    <Td className="listing-table" ><Link to={`/myOrders/feedback/${item._id}`}>Star Rating</Link></Td>
                                                                     {/* <td className="listing-table" >{item.customer.fullName}</td> */}
 
                                                                 </Tr>

@@ -287,16 +287,21 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
+Customer feedback and star rating 
 Customer sigin in should be fixed responsiveness 
-Customer feedback
 Customer CRUD
 Build 3 types of users: Admin , Customer and caterer
 Get current location and integration of google map
+create pdf generator for billing 
 ===========================
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 important Fixes ! :
+get email notification when new order is made for the admin
+generate bill with ease 
+add more validations 
+adding images
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
