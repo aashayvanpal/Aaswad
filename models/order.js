@@ -21,6 +21,15 @@ const orderSchema = new Schema({
     AdvanceAmount: {
         type: Number,
     },
+    overallRating: {
+        type: Number
+    },
+    feedback: {
+        type: Boolean
+    },
+    feedbackNote: {
+        type: String
+    },
     customer: {
         customer_id: {
             type: String,

@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T19 AdvancePayments + order sorting 
+// App version v1.0.5.8 T20 Feedback and star rating completed 
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -238,7 +238,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T19</h1>
+                          <h1>App Version : v1.0.5.8 T20</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                           <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>

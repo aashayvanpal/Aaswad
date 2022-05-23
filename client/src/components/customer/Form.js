@@ -59,6 +59,7 @@ export default class CustomerForm extends React.Component {
             console.log(JSON.parse(localStorage.getItem('order')))
             const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, eventTime, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
 
+            //important fix: if there is eventTime Error here , set event time = '12:30'
             console.log('eventDate:', eventDate)
             // console.log('eventTime to set:', eventTime)
             // console.log('eventTime to first:', eventTime.split(':')[0])

@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T19 feedback and start rating:
+Changes for v1.0.5.8 T20 feedback and start rating completed:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -253,6 +253,12 @@ home delivery and service  fixed and  with the queries updated for the edit orde
 Added Delete options for TransportTable and AdvancePaymentTable
 delete the home delivery transport amount if home delivery false  
 fixed: /order search order by name (done ) - check with the CSS , bug - order deleted after filtering , do a setState for orders:[]
+Customer feedback and star rating:
+1.Edit order with the correct and complete object , check for both the old, new object(done)
+2.display feedback button only after order completed status(done)
+5.Disable star rating after feedback is submitted (done) -> feedback button is hidden
+
+
 
 
 added function for getting userDetails
@@ -287,7 +293,19 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
-Customer feedback and star rating 
+important fix: Customer view split method error in the eventTime if localStorage(order) exists
+after submitting order clear localStorage
+important fix: Order cancellation for user
+1. notify admin order is cancelled
+
+
+Customer feedback and star rating:
+3.Once feedback is submitted ,freeze the object 
+4.Disable Edit button if order is in completed status
+important fix: if admin user in /myOrders , show all the orders (currently showing only logged in users orders),this feature shows feedback of user 
+
+clear buttons for /orders page
+
 Customer sigin in should be fixed responsiveness 
 Customer CRUD
 Build 3 types of users: Admin , Customer and caterer
