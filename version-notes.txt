@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T20 feedback and start rating completed:
+Changes for v1.0.5.8 T21 eventTime error fix:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -257,7 +257,7 @@ Customer feedback and star rating:
 1.Edit order with the correct and complete object , check for both the old, new object(done)
 2.display feedback button only after order completed status(done)
 5.Disable star rating after feedback is submitted (done) -> feedback button is hidden
-
+important fix: Customer view split method error in the eventTime if localStorage(order) exists(done)
 
 
 
@@ -293,8 +293,6 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
-important fix: Customer view split method error in the eventTime if localStorage(order) exists
-after submitting order clear localStorage
 important fix: Order cancellation for user
 1. notify admin order is cancelled
 

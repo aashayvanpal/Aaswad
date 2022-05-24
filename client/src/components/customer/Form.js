@@ -57,8 +57,9 @@ export default class CustomerForm extends React.Component {
         if (JSON.parse(localStorage.getItem('order'))) {
             console.log('order found from localstorage details edit feature')
             console.log(JSON.parse(localStorage.getItem('order')))
-            const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, eventTime, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
-
+            const { customer_id, numberOfPeople, phoneNumber, email, fullName, eventDate, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
+            let { eventTime } = JSON.parse(localStorage.getItem('order'))
+            eventTime = typeof (eventTime) === 'undefined' ? '12:30' : eventTime
             //important fix: if there is eventTime Error here , set event time = '12:30'
             console.log('eventDate:', eventDate)
             // console.log('eventTime to set:', eventTime)
