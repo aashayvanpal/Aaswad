@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T21 eventTime error fix:
+Changes for v1.0.5.8 T22 clear buttons + myOrdersEdit bug fix:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -257,8 +257,9 @@ Customer feedback and star rating:
 1.Edit order with the correct and complete object , check for both the old, new object(done)
 2.display feedback button only after order completed status(done)
 5.Disable star rating after feedback is submitted (done) -> feedback button is hidden
-important fix: Customer view split method error in the eventTime if localStorage(order) exists(done)
-
+important fixed: Customer view split method error in the eventTime if localStorage(order) exists(done)
+noOfPeople becomes undefined and also localStorage('order') is lost,after going to myOrders link it shows,localStorage('order') changes in myorders (fixed)
+clear buttons for /orders page
 
 
 added function for getting userDetails
@@ -295,6 +296,7 @@ when internet is lost , keeping data and updating when internet is back up
 Currently Working :
 important fix: Order cancellation for user
 1. notify admin order is cancelled
+2. Order cannot be cancelled after a certain period of time 
 
 
 Customer feedback and star rating:
@@ -302,13 +304,14 @@ Customer feedback and star rating:
 4.Disable Edit button if order is in completed status
 important fix: if admin user in /myOrders , show all the orders (currently showing only logged in users orders),this feature shows feedback of user 
 
-clear buttons for /orders page
 
 Customer sigin in should be fixed responsiveness 
 Customer CRUD
 Build 3 types of users: Admin , Customer and caterer
 Get current location and integration of google map
 create pdf generator for billing 
+(bug) - when new item is added in card , the previous quantity value is lost 
+myOrdersShow component and myOrdersView component division because both components are independent of each other
 ===========================
 
 

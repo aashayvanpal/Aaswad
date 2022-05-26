@@ -28,6 +28,7 @@ export default class ItemList extends Component {
         this.handleApproveOrder = this.handleApproveOrder.bind(this)
         this.handleCompleteOrder = this.handleCompleteOrder.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.clearOrderSearch = this.clearOrderSearch.bind(this)
     }
 
     componentDidMount() {
@@ -299,6 +300,16 @@ export default class ItemList extends Component {
             })
         })
     }
+    clearOrderSearch = (id, status) => {
+        console.log('inside clearOrderSearch')
+        // console.log('id', id)
+        // console.log(document.getElementById(id))
+        document.getElementById(id).value = ''
+        const reset = this.state.orders.filter(order => order.status === status)
+        console.log('resset', reset)
+        this.setState({ [status]: reset })
+
+    }
     render() {
         return (
             <div>
@@ -379,8 +390,8 @@ export default class ItemList extends Component {
                         <div className='order-container' style={{ "backgroundColor": "#98c8ab" }}>
                             <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Confirmed orders - {this.state.confirmed.length}</h2>
                             <div className='order-functions'>
-                                <input placeholder="Search Order" onChange={(e) => this.handleChange(e, 'confirmed')} className='order-search' />
-                                <button className='order-button-styling' > Clear</button>
+                                <input placeholder="Search Order" id="searchConfirmed" onChange={(e) => this.handleChange(e, 'confirmed')} className='order-search' />
+                                <button className='order-button-styling' onClick={(e) => this.clearOrderSearch('searchConfirmed', 'confirmed')}> Clear</button>
                                 <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
                             </div>
                             <Table className='table-styling'>
@@ -432,8 +443,8 @@ export default class ItemList extends Component {
                         <div className='order-container' style={{ "backgroundColor": "#d7c7aa" }}>
                             <h2 style={{ 'textAlign': 'center', margin: '0px', fontWeight: 'bold' }}>Completed orders -{this.state.completed.length}</h2>
                             <div className='order-functions'>
-                                <input placeholder="Search Order" className='order-search' onChange={(e) => this.handleChange(e, 'completed')} />
-                                <button className='order-button-styling'>Clear</button>
+                                <input placeholder="Search Order" id='searchCompleted' className='order-search' onChange={(e) => this.handleChange(e, 'completed')} />
+                                <button className='order-button-styling' onClick={(e) => this.clearOrderSearch('searchCompleted', 'completed')}>Clear</button>
                             </div>
                             <Table className='table-styling'>
                                 <Thead>

@@ -104,16 +104,6 @@ export default class myOrdersShow extends React.Component {
                     overallRating
                 })
 
-                const orderPrint = {
-                    fullName: this.state.fullName,
-                    eventDate: this.state.eventDate,
-                    phoneNumber: this.state.phoneNumber,
-                    items: this.state.items,
-                    total: this.state.total,
-                    id: this.state.id
-
-                }
-                localStorage.setItem("order", JSON.stringify(orderPrint))
             })
             .catch(err => {
                 console.log(err)
