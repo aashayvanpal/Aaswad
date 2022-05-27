@@ -128,11 +128,11 @@ export default function NavigationBar() {
                     <li>Calender</li>
                 </Link>
                 <Link
-                    to="/qurries"
+                    to="/queries"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Qurries</li>
+                    <li>Queries</li>
                 </Link>
                 <Link
                     to="/deals"

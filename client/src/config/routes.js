@@ -52,6 +52,7 @@ router.delete('/logout', usersRouter)
 
 
 // For Querries
+router.get('/contactus', ContactUsController.list)
 router.post('/contactus', ContactUsController.create)
 
 

@@ -4,15 +4,15 @@ const validator = require('validator')
 const Schema = mongoose.Schema
 // Create a categories Schema - with fields like name of type string and required true
 
-const querreySchema = new Schema({
+const querySchema = new Schema({
     email: {
         type: String,
         required: true,
-        validate:{
-            validator: function (value){
+        validate: {
+            validator: function (value) {
                 return validator.isEmail(value)
             },
-            message: function (){
+            message: function () {
                 return 'Invalid email format'
             }
         }
@@ -20,6 +20,9 @@ const querreySchema = new Schema({
     subject: {
         type: String,
         required: true
+    },
+    reply: {
+        type: String,
     },
     mobile: {
         type: Number,
@@ -33,6 +36,6 @@ const querreySchema = new Schema({
 
 
 //Create a model called as Category
-const Querrey = mongoose.model('Querrey', querreySchema)
+const Query = mongoose.model('Query', querySchema)
 
-module.exports = Querrey
+module.exports = Query

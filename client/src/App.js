@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T22 clear buttons + myOrdersEdit bug fix 
+// App version v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix 
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -33,7 +33,7 @@ import UserProfile from "./components/UserProfile.js";
 import Contact from "./components/contact/Contact.js";
 // import Footer from './components/Footer.js'
 import HomePage from "./components/HomePage.js";
-// import Qurries from './components/Qurries.js'
+import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
 // make header as a component
 import { Container, Row, Col } from "reactstrap";
@@ -238,7 +238,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T22</h1>
+                          <h1>App Version : v1.0.5.8 T23</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                           <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>
@@ -277,9 +277,9 @@ function App() {
                       </h2>
                     </Route>
 
-                    <Route path="/qurries">
+                    <Route path="/queries">
                       <Header />
-                      <h1 style={{ backgroundColor: "blue" }}>Qurries Page</h1>
+                      <Queries />
                     </Route>
 
                     <Route path="*">

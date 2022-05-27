@@ -212,7 +212,7 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T22 clear buttons + myOrdersEdit bug fix:
+Changes for v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix:
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -260,7 +260,7 @@ Customer feedback and star rating:
 important fixed: Customer view split method error in the eventTime if localStorage(order) exists(done)
 noOfPeople becomes undefined and also localStorage('order') is lost,after going to myOrders link it shows,localStorage('order') changes in myorders (fixed)
 clear buttons for /orders page
-
+/Queries page basic added
 
 added function for getting userDetails
 implemented login function on /profile , /myorders
@@ -294,16 +294,7 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
-important fix: Order cancellation for user
-1. notify admin order is cancelled
-2. Order cannot be cancelled after a certain period of time 
-
-
-Customer feedback and star rating:
-3.Once feedback is submitted ,freeze the object 
-4.Disable Edit button if order is in completed status
-important fix: if admin user in /myOrders , show all the orders (currently showing only logged in users orders),this feature shows feedback of user 
-
+Queries reply for a question
 
 Customer sigin in should be fixed responsiveness 
 Customer CRUD
@@ -330,7 +321,16 @@ Additional features :
 
 
 -----------------------------
-Fixes : 
+Fixes and backlog :
+important fix: Order cancellation for user
+1. notify admin order is cancelled
+2. Order cannot be cancelled after a certain period of time 
+
+
+Customer feedback and star rating:
+3.Once feedback is submitted ,freeze the object 
+4.Disable Edit button if order is in completed status
+important fix: if admin user in /myOrders , show all the orders (currently showing only logged in users orders),this feature shows feedback of user 
 -----------------------------
 
 
