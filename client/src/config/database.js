@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { mongodburl } = require('./main.js')
 
 // db configuration - establishing connection to db 
 
@@ -15,7 +16,7 @@ const mongoose = require('mongoose')
 
 
 mongoose.Promise = global.Promise
-mongoose.connect(process.env.MONGODB_URI
+mongoose.connect(mongodburl
     , {
         useNewUrlParser: true,
         useUnifiedTopology: true

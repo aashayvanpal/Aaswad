@@ -17,6 +17,7 @@ export default class CustomerRequest extends React.Component {
         }
 
         this.handleCustomerSubmit = this.handleCustomerSubmit.bind(this)
+        this.emailNotify = this.emailNotify.bind(this)
     }
 
     componentDidMount() {
@@ -57,6 +58,18 @@ export default class CustomerRequest extends React.Component {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    emailNotify(order) {
+        console.log('email check', order)
+        // axios.post('/sendEmail/orderPlaced', { 'email': order.customer.email })
+        axios.post('/sendEmail/welcome', {
+            'fullName': order.customer.fullName,
+            'email': order.customer.email,
+            'phonenumber': order.customer.phoneNumber
+        })
+
+        axios.post('/sendEmail/newOrderNotify', { 'username': order.customer.fullName })
     }
 
     handleCustomerSubmit(customerData) {
@@ -100,6 +113,8 @@ export default class CustomerRequest extends React.Component {
 
                         // window.location.href = '/menu'
 
+                        // for Email notification
+                        this.emailNotify(order)
                     }
                 })
                 .catch(err => console.log(err))
@@ -131,6 +146,8 @@ export default class CustomerRequest extends React.Component {
 
                         // window.location.href = '/menu'
 
+                        // Email notification
+                        this.emailNotify(order)
                     }
                 })
                 .catch(err => console.log(err))

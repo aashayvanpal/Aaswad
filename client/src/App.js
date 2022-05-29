@@ -1,4 +1,4 @@
-// App version v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix 
+// App version v1.0.5.9 T1 Email configured 
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -41,6 +41,7 @@ import NavigationBar from './components/NavigationBar.js'
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
 import ShowBtn from "./assets/ShowBtn.js";
+import { appVersion } from './config/main.js'
 
 function App() {
   return (
@@ -238,7 +239,7 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T23</h1>
+                          <h1>App Version : {appVersion}</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
                           <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>
