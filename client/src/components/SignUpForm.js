@@ -22,6 +22,7 @@ export default class SignUpForm extends React.Component {
         super()
         this.state = initialState
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.notifyUserAccountCreation = this.notifyUserAccountCreation.bind(this)
     }
 
     validate = () => {
@@ -67,6 +68,14 @@ export default class SignUpForm extends React.Component {
 
     }
 
+    notifyUserAccountCreation() {
+        // send welcome email to new user
+        axios.post('/sendEmail/welcome', {
+            'fullName': this.state.username,
+            'email': this.state.email,
+            'phonenumber': this.state.phonenumber
+        })
+    }
 
     handleSubmit = (e) => {
         e.preventDefault()
@@ -103,6 +112,8 @@ export default class SignUpForm extends React.Component {
                         console.log('successfully created user', response.data)
                         alert('account created successfully')
                         window.location.href = '/signin'
+
+                        this.notifyUserAccountCreation()
 
                     }
                 })

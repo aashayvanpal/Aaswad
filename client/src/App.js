@@ -1,4 +1,4 @@
-// App version v1.0.5.9 T1 Email configured 
+// App version v1.0.5.9 T2 Email configured 2 
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";

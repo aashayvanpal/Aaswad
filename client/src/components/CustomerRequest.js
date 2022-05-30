@@ -62,13 +62,7 @@ export default class CustomerRequest extends React.Component {
 
     emailNotify(order) {
         console.log('email check', order)
-        // axios.post('/sendEmail/orderPlaced', { 'email': order.customer.email })
-        axios.post('/sendEmail/welcome', {
-            'fullName': order.customer.fullName,
-            'email': order.customer.email,
-            'phonenumber': order.customer.phoneNumber
-        })
-
+        axios.post('/sendEmail/orderPlaced', { 'email': order.customer.email })
         axios.post('/sendEmail/newOrderNotify', { 'username': order.customer.fullName })
     }
 

@@ -216,6 +216,13 @@ export default class ItemList extends Component {
                     // this.props.history.push(`/items/show/${response.data._id}`)
                     // window.location.href = '/items'
 
+                    // order approved email notification
+                    console.log('changed items ', changedItems)
+                    axios.post('/sendEmail/orderApproved', {
+                        'fullName': changedItems[index].customer.fullName,
+                        'email': changedItems[index].customer.email,
+                        'phonenumber': changedItems[index].customer.phoneNumber
+                    })
                 }
             })
     }
@@ -280,6 +287,9 @@ export default class ItemList extends Component {
                     console.log('success', response.data)
                     // this.props.history.push(`/items/show/${response.data._id}`)
                     // window.location.href = '/items'
+
+                    // order completed email
+                    axios.post('/sendEmail/orderCompleted', changedItems[index].email)
 
                 }
             })
