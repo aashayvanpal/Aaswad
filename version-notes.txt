@@ -294,7 +294,27 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
+Multiple order taking at once for many days
+Calculating final amount of order query 
+
+bug fix:filtering via date from and to date find query
+integrating mongodbCharts with the application and using it in the dashboard
+completing email integration 
 Queries reply for a question
+Feedback viewing panel
+Admin update : order show normally, currently it is inverted
+
+Email notification - 
+1.Creating new account welcome email 
+2.Order placed email
+3.Admin notification :New Order recieved email
+4.Order has been approved and billing estimation
+5.Order has been rejected
+6.Order has been Completed 
+7.Bill 
+8.Account deletion
+9.Easy password management
+
 
 Customer sigin in should be fixed responsiveness 
 Customer CRUD

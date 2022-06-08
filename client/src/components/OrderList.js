@@ -14,6 +14,7 @@ import homeDeliveryMan from '../images/home-delivery-man.png'
 import serviceGif from '../images/service.gif'
 import upArrow from '../images/up-arrow.png'
 import downArrow from '../images/down-arrow.png'
+import DatePicker from "react-datepicker";
 
 export default class ItemList extends Component {
     constructor() {
@@ -22,13 +23,16 @@ export default class ItemList extends Component {
             orders: [],
             approves: [],
             confirmed: [],
-            completed: []
+            completed: [],
+            startDateFrom: new Date(),
+            startDateTo: new Date(),
         }
         this.handleRemoveOrder = this.handleRemoveOrder.bind(this)
         this.handleApproveOrder = this.handleApproveOrder.bind(this)
         this.handleCompleteOrder = this.handleCompleteOrder.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.clearOrderSearch = this.clearOrderSearch.bind(this)
+        this.handleDateChange = this.handleDateChange.bind(this)
     }
 
     componentDidMount() {
@@ -289,7 +293,7 @@ export default class ItemList extends Component {
                     // window.location.href = '/items'
 
                     // order completed email
-                    axios.post('/sendEmail/orderCompleted', changedItems[index].email)
+                    axios.post('/sendEmail/orderCompleted', { 'email': response.data.customer.email })
 
                 }
             })
@@ -320,6 +324,31 @@ export default class ItemList extends Component {
         this.setState({ [status]: reset })
 
     }
+
+    handleDateChange = (date, dateString) => {
+        // console.log("Date Changed :", String(date))
+        console.log("Date Changed :", date)
+
+        this.setState({
+            [dateString]: date,
+        });
+
+
+
+        console.log('======finding the orders between the dates=====')
+        console.log(this.state.startDateFrom, this.state.startDateFrom.toISOString())
+        console.log(this.state.startDateTo, this.state.startDateTo.toISOString())
+        console.log('check completed state here:', this.state.completed)
+
+
+        // const filteredDateOrders = this.state.completed.filter(order => order.customer.eventDate < this.state.startDateFrom)
+        const completedOrders = this.state.orders.filter(order => order.status === 'completed')
+        const filteredDateOrders = completedOrders.filter(order => {
+            return ((new Date(this.state.startDateFrom.toISOString()) <= new Date(order.customer.eventDate)) && (new Date(this.state.startDateTo.toISOString()) >= new Date(order.customer.eventDate)))
+        })
+        console.log('filteredDateOrders:', filteredDateOrders)
+        this.setState({ completed: filteredDateOrders })
+    };
     render() {
         return (
             <div>
@@ -455,6 +484,22 @@ export default class ItemList extends Component {
                             <div className='order-functions'>
                                 <input placeholder="Search Order" id='searchCompleted' className='order-search' onChange={(e) => this.handleChange(e, 'completed')} />
                                 <button className='order-button-styling' onClick={(e) => this.clearOrderSearch('searchCompleted', 'completed')}>Clear</button>
+                                From
+                                <DatePicker className=""
+                                    wrapperClassName="datePickerStyle"
+                                    selected={this.state.startDateFrom}
+                                    onChange={(e) => this.handleDateChange(e, 'startDateFrom')}
+                                    dateFormat="dd/MM/yyyy"
+
+                                />
+                                To
+                                <DatePicker className=""
+                                    wrapperClassName="datePickerStyle"
+                                    selected={this.state.startDateTo}
+                                    onChange={(e) => this.handleDateChange(e, 'startDateTo')}
+                                    dateFormat="dd/MM/yyyy"
+
+                                />
                             </div>
                             <Table className='table-styling'>
                                 <Thead>

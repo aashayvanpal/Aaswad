@@ -58,7 +58,25 @@ module.exports.orderPlaced = (req, res) => {
         from: NODEMAILER_USER,
         to: [req.body.email,],
         subject: 'Order has been placed successfully',
-        html: `<h1>Your order has been placed successfully</h1>`
+        attachments: [{
+            filename: 'aaswad-logo-email.png',
+            path: `${__dirname}/../images/aaswad-logo-email.png`,
+            cid: 'logo' //same cid value as in the html img src
+        }],
+        html: `
+        <div style="background-color:#E8CC69;">
+            <img src="cid:logo" alt="logo" style="display:block;margin-left:auto;margin-right:auto;"/>
+            <div style="background-color:#FFF5D0;border:3px solid #E2BD38;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);border-radius: 50px 10px;margin: 10px">
+                <h3 style="margin-left:5px">Your order has been placed successfully at Aaswad Caterers!</h3>
+                <br />
+                <br />
+            </div>
+            <div style="background-color:#000;color:#E8CC69;">
+                <h3 style="text-align:center;">Email :varsha.vanpal@gmail.com </h3>
+                <h3 style="text-align:center;">Phone number :9742814239</h3>
+            </div>
+        </div>`
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -77,7 +95,25 @@ module.exports.orderApproved = (req, res) => {
         from: NODEMAILER_USER,
         to: [req.body.email,],
         subject: 'Order has been Approved',
-        html: `<h1>Your order has been Approved </h1>`
+        attachments: [{
+            filename: 'aaswad-logo-email.png',
+            path: `${__dirname}/../images/aaswad-logo-email.png`,
+            cid: 'logo' //same cid value as in the html img src
+        }],
+        html: `
+        <div style="background-color:#E8CC69;">
+            <img src="cid:logo" alt="logo" style="display:block;margin-left:auto;margin-right:auto;"/>
+            <div style="background-color:#FFF5D0;border:3px solid #E2BD38;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);border-radius: 50px 10px;margin: 10px">
+                <h3 style="margin-left:5px">Your order has been Approved!</h3>
+                <br />
+                <br />
+            </div>
+            <div style="background-color:#000;color:#E8CC69;">
+                <h3 style="text-align:center;">Email :varsha.vanpal@gmail.com </h3>
+                <h3 style="text-align:center;">Phone number :9742814239</h3>
+            </div>
+        </div>`
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -115,7 +151,8 @@ module.exports.orderCompleted = (req, res) => {
         from: NODEMAILER_USER,
         to: [req.body.email,],
         subject: 'Order completed successfully',
-        html: `<h1>Your order has been Completed </h1>`
+        html: `<h1>Your order has been Completed .</h1>
+        <h1>You can now provide your feedback by clicking on user icon and going to My Orders and selecting your order</h1>`
     }
 
     transporter.sendMail(mailOptions, function (error, info) {
