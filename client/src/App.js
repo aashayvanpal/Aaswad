@@ -1,4 +1,4 @@
-// App version v1.0.5.11 T1 pre code refactoring  
+// App version v1.0.5.11 T1 completed AdminCart react hooks  
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
