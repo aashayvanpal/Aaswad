@@ -7,11 +7,11 @@ import { Stepper } from 'react-form-stepper'
 import clearCartImg from '../images/clear-cart-icon.png'
 import '../css/AdminCart.css'
 
-const AdminCart = () => {
+const AdminCart = (props) => {
 
     const [cartItems, setCartItems] = useState([])
     const [defaultItems, setDefaultItems] = useState([])
-    const [total, setTotal] = useState(0)
+    let [total, setTotal] = useState(0)
     useEffect(() => {
         // get all orders from /menu find and display all items from that _id
         console.log('inside componentdidmount Cart')
@@ -73,7 +73,7 @@ const AdminCart = () => {
         var changedItems = cartItems
         changedItems[index].quantity = Number(changedItems[index].quantity) - 1
 
-        setCartItems(changedItems)
+        setCartItems([...changedItems])
         // here the array is correct , it needs all the other isSelected:false 
 
 
@@ -130,7 +130,7 @@ const AdminCart = () => {
         var changedItems = cartItems
         changedItems[index].quantity = Number(changedItems[index].quantity) + 1
 
-        setCartItems(changedItems)
+        setCartItems([...changedItems])
         // here the array is correct , it needs all the other isSelected:false 
 
 
@@ -192,7 +192,7 @@ const AdminCart = () => {
         console.log('price should become :', e.target.value)
         changedItems[index].price = e.target.value
 
-        setCartItems(changedItems)
+        setCartItems([...changedItems])
         // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
         // console.log("==DEBUG==")
         console.log("Default items:")
@@ -247,7 +247,7 @@ const AdminCart = () => {
         console.log('quantity should become :', e.target.value)
         changedItems[index].quantity = e.target.value
 
-        setCartItems(changedItems)
+        setCartItems([...changedItems])
         // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
 
 
@@ -278,7 +278,7 @@ const AdminCart = () => {
 
     const clearCart = () => {
         JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
-            this.props.resetIsSelected(item._id)
+            props.resetIsSelected(item._id)
         })
         localStorage.removeItem("cartItems")
         setCartItems([])
@@ -288,7 +288,7 @@ const AdminCart = () => {
 
     // console.log("check props for cart items to show :", this.props.items.length)
     // console.log("check props for cart items to show :", this.props.items)
-    console.log("check props for cart items to show :", this.props.cartItems)
+    // console.log("check props for cart items to show :", this.props.cartItems)
     return (
         <div id="inner-Cart" >
             {/* <h1 id="cart-text-style" > Cart :</h1> */}
@@ -329,9 +329,9 @@ const AdminCart = () => {
                                     {
                                         // this.props.items.filter(item => item.isSelected === true).map((item, i) => {
                                         cartItems.map((item, i) => {
-                                            total += item.quantity * item.price
+                                            // total += item.quantity * item.price
 
-                                            setTotal(total += item.quantity * item.price)
+                                            // setTotal(total += item.quantity * item.price)
                                             return (
                                                 <tr key={item._id} >
                                                     <td style={{ "textAlign": "center" }}>{i + 1}</td>
@@ -354,7 +354,7 @@ const AdminCart = () => {
                                                     </td>
                                                     <td>
                                                         <Button color="danger" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
-                                                            this.props.resetIsSelected(item._id)
+                                                            props.resetIsSelected(item._id)
                                                             handleRemove(item._id)
                                                         }}>
                                                             X
@@ -379,7 +379,7 @@ const AdminCart = () => {
                                     onClick={() => {
                                         // console.log('request button clicked!')
                                         // window.alert('request button clicked')
-                                        this.props.requestOrder(cartItems)
+                                        props.requestOrder(cartItems)
                                     }}>
                                     <Button
                                         style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }}
