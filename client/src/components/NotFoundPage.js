@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 // import '../css/headerpage.css'
 import ReactAnime from 'react-animejs'
 import PageNotFound from '../images/PageNotFound.svg'
-const { Anime, stagger } = ReactAnime
+const { Anime } = ReactAnime
 
 export default function NotFoundPage() {
     return (

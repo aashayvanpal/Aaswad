@@ -9,9 +9,11 @@ import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
 import Header from "./Header.js"
 import NavigationBar from './NavigationBar'
-import { Toast, ToastBody, ToastHeader } from 'reactstrap';
+import { Alert, Button } from 'reactstrap';
 import { Link } from 'react-router-dom'
-
+import ShowBtn from '../assets/ShowBtn'
+import clearIcon from '../images/clear-icon.png'
+import '../css/AdminCart.css'
 
 // for loading from google images :(not working) 
 // <img src={`https://photos.google.com/share/AF1QipMK9yJs7N52kZcsS17jVq8mvLsi3NPhGkyrGv3IUhDOx0WbPcW5-ZVmPnj0MvTg_A${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" /> */}
@@ -33,7 +35,8 @@ export default class Menu extends React.Component {
             searchFilter: [],
             username: '',
             userType: false,
-            spinnerLoading: false
+            spinnerLoading: false,
+            showAlert: false,
         }
 
         // this.CartHandle = this.CartHandle.bind(this)
@@ -43,7 +46,6 @@ export default class Menu extends React.Component {
         this.newCheckboxChange = this.newCheckboxChange.bind(this)
         this.isCheckedValue = this.isCheckedValue.bind(this)
         this.resetIsSelected = this.resetIsSelected.bind(this)
-        this.toggleIsSelected = this.toggleIsSelected.bind(this)
         this.newtoggleIsSelected = this.newtoggleIsSelected.bind(this)
         this.requestOrder = this.requestOrder.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -147,56 +149,13 @@ export default class Menu extends React.Component {
             })
     }
 
-    
+
     // trying to get the cart rendering with newCheckBoxChange
     newCheckboxChange(item) {
         console.log('inside newCheckBoxChange function', item)
-        // this.toggleIsSelected(item._id)
         this.newtoggleIsSelected(item._id)
     }
 
-    toggleIsSelected = (id) => {
-        // Delete item from the cartItems do setState of cartItems
-        console.log('inside the toggleIsSelected function')
-        console.log('toggle this id from the items :', id)
-        // this.removeItemFromCart(id)
-        // console.log('Id removed from the cart check...')
-
-        // Reset the items.isSelected to false
-        // find the item in items[] then change isSelected to false
-        console.log('items state:', this.state.items)
-        console.log('searchfilter state:', this.state.searchFilter)
-        // If below line is removed , the filtering works ,else it removes everything after the checkbox is selected
-        this.setState({ searchFilter: this.state.items })
-
-
-        const foundItem = this.state.items.find(item => item._id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  items.isSelected before:', foundItem.isSelected)
-        console.log('Edit item.isSelected to false : ', foundItem)
-        const index = this.state.items.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-        console.log('state of items :', this.state.items)
-        // console.log('spread :', ...this.state.items)
-        console.log('spread index :', this.state.items[index])
-        console.log('spread index.isSelected before:', this.state.items[index].isSelected)
-        // console.log('spread index.isSelected after:', !this.state.items[index].isSelected)
-        var changedItems = this.state.items
-        changedItems[index].isSelected = !changedItems[index].isSelected
-        // this.setState({ items: changedItems })
-        this.setState({ searchFilter: changedItems })
-
-        // localStorage.setItem('cartItems', JSON.stringify(this.state.items))
-        localStorage.setItem('cartItems', JSON.stringify(this.state.searchFilter))
-        console.log('Items found\'s isSelected after:', this.state.items)
-
-        // // console.log('Item found\'s display after:', foundItem.display)
-
-        // this.clearSearch()
-
-        console.log('end of toggleIsSelected Function')
-        return null
-    }
 
     newtoggleIsSelected = (id) => {
         console.log('inside newToggleIsSelected')
@@ -216,8 +175,7 @@ export default class Menu extends React.Component {
         }) || item);
 
         console.log('newVal:', newVal)
-        this.setState({ filteredItems: newVal })
-        this.setState({ items: newVal })
+        this.setState({ filteredItems: newVal, items: newVal })
         localStorage.setItem("cartItems", JSON.stringify(newVal))
         console.log('end of  newToggleIsSelected')
 
@@ -348,22 +306,17 @@ export default class Menu extends React.Component {
                 {this.state.userType === "Admin" ? (
                     <>
                         <h2 style={{ "textAlign": "center" }}>Welcome - {this.state.username} you are - {this.state.userType}</h2>
-                        <button id="ShowButton" onClick={() => {
-                            var navBarElement = document.getElementById("Nav-bar")
-                            navBarElement.style.display = "block"
-
-                            var showElement = document.getElementById("ShowButton")
-                            showElement.style.display = "none"
-
-                        }}>Show</button>
+                        <ShowBtn />
                         <button id="ShowButton" onClick={() => {
                             if (localStorage.getItem("cartItems")) {
                                 JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
                                     this.resetIsSelected(item._id)
                                 })
                                 localStorage.removeItem("cartItems")
+                                localStorage.removeItem("order")
                             }
                         }}>Clear Local</button>
+                        <button onClick={() => this.setState({ showAlert: true })}>Toast +</button>
                     </>
                 ) : null
                 }
@@ -372,14 +325,25 @@ export default class Menu extends React.Component {
                     <div className="Menu-Cart" >
                         <div className="inner-Menu" >
                             {/* <div style={{
-                             "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
+                                "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
                             }}>
-                            <Toast delay={300} autohide>
-                                <ToastBody>
-                                    Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
-                                </ToastBody>
-                            </Toast>
+                                <Toast delay={300} isOpen={this.state.showAlert} autohide>
+                                    <ToastBody>
+                                        Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
+                                        <button onClick={() => this.setState({ showAlert: false })}>X</button>
+                                    </ToastBody>
+                                </Toast>
                             </div> */}
+                            <Alert style={{
+                                "backgroundColor": "#dbc268", 'color': "green",
+                            }} isOpen={this.state.showAlert}>
+                                Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
+                                <Button color="danger" style={{
+                                    "float": "right",
+                                    "color": "white",
+                                    "marginTop": "-5px",
+                                }} onClick={() => this.setState({ showAlert: false })}>X</Button>
+                            </Alert>
                             <h1 id="Menu-style">Choose Your Menu</h1>
 
                             <div id="filteringOptions">
@@ -407,7 +371,9 @@ export default class Menu extends React.Component {
                                     <option value="snacks">Snacks</option>
                                     <option value="special">Special</option>
                                 </select>
-                                <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>Clear Filters</button>
+                                <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>
+                                    <img src={clearIcon} alt="" width="30px" height="30px" />
+                                    Clear Filters</button>
                             </div>
                             <Stepper className="stepper-color"
                                 steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
@@ -445,7 +411,7 @@ export default class Menu extends React.Component {
                                                                     <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
                                                                 </div>
                                                                 <div className="contents">
-                                                                    <h1 className="itemName" style={{ "textAlign": "center" }}>{item.name}</h1>
+                                                                    <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{item.name}</h1>
                                                                     <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                                 </div>
                                                             </div>
@@ -458,9 +424,11 @@ export default class Menu extends React.Component {
                                     </div>
                                 )}
                         </div>
-                        <CartModel buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
+                        <CartModel
+                            buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
                             resetIsSelected={this.resetIsSelected}
                             requestOrder={this.requestOrder}
+                            userType={this.state.userType}
                         />
                     </div >
                 </div>

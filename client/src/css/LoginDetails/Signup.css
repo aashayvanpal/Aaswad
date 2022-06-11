@@ -3,7 +3,7 @@
   border-radius: 48px;
   padding: 20px;
   border: 2px solid black;
-  margin-top: 10px;
+  margin: 10px;
 }
 
 .signup-form {
@@ -17,7 +17,7 @@
   margin-right: auto;
   width: 218px;
 }
-.input-box input {
+.input-box input, .input-box textarea {
   width: 100%;
   height: 80px;
   margin: 15px;
@@ -53,6 +53,13 @@
   background-size: 50px 50px;
 }
 
+#inputAddress {
+  background: url(../../images/LocationIcon.png) no-repeat 40px 15px;
+  background-size: 50px 50px;
+  height: 150px;
+  border: 2px solid grey;
+}
+
 #caterer {
   height: 50px;
   width: 30px;
@@ -72,21 +79,25 @@
   border-radius: 50px;
   border: 2px solid black;
   color: white;
-  background-color: #dbc268;
+  background-color: rgba(219, 194, 104,0.9);
   font-size: 32px;
+  cursor: pointer;
 }
 
 #create-account-button:hover {
   color: "black";
-  background-color: #b5900b;
+  background-color: rgba(219, 194, 104,1);
   box-shadow: 5px 5px grey;
-  transition: 1s;
-  font-weight: bold;
+  transition: 0.5s;
 }
 
 #already-have-account {
   text-align: center;
   margin-top: 20px;
+}
+#sign-in-container {
+  display: flex;
+  align-items: center;
 }
 
 #signinImg {
@@ -100,14 +111,38 @@
   width: 50%;
 }
 
+#downloadBtn{
+  border-radius: 20px;
+  background-color: #dbc268;
+  font-weight: bold;
+  color: green;
+  cursor: pointer;
+  opacity: 0.9;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 25px;
+  padding: 10px;
+  box-shadow: 5px 5px #e2dbc2;
+}
+
+#downloadBtn:hover {
+  opacity: 1;
+}
+
+
+
 @media screen and (max-width: 1002px) {
   #leftContainerImg {
-    display: none;
-  }
-
-  .SignUpCard {
     width: 100%;
   }
+  #sign-in-container{
+    flex-direction: column;
+  }
+
+  /* .SignUpCard {
+    width: 100%;
+  } */
 }
 
 @media screen and (max-width: 514px) {

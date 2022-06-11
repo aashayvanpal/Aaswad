@@ -61,7 +61,7 @@ export default function HomePage(props) {
                                         <img alt="deliver-img" src={deliver} />
                                         <div className="card2">
                                             <h2>DELIVER  OR  PICKUP</h2>
-                                            <h5>Services that we provide depend on the type of event and are <span> fullfilled according to your convinience</span></h5>
+                                            <h5>Services that we provide depend on the type of event and are <span> fullfilled according to your convenience</span></h5>
                                         </div>
                                     </div>
 

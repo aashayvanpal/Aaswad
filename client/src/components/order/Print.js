@@ -1,5 +1,7 @@
 import React from 'react'
-
+import '../../css/Print.css'
+import diwaliImg from '../../images/diw.jpeg'
+import logo from '../../images/aaswad-logo.svg'
 // Displaying image to center css :
 // display: block;
 //   margin-left: auto;
@@ -12,7 +14,13 @@ export default class OrderPrint extends React.Component {
         super()
         this.state = {
             order: {},
-            total: 0
+            total: 0,
+            fullName: '',
+            items: [],
+            eventDate: '',
+            phoneNumber: '',
+            id: '',
+            advanceAmount: '',
         }
 
     }
@@ -35,127 +43,119 @@ export default class OrderPrint extends React.Component {
         console.log("order :", order)
         console.log("state of order :", this.state.order)
 
+        const { fullName, items, eventDate, phoneNumber, id, advanceAmount } = JSON.parse(localStorage.getItem('order'))
+        this.setState({
+            fullName,
+            items,
+            eventDate,
+            phoneNumber,
+            id,
+            advanceAmount
+        })
+        console.log("items", items)
+        console.log("isArray items", Array.isArray(items))
+        // SET state for advance payment here
+        console.log("------Debug------:", this.state.advanceAmount)
+
+        console.log("this.state.advancePayment:", this.state.advanceAmount)
+
     }
 
     render() {
-        // const header = document.getElementsByClassName("header")
-        // // header.remove()
-        // console.log("header :", header)
-        const { fullName, items, eventDate, phoneNumber, id } = JSON.parse(localStorage.getItem('order'))
-
-        console.log("items", items)
-        console.log("isArray items", Array.isArray(items))
-        console.log("this.state.order", this.state.order)
         return (
-
-            <div style={{
-                "border": "5px solid black",
-                "padding": "30px",
-                "height": "1400px",
-                "float": "right",
-                "backgroundColor": "#f5edc0",
-                "pageBreakAfter": "always",
-                "marginTop": "20px",
-                "marginBottom": "120px"
-
-            }}>
-                <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,900&display=swap" rel="stylesheet" />
-                <h1 style={{ "fontFamily": " 'Lato' , sans-serif", "fontSize": "60px", "textAlign": "center", "marginTop": "25px", "marginBottom": "25px" }}>Aaswad Caterers</h1>
-
+            <div id="Bill-Card">
+                <img src={logo} alt="logo" id='logo' />
                 <h4 style={{ "marginBottom": "50px" }}>
                     In an attempt to go paperless, we are sending all the billing estimates over WhatsApp.<br />
                     Your estimate is as follows : -
                 </h4>
-                <h3>Name   : {fullName}</h3>
-                <h3>Mobile : {phoneNumber}</h3>
-                <h3>Date   : {eventDate}</h3>
+                <h3>Name   : {this.state.fullName}</h3>
+                <h3>Mobile : {this.state.phoneNumber}</h3>
+                <h3>Date   : {this.state.eventDate}</h3>
                 <h3>
-                    <table
-                        style={{
-                            "border": "1px solid black",
-                            "border - collapse": "collapse",
-                            "textAlign": "center",
-                            "width": "90%",
-                            "margin": "50px 0px 50px 50px",
-                            "padding": "20px"
-                        }}>
-                        <thead style={{
-                            "fontWeight": "bold",
-                            "border": "1px solid black",
-                            "border-collapse": "collapse"
-                        }}>
-                            <td style={{
-                                "border": "1px solid black",
-                                "border-collapse": "collapse"
-                            }}>Sl No.</td>
-                            <td style={{
-                                "border": "1px solid black",
-                                "border-collapse": "collapse"
-                            }}>Particulars</td>
-                            <td style={{
-                                "border": "1px solid black",
-                                "border-collapse": "collapse"
-                            }}>Quantity</td>
-                            <td style={{
-                                "border": "1px solid black",
-                                "border-collapse": "collapse"
-                            }}>Rate</td>
-                            <td style={{
-                                "border": "1px solid black",
-                                "border-collapse": "collapse"
-                            }}>Amount (in INR)</td>
+                    <table id='table-style'>
+                        <thead className='td-style' style={{ "fontWeight": "bold" }}>
+                            <td className='td-style'>Sl No.</td>
+                            <td className='td-style'>Particulars</td>
+                            <td className='td-style'>Quantity</td>
+                            <td className='td-style'>Rate</td>
+                            <td className='td-style'>Amount (in INR)</td>
                         </thead>
                         <tbody>
                             {
-                                items.map((item, i) => {
+                                this.state.items.map((item, i) => {
+                                    this.setState()
                                     return (
                                         <tr>
-                                            <td style={{
-                                                "border": "1px solid black",
-                                                "border-collapse": "collapse"
-                                            }}>{i + 1}</td>
-                                            <td style={{
-                                                "border": "1px solid black",
-                                                "border-collapse": "collapse",
+                                            <td className='td-style'>{i + 1}</td>
+                                            <td className='td-style' style={{
                                                 "textAlign": "left",
                                                 "paddingLeft": "20px"
                                             }}>{item.name}</td>
-                                            <td style={{
-                                                "border": "1px solid black",
-                                                "border-collapse": "collapse"
-                                            }}>{item.quantity} {item.measured}.</td>
-                                            <td style={{
-                                                "border": "1px solid black",
-                                                "border-collapse": "collapse"
-                                            }}>&#x20B9; {item.price}/-</td>
-                                            <td style={{
-                                                "border": "1px solid black",
-                                                "border-collapse": "collapse"
-                                            }}>&#x20B9; {item.price * item.quantity}/-</td>
+                                            <td className='td-style'>{item.quantity} {item.measured}.</td>
+                                            <td className='td-style'>&#x20B9; {item.price}/-</td>
+                                            <td className='td-style'>&#x20B9; {item.price * item.quantity}/-</td>
 
                                         </tr>)
                                 })
                             }
-                            <tr>
-                                <td style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right",
-                                    "paddingRight": "80px"
-                                }} colspan="5"><b>Total:
-                        &#x20B9; {this.state.order.total}/-</b></td>
-                            </tr>
+
+
+                            {this.state.advanceAmount ? (<>
+                                <tr>
+                                    <td colSpan="4" style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right", fontWeight: "bold"
+                                    }}> Total</td>
+                                    <td style={{
+                                        "border": "1px solid black"
+                                    }}>   &#x20B9; {this.state.items.reduce((sum, i) => (
+                                        sum += i.quantity * i.price
+                                    ), 0)} /-</td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="4" style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right", fontWeight: "bold"
+                                    }}> Advance payment(-)</td>
+                                    <td>  &#x20B9; {this.state.advanceAmount}/-</td>
+                                </tr>
+
+                                <tr>
+                                    <td style={{
+                                        "border": "1px solid black",
+                                        "textAlign": "right",
+                                        "paddingRight": "80px",
+                                        "fontWeight": "bold",
+                                    }} colSpan="5">Balance:
+                                        &#x20B9; {this.state.items.reduce((sum, i) => (
+                                            sum += i.quantity * i.price
+                                        ), -this.state.advanceAmount)} /-</td>
+                                </tr>
+                            </>
+                            ) :
+                                (
+                                    <tr>
+                                        <td style={{
+                                            "border": "1px solid black",
+                                            "textAlign": "right",
+                                            "paddingRight": "80px",
+                                            "fontWeight": "bold",
+                                        }} colSpan="5">Total:
+                                            &#x20B9; {this.state.items.reduce((sum, i) => (
+                                                sum += i.quantity * i.price
+                                            ), 0)} /-</td>
+                                    </tr>
+                                )}
                         </tbody>
                     </table >
                 </h3>
 
-
-
                 <h4 style={{ "fontFamily": "'Lato' , sans-serif" }}>Contact :-<br />
-                        Varsha Vanpal <br /> Mobile : 9742814239<br />
-                        Email : varsha.vanpal@gmail.com <br /></h4><br />
+                    Varsha Vanpal <br /> Mobile : 9742814239<br />
+                    Email : varsha.vanpal@gmail.com <br /></h4>
 
-
-                <br />
+                <br /><br />
                 {/* <img src="https://static.toiimg.com/photo/msid-66475760/66475760.jpg?952246" alt="" width="45%" height="300px"
                     style={{
                         "marginRight": "50px", "marginLeft": "30px"
@@ -163,23 +163,24 @@ export default class OrderPrint extends React.Component {
 
                 <img src="https://i.pinimg.com/originals/8f/f5/ec/8ff5ec000c3b3ac91d12f88a6d0fd39c.jpg" alt="" width="45%" height="300px"
                     style={{ "marginLeft": "auto", "marginRight": "auto" }} /><br /> */}
-                <br />
-                <br />
                 {/* <h3 style={{ "textAlign": "center" }}><b>
                     Happy Diwali</b>
                 </h3><br /> <br /> */}
 
-
-                <img src={require("../../images/food-items-images/3.jpg")} alt="" width="45%" height="300px"
+                <img src={diwaliImg} alt=""
                     style={{
-                        "marginRight": "50px", "marginLeft": "30px"
+                        'display': "block",
+                        "marginRight": "auto",
+                        "marginLeft": "auto",
+                        'width': "400px",
+                        'height': "300px",
+                        'borderRadius': "10px"
                     }} />
 
                 <br /> <br /><br /> <br />
                 <h5 style={{ "textAlign": "right" }}><b>
-                    OrderID :{id}</b>
-                </h5><br /> <br />
-
+                    OrderID :{this.state.id}</b>
+                </h5>
             </div >
         )
     }

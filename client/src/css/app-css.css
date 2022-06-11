@@ -20,10 +20,11 @@
 
 #Nav-bar {
   background-color: #04045f;
-  width: 15%;
+  width: 19%;
   font-size: 30px;
   display: none;
   z-index: 2;
+  border-radius: 20px;
 }
 
 #Nav-bar ul li:hover {
@@ -59,12 +60,14 @@
   padding: 15px;
   font-size: 25px;
   font-weight: bold;
+  border-radius: 10px;
 }
 
 .button-color3:hover {
   background-color: #eeb66c;
   color: black;
   cursor: pointer;
+  transition: 0.5s;
 }
 
 .checkbox {
@@ -75,6 +78,8 @@
 .button-color4 {
   background-color: #8087c1;
   color: white;
+  transition: 0.5s;
+  border-radius: 5px;
 }
 
 .button-color4:hover {
@@ -84,9 +89,10 @@
 }
 
 .button-color5 {
-  background-color: red;
+  background-color: #c82333;
   color: white;
   font-weight: bold;
+  border-radius: 5px;
 }
 
 .button-color5:hover {
@@ -96,9 +102,27 @@
   transition: 0.5s;
 }
 
+.button-color6{
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.button-color6:hover {
+  background-color: rgb(159, 235, 97);
+  color: black;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
 .labels {
   margin: 20px 20px 20px 100px;
   font-size: 30px;
+}
+@media screen and (max-width: 507px) {
+  .labels {
+    margin: 0px;
+  }
 }
 
 .search-align {
@@ -246,14 +270,6 @@
   }
 }
 
-.user {
-  background-image: url("../images/usr-icon.svg");
-  background-repeat: no-repeat;
-  background-size: 100%;
-  margin-top:10px;
-  height: 70px;
-  width: 70px;
-}
 
 /* .inner-Menu { */
 /* background-color: #dbc268;
@@ -631,6 +647,7 @@
 
 .stepper-color {
   font-weight: bold;
+  
 }
 
 .stepper-color > div > div > button.active {

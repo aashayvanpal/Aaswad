@@ -30,7 +30,13 @@
   border-radius: 5px;
   text-align: center;
 }
+<<<<<<< HEAD
 
+=======
+.datePickerStyle{
+  width: 100%;
+}
+>>>>>>> bd619f74f6e4151c931f54078d9e1b16a3d98c98
 #submit-request {
   font-size: 1.5rem;
 

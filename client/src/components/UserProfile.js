@@ -4,7 +4,7 @@ import React from 'react'
 // import axios from '../config/axios.js'
 import heroUser from '../images/heroUser.svg'
 import { getUserDetails } from '../assets/user-functions.js'
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
+// import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import "../css/profile.css"
 
 export default class UserProfile extends React.Component {
@@ -45,7 +45,7 @@ export default class UserProfile extends React.Component {
         return (
             <div id="profile-container">
                 <div id="profile-Overlap">
-                    <img src={heroUser} alt="image" style={{
+                    <img src={heroUser} alt="" style={{
                         "display": "block",
                         "marginLeft": "auto",
                         "marginRight": "auto",

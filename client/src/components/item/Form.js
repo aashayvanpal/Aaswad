@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-
+// import { Table } from 'reactstrap';
+import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
+import '../../css/itemForm.css'
 
 export default class ItemForm extends Component {
     constructor(props) {
@@ -19,6 +21,23 @@ export default class ItemForm extends Component {
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.onSelect = this.onSelect.bind(this)
+        this.onRemove = this.onRemove.bind(this)
+    }
+
+    onSelect(selectedList, selectedItem) {
+        console.log('inside onSelect')
+        console.log('selectedList', selectedList)
+        console.log('selectedItem', selectedItem)
+        this.setState({ selectedValues: selectedList })
+
+    }
+    onRemove(selectedList, selectedItem) {
+        console.log('inside onRemove')
+        console.log('selectedList', selectedList)
+        console.log('selectedItem', selectedItem)
+        this.setState({ selectedValues: selectedList })
+
     }
 
 
@@ -91,60 +110,65 @@ export default class ItemForm extends Component {
                     "background": "#0173a9",
                     "fontWeight": "bold"
                 }}>Add Item details</h2>
-                <form onSubmit={this.handleSubmit}>
-                    <label className="labels">Name
-                        <input type="text" name="name" value={this.state.name} onChange={this.handleChange}
-                            style={{ "marginLeft": "150px" }}
-                        />&nbsp;&nbsp;
-                    </label><br />
-                    <label className="labels">Price
-                        <input type="text" name="price" value={this.state.price} onChange={this.handleChange}
-                            style={{ "marginLeft": "160px" }}
-                        />&nbsp;&nbsp;
-                    </label><br />
-                    <label className="labels">Category
-                        <input type="text" name="category" value={this.state.category} onChange={this.handleChange}
-                            style={{ "marginLeft": "105px" }}
-                        />&nbsp;&nbsp;
-                    </label><br />
+                <Form onSubmit={this.handleSubmit} id='itemForm' >
+                    <FormGroup row id='formGroup'>
+                        <Label for="name" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Name</Label>
+                        <Col sm={10}>
+                            <Input type="text" name="name" id="name" placeholder="Item name" value={this.state.name} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row id='formGroup'>
+                        <Label for="price" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Price</Label>
+                        <Col sm={10}>
+                            <Input type="text" name="price" id="price" placeholder="Price" value={this.state.price} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup row id='formGroup'>
+                        <Label for="category" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Category</Label>
+                        <Col sm={10}>
+                            <Input type="text" name="category" id="category" placeholder="Category" value={this.state.category} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
 
-                    <label className="labels">Measured in
-                        {/* <input type="text" name="category" value={this.state.category} onChange={this.handleChange}
-                            style={{ "marginLeft": "105px" }}
-                        />&nbsp;&nbsp; */}
-                        <select name="measured" value={this.state.measured} onChange={this.handleChange} style={{ "marginLeft": "65px" }}>
-                            <option value="">--</option>
-                            <option value="pc">pc</option>
-                            <option value="Kg">Kg</option>
-                            <option value="plate">plate</option>
-                        </select>
-                    </label><br />
+                    <FormGroup row id='formGroup'>
+                        <Label for="measured" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Measured In</Label>
+                        <Col sm={10}>
+                            <Input type="select" value={this.state.measured} onChange={this.handleChange} name="measured" id="measured">
+                                <option value="">--</option>
+                                <option value="pc">pc</option>
+                                <option value="Kg">Kg</option>
+                                <option value="plate">plate</option>
+                            </Input>
+                        </Col>
+                    </FormGroup>
 
-                    <label className="labels">Image-URL
-                        <textarea type="text" name="imgUrl" value={this.state.imgUrl} onChange={this.handleChange}
-                            style={{ "marginLeft": "75px", "width": "500px", "height": "200px" }}
+                    <FormGroup row id='formGroup'>
+                        <Label for="imgURL" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Image URL</Label>
+                        <Col sm={10}>
+                            <Input type="textarea" name="imgURL" id="imgeURL" placeholder="Image URL" value={this.state.imgUrl} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
 
-                        />&nbsp;&nbsp;
-                    </label><br />
-                    <label className="labels">Ingredients
-                        <textarea type="text" name="ingredients" value={this.state.ingredients} onChange={this.handleChange}
-                            style={{ "marginLeft": "75px", "width": "500px", "height": "250px" }}
+                    <FormGroup row id='formGroup'>
+                        <Label for="ingredients" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</Label>
+                        <Col sm={10}>
+                            <Input type="textarea" name="ingredients" id="ingredients" placeholder="Ingredients" value={this.state.ingredients} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
 
-                        />&nbsp;&nbsp;
-                    </label><br />
-                    <label className="labels">Recipie
-                        <textarea type="text" name="recipie" value={this.state.recipie} onChange={this.handleChange}
-                            style={{ "marginLeft": "75px", "width": "500px", "height": "250px" }}
+                    <FormGroup row id='formGroup'>
+                        <Label for="recipie" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Recipie</Label>
+                        <Col sm={10} style={{ marginBottom: "30px" }}>
+                            <Input type="textarea" name="recipie" id="recipie" placeholder="Recipie" value={this.state.recipie} onChange={this.handleChange} />
+                        </Col>
+                    </FormGroup>
 
-                        />&nbsp;&nbsp;
-                    </label><br />
+                    <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "30px" }}>
+                        <Link to='/items'><button className="button-color3" >Back</button></Link>
 
-                    <Link to='/items'><button className="button-color3" style={{ "margin": "50px 30px 50px 100px" }}>Back</button></Link>
-
-                    <input className="button-color3" type="submit" value="Add Item" style={{ "marginLeft": "250px", "width": "300px" }} />
-
-                </form>
-
+                        <input className="button-color3" type="submit" value="Add Item" />
+                    </div>
+                </Form>
             </div>
         )
     }

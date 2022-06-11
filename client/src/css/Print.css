@@ -1,0 +1,33 @@
+#Bill-Card{
+    border: 5px solid black;
+    padding: 30px;
+    background-color: #f5edc0;
+    page-break-after: always;
+    margin-top: 40px;
+    margin-bottom: 50px;    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;  
+}
+
+#logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+#table-style{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    width: 90%;
+    margin: 50px 0px 50px 50px;
+    padding: 20px;
+}
+
+.td-style{
+    border: 1px solid black;
+    border-collapse: collapse;
+}

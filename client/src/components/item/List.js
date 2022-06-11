@@ -6,7 +6,8 @@ import DisplayItems from './Item.js'
 import axios from '../../config/axios.js'
 import { Table, Thead, Tbody, Tr, Th } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
-
+import confirm from 'reactstrap-confirm'
+import addIcon from '../../images/add-item-icon.png'
 
 export default class AddItems extends Component {
     constructor(props) {
@@ -59,34 +60,57 @@ export default class AddItems extends Component {
 
 
 
-    deleteItem = (itemToDelete) => {
+    async deleteItem(itemToDelete) {
         console.log('called parent component delete id', itemToDelete)
         // console.log("remove button clicked!")
         // console.log("value of this ", this)
         // console.log("value of this.items ", this.state.items)
         // console.log("value of itemToDelete ", itemToDelete)
 
-        axios.delete(`/items/${itemToDelete}`, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
+        //confirm to delete
+        let result = await confirm({
+            title: (
+                <div style={{ "color": "black", "fontWeight": "bold" }}>
+                    Delete item Confirmation
+                </div>
+            ),
+            message: (
+                <div style={{ "color": "green" }}>
+                    Are you sure you want to delete this item ??
+                </div>
+            ),
+            confirmText: "Delete",
+            confirmColor: "warning",
+            cancelColor: "link text-danger",
+            classNames: 'confirmModal'
         })
-            .then((response) => {
-                console.log('response data', response.data)
-                console.log('Inside the .then promise')
+        console.log("result is :", result)
 
-                // this.setState((prevState) => ({
-                //     searchFilter: prevState.searchFilter.filter(item => item._id !== response.data._id),
-                // }))
-                var filteredItems = this.state.searchFilter.filter(item => item._id !== response.data._id)
-                this.setState({ searchFilter: filteredItems })
-
-                // this.setState({ items: this.state.searchFilter })
-
+        if (result) {
+            axios.delete(`/items/${itemToDelete}`, {
+                headers: {
+                    'x-auth': localStorage.getItem('token')
+                }
             })
-            .catch((err) => {
-                console.log(err)
-            })
+                .then((response) => {
+                    console.log('response data', response.data)
+                    console.log('Inside the .then promise')
+
+                    // this.setState((prevState) => ({
+                    //     searchFilter: prevState.searchFilter.filter(item => item._id !== response.data._id),
+                    // }))
+                    var filteredItems = this.state.searchFilter.filter(item => item._id !== response.data._id)
+                    this.setState({ searchFilter: filteredItems })
+
+                    // this.setState({ items: this.state.searchFilter })
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            console.log("dont delete the item")
+        }
 
         // this.setState(
         //     prevState => ({
@@ -146,12 +170,14 @@ export default class AddItems extends Component {
                 <div className="search-align">
                     <h2>Listing items - {this.state.searchFilter.length}</h2>
 
-                    <input type="text" placeholder="Search" name="item" onChange={this.handleChange} />&nbsp;&nbsp;
-                    <input type="submit" value="Search" />
+                    <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={this.handleChange} />&nbsp;&nbsp;
 
 
                 </div>
-                <Link to='/items/add'> <button className="button-color3">Add new items</button></Link>
+                <Link to='/items/add'> <button className="button-color3">
+                    <img src={addIcon} alt="addIcon" height="35px" width="30px" />
+                    Add new item
+                </button></Link>
 
                 <div style={{ "margin": "10px" }}>
                     <Table>
@@ -159,6 +185,7 @@ export default class AddItems extends Component {
                             <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
                                 <Th className="listing-table">Sl No</Th>
                                 <Th className="listing-table">Name</Th>
+                                <Th className="listing-table">Price</Th>
                                 <Th className="listing-table"> Update</Th>
                                 <Th className="listing-table"> Active/Inactive</Th>
                                 <Th className="listing-table"> Remove</Th>
@@ -172,6 +199,7 @@ export default class AddItems extends Component {
                                         <DisplayItems
                                             key={i}
                                             name={item.name}
+                                            price={item.price}
                                             deleteItem={this.deleteItem}
                                             updateCheckbox={this.updateCheckbox}
                                             id={item._id}

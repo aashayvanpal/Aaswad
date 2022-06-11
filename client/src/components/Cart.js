@@ -4,7 +4,7 @@ import { Table, Button } from 'reactstrap';
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import { Stepper } from 'react-form-stepper'
-
+import clearCartImg from '../images/clear-cart-icon.png'
 
 export default class Cart extends React.Component {
     constructor(props) {
@@ -265,7 +265,7 @@ export default class Cart extends React.Component {
         // console.log("check props for cart items to show :", this.props.items)
         console.log("check props for cart items to show :", this.props.cartItems)
         return (
-            <div id="inner-Cart" >
+            <div id="inner-Cart">
 
                 {/* <h1 id="cart-text-style" > Cart :</h1> */}
                 {
@@ -282,7 +282,8 @@ export default class Cart extends React.Component {
                         :
                         (
                             <div>
-                                <Stepper className="stepper-color" style={{ "backgroundColor": "#fff5d2" }}
+                                <Stepper style={{ "backgroundColor": "#green" }}
+                                    className="stepper-color"
                                     steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
                                     activeStep={1}
                                 />
@@ -330,7 +331,10 @@ export default class Cart extends React.Component {
                                 </Table>
                                 <hr />
                                 <div style={{ "display": "flex", "justifyContent": "space-evenly" }}>
-                                    <Button color="danger" style={{ "fontWeight": "bold" }} onClick={() => this.clearCart()}>Clear Cart</Button>
+                                    <Button color="danger" style={{ "fontWeight": "bold" }} onClick={() => this.clearCart()}>
+                                        <img src={clearCartImg} alt="" height="25px" width="25px" />
+                                        Clear Cart
+                                    </Button>
                                     <Link to='/request'
                                         onClick={() => {
                                             // console.log('request button clicked!')
@@ -341,7 +345,7 @@ export default class Cart extends React.Component {
                                         <Button style={{
                                             "backgroundColor": "#dbc268", "color": "black", "width": "100%", "fontWeight": "bold"
                                         }}>
-                                            Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "20px" }} />
+                                            Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />
                                         </Button>
 
                                     </Link>

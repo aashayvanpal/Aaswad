@@ -1,18 +1,27 @@
 import { Link } from 'react-router-dom'
+import homeImg from '../images/home-icon.png'
+import dashboardImg from '../images/dashboard-icon.png'
+import itemsImg from '../images/items-icon.png'
+import menuImg from '../images/menu-icon.png'
+import ordersImg from '../images/orders-icon.png'
+
 export default function NavigationBar() {
     return (
         <div id="Nav-bar">
-            <ul style={{ listStyleType: "none" }}>
+            <ul style={{ listStyleImage: 'none', margin: '0px', padding: '0px' }}>
                 <button
                     style={{
-                        marginLeft: "109px",
-                        background: "#0e235f",
+                        marginLeft: "160px",
+                        background: "#04045f",
                         border: "none",
                         color: "white",
                         cursor: "pointer",
+                        borderRadius: "20px",
+                        fontWeight: 'bold'
                     }}
                     onClick={() => {
                         var navBarElement = document.getElementById("Nav-bar");
+                        // navBarElement.style.width = "0%";
                         navBarElement.style.display = "none";
 
                         var showElement = document.getElementById("ShowButton");
@@ -24,30 +33,50 @@ export default function NavigationBar() {
                 <Link
                     to="/"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
+                    style={{
+                        textDecoration: "none",
+                    }}
                 >
-                    <li>Home</li>
+                    <li>
+                        <img src={homeImg} alt=""
+                            style={{
+                                filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                            }} height="40px" width="40px" />
+                        Home</li>
                 </Link>
                 <Link
                     to="/dashboard"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Dashboard</li>
+
+                    <li><img src={dashboardImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />
+                        Dashboard</li>
                 </Link>
                 <Link
                     to="/items"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Items</li>
+
+                    <li><img src={itemsImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Items</li>
                 </Link>
                 <Link
                     to="/menu"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Menu</li>
+
+                    <li> <img src={menuImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Menu</li>
                 </Link>
 
                 <Link
@@ -55,7 +84,22 @@ export default function NavigationBar() {
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Orders</li>
+
+                    <li><img src={ordersImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Orders</li>
+                </Link>
+
+                <Link
+                    to="/bulk-orders"
+                    className="Nav-barLink"
+                    style={{ textDecoration: "none" }}
+                >
+                    <li><img src={ordersImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Bulk Orders</li>
                 </Link>
 
                 <Link
@@ -94,11 +138,11 @@ export default function NavigationBar() {
                     <li>Calender</li>
                 </Link>
                 <Link
-                    to="/qurries"
+                    to="/queries"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
-                    <li>Qurries</li>
+                    <li>Queries</li>
                 </Link>
                 <Link
                     to="/deals"

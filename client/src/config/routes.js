@@ -6,6 +6,7 @@ const approveController = require('../controllers/approveController.js')
 const { usersRouter } = require('../controllers/UsersController.js')
 // const { default: ContactUs } = require('../../../../components/contact/Contact.js')
 const ContactUsController = require('../controllers/contactUsController.js')
+const emailController = require('../controllers/emailController.js')
 
 
 // const customerController = require('../app/controllers/customerController.js')
@@ -52,7 +53,20 @@ router.delete('/logout', usersRouter)
 
 
 // For Querries
+router.get('/contactus', ContactUsController.list)
 router.post('/contactus', ContactUsController.create)
+
+
+// for Email notifications
+router.use('/sendEmail/welcome', emailController.welcome)
+router.use('/sendEmail/orderPlaced', emailController.orderPlaced)
+router.use('/sendEmail/orderApproved', emailController.orderApproved)
+router.use('/sendEmail/orderCompleted', emailController.orderCompleted)
+router.use('/sendEmail/orderRejected', emailController.orderRejected)
+router.use('/sendEmail/bill', emailController.bill)
+router.use('/sendEmail/accountDeletion', emailController.deleteAccount)
+router.use('/sendEmail/forgotPassword', emailController.forgotPassword)
+router.use('/sendEmail/newOrderNotify', emailController.newOrderNotify)
 
 
 module.exports = router

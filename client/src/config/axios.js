@@ -1,9 +1,8 @@
 import Axios from 'axios'
+import { axiosURL } from './main.js'
 
 const axios = Axios.create({
-    baseURL: 'https://aaswad.herokuapp.com'
-    // baseURL: 'http://localhost:3000 working one'
-    // baseURL: 'http://localhost:5001'
-
+    // baseURL: 'https://aaswad.herokuapp.com'
+    baseURL: axiosURL
 })
 export default axios

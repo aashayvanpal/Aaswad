@@ -1,24 +1,24 @@
-const Querrey = require('../../../models/querrey.js')
+const Query = require('../../../models/query.js')
 
-// // list
-// module.exports.list = (req, res) => {
-//     Item.find()
-//         .then(item => {
-//             res.json(item)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// }
+// list
+module.exports.list = (req, res) => {
+    Query.find()
+        .then(item => {
+            res.json(item)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
 
 // create
 module.exports.create = (req, res) => {
     const body = req.body
-    const querrey = new Querrey(body)
+    const query = new Query(body)
     // const note = new Note(body)
-    querrey.save()
-        .then((querrey) => {
-            res.json(querrey)
+    query.save()
+        .then((query) => {
+            res.json(query)
         })
         .catch((err) => {
             res.json(err)

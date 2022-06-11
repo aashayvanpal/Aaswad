@@ -1,8 +1,8 @@
-// App version v1.0.5.8 T9 Back and Edit order
+// App version v1.0.5.11 T1 pre code refactoring  
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
-import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Dashboard from "./components/Dashboard.js";
 import Header from './components/Header.js'
 import Menu from "./components/ItemList";
@@ -10,6 +10,7 @@ import MyOrdersList from "./components/MyOrdersList.js";
 import OrderList from "./components/OrderList";
 import OrderShow from "./components/order/Show.js";
 import OrderPrint from "./components/order/Print.js";
+import OrderPrintDelivery from "./components/order/PrintDelivery";
 
 import MyOrdersShow from "./components/myOrdersShow.js";
 
@@ -32,13 +33,16 @@ import UserProfile from "./components/UserProfile.js";
 import Contact from "./components/contact/Contact.js";
 // import Footer from './components/Footer.js'
 import HomePage from "./components/HomePage.js";
-// import Qurries from './components/Qurries.js'
+import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
 // make header as a component
 import { Container, Row, Col } from "reactstrap";
 import NavigationBar from './components/NavigationBar.js'
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
+import ShowBtn from "./assets/ShowBtn.js";
+import { appVersion } from './config/main.js'
+import MultiDateOrders from "./components/MultiDateOrders.js";
 
 function App() {
   return (
@@ -137,19 +141,7 @@ function App() {
 
                     <Route exact={true} path="/items">
                       <Header />
-                      <button
-                        id="ShowButton"
-                        onClick={() => {
-                          var navBarElement = document.getElementById("Nav-bar");
-                          navBarElement.style.display = "block";
-
-                          var showElement = document.getElementById("ShowButton");
-                          showElement.style.display = "none";
-                        }}
-                      >
-                        Show
-                      </button>
-                      {/* <div style={{ 'display': 'flex' }}> */}
+                      <ShowBtn />
                       <div style={{ "width": "100%", "display": "flex" }}>
                         <NavigationBar />
                         <ItemList />
@@ -191,6 +183,11 @@ function App() {
                       <OrderList />
                     </Route>
 
+                    <Route exact path="/bulk-orders">
+                      <Header />
+                      <MultiDateOrders />
+                    </Route>
+
                     <Route exact path="/orders/:id">
                       <Header />
                       <OrderShow />
@@ -199,11 +196,21 @@ function App() {
                       exact
                       path="/orders/:id/print"
                     >
-                      <Header />
                       <OrderPrint />
+                    </Route>
+                    <Route
+                      exact
+                      path="/orders/:id/printDelivery"
+                    >
+                      <OrderPrintDelivery />
                     </Route>
 
                     <Route path="/myOrders/show/:id">
+                      <Header />
+                      <MyOrdersShow />
+                    </Route>
+
+                    <Route path="/myOrders/feedback/:id">
                       <Header />
                       <MyOrdersShow />
                     </Route>
@@ -238,8 +245,9 @@ function App() {
                           "textAlign": "center",
                         }}>
                           <h1>Settings:</h1>
-                          <h1>App Version : v1.0.5.8 T9</h1>
+                          <h1>App Version : {appVersion}</h1>
                           <h1>Created By : Aashay S Vanpal</h1>
+                          <h1>Contact : 9743419673 for any issues in app</h1>
                         </div>
                       </div>
                     </Route>
@@ -276,9 +284,9 @@ function App() {
                       </h2>
                     </Route>
 
-                    <Route path="/qurries">
+                    <Route path="/queries">
                       <Header />
-                      <h1 style={{ backgroundColor: "blue" }}>Qurries Page</h1>
+                      <Queries />
                     </Route>
 
                     <Route path="*">

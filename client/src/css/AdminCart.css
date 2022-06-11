@@ -1,0 +1,13 @@
+#proceed-btn{
+    color: black;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+#proceed-btn :hover {
+    opacity: 1;
+    background-color: #ecbe16;
+
+}
+
+

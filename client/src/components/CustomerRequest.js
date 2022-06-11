@@ -1,4 +1,5 @@
 import React from 'react';
+import ShowBtn from '../assets/ShowBtn';
 import axios from '../config/axios';
 import CustomerForm from './customer/Form.js'
 import NavigationBar from './NavigationBar.js'
@@ -12,17 +13,11 @@ export default class CustomerRequest extends React.Component {
             userType: '',
             address: '',
             phonenumber: '',
-            openModal: 'false'
+            openSubmitEnquiryModal: false
         }
 
-        this.handleRemove = this.handleRemove.bind(this)
-        this.plusHandle = this.plusHandle.bind(this)
-        this.minusHandle = this.minusHandle.bind(this)
-        this.disableButton = this.disableButton.bind(this)
-        this.EnableButton = this.EnableButton.bind(this)
         this.handleCustomerSubmit = this.handleCustomerSubmit.bind(this)
-        this.handleChange = this.handleChange.bind(this)
-
+        this.emailNotify = this.emailNotify.bind(this)
     }
 
     componentDidMount() {
@@ -58,116 +53,22 @@ export default class CustomerRequest extends React.Component {
                     userType: dataRequest.data.userType,
                     phonenumber: dataRequest.data.phonenumber,
                     address: dataRequest.data.address,
-
                 })
             })
             .catch(err => {
                 console.log(err)
             })
-
     }
 
-    handleRemove = (id) => {
-        console.log('clicked on remove button for id :', id)
-        this.setState((prevState) => ({
-            reqOrder: prevState.reqOrder.filter(item => item.id !== id)
-        }))
-    }
-
-
-    disableButton = (index) => {
-        console.log("disable the - button for the id :", index + 1)
-        var minusButtonId = document.getElementById(index + 1)
-        console.log("minusButton", minusButtonId)
-        minusButtonId.disabled = true
-    }
-
-
-    EnableButton = (index) => {
-        console.log("Enable the - button for the id :", index + 1)
-        var minusButtonId = document.getElementById(index + 1)
-        console.log("minusButton", minusButtonId)
-        minusButtonId.disabled = false
-    }
-
-    minusHandle = (id) => {
-        console.log('clicked on - button for id :', id)
-
-        console.log('reqOrder state:', this.state.reqOrder)
-        const foundItem = this.state.reqOrder.find(item => item.id === id)
-
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  reqOrder.quantity before:', foundItem.quantity)
-
-
-        const index = this.state.reqOrder.findIndex(item => item.id === id)
-        console.log('the index is :', index)
-
-        console.log('state of reqOrders :', this.state.reqOrder)
-        console.log('spread :', ...this.state.reqOrder)
-        console.log('spread index :', this.state.reqOrder[index])
-        console.log('spread index.quantity before:', this.state.reqOrder[index].quantity)
-
-        var changedItems = this.state.reqOrder
-        changedItems[index].quantity = changedItems[index].quantity - 1
-
-
-
-        this.setState({ reqOrder: changedItems })
-        // If the quantity goes below 0 disable the - button 
-
-        if (changedItems[index].quantity <= 0) {
-            this.disableButton(index)
-        } else {
-            this.EnableButton(index)
-        }
-
-
-        console.log('Items found\'s quantity after:', this.state.reqOrder)
-        console.log('end of - Function')
-
-    }
-    plusHandle = (id, e) => {
-        console.log('clicked on + button for id :', id)
-
-        console.log('reqOrder state:', this.state.reqOrder)
-        const foundItem = this.state.reqOrder.find(item => item.id === id)
-
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  reqOrder.quantity before:', foundItem.quantity)
-
-
-        const index = this.state.reqOrder.findIndex(item => item.id === id)
-        console.log('the index is :', index)
-
-        console.log('state of reqOrders :', this.state.reqOrder)
-        console.log('spread :', ...this.state.reqOrder)
-        console.log('spread index :', this.state.reqOrder[index])
-        console.log('spread index.quantity before:', this.state.reqOrder[index].quantity)
-        console.log('e.target.value:', e.target)
-        console.log('e.target.quantity:', e.target['quantity'])
-        console.log('e:', e)
-
-        var changedItems = this.state.reqOrder
-        changedItems[index].quantity = Number(changedItems[index].quantity) + 1
-
-        this.setState({ reqOrder: changedItems })
-
-        if (changedItems[index].quantity <= 0) {
-            this.disableButton(index)
-        } else {
-            this.EnableButton(index)
-        }
-
-
-        console.log('Items found\'s quantity after:', this.state.reqOrder)
-        console.log('end of + Function')
-
+    emailNotify(order) {
+        console.log('email check', order)
+        axios.post('/sendEmail/orderPlaced', { 'email': order.customer.email })
+        axios.post('/sendEmail/newOrderNotify', { 'username': order.customer.fullName })
     }
 
     handleCustomerSubmit(customerData) {
         // e.preventDefault()
-        console.log('clicked on submit enquiry button lol fail')
+        console.log('clicked on submit enquiry button')
         console.log('Send these items for approval :', this.state.reqOrder)
         console.log('Submit this customer data :', customerData)
 
@@ -178,98 +79,95 @@ export default class CustomerRequest extends React.Component {
         }
 
         console.log('order :', order)
-
-        // post request -> order 
-        axios.post('/request', order, {
-            headers: {
-                "x-auth": localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data.errors) {
-                    console.log('Validation Error : ', response.data.errors)
-                    window.alert(response.data.message)
-                }
-                else {
-                    console.log('success', response.data)
-                    // this.props.history.push('/items')
-
-                    // Adding confirmation modal
-                    window.alert('Thank you for placing order we will get back')
-                    // console.log(this.props)
-                    // this.props.history.push('/menu')
-                    localStorage.removeItem("cartItems")
-                    window.location.href = '/menu'
-
+        // post request if new order , put request if old-edit order
+        if (localStorage.getItem('order')) {
+            console.log('execute the put request')
+            axios.put(`/orders/${JSON.parse(localStorage.order).id}`, order, {
+                headers: {
+                    "x-auth": localStorage.getItem('token')
                 }
             })
-    }
+                .then(response => {
+                    if (response.data.errors) {
+                        console.log('Validation Error : ', response.data.errors)
+                        window.alert(response.data.message)
+                    }
+                    else {
+                        console.log('put request success', response.data)
+                        // this.props.history.push('/items')
 
-    handleChange(e, qty, id) {
-        console.log('inside the new handleChange')
-        console.log('e :', e)
-        console.log('e.target :', e.target)
-        console.log('e.target.value :', e.target.value)
-        console.log('qty :', qty)
+                        // Adding confirmation modal
+                        // window.alert('Thank you for placing order we will get back')
+                        // console.log(this.props)
+                        // this.props.history.push('/menu')
+                        this.setState({ openSubmitEnquiryModal: true })
+                        // console.log('success check for trueeee', this.state.openSubmitEnquiryModal)
+                        localStorage.removeItem("cartItems")
+                        localStorage.removeItem("order")
 
+                        // window.location.href = '/menu'
 
-        console.log('change quantity of this id:', id)
-
-        const foundItem = this.state.reqOrder.find(item => item.id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s quantity before:', foundItem.quantity)
-
-        console.log('Edit item : ', foundItem)
-
-
-        const index = this.state.reqOrder.findIndex(item => item.id === id)
-        console.log('the index is :', index)
-
-        console.log('state of reqOrder :', this.state.reqOrder)
-        console.log('spread :', ...this.state.reqOrder)
-        // console.log('spread index 2:', this.state.items[2])
-        // console.log('spread index 2 display before:', this.state.items[2].display)
-        // console.log('spread index 2 display after:', !this.state.items[2].display)
-
-        var changedItems = this.state.reqOrder
-        console.log('quantity :', qty)
-        console.log('quantity should become :', e.target.value)
-        changedItems[index].quantity = e.target.value
-
-        this.setState({
-            reqOrder: changedItems
-        })
-
-        if (changedItems[index].quantity <= 0) {
-            this.disableButton(index)
+                        // for Email notification
+                        this.emailNotify(order)
+                    }
+                })
+                .catch(err => console.log(err))
         } else {
-            this.EnableButton(index)
+            console.log('execute the post request for new order')
+            // post request -> order 
+            axios.post('/request', order, {
+                headers: {
+                    "x-auth": localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    if (response.data.errors) {
+                        console.log('Validation Error : ', response.data.errors)
+                        window.alert(response.data.message)
+                    }
+                    else {
+                        console.log('success', response.data)
+                        // this.props.history.push('/items')
+
+                        // Adding confirmation modal
+                        // window.alert('Thank you for placing order we will get back')
+                        // console.log(this.props)
+                        // this.props.history.push('/menu')
+                        this.setState({ openSubmitEnquiryModal: true })
+                        // console.log('success check for trueeee', this.state.openSubmitEnquiryModal)
+                        localStorage.removeItem("cartItems")
+                        localStorage.removeItem("order")
+
+                        // window.location.href = '/menu'
+
+                        // Email notification
+                        this.emailNotify(order)
+                    }
+                })
+                .catch(err => console.log(err))
         }
+
     }
 
     render() {
-        console.log('customer request')
+        console.log('customer request render')
         return (
             <div id="request-div">
                 <div style={{ "display": "inline" }}>
                     {
                         this.state.userType === "Admin" ? (
                             <>
-                                <button id="ShowButton" onClick={() => {
-                                    var navBarElement = document.getElementById("Nav-bar")
-                                    navBarElement.style.display = "block"
-
-                                    var showElement = document.getElementById("ShowButton")
-                                    showElement.style.display = "none"
-
-                                }}>Show</button>
+                                <ShowBtn />
                             </>
                         ) : (null)
                     }
 
                     <div style={{ "display": "flex" }}>
                         <NavigationBar />
-                        <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit} />
+                        <CustomerForm handleCustomerSubmit={this.handleCustomerSubmit}
+                            openSubmitEnquiryModal={this.state.openSubmitEnquiryModal}
+                            userType={this.state.userType}
+                        />
                     </div>
                 </div >
                 <div style={{

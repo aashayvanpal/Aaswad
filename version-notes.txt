@@ -166,7 +166,7 @@ added Stepper
 fixed /menu backend error
 
 
-Changes for v1.0.5.8 T9 Back and Edit order changes:
+Changes for v1.0.5.8 T11 Back and Edit order changes:
 fixed /menu alignment of items
 added spinner for loading 
 Fixed the rendering if items not found in card (when no item in cart)
@@ -196,11 +196,32 @@ reordered myOrdersShow in mobile css changes
 Edit order feature added
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 bug fix: /items after deleting ,it is filtering from the default(this.state.items)
+bug fix(admin): when seeing an order /order/:id - it will populate the cart (through localStorage), in /menu
+Adding confirm model for window.confirm :
+added confirm modal to /orders,/items delete
+added query display 
+Fixed the billing system
+added images to buttons
 
 added new /myOrders path to show users order history (still working on this)
 added profile option in UserButton component - should show user details (still working on this)
 added contact us validation(still needs work)
 
+
+found a small bug in /menu , in the menu component the filteredSearch state is rerendered when X button is pressed in the Cart Component 
+bug fix: if item is edited , the new value of the item.price will not reflect in /menu
+Added icons for home delivery and service gif
+
+Changes for v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix:
+Table sorting
+Added Admin Cart component , Clear form button , transport table in /show/:id
+added button for delivery
+responsive add item form added
+Generate bill with delivery completed
+print delivery add the item total with the transport and display total
+Center align tables in /orders/:id
+
+Add items /items/add made responsive
 
 Clear all the warnings
 Add the loading animation everywhere:
@@ -223,6 +244,23 @@ important fix: admin : saving the total of the order in database and retrieving 
 was checking on the default image loading when nothing is given
 important fix: back recovery for cart
 update : admin entering name to get orders , from and to date - lists all orders
+Edit order feature added
+Contactus focus on top of page
+Advance Payment feature inside order
+generating bill according to advance payment
+/orders sorting orders for both confirmed and completed orders  
+home delivery and service  fixed and  with the queries updated for the edit order 
+Added Delete options for TransportTable and AdvancePaymentTable
+delete the home delivery transport amount if home delivery false  
+fixed: /order search order by name (done ) - check with the CSS , bug - order deleted after filtering , do a setState for orders:[]
+Customer feedback and star rating:
+1.Edit order with the correct and complete object , check for both the old, new object(done)
+2.display feedback button only after order completed status(done)
+5.Disable star rating after feedback is submitted (done) -> feedback button is hidden
+important fixed: Customer view split method error in the eventTime if localStorage(order) exists(done)
+noOfPeople becomes undefined and also localStorage('order') is lost,after going to myOrders link it shows,localStorage('order') changes in myorders (fixed)
+clear buttons for /orders page
+/Queries page basic added
 
 added function for getting userDetails
 implemented login function on /profile , /myorders
@@ -231,6 +269,17 @@ fix: UserButton when logged in make inside another class component
 fix: UserButton when logged in show , (currently need to refresh)
 fix: All form submission must become blank after submission
 fix: /items /orders when not logged in is loading the page (redirect should be applied)
+fix: /items Admin user should be fetching all items and not filtering ,(customer gets the Active/inactive)
+fix: adding trasnport price inside the order before 1/11/2021
+fix: /items css in mobile screen
+fix: remove all backend validation and display meaningful message to user(it is showing like an alert message)
+fix: add remove transport button for /orders/:id
+fix: generate bill delivery should render final amount with advance payment
+fix: /menu Search bar and the selection and the clear filters should become sticky while scrolling the menu
+fix: make button to reach top of page
+bug fix: /menu ,changing price in admin cart ,and then selecting new item is resetting the price in admin cart , fix this bug
+bug: edit order , if the advance payment is present in the order , it will render the table , if home deliver and service are unchecked they must be removed from the edited order also
+
 
 Session management cart order variable creation
 cookies to store temp cart items
@@ -238,3 +287,76 @@ pagination
 toasts
 giving focus on top to user
 selecting time compulsary
+when internet is lost , keeping data and updating when internet is back up
+
+
+
+
+==========================
+Currently Working :
+converting all class components to function components
+Multiple order taking at once for many days
+rendering multi date items component completion
+Calculating final amount of order query 
+
+bug fix:filtering via date from and to date find query
+integrating mongodbCharts with the application and using it in the dashboard
+completing email integration 
+Queries reply for a question
+Feedback viewing panel
+Admin update : order show normally, currently it is inverted
+
+Email notification - 
+1.Creating new account welcome email 
+2.Order placed email
+3.Admin notification :New Order recieved email
+4.Order has been approved and billing estimation
+5.Order has been rejected
+6.Order has been Completed 
+7.Bill 
+8.Account deletion
+9.Easy password management
+
+
+Customer sigin in should be fixed responsiveness 
+Customer CRUD
+Build 3 types of users: Admin , Customer and caterer
+Get current location and integration of google map
+create pdf generator for billing 
+(bug) - when new item is added in card , the previous quantity value is lost 
+myOrdersShow component and myOrdersView component division because both components are independent of each other
+===========================
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+important Fixes ! :
+get email notification when new order is made for the admin
+generate bill with ease 
+add more validations 
+adding images
+!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
++++++++++++++++++++++++++++
+Additional features : 
++++++++++++++++++++++++++++
+
+
+-----------------------------
+Fixes and backlog :
+important fix: Order cancellation for user
+1. notify admin order is cancelled
+2. Order cannot be cancelled after a certain period of time 
+
+
+Customer feedback and star rating:
+3.Once feedback is submitted ,freeze the object 
+4.Disable Edit button if order is in completed status
+important fix: if admin user in /myOrders , show all the orders (currently showing only logged in users orders),this feature shows feedback of user 
+-----------------------------
+
+
+
+(((((((((((((((((((((((((((((
+Completed :
+)))))))))))))))))))))))))))))
