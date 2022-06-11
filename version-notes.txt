@@ -294,7 +294,9 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
+converting all class components to function components
 Multiple order taking at once for many days
+rendering multi date items component completion
 Calculating final amount of order query 
 
 bug fix:filtering via date from and to date find query

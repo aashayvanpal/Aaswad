@@ -1,4 +1,4 @@
-// App version v1.0.5.10 T1 Email configured 2 
+// App version v1.0.5.11 T1 pre code refactoring  
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -42,6 +42,7 @@ import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
 import ShowBtn from "./assets/ShowBtn.js";
 import { appVersion } from './config/main.js'
+import MultiDateOrders from "./components/MultiDateOrders.js";
 
 function App() {
   return (
@@ -180,6 +181,11 @@ function App() {
                     <Route exact path="/orders">
                       <Header />
                       <OrderList />
+                    </Route>
+
+                    <Route exact path="/bulk-orders">
+                      <Header />
+                      <MultiDateOrders />
                     </Route>
 
                     <Route exact path="/orders/:id">
