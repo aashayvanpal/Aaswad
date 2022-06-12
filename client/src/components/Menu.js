@@ -26,14 +26,15 @@ import '../css/AdminCart.css'
 const Menu = () => {
     const [items, setItems] = useState([])
     const [searchFilter, setSearchFilter] = useState([])
-    const [cartItems, setCartItems] = useState([])
     const [inputSearch, setInputSearch] = useState('')
     const [username, setUserName] = useState('')
     const [userType, setUserType] = useState(false)
     const [isFavourite, setIsFavourite] = useState(false)
-    const [showItemQtyBar, setShowItemQtyBar] = useState(false)
     const [spinnerLoading, setSpinnerLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
+    // const [cartItems, setCartItems] = useState([])
+    // const [showItemQtyBar, setShowItemQtyBar] = useState(false)
+    
     useEffect(() => {
         // Do a get request to /account to get user name , add x-auth as header to it
         // just set the token in localStorage and get it in x-auth , the code is working fine,,,
