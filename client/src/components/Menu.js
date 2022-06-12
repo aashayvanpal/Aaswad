@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from '../config/axios'
 import CartModel from './CartModel.js'
 import cardCurve from '../images/item-curve.svg'
@@ -23,72 +23,27 @@ import '../css/AdminCart.css'
 // <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
 
-
-export default class Menu extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            isFavourite: false,
-            items: [],
-            cartItems: [],
-            inputSearch: '',
-            searchFilter: [],
-            username: '',
-            userType: false,
-            spinnerLoading: false,
-            showAlert: false,
-        }
-
-        // this.CartHandle = this.CartHandle.bind(this)
-        this.CartRemoveHandle = this.CartRemoveHandle.bind(this)
-        this.favouriteHandle = this.favouriteHandle.bind(this)
-        // this.checkboxChange = this.checkboxChange.bind(this)
-        this.newCheckboxChange = this.newCheckboxChange.bind(this)
-        this.isCheckedValue = this.isCheckedValue.bind(this)
-        this.resetIsSelected = this.resetIsSelected.bind(this)
-        this.newtoggleIsSelected = this.newtoggleIsSelected.bind(this)
-        this.requestOrder = this.requestOrder.bind(this)
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSelect = this.handleSelect.bind(this)
-        this.clearSearch = this.clearSearch.bind(this)
-        this.getUserMenu = this.getUserMenu.bind(this)
-
-
-
-    }
-
-    favouriteHandle() {
-        this.setState({
-            isFavourite: true
-        })
-        console.log('Favourite button was clicked!')
-        console.log("I got updated! ")
-
-        console.log("Favourite :", this.state.isFavourite)
-    }
-    CartRemoveHandle() {
-        console.log('Remove from Cart button was clicked!')
-
-        this.setState({
-            showItemQtyBar: false
-        })
-
-    }
-
-
-    componentDidMount() {
-
+const Menu = () => {
+    const [items, setItems] = useState([])
+    const [searchFilter, setSearchFilter] = useState([])
+    const [cartItems, setCartItems] = useState([])
+    const [inputSearch, setInputSearch] = useState('')
+    const [username, setUserName] = useState('')
+    const [userType, setUserType] = useState(false)
+    const [isFavourite, setIsFavourite] = useState(false)
+    const [showItemQtyBar, setShowItemQtyBar] = useState(false)
+    const [spinnerLoading, setSpinnerLoading] = useState(false)
+    const [showAlert, setShowAlert] = useState(false)
+    useEffect(() => {
         // Do a get request to /account to get user name , add x-auth as header to it
         // just set the token in localStorage and get it in x-auth , the code is working fine,,,
 
         getUserDetails()
             .then(res => {
                 console.log("user data inside component did mount new :", res)
-                this.setState({
-                    username: res.username,
-                    userType: res.userType
-                })
-                this.getUserMenu()
+                setUserName(res.username)
+                setUserType(res.userType)
+                getUserMenu()
 
             })
             .catch(err => {
@@ -96,9 +51,23 @@ export default class Menu extends React.Component {
                 window.alert('Please login ,you will be redirected')
                 window.location.href = '/signin'
             })
+    }, [])
+
+
+
+    const favouriteHandle = () => {
+        setIsFavourite(true)
+        console.log('Favourite button was clicked!')
+        console.log("I got updated! ")
+        console.log("Favourite :", isFavourite)
     }
 
-    getUserMenu() {
+    // const CartRemoveHandle = () => {
+    //     console.log('Remove from Cart button was clicked!')
+    //     setShowItemQtyBar(false)
+    // }
+
+    const getUserMenu = () => {
         axios.get('/api/menu', {
             headers: {
                 'x-auth': localStorage.getItem('token')
@@ -113,16 +82,12 @@ export default class Menu extends React.Component {
                         item.isSelected = false
                         item.quantity = 1
                     })
-                    this.setState({
-                        items: filteredItems,
-                    })
+                    setItems(filteredItems)
 
-                    var oldSelectedItems = JSON.parse(localStorage.getItem("cartItems")).filter(item => this.state.items.find(i => item._id === i._id))
+                    var oldSelectedItems = JSON.parse(localStorage.getItem("cartItems")).filter(item => items.find(i => item._id === i._id))
                     console.log(oldSelectedItems)
-                    this.setState({
-                        searchFilter: oldSelectedItems,
-                        items: oldSelectedItems
-                    })
+                    setSearchFilter(oldSelectedItems)
+                    setItems(oldSelectedItems)
                 } else {
                     console.log('Data : ', response.data)
                     const items = response.data
@@ -133,15 +98,13 @@ export default class Menu extends React.Component {
                         item.isSelected = false
                         item.quantity = 1
                     })
-                    this.setState({
-                        items: filteredItems,
-                        searchFilter: filteredItems
-                    })
+                    setItems(filteredItems)
+                    setSearchFilter(filteredItems)
                 }
 
-                console.log("this.state.items:", this.state.items)
+                console.log("items:", items)
 
-                this.setState({ spinnerLoading: false })
+                setSpinnerLoading(false)
 
             })
             .catch(err => {
@@ -149,24 +112,23 @@ export default class Menu extends React.Component {
             })
     }
 
-
     // trying to get the cart rendering with newCheckBoxChange
-    newCheckboxChange(item) {
+    const newCheckboxChange = (item) => {
         console.log('inside newCheckBoxChange function', item)
-        this.newtoggleIsSelected(item._id)
+        newtoggleIsSelected(item._id)
     }
 
 
-    newtoggleIsSelected = (id) => {
+    const newtoggleIsSelected = (id) => {
         console.log('inside newToggleIsSelected')
-        console.log('items state:', this.state.items)
-        console.log('searchfilter state:', this.state.searchFilter)
+        console.log('items state:', items)
+        console.log('searchfilter state:', searchFilter)
 
-        const foundItem = this.state.items.find(item => item._id === id)
+        const foundItem = items.find(item => item._id === id)
         console.log('Found the item:', foundItem)
 
 
-        var newVal = this.state.items.map(item => [foundItem].find(o => {
+        var newVal = items.map(item => [foundItem].find(o => {
             if (o._id === item._id) {
                 foundItem.isSelected = !foundItem.isSelected
                 // foundItem.quantity = 1
@@ -175,13 +137,15 @@ export default class Menu extends React.Component {
         }) || item);
 
         console.log('newVal:', newVal)
-        this.setState({ filteredItems: newVal, items: newVal })
+        // setFilteredItems(newVal)
+        setItems(newVal)
         localStorage.setItem("cartItems", JSON.stringify(newVal))
         console.log('end of  newToggleIsSelected')
 
     }
 
-    resetIsSelected = (id) => {
+
+    const resetIsSelected = (id) => {
         // Delete item from the cartItems do setState of cartItems
         console.log('inside the removeAndReset function')
         console.log('delete this id from the cartItems :', id)
@@ -190,9 +154,8 @@ export default class Menu extends React.Component {
 
         // Reset the items.isSelected to false
         // find the item in items[] then change isSelected to false
-        console.log('items state:', this.state.items)
-        const foundItem = this.state.items.find(item => item._id === id)
-
+        console.log('items state:', items)
+        const foundItem = items.find(item => item._id === id)
 
         console.log('Item found :', foundItem)
         console.log('Item found\'s  items.isSelected before:', foundItem.isSelected)
@@ -200,37 +163,33 @@ export default class Menu extends React.Component {
         console.log('Edit item.isSelected to false : ', foundItem)
 
 
-        const index = this.state.items.findIndex(item => item._id === id)
+        const index = items.findIndex(item => item._id === id)
         console.log('the index is :', index)
 
         // console.log('state of items :', this.state.items)
         // console.log('spread :', ...this.state.items)
-        console.log('spread index :', this.state.items[index])
-        console.log('spread index.isSelected before:', this.state.items[index].isSelected)
+        console.log('spread index :', items[index])
+        console.log('spread index.isSelected before:', items[index].isSelected)
         // console.log('spread index.isSelected after:', !this.state.items[index].isSelected)
 
-        var changedItems = this.state.items
+        var changedItems = items
         changedItems[index].isSelected = false
 
-        this.setState({ items: changedItems, searchFilter: this.state.items })
+        setItems([...changedItems])
+        setSearchFilter(items)
 
         // this.setState({ filteredItems: changedItems })
-        localStorage.setItem("cartItems", JSON.stringify(this.state.items))
+        localStorage.setItem("cartItems", JSON.stringify(items))
 
 
-        console.log('Items found\'s isSelected after:', this.state.items)
+        console.log('Items found\'s isSelected after:', items)
         // // console.log('Item found\'s display after:', foundItem.display)
 
         console.log('end of resetIsSelected Function')
         return null
     }
 
-    isCheckedValue(id) {
-        console.log('check for this id ', id)
-        return true
-    }
-
-    requestOrder(cartItems) {
+    const requestOrder = (cartItems) => {
         console.log('inside request order function')
         // var cartItems = this.state.items.filter(item => item.isSelected === true)
         // console.log('Approve these items :', cartItems)
@@ -263,68 +222,62 @@ export default class Menu extends React.Component {
 
     }
 
-    handleChange = (e) => {
+    const handleChange = (e) => {
         console.log('Inside handleChange')
         console.log('e.target:', e.target)
         console.log('e.target.value:', e.target.value)
-        console.log('this.state.items:', this.state.items)
-        console.log('this.state.items filtered:', this.state.items.filter(item => item.name.includes(e.target.value)))
+        setInputSearch(e.target.value)
+        console.log('this.state.items:', items)
+        console.log('this.state.items filtered:', items.filter(item => item.name.includes(e.target.value)))
 
-        let searchFilter = this.state.items.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
-        this.setState({ searchFilter })
+        let searchFilter = items.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        setSearchFilter(searchFilter)
 
     }
 
-    handleSelect(e) {
+    const handleSelect = (e) => {
         console.log('You changed the select option')
         console.log('Value is:', e.target.value)
 
-        this.setState({
-            searchFilter:
-                this.state.items.filter(item => item.category.includes(e.target.value.toLowerCase()))
-        })
-
-
-
+        setSearchFilter(items.filter(item => item.category.includes(e.target.value.toLowerCase())))
     }
 
-    clearSearch() {
+    const clearSearch = () => {
         console.log("clear search button clicked!")
         // this.handleChange(document.getElementById("inputSearch"))
-        this.setState({
-            searchFilter: this.state.items
-        })
+        setSearchFilter(items)
+        setInputSearch('')
         console.log(document.getElementById("inputSearch"))
         console.log(document.getElementById("filterItems").value = "all")
         document.getElementById("inputSearch").value = ""
         document.getElementById("filterItems").value = "all"
     }
-    render() {
-        return (
-            <div>
-                <Header />
-                {this.state.userType === "Admin" ? (
-                    <>
-                        <h2 style={{ "textAlign": "center" }}>Welcome - {this.state.username} you are - {this.state.userType}</h2>
-                        <ShowBtn />
-                        <button id="ShowButton" onClick={() => {
-                            if (localStorage.getItem("cartItems")) {
-                                JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
-                                    this.resetIsSelected(item._id)
-                                })
-                                localStorage.removeItem("cartItems")
-                                localStorage.removeItem("order")
-                            }
-                        }}>Clear Local</button>
-                        <button onClick={() => this.setState({ showAlert: true })}>Toast +</button>
-                    </>
-                ) : null
-                }
-                <div style={{ "display": "flex" }}>
-                    <NavigationBar />
-                    <div className="Menu-Cart" >
-                        <div className="inner-Menu" >
-                            {/* <div style={{
+
+    return (
+        <div>
+            <Header />
+            {userType === "Admin" ? (
+                <>
+                    <h2 style={{ "textAlign": "center" }}>Welcome - {username} you are - {userType}</h2>
+                    <ShowBtn />
+                    <button id="ShowButton" onClick={() => {
+                        if (localStorage.getItem("cartItems")) {
+                            JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
+                                resetIsSelected(item._id)
+                            })
+                            localStorage.removeItem("cartItems")
+                            localStorage.removeItem("order")
+                        }
+                    }}>Clear Local</button>
+                    <button onClick={() => setShowAlert(true)}>Toast +</button>
+                </>
+            ) : null
+            }
+            <div style={{ "display": "flex" }}>
+                <NavigationBar />
+                <div className="Menu-Cart" >
+                    <div className="inner-Menu" >
+                        {/* <div style={{
                                 "backgroundColor": "#dbc268", 'color': "green", "border-radius": "5px", "padding": "10px", "fontWeight": "bold", "fontSize": "20px", "marginBottom": "10px"
                             }}>
                                 <Toast delay={300} isOpen={this.state.showAlert} autohide>
@@ -334,114 +287,115 @@ export default class Menu extends React.Component {
                                     </ToastBody>
                                 </Toast>
                             </div> */}
-                            <Alert style={{
-                                "backgroundColor": "#dbc268", 'color': "green",
-                            }} isOpen={this.state.showAlert}>
-                                Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
-                                <Button color="danger" style={{
-                                    "float": "right",
-                                    "color": "white",
-                                    "marginTop": "-5px",
-                                }} onClick={() => this.setState({ showAlert: false })}>X</Button>
-                            </Alert>
-                            <h1 id="Menu-style">Choose Your Menu</h1>
+                        <Alert style={{
+                            "backgroundColor": "#dbc268", 'color': "green",
+                        }} isOpen={showAlert}>
+                            Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
+                            <Button color="danger" style={{
+                                "float": "right",
+                                "color": "white",
+                                "marginTop": "-5px",
+                            }} onClick={() => setShowAlert(false)}>X</Button>
+                        </Alert>
+                        <h1 id="Menu-style">Choose Your Menu</h1>
 
-                            <div id="filteringOptions">
-                                <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
+                        <div id="filteringOptions">
+                            <input onChange={handleChange} value={inputSearch} name="inputSearch" id="inputSearch" placeholder="Search your item" />
 
-                                {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
+                            {/* <h2 style={{ "fontSize": "22px", "display": "inline-block" }}>Filter Items </h2> */}
 
-                                <select onChange={this.handleSelect}
-                                    style={{
-                                        "fontSize": "22px",
-                                        "padding": "10px",
-                                        "width": "160px",
-                                        "marginLeft": "10px",
-                                        "borderRadius": "10px",
-                                        "backgroundColor": "#dbc268"
-                                    }}
+                            <select onChange={handleSelect}
+                                style={{
+                                    "fontSize": "22px",
+                                    "padding": "10px",
+                                    "width": "160px",
+                                    "marginLeft": "10px",
+                                    "borderRadius": "10px",
+                                    "backgroundColor": "#dbc268"
+                                }}
 
-                                    id="filterItems"
-                                >
-                                    <option value="all">All</option>
-                                    <option value="breakfast">Breakfast</option>
-                                    <option value="lunch">Lunch</option>
-                                    <option value="dinner">Dinner</option>
-                                    <option value="sweets">Sweets</option>
-                                    <option value="snacks">Snacks</option>
-                                    <option value="special">Special</option>
-                                </select>
-                                <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={this.clearSearch}>
-                                    <img src={clearIcon} alt="" width="30px" height="30px" />
-                                    Clear Filters</button>
-                            </div>
-                            <Stepper className="stepper-color"
-                                steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
-                                activeStep={0}
-                            />
-                            <hr style={{ "height": "10px" }} />
-                            {this.state.spinnerLoading ? (
-                                <LoadingSpinner LoadingSpinner={this.state.spinnerLoading} />
-                            )
-                                :
-                                (
-                                    <div id="menu-container">
-                                        <div id="display-cards-container">
-                                            {/* total length -{this.state.searchFilter.length} */}
-                                            {this.state.searchFilter.length === 0 ? (
-                                                <div style={{ "textAlign": "center", "width": "100%" }}>
-                                                    <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
-                                                    <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
-                                                    <br />
-                                                    <br />
-                                                    <br />
-                                                </div>
-                                            ) : (
-                                                this.state.searchFilter.map((item, i) => {
-                                                    return (
-                                                        <div key={i} className="card-style" onClick={() => {
-                                                            this.newCheckboxChange(item)
-                                                        }}>
-                                                            <div className="card-body-style">
-                                                                <div style={{ "height": "150px", "width": "100%" }}>
+                                id="filterItems"
+                            >
+                                <option value="all">All</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="sweets">Sweets</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="special">Special</option>
+                            </select>
+                            <button style={{ "padding": "12px", "cursor": "pointer", "backgroundColor": "#dbc268", "marginLeft": "30px", "borderRadius": "10px" }} onClick={clearSearch}>
+                                <img src={clearIcon} alt="" width="30px" height="30px" />
+                                Clear Filters</button>
+                        </div>
+                        <Stepper className="stepper-color"
+                            steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
+                            activeStep={0}
+                        />
+                        <hr style={{ "height": "10px" }} />
+                        {spinnerLoading ? (
+                            <LoadingSpinner LoadingSpinner={spinnerLoading} />
+                        )
+                            :
+                            (
+                                <div id="menu-container">
+                                    <div id="display-cards-container">
+                                        {/* total length -{this.state.searchFilter.length} */}
+                                        {searchFilter.length === 0 ? (
+                                            <div style={{ "textAlign": "center", "width": "100%" }}>
+                                                <h1 style={{ "color": "red" }}>This item could not be found, please search another dish</h1>
+                                                <img src={noItemFound} alt="no-item-found" width="60%" height="60%" />
+                                                <br />
+                                                <br />
+                                                <br />
+                                            </div>
+                                        ) : (
+                                            searchFilter.map((item, i) => {
+                                                return (
+                                                    <div key={i} className="card-style" onClick={() => {
+                                                        newCheckboxChange(item)
+                                                    }}>
+                                                        <div className="card-body-style">
+                                                            <div style={{ "height": "150px", "width": "100%" }}>
 
-                                                                    <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
+                                                                <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
-                                                                    {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                                    <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
-                                                                </div>
-                                                                <div className="contents">
-                                                                    <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{item.name}</h1>
-                                                                    <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
-                                                                </div>
+                                                                {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
+                                                                <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
+                                                            </div>
+                                                            <div className="contents">
+                                                                <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{item.name}</h1>
+                                                                <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                             </div>
                                                         </div>
-                                                    )
-                                                })
-                                            )}
-                                        </div>
-                                        <br />
+                                                    </div>
+                                                )
+                                            })
+                                        )}
                                     </div>
-                                )}
-                        </div>
-                        <CartModel
-                            buttonLabel={`Cart - ${this.state.items.filter(item => item.isSelected).length}`}
-                            resetIsSelected={this.resetIsSelected}
-                            requestOrder={this.requestOrder}
-                            userType={this.state.userType}
-                        />
-                    </div >
-                </div>
+                                    <br />
+                                </div>
+                            )}
+                    </div>
+                    <CartModel
+                        buttonLabel={`Cart - ${items.filter(item => item.isSelected).length}`}
+                        resetIsSelected={resetIsSelected}
+                        requestOrder={requestOrder}
+                        userType={userType}
+                    />
+                </div >
+            </div>
 
-                <div style={{
-                    "marginTop": "30px",
-                    "textAlign": "center",
-                    "color": "#dbc268",
-                    "backgroundColor": "#353535"
-                }}>
-                    © Copyrights Reserved 2021
-                </div>
-            </div >
-        );
-    }
+            <div style={{
+                "marginTop": "30px",
+                "textAlign": "center",
+                "color": "#dbc268",
+                "backgroundColor": "#353535"
+            }}>
+                © Copyrights Reserved 2021
+            </div>
+        </div >
+    );
 }
+
+export default Menu
