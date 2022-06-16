@@ -295,6 +295,7 @@ when internet is lost , keeping data and updating when internet is back up
 ==========================
 Currently Working :
 converting all class components to function components
+Form.js
 Multiple order taking at once for many days
 rendering multi date items component completion
 Calculating final amount of order query 
@@ -317,6 +318,8 @@ Email notification -
 8.Account deletion
 9.Easy password management
 
+
+all alert messges to be changed to modals
 
 Customer sigin in should be fixed responsiveness 
 Customer CRUD
