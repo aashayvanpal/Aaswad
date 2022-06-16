@@ -1,5 +1,5 @@
 // fix url config (store in folder)
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import DisplayItems from './Item.js'
 // import SearchItem from './Search.js'
@@ -9,23 +9,12 @@ import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import confirm from 'reactstrap-confirm'
 import addIcon from '../../images/add-item-icon.png'
 
-export default class AddItems extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            items: [
 
-            ],
-            searchFilter: []
+const AddItems = (props) => {
+    const [items, setItems] = useState([])
+    const [searchFilter, setSearchFilter] = useState([])
 
-        }
-
-        this.deleteItem = this.deleteItem.bind(this)
-        this.updateCheckbox = this.updateCheckbox.bind(this)
-    }
-
-
-    componentDidMount() {
+    useEffect(() => {
         axios.get('/api/items', {
             headers: {
                 'x-auth': localStorage.getItem('token')
@@ -35,32 +24,32 @@ export default class AddItems extends Component {
                 console.log('Data : ', response.data)
                 const items = response.data
                 console.log('items after request :', items)
-                this.setState({ items })
-                this.setState({ searchFilter: this.state.items })
+                // this.setState({ items })
+                // this.setState({ searchFilter: this.state.items })
+                setItems(items)
+                setSearchFilter(items)
             })
             .catch(err => {
                 console.log(err)
             })
-    }
+    }, [])
 
-
-    handleChange = e => {
+    const handleChange = e => {
         console.log('Inside handleChange')
         console.log('e.target.value:', e.target.value)
-        console.log('this.state.items:', this.state.items)
-        console.log('this.state.items filtered:', this.state.items.filter(item => item.name.includes(e.target.value)))
+        console.log('items:', items)
+        console.log('this.state.items filtered:', items.filter(item => item.name.includes(e.target.value)))
 
-        let searchFilter = this.state.items.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
-        this.setState({ searchFilter })
+        let searchFilter = items.filter(item => item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        // this.setState({ searchFilter })
+        setSearchFilter(searchFilter)
 
         // this.setState({
         //     item: e.target.value
         // })
     }
 
-
-
-    async deleteItem(itemToDelete) {
+    const deleteItem = async (itemToDelete) => {
         console.log('called parent component delete id', itemToDelete)
         // console.log("remove button clicked!")
         // console.log("value of this ", this)
@@ -99,8 +88,9 @@ export default class AddItems extends Component {
                     // this.setState((prevState) => ({
                     //     searchFilter: prevState.searchFilter.filter(item => item._id !== response.data._id),
                     // }))
-                    var filteredItems = this.state.searchFilter.filter(item => item._id !== response.data._id)
-                    this.setState({ searchFilter: filteredItems })
+                    var filteredItems = searchFilter.filter(item => item._id !== response.data._id)
+                    // this.setState({ searchFilter: filteredItems })
+                    setSearchFilter(filteredItems)
 
                     // this.setState({ items: this.state.searchFilter })
 
@@ -111,36 +101,31 @@ export default class AddItems extends Component {
         } else {
             console.log("dont delete the item")
         }
-
-        // this.setState(
-        //     prevState => ({
-        //         items: prevState.items.filter(item => item !== itemToDelete)
-        //     })
-        // )
     }
 
-    updateCheckbox = (itemToToggle) => {
+    const updateCheckbox = (itemToToggle) => {
         console.log('inside the toggle checkbox')
         console.log("itemToToggle id:", itemToToggle)
         // you have found the id, you have to get the whole item 
-        const foundItem = this.state.items.find(item => item._id === itemToToggle)
+        const foundItem = items.find(item => item._id === itemToToggle)
         console.log('Item found :', foundItem)
         console.log('Item found\'s display before:', foundItem.display)
         console.log('Edit item : ', foundItem)
 
-        const index = this.state.items.findIndex(item => item._id === itemToToggle)
+        const index = items.findIndex(item => item._id === itemToToggle)
         console.log('the index is :', index)
 
-        console.log('state of items :', this.state.items)
-        console.log('spread :', ...this.state.items)
+        console.log('state of items :', items)
+        console.log('spread :', ...items)
         // console.log('spread index 2:', this.state.items[2])
         // console.log('spread index 2 display before:', this.state.items[2].display)
         // console.log('spread index 2 display after:', !this.state.items[2].display)
 
-        var changedItems = this.state.items
+        var changedItems = items
         changedItems[index].display = !changedItems[index].display
 
-        this.setState({ items: changedItems })
+        // this.setState({ items: changedItems })
+        setItems([...changedItems])
 
         axios.put(`/items/edit/${foundItem._id}`, foundItem, {
             headers: {
@@ -159,60 +144,60 @@ export default class AddItems extends Component {
                 }
             })
 
-        console.log('Item found\'s display after:', this.state.items)
+        console.log('Item found\'s display after:', items)
         // console.log('Item found\'s display after:', foundItem.display)
 
     }
 
-    render() {
-        return (
-            <div className="content-primary">
-                <div className="search-align">
-                    <h2>Listing items - {this.state.searchFilter.length}</h2>
+    return (
+        <div className="content-primary">
+            <div className="search-align">
+                <h2>Listing items - {searchFilter.length}</h2>
+                <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={handleChange} />&nbsp;&nbsp;
+            </div>
 
-                    <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={this.handleChange} />&nbsp;&nbsp;
-
-
-                </div>
-                <Link to='/items/add'> <button className="button-color3">
+            <Link to='/items/add'>
+                <button className="button-color3">
                     <img src={addIcon} alt="addIcon" height="35px" width="30px" />
                     Add new item
-                </button></Link>
+                </button>
+            </Link>
 
-                <div style={{ "margin": "10px" }}>
-                    <Table>
-                        <Thead >
-                            <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
-                                <Th className="listing-table">Sl No</Th>
-                                <Th className="listing-table">Name</Th>
-                                <Th className="listing-table">Price</Th>
-                                <Th className="listing-table"> Update</Th>
-                                <Th className="listing-table"> Active/Inactive</Th>
-                                <Th className="listing-table"> Remove</Th>
-                            </Tr>
-                        </Thead>
+            <div style={{ "margin": "10px" }}>
+                <Table>
+                    <Thead >
+                        <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
+                            <Th className="listing-table">Sl No</Th>
+                            <Th className="listing-table">Name</Th>
+                            <Th className="listing-table">Price</Th>
+                            <Th className="listing-table"> Update</Th>
+                            <Th className="listing-table"> Active/Inactive</Th>
+                            <Th className="listing-table"> Remove</Th>
+                        </Tr>
+                    </Thead>
 
-                        <Tbody>
-                            {
-                                this.state.searchFilter.map((item, i) => {
-                                    return (
-                                        <DisplayItems
-                                            key={i}
-                                            name={item.name}
-                                            price={item.price}
-                                            deleteItem={this.deleteItem}
-                                            updateCheckbox={this.updateCheckbox}
-                                            id={item._id}
-                                            display={item.display}
-                                            i={i}
-                                        />
-                                    )
-                                })
-                            }
-                        </Tbody>
-                    </Table>
-                </div>
+                    <Tbody>
+                        {
+                            searchFilter.map((item, i) => {
+                                return (
+                                    <DisplayItems
+                                        key={i}
+                                        name={item.name}
+                                        price={item.price}
+                                        deleteItem={deleteItem}
+                                        updateCheckbox={updateCheckbox}
+                                        id={item._id}
+                                        display={item.display}
+                                        i={i}
+                                    />
+                                )
+                            })
+                        }
+                    </Tbody>
+                </Table>
             </div>
-        )
-    }
+        </div>
+    )
 }
+
+export default AddItems
