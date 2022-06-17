@@ -2,14 +2,9 @@ import React from 'react'
 import ItemForm from './Form.js'
 import axios from '../../config/axios.js'
 
+const ItemNew = () => {
 
-export default class ItemNew extends React.Component {
-    constructor() {
-        super()
-        this.handleItemSubmit = this.handleItemSubmit.bind(this)
-    }
-
-    handleItemSubmit(item) {
+    const handleItemSubmit = (item) => {
         console.log('New Component : ', item)
         axios.post('/items/add', item, {
             headers: {
@@ -31,12 +26,12 @@ export default class ItemNew extends React.Component {
             })
     }
 
-    render() {
-        return (
-            <div>
-                <h1>Add New Item</h1>
-                <ItemForm handleItemSubmit={this.handleItemSubmit} />
-            </div>
-        )
-    }
+    return (
+        <div>
+            <h1>Add New Item</h1>
+            <ItemForm handleItemSubmit={handleItemSubmit} />
+        </div>
+    )
 }
+
+export default ItemNew
