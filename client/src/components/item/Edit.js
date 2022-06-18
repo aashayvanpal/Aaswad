@@ -1,17 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from '../../config/axios'
 import ItemForm from './Form.js'
 
-export default class EditItem extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            item: {}
-        }
-    }
-
-    componentDidMount() {
-        console.log('this.props:', this.props)
+const EditItem = (props) => {
+    const [item, setItem] = useState({})
+    useEffect(() => {
+        console.log('props:', props)
         console.log('id to edit', window.location.href.split('/')[5])
         const id = window.location.href.split('/')[5]
 
@@ -22,17 +16,16 @@ export default class EditItem extends React.Component {
         })
             .then(response => {
                 const item = response.data
-                this.setState({ item })
-
-                console.log('Edit :', this.state.item)
+                // this.setState({ item })
+                setItem(item)
+                console.log('Edit :', item)
             })
             .catch(err => {
                 console.log(err)
             })
-    }
+    }, [])
 
-
-    handleItemSubmit = (item) => {
+    const handleItemSubmit = (item) => {
         console.log('Edit item : ', item)
         axios.put(`/items/edit/${item.id}`, item, {
             headers: {
@@ -55,12 +48,12 @@ export default class EditItem extends React.Component {
             })
     }
 
-    render() {
-        return (
-            <div>
-                <h1 style={{ "textAlign": "center", "padding": "10px" }}>Edit Item - {this.state.item.name}</h1>
-                {this.state.item.name && <ItemForm item={this.state.item} handleItemSubmit={this.handleItemSubmit} />}
-            </div>
-        )
-    }
+    return (
+        <div>
+            <h1 style={{ "textAlign": "center", "padding": "10px" }}>Edit Item - {item.name}</h1>
+            {item.name && <ItemForm item={item} handleItemSubmit={handleItemSubmit} />}
+        </div>
+    )
 }
+
+export default EditItem

@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 // import { Table } from 'reactstrap';
 import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
