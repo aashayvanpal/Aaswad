@@ -29,7 +29,7 @@ const CustomerForm = (props) => {
     const [emailError, setEmailError] = useState('')
     const [noOfPeopleError, setNoOfPeopleError] = useState('')
     const [addressError, setAddressError] = useState('')
-    const [userId, setUserId] = useState('')
+    const [customerId, setCustomerId] = useState('')
     const [id, setId] = useState('')
     const [userType, setUserType] = useState('')
     const [openSubmitEnquiryModal, setOpenSubmitEnquiryModal] = useState(props.openSubmitEnquiryModal)
@@ -79,9 +79,8 @@ const CustomerForm = (props) => {
             //     queries
             // })
             setStartDate(dateObject)
-            setUserId(customer_id)
+            setCustomerId(customer_id)
             setFullName(fullName)
-            console.log('debug here : ', phoneNumber)
             setPhoneNumber(phoneNumber)
             setEventTime(eventTime)
             setEmail(email)
@@ -120,15 +119,6 @@ const CustomerForm = (props) => {
         }
 
     }, [])
-
-    // doubt for setting state in hooks
-    // const handleChange = e => {
-    //     this.setState({
-    //         [e.target.name]: e.target.value
-    //     })
-    //     state[e.target.name] 
-    //     // this.validate()
-    // }
 
     const handleCheckboxChange = () => {
         console.log('homeDelivery before:', homeDelivery)
@@ -251,7 +241,7 @@ const CustomerForm = (props) => {
                 eventTime: eventTime,
                 homeDelivery: homeDelivery,
                 service: service,
-                customer_id: id
+                customer_id: customerId
 
             }
             // this.props.item && (item.id = this.props.item._id)
