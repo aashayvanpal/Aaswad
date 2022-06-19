@@ -87,7 +87,8 @@ const CustomerForm = (props) => {
             setAddress(address)
             setEventName(eventName)
             setNumberOfPeople(String(numberOfPeople))
-            setId(_id)
+            // setId(_id)
+            setId(customer_id)
             setHomeDelivery(homeDelivery)
             setService(service)
             setQuerries(queries)
@@ -241,7 +242,7 @@ const CustomerForm = (props) => {
                 eventTime: eventTime,
                 homeDelivery: homeDelivery,
                 service: service,
-                customer_id: customerId
+                customer_id: id
 
             }
             // this.props.item && (item.id = this.props.item._id)
