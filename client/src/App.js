@@ -191,17 +191,14 @@ function App() {
                     <Route exact path="/orders/:id">
                       <Header />
                       <OrderShow />
+                      {/* here refactoring */}
                     </Route>
-                    <Route
-                      exact
-                      path="/orders/:id/print"
-                    >
+
+                    <Route exact path="/orders/:id/print">
                       <OrderPrint />
                     </Route>
-                    <Route
-                      exact
-                      path="/orders/:id/printDelivery"
-                    >
+
+                    <Route exact path="/orders/:id/printDelivery">
                       <OrderPrintDelivery />
                     </Route>
 
