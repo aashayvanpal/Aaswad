@@ -338,6 +338,8 @@ generate bill with ease
 add more validations 
 adding images
 check on the feedback section once and for the conditional rendering 
+signup form validations
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
