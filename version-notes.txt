@@ -337,6 +337,7 @@ get email notification when new order is made for the admin
 generate bill with ease 
 add more validations 
 adding images
+check on the feedback section once and for the conditional rendering 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
