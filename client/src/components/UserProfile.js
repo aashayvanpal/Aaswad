@@ -1,36 +1,27 @@
 //User type is not required 
 
-import React from 'react'
-// import axios from '../config/axios.js'
+import React, { useState, useEffect } from 'react'
 import heroUser from '../images/heroUser.svg'
 import { getUserDetails } from '../assets/user-functions.js'
-// import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import "../css/profile.css"
+const UserProfile = () => {
 
-export default class UserProfile extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            username: '',
-            userType: '',
-            phonenumber: '',
-            address: ''
+    const [username, setUserName] = useState('')
+    const [userType, setUserType] = useState('')
+    const [phonenumber, setPhoneNumber] = useState('')
+    const [address, setAddress] = useState('')
+    const [email, setEmail] = useState('')
 
-        }
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         getUserDetails()
             .then(res => {
                 console.log("user data inside component did mount :", res)
-                this.setState({
-                    username: res.username,
-                    userType: res.userType,
-                    email: res.email,
-                    phonenumber: res.phonenumber,
-                    address: res.address
 
-                })
+                setUserName(res.username)
+                setUserType(res.userType)
+                setEmail(res.email)
+                setPhoneNumber(res.phonenumber)
+                setAddress(res.address)
 
             })
             .catch(err => {
@@ -39,67 +30,66 @@ export default class UserProfile extends React.Component {
                 window.location.href = '/signin'
             })
 
-    }
+    }, [])
 
-    render() {
-        return (
-            <div id="profile-container">
-                <div id="profile-Overlap">
-                    <img src={heroUser} alt="" style={{
-                        "display": "block",
-                        "marginLeft": "auto",
-                        "marginRight": "auto",
-                        "height": "100px",
-                    }} />
-                    <h2 style={{
-                        "textAlign": "center"
-                    }}
-                    >{this.state.username}</h2>
+    return (
+        <div id="profile-container">
+            <div id="profile-Overlap">
+                <img src={heroUser} alt="" style={{
+                    "display": "block",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "height": "100px",
+                }} />
+                <h2 style={{
+                    "textAlign": "center"
+                }}
+                >{username}</h2>
 
-                </div>
-
-                <div id="profile-inner-container">
-                    <div id="profileDiv">
-                        <table >
-                            <tbody>
-                                {/* <tr>
-                                    <td style={{ "padding": "10px" }}>UserType</td>
-                                    <td style={{ "padding": "10px" }}>{this.state.userType}</td>
-                                </tr> */}
-                                <tr style={{ "width": "100%" }}>
-                                    <td style={{ "padding": "10px" }}>Email</td>
-                                    <td style={{ "padding": "10px" }}>{this.state.email}</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ "padding": "10px" }}>Phone Number</td>
-                                    <td style={{ "padding": "10px" }}>{this.state.phonenumber}</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ "padding": "10px" }}>Address</td>
-                                    <td style={{ "padding": "10px" }}>{this.state.address}</td>
-                                    <td style={{ "padding": "10px", "maxWidth": "50px" }}></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button style={{
-                        "display": "block",
-                        "margin": "10px auto",
-                        "padding": "10px 40px",
-                        "borderRadius": "10px",
-                        "fontSize": "20px",
-                        "fontWeight": "bold",
-                        "cursor": "pointer",
-                        "backgroundColor": "#ff881a",
-                        "boxShadow": "0px 4px 4px rgba(0, 0, 0, 0.25)"
-
-                    }}>Change Password</button>
-                </div>
-                <h5 id="footer-style">
-                    © Copyrights Reserved 2021
-                </h5>
             </div>
-        )
-    }
+
+            <div id="profile-inner-container">
+                <div id="profileDiv">
+                    <table >
+                        <tbody>
+                            {/* <tr>
+                                <td style={{ "padding": "10px" }}>UserType</td>
+                                <td style={{ "padding": "10px" }}>{this.state.userType}</td>
+                            </tr> */}
+                            <tr style={{ "width": "100%" }}>
+                                <td style={{ "padding": "10px" }}>Email</td>
+                                <td style={{ "padding": "10px" }}>{email}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ "padding": "10px" }}>Phone Number</td>
+                                <td style={{ "padding": "10px" }}>{phonenumber}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ "padding": "10px" }}>Address</td>
+                                <td style={{ "padding": "10px" }}>{address}</td>
+                                <td style={{ "padding": "10px", "maxWidth": "50px" }}></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button style={{
+                    "display": "block",
+                    "margin": "10px auto",
+                    "padding": "10px 40px",
+                    "borderRadius": "10px",
+                    "fontSize": "20px",
+                    "fontWeight": "bold",
+                    "cursor": "pointer",
+                    "backgroundColor": "#ff881a",
+                    "boxShadow": "0px 4px 4px rgba(0, 0, 0, 0.25)"
+
+                }}>Change Password</button>
+            </div>
+            <h5 id="footer-style">
+                © Copyrights Reserved 2021
+            </h5>
+        </div>
+    )
 }
 
+export default UserProfile
