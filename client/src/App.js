@@ -1,4 +1,4 @@
-// App version v1.0.6.0 T1 Complete Refactored Code
+// App version v1.0.6.0 T2 Complete Refactored Code
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
