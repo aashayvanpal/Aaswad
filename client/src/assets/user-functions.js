@@ -1,7 +1,5 @@
 import axios from '../config/axios.js'
 
-
-
 function getUserDetails() {
     return new Promise((resolve, reject) => {
         axios.get('/account', {
@@ -14,8 +12,4 @@ function getUserDetails() {
     })
 }
 
-
-function test() {
-    return 'tested'
-}
-export { getUserDetails, test }
+export { getUserDetails }

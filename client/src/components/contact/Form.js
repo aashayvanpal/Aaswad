@@ -1,59 +1,53 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from '../../config/axios.js'
 
-export default class Form extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            email: '',
-            emailError: '',
-            subject: '',
-            subjectError: '',
-            mobile: '',
-            mobileError: '',
-            message: '',
-            messageError: ''
-        }
-        this.formSubmit = this.formSubmit.bind(this)
-    }
+const Form = () => {
+    
+    const [email, setEmail] = useState('')
+    const [subject, setSubject] = useState('')
+    const [mobile, setMobile] = useState('')
+    const [message, setMessage] = useState('')
+    const [emailError, setEmailError] = useState('')
+    const [subjectError, setSubjectError] = useState('')
+    const [mobileError, setMobileError] = useState('')
+    const [messageError, setMessageError] = useState('')
 
-    handleChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-    validate() {
+
+    const validate = () => {
         let emailError, subjectError, mobileError, messageError = ''
         // let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 
-        if (!this.state.email.includes('@')) {
+        if (!email.includes('@')) {
             emailError = "Error: The email address should contain @ symbol"
         }
 
-        if (this.state.mobile.toString().length !== 10) {
+        if (mobile.toString().length !== 10) {
             mobileError = "Error: There must be 10 digits in your number !"
         }
 
-        if (this.state.email.length === 0) {
+        if (email.length === 0) {
             emailError = "Error: The email cannot be left blank "
 
         }
-        if (this.state.subject.length === 0) {
+        if (subject.length === 0) {
             subjectError = "Error: The subject cannot be left blank "
 
         }
-        if (this.state.mobile.length === 0) {
+        if (mobile.length === 0) {
             mobileError = "Error: The mobile number cannot be left blank "
 
         }
-        if (this.state.message.length === 0) {
+        if (message.length === 0) {
             messageError = "Error: The message cannot be left blank "
 
         }
 
         if (emailError || subjectError || mobileError || messageError) {
-            this.setState({ emailError, subjectError, mobileError, messageError })
+            setEmailError(emailError)
+            setSubjectError(subjectError)
+            setMobileError(mobileError)
+            setMessageError(messageError)
             return false
         }
 
@@ -61,15 +55,15 @@ export default class Form extends React.Component {
 
     }
 
-    formSubmit(e) {
+    const formSubmit = (e) => {
         e.preventDefault()
         console.log('cliked on send message !')
 
         // validation for form
-        const isValid = this.validate()
+        const isValid = validate()
 
         if (isValid) {
-            const formData = this.state
+            const formData = { email, subject, mobile, message }
             console.log("formDate : ", formData)
 
             axios.post('/contactus', formData, {
@@ -86,32 +80,34 @@ export default class Form extends React.Component {
                         console.log('success', response.data)
                         // this.props.history.push('/')
                         window.alert("Querry submitted successfully!")
+                        // clearing form
+                        setEmail('')
+                        setSubject('')
+                        setMessage('')
+                        setMobile('')
                     }
                 })
         }
-
-
     }
 
-    render() {
-        return (
-            <form id="messageForm" onSubmit={(e) => { this.formSubmit(e) }}>
-                <input className="Qurrie-form" onChange={this.handleChange} name="email" placeholder="Your Email" /><br />
-                {this.state.emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.emailError}</div>) : null}
+    return (
+        <form id="messageForm" onSubmit={(e) => { formSubmit(e) }}>
+            <input className="Qurrie-form" value={email} onChange={(e) => { setEmail(e.target.value) }} name="email" placeholder="Your Email" /><br />
+            {emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{emailError}</div>) : null}
 
-                <input className="Qurrie-form" onChange={this.handleChange} name="subject" placeholder="Subject" /><br />
-                {this.state.subjectError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.subjectError}</div>) : null}
+            <input className="Qurrie-form" value={subject} onChange={(e) => { setSubject(e.target.value) }} name="subject" placeholder="Subject" /><br />
+            {subjectError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{subjectError}</div>) : null}
 
-                <input className="Qurrie-form" onChange={this.handleChange} name="mobile" placeholder="Phone number" /><br />
-                {this.state.mobileError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.mobileError}</div>) : null}
+            <input className="Qurrie-form" value={mobile} onChange={(e) => { setMobile(e.target.value) }} name="mobile" placeholder="Phone number" /><br />
+            {mobileError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{mobileError}</div>) : null}
 
-                <textarea className="Qurrie-form" style={{ "height": "150px", "border": "2px solid #767676" }}
-                    onChange={this.handleChange} name="message" placeholder="Message" /><br />
-                {this.state.messageError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{this.state.messageError}</div>) : null}
+            <textarea className="Qurrie-form" value={message} style={{ "height": "150px", "border": "2px solid #767676" }}
+                onChange={(e) => { setMessage(e.target.value) }} name="message" placeholder="Message" /><br />
+            {messageError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{messageError}</div>) : null}
 
-                <input id="sendMessage" type="submit" value="Send Message" />
-            </form>
+            <input id="sendMessage" type="submit" value="Send Message" />
+        </form>
 
-        )
-    }
+    )
 }
+export default Form

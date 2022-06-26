@@ -116,6 +116,7 @@ function App() {
                       <h1>Add User :</h1>
                     </Route>
 
+                    {/* Route for all types of users */}
                     <Route
                       exact
                       path="/users/add"
@@ -162,6 +163,7 @@ function App() {
                       <ItemShow />
                     </Route>
 
+                    {/* Route not in use */}
                     <Route path="/items/add/adddetails">
                       <Header />
                       <h1>Listing Details :</h1>
@@ -191,7 +193,6 @@ function App() {
                     <Route exact path="/orders/:id">
                       <Header />
                       <OrderShow />
-                      {/* here refactoring */}
                     </Route>
 
                     <Route exact path="/orders/:id/print">
