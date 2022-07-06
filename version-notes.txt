@@ -294,9 +294,14 @@ when internet is lost , keeping data and updating when internet is back up
 
 ==========================
 Currently Working :
-converting all class components to function components
-Form.js
 Multiple order taking at once for many days
+steps:
+1.Create button for cart menu and grab current cart items
+2.check if getusermenu function is required
+3.
+
+
+
 rendering multi date items component completion
 Calculating final amount of order query 
 

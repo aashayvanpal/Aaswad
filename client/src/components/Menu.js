@@ -34,7 +34,7 @@ const Menu = () => {
     const [showAlert, setShowAlert] = useState(false)
     // const [cartItems, setCartItems] = useState([])
     // const [showItemQtyBar, setShowItemQtyBar] = useState(false)
-    
+
     useEffect(() => {
         // Do a get request to /account to get user name , add x-auth as header to it
         // just set the token in localStorage and get it in x-auth , the code is working fine,,,
@@ -53,8 +53,6 @@ const Menu = () => {
                 window.location.href = '/signin'
             })
     }, [])
-
-
 
     const favouriteHandle = () => {
         setIsFavourite(true)
@@ -256,7 +254,6 @@ const Menu = () => {
 
     return (
         <div>
-            <Header />
             {userType === "Admin" ? (
                 <>
                     <h2 style={{ "textAlign": "center" }}>Welcome - {username} you are - {userType}</h2>

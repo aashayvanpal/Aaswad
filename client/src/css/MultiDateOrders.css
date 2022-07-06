@@ -1,0 +1,26 @@
+#accordion-list {
+    display: flex;
+    justify-content: space-evenly;
+    /* background-color: #DBC268; */
+}
+
+.accordion-section {
+    background-color: aquamarine;
+}
+
+.accordion-section h1 {
+    text-align: center;
+}
+
+.accordion-li {
+    list-style-type: none;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    transition: 0.7s;
+}
+
+.accordion-li:hover {
+    background-color: aquamarine;
+}

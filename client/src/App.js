@@ -101,7 +101,7 @@ function App() {
                       <span id="Link"><Link to="/Menu">Menu</Link></span>
                       <span id="Link"><Link to="/Cart">Cart</Link></span>
                     </h1> */}
-                      {/* <Header /> */}
+                      <Header />
                       <Menu />
                       {/* <ItemCard /> */}
                     </Route>

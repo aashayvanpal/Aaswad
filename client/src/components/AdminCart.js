@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Table, Button } from 'reactstrap';
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import { Stepper } from 'react-form-stepper'
 import clearCartImg from '../images/clear-cart-icon.png'
+import VisibilityContext from './Context.js'
 import '../css/AdminCart.css'
 
 const AdminCart = (props) => {
 
     const [cartItems, setCartItems] = useState([])
     const [defaultItems, setDefaultItems] = useState([])
+    const [bulkMealType, setBulkMealType] = useState('')
+    const [bulkDate, setBulkDate] = useState('')
+    const [bulkIndex, setBulkIndex] = useState('')
     let [total, setTotal] = useState(0)
+    const { actions } = useContext(VisibilityContext);
+    // const context = useContext(context);
+
     useEffect(() => {
         // get all orders from /menu find and display all items from that _id
         console.log('inside componentdidmount Cart')
@@ -26,10 +33,14 @@ const AdminCart = (props) => {
             setCartItems(trueValues)
             setDefaultItems(JSON.parse(localStorage.getItem("cartItems")))
         }
-        // else
-        //     setCartItems([])
-    }, [])
 
+        if (localStorage.getItem('bulkOrderSetting')) {
+            const bulkOrderSetting = JSON.parse(localStorage.getItem('bulkOrderSetting'))
+            setBulkMealType(bulkOrderSetting[1])
+            setBulkDate(bulkOrderSetting[0])
+            setBulkIndex(bulkOrderSetting[2])
+        }
+    }, [])
 
 
     const handleRemove = (id) => {
@@ -289,6 +300,23 @@ const AdminCart = (props) => {
     // console.log("check props for cart items to show :", this.props.items.length)
     // console.log("check props for cart items to show :", this.props.items)
     // console.log("check props for cart items to show :", this.props.cartItems)
+
+    const multiOrder = () => {
+        console.log('setchild component', actions)
+        let order = actions.orderDates
+        order[bulkIndex][bulkDate][bulkMealType].items = cartItems
+        // console.log('current state of orderDates1', bulkDate)
+        // console.log('current state of orderDates2', bulkMealType)
+        console.log('cart items', cartItems)
+        console.log('order', order)
+        console.log('current state of orderDates', actions.orderDates)
+        actions.setOrderDates(order)
+        // localStorage.setItem('bulkOrders', JSON.stringify(order))
+        // console.log(order[0]['2022/07/06']['Breakfast'][0].name)
+        // actions.setTextvalue(`the value is changed to ${order[bulkIndex][bulkDate][bulkMealType].items[0].name}`)
+        // actions.setTextvalue(`the value is changed to ${order[0]['2022/07/06']['Breakfast'][0].name}`)
+        actions.setShowMultiDateComponent(true)
+    }
     return (
         <div id="inner-Cart" >
             {/* <h1 id="cart-text-style" > Cart :</h1> */}
@@ -389,6 +417,8 @@ const AdminCart = (props) => {
                                 </Link>
 
                             </div >
+                            {bulkDate} for {bulkMealType}
+                            <button onClick={multiOrder}>Proceed to multiOrder</button>
                         </div >
                     )
             }
