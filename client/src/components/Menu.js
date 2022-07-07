@@ -7,7 +7,6 @@ import LoadingSpinner from './LoadingSpinner.js'
 import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
-import Header from "./Header.js"
 import NavigationBar from './NavigationBar'
 import { Alert, Button } from 'reactstrap';
 import { Link } from 'react-router-dom'
@@ -81,7 +80,6 @@ const Menu = () => {
                         item.isSelected = false
                         item.quantity = 1
                     })
-                    setItems(filteredItems)
 
                     var oldSelectedItems = JSON.parse(localStorage.getItem("cartItems")).filter(item => items.find(i => item._id === i._id))
                     console.log(oldSelectedItems)
@@ -362,7 +360,7 @@ const Menu = () => {
                                                                 <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
                                                             </div>
                                                             <div className="contents">
-                                                                <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{item.name}</h1>
+                                                                <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{i+1}.{item.name}</h1>
                                                                 <input type="checkbox" id="checkBoxStyling" checked={item.isSelected} onChange={() => { }} />
                                                             </div>
                                                         </div>

@@ -7,6 +7,7 @@ import _ from 'lodash'
 import '../css/MultiDateOrders.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VisibilityContext from './Context'
+import axios from "../config/axios.js";
 
 export default function MultiDateOrders() {
     const today = new Date()
@@ -17,42 +18,11 @@ export default function MultiDateOrders() {
     const [values, setValues] = useState([today, tomorrow])
     const [dates, setDates] = useState([])
     const [orderType, setOrderType] = useState('Breakfast')
-    const [orderDates, setOrderDates] = useState([
-        {
-            "2022/07/06": {
-                "Breakfast": {
-                    "items": [
-                        {
-                            "category": [
-                                "all",
-                                "breakfast",
-                                "snacks"
-                            ],
-                            "_id": "5f111c8db49da512d92abee5",
-                            "name": "Dosa",
-                            "price": 70,
-                            "imgUrl": "Dosa.jpg",
-                            "display": true,
-                            "__v": 0,
-                            "measured": "plate",
-                            "isSelected": true,
-                            "quantity": 3
-                        }
-                    ]
-                },
-                "Lunch": {
-                    "items": []
-                },
-                "Dinner": {
-                    "items": []
-                }
-            }
-        }])
+    const [orderDates, setOrderDates] = useState([])
     const [finalOrder, setFinalOrder] = useState({})
-    const [textvalue, setTextvalue] = useState('no text value')
     const [ShowMultiDateComponent, setShowMultiDateComponent] = useState(true)
     const value = {
-        actions: { setShowMultiDateComponent, orderDates, setOrderDates, setTextvalue }
+        actions: { setShowMultiDateComponent, orderDates, setOrderDates }
     };
     useEffect(() => {
 
@@ -109,6 +79,49 @@ export default function MultiDateOrders() {
         setOrderType(mealType)
 
     }
+    const getUserMenu = (selectedItems) => {
+        axios.get('/api/menu', {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const items = response.data
+                let filteredItems = items.filter(item => item.display === true)
+                filteredItems.forEach(item => {
+                    item.isSelected = false
+                    item.quantity = 1
+                })
+
+                // localStorage.setItem('cartItems', JSON.stringify(oldSelectedItems))
+                // loop over each selectedItem , 
+                const combinedSelections = _.unionBy(selectedItems, filteredItems, '_id');
+                console.log('combinedSelection', combinedSelections)
+                localStorage.setItem("cartItems", JSON.stringify(combinedSelections))
+
+
+
+                // const foundItem = items.find(item => item._id === id)
+                // console.log('Found the item:', foundItem)
+
+
+                // var newVal = items.map(item => [foundItem].find(o => {
+                //     if (o._id === item._id) {
+                //         foundItem.isSelected = !foundItem.isSelected
+                //         // foundItem.quantity = 1
+                //         return foundItem
+                //     }
+                // }) || item);
+
+                // console.log('newVal:', newVal)
+                // // setFilteredItems(newVal)
+                // setItems(newVal)
+                // localStorage.setItem("cartItems", JSON.stringify(newVal))
+                // console.log('end of  newToggleIsSelected')
+            })
+            .catch(err => console.log(err))
+    }
+
 
     const confirmDate = (mealType, date, i) => {
         // props.showMenuComponent(false)
@@ -121,6 +134,16 @@ export default function MultiDateOrders() {
         console.log('orderDates state:', orderDates)
         console.log('date present at:', index)
         console.log('date:', Object.keys(orderDates[index])[0])
+
+        // bug fix here
+        if (!orderDates[index][date][mealType].items.length == 0) {
+            // localStorage.setItem('cartItems', JSON.stringify(orderDates[index][date][mealType].items))
+            // get all the items 
+            // set selected values to localstorage 
+            getUserMenu(orderDates[index][date][mealType].items)
+        }
+
+
 
         // after proceed is clicked setItem for selectedItems
         // orderDates[index][date][mealType] = { items: verifyItems } //correct way 
@@ -188,11 +211,10 @@ export default function MultiDateOrders() {
 
                                             </strong >
 
-                                            {orderType} for {date} < br />
-                                            {textvalue} - {}
-                                            {!(orderDates[i][date][orderType].items.length != 0) ? ("no items found") : ("items found")}
+                                            <h1>{orderType} for {date}</h1> < br />
+                                            {!(orderDates[i][date][orderType].items.length != 0) ? (<>no items found<br /></>) : (<>items found<br /></>)}
                                             {/* {orderDates[i][date][orderType].items.map(item => <div key={item}>{item}<br /></div>)} */}
-                                            {orderDates[i][date][orderType].items.map(item => <div key={item.name}>{item.name}<br /></div>)}
+                                            {orderDates[i][date][orderType].items.map(item => <div key={item.name}>{item.name} {item.price} {item.quantity} <br /></div>)}
 
                                             {/* Working here , must change to functional components for easier use */}
                                             <button onClick={() => {
@@ -320,6 +342,9 @@ export default function MultiDateOrders() {
                                 setOrderDates([...defaultOrder])
                                 localStorage.setItem('bulkOrders', JSON.stringify(defaultOrder))
                             }}>set default order</button>
+                            <button onClick={() => {
+                                localStorage.removeItem('bulkOrders')
+                            }}>Reset Multi orders</button>
                         </div >
                     </div >
                 ) : (

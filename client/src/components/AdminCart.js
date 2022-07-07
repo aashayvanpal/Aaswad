@@ -302,16 +302,18 @@ const AdminCart = (props) => {
     // console.log("check props for cart items to show :", this.props.cartItems)
 
     const multiOrder = () => {
-        console.log('setchild component', actions)
-        let order = actions.orderDates
-        order[bulkIndex][bulkDate][bulkMealType].items = cartItems
+        // console.log('current state of orderDates', actions.orderDates)
         // console.log('current state of orderDates1', bulkDate)
         // console.log('current state of orderDates2', bulkMealType)
+        
+        console.log('actions found from context API', actions)
+        let order = actions.orderDates
+        order[bulkIndex][bulkDate][bulkMealType].items = cartItems
         console.log('cart items', cartItems)
         console.log('order', order)
-        console.log('current state of orderDates', actions.orderDates)
         actions.setOrderDates(order)
-        // localStorage.setItem('bulkOrders', JSON.stringify(order))
+        localStorage.setItem('bulkOrders', JSON.stringify(order))
+        localStorage.removeItem('cartItems')
         // console.log(order[0]['2022/07/06']['Breakfast'][0].name)
         // actions.setTextvalue(`the value is changed to ${order[bulkIndex][bulkDate][bulkMealType].items[0].name}`)
         // actions.setTextvalue(`the value is changed to ${order[0]['2022/07/06']['Breakfast'][0].name}`)
