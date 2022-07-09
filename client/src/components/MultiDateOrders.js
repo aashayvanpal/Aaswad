@@ -93,31 +93,10 @@ export default function MultiDateOrders() {
                     item.quantity = 1
                 })
 
-                // localStorage.setItem('cartItems', JSON.stringify(oldSelectedItems))
-                // loop over each selectedItem , 
                 const combinedSelections = _.unionBy(selectedItems, filteredItems, '_id');
                 console.log('combinedSelection', combinedSelections)
                 localStorage.setItem("cartItems", JSON.stringify(combinedSelections))
 
-
-
-                // const foundItem = items.find(item => item._id === id)
-                // console.log('Found the item:', foundItem)
-
-
-                // var newVal = items.map(item => [foundItem].find(o => {
-                //     if (o._id === item._id) {
-                //         foundItem.isSelected = !foundItem.isSelected
-                //         // foundItem.quantity = 1
-                //         return foundItem
-                //     }
-                // }) || item);
-
-                // console.log('newVal:', newVal)
-                // // setFilteredItems(newVal)
-                // setItems(newVal)
-                // localStorage.setItem("cartItems", JSON.stringify(newVal))
-                // console.log('end of  newToggleIsSelected')
             })
             .catch(err => console.log(err))
     }
@@ -126,7 +105,6 @@ export default function MultiDateOrders() {
     const confirmDate = (mealType, date, i) => {
         // props.showMenuComponent(false)
         console.log('confirmDate:', mealType, date, i)
-        // const verifyItems = ['item1', 'item2', 'item3', 'new item4']
 
         // setup localstorage for settings
         const index = dates.indexOf(date)
@@ -137,7 +115,6 @@ export default function MultiDateOrders() {
 
         // bug fix here
         if (!orderDates[index][date][mealType].items.length == 0) {
-            // localStorage.setItem('cartItems', JSON.stringify(orderDates[index][date][mealType].items))
             // get all the items 
             // set selected values to localstorage 
             getUserMenu(orderDates[index][date][mealType].items)
@@ -147,28 +124,8 @@ export default function MultiDateOrders() {
 
         // after proceed is clicked setItem for selectedItems
         // orderDates[index][date][mealType] = { items: verifyItems } //correct way 
-        // orderDates[index][date][mealType] = { items: verifyItems }
-        // const newOrder = [...orderDates]
-        // setOrderDates(newOrder)
-
     }
 
-    const confirmDate2 = (mealType, date, i) => {
-        console.log('confirmDate:', mealType, date, i)
-        // const verifyItems = ['item1', 'item2', 'item3', 'new item4']
-        const verifyItems = JSON.parse(localStorage.getItem('cartItems'))
-
-        const index = dates.indexOf(date)
-        console.log('orderDates state:', orderDates)
-        console.log('date present at:', index)
-        console.log('date:', Object.keys(orderDates[index])[0])
-
-        // orderDates[index][date][mealType] = { items: verifyItems } //correct way 
-        orderDates[index][date][mealType] = { items: verifyItems }
-        const newOrder = [...orderDates]
-        setOrderDates(newOrder)
-
-    }
     return (
         <VisibilityContext.Provider value={value}>
             <div>
@@ -207,22 +164,54 @@ export default function MultiDateOrders() {
                                                     <li className="accordion-li" onClick={() => dayNavigation('Lunch', date, i)}>Lunch</li>
                                                     <li className="accordion-li" onClick={() => dayNavigation('Dinner', date, i)}>Dinner</li>
                                                 </ul>
-                                                {/* {order3.customer.fullName} */}
 
                                             </strong >
 
                                             <h1>{orderType} for {date}</h1> < br />
-                                            {!(orderDates[i][date][orderType].items.length != 0) ? (<>no items found<br /></>) : (<>items found<br /></>)}
-                                            {/* {orderDates[i][date][orderType].items.map(item => <div key={item}>{item}<br /></div>)} */}
-                                            {orderDates[i][date][orderType].items.map(item => <div key={item.name}>{item.name} {item.price} {item.quantity} <br /></div>)}
+                                            {!(orderDates[i][date][orderType].items.length != 0) ? (
+                                                <h2>no items found<br /></h2>
+                                            ) : (
+                                                <h2>items found<br />
+                                                    <table style={{ textAlign: 'center' }}>
+                                                        <thead>
+                                                            <tr>
+                                                                <td>Sl no</td>
+                                                                <td>Name</td>
+                                                                <td>Price</td>
+                                                                <td>Quantity</td>
+                                                                <td>Amount</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 
-                                            {/* Working here , must change to functional components for easier use */}
-                                            <button onClick={() => {
-                                                setShowMultiDateComponent(false)
-                                                confirmDate(orderType, date, i)
-                                            }}>Add items</button>
-                                            <button onClick={() => confirmDate2(orderType, date, i)}>Sample</button>
-                                            <button onClick={() => console.log('confirm clicked')}>Confirm</button>
+                                                            {orderDates[i][date][orderType].items.map((item, i) =>
+                                                                <tr key={item.name}>
+                                                                    <td>{i + 1}</td>
+                                                                    <td>{item.name}</td>
+                                                                    <td>{item.price}</td>
+                                                                    <td>{item.quantity}</td>
+                                                                    <td>{item.price * item.quantity}</td>
+                                                                </tr>)}
+                                                        </tbody>
+                                                    </table>
+                                                    <br />
+
+                                                    <b>Total Amount - {
+                                                        orderDates[i][date][orderType].items.reduce((sum, i) => (
+                                                            sum += i.quantity * i.price
+                                                        ), 0)}
+                                                    </b>
+                                                    <br />
+                                                    <br />
+
+                                                    <button onClick={() => {
+                                                        setShowMultiDateComponent(false)
+                                                        confirmDate(orderType, date, i)
+                                                    }}>Add items</button>
+                                                </h2>
+                                            )}
+
+
                                         </Accordion.Body >
                                     </Accordion.Item >
                                 )}
