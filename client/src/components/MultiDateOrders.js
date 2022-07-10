@@ -8,6 +8,9 @@ import '../css/MultiDateOrders.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VisibilityContext from './Context'
 import axios from "../config/axios.js";
+// adding validation and post request and CSS to make the form look modern
+// clear button removing the element form orderDates array 
+
 
 export default function MultiDateOrders() {
     const today = new Date()
@@ -15,6 +18,10 @@ export default function MultiDateOrders() {
 
     tomorrow.setDate(tomorrow.getDate() + 1)
 
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phonenumber, setPhonenumber] = useState('')
+    const [address, setAddress] = useState('')
     const [values, setValues] = useState([today, tomorrow])
     const [dates, setDates] = useState([])
     const [orderType, setOrderType] = useState('Breakfast')
@@ -126,21 +133,29 @@ export default function MultiDateOrders() {
         // orderDates[index][date][mealType] = { items: verifyItems } //correct way 
     }
 
+    const handleCheckboxChange = (index, date, orderType, type) => {
+        console.log('inside checkboxchage index, orderType:', index, orderType)
+        orderDates[index][date][orderType][type] = !orderDates[index][date][orderType][type]
+        console.log('orderDates[index][orderType]', orderDates[index][date])
+        setOrderDates([...orderDates])
+    }
+
     return (
         <VisibilityContext.Provider value={value}>
             <div>
                 {ShowMultiDateComponent ? (
-                    <div>
+                    <form className="multiorder-form">
+                        Please fill your order details : - <br />
+                        Name <input onChange={(e) => setName(e.target.value)} /> < br />
+                        Email <input onChange={(e) => setEmail(e.target.value)} />< br />
+                        Phone number <input onChange={(e) => setPhonenumber(e.target.value)} />< br />
+                        Address <textarea onChange={(e) => setAddress(e.target.value)} />< br />
                         Select your dates < br />
-
-                        name < br />
-                        email < br />
-                        phone number < br />
-                        address < br />
                         Dates : <DatePicker
                             multiple
                             sort
                             value={values}
+                            format="DD/MM/YYYY"
                             plugins={[
                                 <DatePanel />]}
                             onChange={selectedDates}
@@ -153,7 +168,7 @@ export default function MultiDateOrders() {
                             // toggle={function noRefCheck(target) { console.log('toggled target:', target) }}
                             >
                                 {dates.map((date, i) =>
-                                    <Accordion.Item key={i} eventKey={i} >
+                                    <Accordion.Item key={i} eventKey={i} className="accordion">
                                         <Accordion.Header onClick={() => { console.log('clicked:', date, i) }} targetid={i} style={{ textAlign: 'center' }}>
                                             {date}
                                         </Accordion.Header>
@@ -169,46 +184,58 @@ export default function MultiDateOrders() {
 
                                             <h1>{orderType} for {date}</h1> < br />
                                             {!(orderDates[i][date][orderType].items.length != 0) ? (
-                                                <h2>no items found<br /></h2>
-                                            ) : (
-                                                <h2>items found<br />
-                                                    <table style={{ textAlign: 'center' }}>
-                                                        <thead>
-                                                            <tr>
-                                                                <td>Sl no</td>
-                                                                <td>Name</td>
-                                                                <td>Price</td>
-                                                                <td>Quantity</td>
-                                                                <td>Amount</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                            {orderDates[i][date][orderType].items.map((item, i) =>
-                                                                <tr key={item.name}>
-                                                                    <td>{i + 1}</td>
-                                                                    <td>{item.name}</td>
-                                                                    <td>{item.price}</td>
-                                                                    <td>{item.quantity}</td>
-                                                                    <td>{item.price * item.quantity}</td>
-                                                                </tr>)}
-                                                        </tbody>
-                                                    </table>
-                                                    <br />
-
-                                                    <b>Total Amount - {
-                                                        orderDates[i][date][orderType].items.reduce((sum, i) => (
-                                                            sum += i.quantity * i.price
-                                                        ), 0)}
-                                                    </b>
-                                                    <br />
-                                                    <br />
-
+                                                <h2>no items found<br />
                                                     <button onClick={() => {
                                                         setShowMultiDateComponent(false)
                                                         confirmDate(orderType, date, i)
-                                                    }}>Add items</button>
-                                                </h2>
+                                                    }}>Add items</button></h2>
+                                            ) : (
+                                                <div>
+                                                    <h2>items found<br />
+                                                        <table style={{ textAlign: 'center' }}>
+                                                            <thead>
+                                                                <tr>
+                                                                    <td>Sl no</td>
+                                                                    <td>Name</td>
+                                                                    <td>Price</td>
+                                                                    <td>Quantity</td>
+                                                                    <td>Amount</td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                {orderDates[i][date][orderType].items.map((item, i) =>
+                                                                    <tr key={item.name}>
+                                                                        <td>{i + 1}</td>
+                                                                        <td>{item.name}</td>
+                                                                        <td>{item.price}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>{item.price * item.quantity}</td>
+                                                                    </tr>)}
+                                                            </tbody>
+                                                        </table>
+                                                        <br />
+
+                                                        <b>Total Amount - {
+                                                            orderDates[i][date][orderType].items.reduce((sum, i) => (
+                                                                sum += i.quantity * i.price
+                                                            ), 0)}
+                                                        </b>
+                                                        <br />
+                                                        <br />
+
+                                                        <button onClick={() => {
+                                                            setShowMultiDateComponent(false)
+                                                            confirmDate(orderType, date, i)
+                                                        }}>Add/Edit items</button>
+
+
+                                                        <input type="checkbox" id="homedelivery" name="homedelivery" value="homedelivery" checked={orderDates[i][date][orderType]['homedelivery']} onChange={() => handleCheckboxChange(i, date, orderType, "homedelivery")} />
+                                                        <label for="homedelivery">Home delivery</label><br />
+                                                        <input type="checkbox" id="service" name="service" value="service" checked={orderDates[i][date][orderType]['service']} onChange={() => handleCheckboxChange(i, date, orderType, "service")} />
+                                                        <label for="service">Service</label><br /><br />
+                                                    </h2>
+                                                </div>
                                             )}
 
 
@@ -216,7 +243,12 @@ export default function MultiDateOrders() {
                                     </Accordion.Item >
                                 )}
                             </Accordion >
-                            <button onClick={() => {
+                            <button onClick={(e) => {
+                                e.preventDefault()
+                                console.log('name:', name)
+                                console.log('email:', email)
+                                console.log('phonenumber:', phonenumber)
+                                console.log('address:', address)
                                 console.log('final order:', orderDates)
                                 // if the orders have empty array , remove the property
 
@@ -335,7 +367,7 @@ export default function MultiDateOrders() {
                                 localStorage.removeItem('bulkOrders')
                             }}>Reset Multi orders</button>
                         </div >
-                    </div >
+                    </form >
                 ) : (
                     <Menu />
                 )}

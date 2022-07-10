@@ -1,3 +1,7 @@
+.accordion {
+    margin: 10px;
+}
+
 #accordion-list {
     display: flex;
     justify-content: space-evenly;
@@ -23,4 +27,19 @@
 
 .accordion-li:hover {
     background-color: aquamarine;
+}
+
+/* making the multiorder form look attractive and responsive */
+
+.multiorder-form {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px;
+    /* background-image: url('../images/food-form.jpg'); */
+    /* background-size: 100%; */
+    /* background-repeat: no-repeat; */
+    /* background-blend-mode: overlay; */
+    /* background-color: rgba(249, 249, 223, 0.486); */
 }
