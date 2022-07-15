@@ -298,7 +298,14 @@ Multiple order taking at once for many days
 steps:
 1.Create button for cart menu and grab current cart items
 2.check if getusermenu function is required
-3.
+3.open modal -> grab user information and display 
+4.Create post request to create multiOrder
+working here
+5.Read multiOrder
+6.Apply edit feature
+7.Apply delete feature
+8.Apply validations
+
 
 
 

@@ -3,6 +3,7 @@ const router = express.Router()
 
 const itemController = require('../controllers/itemController.js')
 const approveController = require('../controllers/approveController.js')
+const multiOrderController = require('../controllers/multiOrderController.js')
 const { usersRouter } = require('../controllers/UsersController.js')
 // const { default: ContactUs } = require('../../../../components/contact/Contact.js')
 const ContactUsController = require('../controllers/contactUsController.js')
@@ -43,6 +44,9 @@ router.delete('/orders/:id', approveController.destroy)
 router.get('/api/orders/:id', approveController.show)
 router.get('/myOrders/:id', approveController.myOrdersList)
 router.get('/myOrders/show/:id', approveController.show)
+
+// For multiOrders
+router.post('/multiOrders', multiOrderController.createMultiOrder)
 
 
 // Registeration 

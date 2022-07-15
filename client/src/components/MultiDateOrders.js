@@ -8,6 +8,7 @@ import '../css/MultiDateOrders.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import VisibilityContext from './Context'
 import axios from "../config/axios.js";
+import UserDetailsFormModal from "./UserDetailsFormModal.js";
 // adding validation and post request and CSS to make the form look modern
 // clear button removing the element form orderDates array 
 
@@ -18,10 +19,7 @@ export default function MultiDateOrders() {
 
     tomorrow.setDate(tomorrow.getDate() + 1)
 
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [phonenumber, setPhonenumber] = useState('')
-    const [address, setAddress] = useState('')
+
     const [values, setValues] = useState([today, tomorrow])
     const [dates, setDates] = useState([])
     const [orderType, setOrderType] = useState('Breakfast')
@@ -144,12 +142,7 @@ export default function MultiDateOrders() {
         <VisibilityContext.Provider value={value}>
             <div>
                 {ShowMultiDateComponent ? (
-                    <form className="multiorder-form">
-                        Please fill your order details : - <br />
-                        Name <input onChange={(e) => setName(e.target.value)} /> < br />
-                        Email <input onChange={(e) => setEmail(e.target.value)} />< br />
-                        Phone number <input onChange={(e) => setPhonenumber(e.target.value)} />< br />
-                        Address <textarea onChange={(e) => setAddress(e.target.value)} />< br />
+                    <div>
                         Select your dates < br />
                         Dates : <DatePicker
                             multiple
@@ -229,7 +222,9 @@ export default function MultiDateOrders() {
                                                             confirmDate(orderType, date, i)
                                                         }}>Add/Edit items</button>
 
-
+                                                        Event Name
+                                                        number of people
+                                                        notes
                                                         <input type="checkbox" id="homedelivery" name="homedelivery" value="homedelivery" checked={orderDates[i][date][orderType]['homedelivery']} onChange={() => handleCheckboxChange(i, date, orderType, "homedelivery")} />
                                                         <label for="homedelivery">Home delivery</label><br />
                                                         <input type="checkbox" id="service" name="service" value="service" checked={orderDates[i][date][orderType]['service']} onChange={() => handleCheckboxChange(i, date, orderType, "service")} />
@@ -243,30 +238,11 @@ export default function MultiDateOrders() {
                                     </Accordion.Item >
                                 )}
                             </Accordion >
-                            <button onClick={(e) => {
-                                e.preventDefault()
-                                console.log('name:', name)
-                                console.log('email:', email)
-                                console.log('phonenumber:', phonenumber)
-                                console.log('address:', address)
-                                console.log('final order:', orderDates)
-                                // if the orders have empty array , remove the property
-
-                                // order.forEach(orderObj => {
-                                //     for (let obj in orderObj) {
-                                //         // console.log(orderObj[obj])
-                                //         for (let mealType in orderObj[obj]) {
-                                //             // console.log(orderObj[obj][mealType].items.length)
-                                //             if (orderObj[obj][mealType].items.length === 0) {
-                                //                 delete orderObj[obj][mealType]
-                                //             }
-                                //         }
-                                //     }
-                                // })
-
-                                // console.log(order)
-                            }}>Get final order</button>
-
+                            
+                            <UserDetailsFormModal
+                                orderDates={orderDates}
+                                buttonLabel={`Proceed with order`}
+                            />
                             <button onClick={() => {
                                 const defaultOrder = [
                                     {
@@ -367,7 +343,7 @@ export default function MultiDateOrders() {
                                 localStorage.removeItem('bulkOrders')
                             }}>Reset Multi orders</button>
                         </div >
-                    </form >
+                    </div>
                 ) : (
                     <Menu />
                 )}
