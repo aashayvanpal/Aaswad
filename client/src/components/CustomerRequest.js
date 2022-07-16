@@ -32,13 +32,6 @@ const CustomerRequest = () => {
         })
             .then(dataRequest => {
                 console.log("user data :", dataRequest)
-                // this.setState({
-                //     username: dataRequest.data.username,
-                //     userType: dataRequest.data.userType,
-                //     phonenumber: dataRequest.data.phonenumber,
-                //     address: dataRequest.data.address,
-                // })
-
                 setUserName(dataRequest.data.username)
                 setUserType(dataRequest.data.userType)
                 setPhoneNumber(dataRequest.data.phonenumber)

@@ -21,15 +21,15 @@ module.exports.createMultiOrder = (req, res) => {
 
 
 // // list
-// module.exports.list = (req, res) => {
-//     Order.find()
-//         .then(order => {
-//             res.json(order)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// }
+module.exports.list = (req, res) => {
+    MultiOrder.find()
+        .then(order => {
+            res.json(order)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
 
 // // list
 // module.exports.myOrdersList = (req, res) => {
@@ -47,22 +47,22 @@ module.exports.createMultiOrder = (req, res) => {
 // }
 
 
-// // destroy
-// module.exports.destroy = (req, res) => {
-//     const id = req.params.id
-//     Order.findByIdAndDelete(id)
-//         .then(order => {
-//             if (order) {
-
-//                 res.json(order)
-//             } else {
-//                 res.json({})
-//             }
-//         })
-//         .catch(err => {
-//             res.json(err)
-//         })
-// }
+// destroy
+module.exports.destroy = (req, res) => {
+    const id = req.params.id
+    console.log('check delete id ', id)
+    MultiOrder.findByIdAndDelete(id)
+        .then(order => {
+            if (order) {
+                res.json(order)
+            } else {
+                res.json({})
+            }
+        })
+        .catch(err => {
+            res.json(err)
+        })
+}
 
 // // show
 // module.exports.show = (req, res) => {

@@ -23,6 +23,7 @@ export default function MultiDateOrders() {
     const [values, setValues] = useState([today, tomorrow])
     const [dates, setDates] = useState([])
     const [orderType, setOrderType] = useState('Breakfast')
+    const [eventName, setEventName] = useState('')
     const [orderDates, setOrderDates] = useState([])
     const [finalOrder, setFinalOrder] = useState({})
     const [ShowMultiDateComponent, setShowMultiDateComponent] = useState(true)
@@ -136,6 +137,15 @@ export default function MultiDateOrders() {
         orderDates[index][date][orderType][type] = !orderDates[index][date][orderType][type]
         console.log('orderDates[index][orderType]', orderDates[index][date])
         setOrderDates([...orderDates])
+
+    }
+
+    const handleInput = (e, index, date, orderType, type) => {
+        console.log('inside handleInput index,date, orderType:', index, date, orderType)
+        orderDates[index][date][orderType][type] = e.target.value
+        console.log(`orderDates[index][orderType][${type}]`, orderDates[index][date][orderType][type])
+        setOrderDates([...orderDates])
+        localStorage.setItem('bulkOrders', JSON.stringify([...orderDates]))
     }
 
     return (
@@ -220,11 +230,12 @@ export default function MultiDateOrders() {
                                                         <button onClick={() => {
                                                             setShowMultiDateComponent(false)
                                                             confirmDate(orderType, date, i)
-                                                        }}>Add/Edit items</button>
+                                                        }}>Add/Edit items</button><br/>
 
-                                                        Event Name
-                                                        number of people
-                                                        notes
+                                                        Event Name <input type="text" onChange={(e) => { handleInput(e, i, date, orderType, "eventName") }} value={orderDates[i][date][orderType]['eventName']} /><br />
+                                                        Number of people <input type="number" onChange={(e) => { handleInput(e, i, date, orderType, "numberOfPeople") }} value={orderDates[i][date][orderType]['numberOfPeople']} /><br />
+                                                        Notes<input type="text" onChange={(e) => { handleInput(e, i, date, orderType, "notes") }} value={orderDates[i][date][orderType]['notes']} /><br />
+                                                        
                                                         <input type="checkbox" id="homedelivery" name="homedelivery" value="homedelivery" checked={orderDates[i][date][orderType]['homedelivery']} onChange={() => handleCheckboxChange(i, date, orderType, "homedelivery")} />
                                                         <label for="homedelivery">Home delivery</label><br />
                                                         <input type="checkbox" id="service" name="service" value="service" checked={orderDates[i][date][orderType]['service']} onChange={() => handleCheckboxChange(i, date, orderType, "service")} />
@@ -238,7 +249,7 @@ export default function MultiDateOrders() {
                                     </Accordion.Item >
                                 )}
                             </Accordion >
-                            
+
                             <UserDetailsFormModal
                                 orderDates={orderDates}
                                 buttonLabel={`Proceed with order`}

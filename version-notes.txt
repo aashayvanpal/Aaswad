@@ -306,8 +306,9 @@ working here
 7.Apply delete feature
 8.Apply validations
 
+calculating and storing amount in DB
 
-
+bug:setting timeout functions for 1.5seconds delay to take input in bulkOrders
 
 rendering multi date items component completion
 Calculating final amount of order query 
