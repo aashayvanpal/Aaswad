@@ -301,6 +301,7 @@ steps:
 3.open modal -> grab user information and display 
 4.Create post request to create multiOrder
 working here
+calculating amount and total amount for order and post request
 5.Read multiOrder
 6.Apply edit feature
 7.Apply delete feature

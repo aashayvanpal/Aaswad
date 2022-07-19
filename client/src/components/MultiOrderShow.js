@@ -6,8 +6,8 @@ const MultiOrderShow = () => {
 
     const [order, setOrder] = useState({})
     const [dates, setDates] = useState([])
-    const [selectedOrder, setSelectedOrder] = useState({ index: 0, date: '19/07/2022', orderType: 'Lunch' })
-    // const [selectedOrder, setSelectedOrder] = useState({})
+    // const [selectedOrder, setSelectedOrder] = useState({ index: 1, date: '20/07/2022', orderType: 'Lunch' })
+    const [selectedOrder, setSelectedOrder] = useState('undefined')
     const [orderId, setOrderId] = useState('')
     const [customerId, setCustomerId] = useState('')
     const [fullName, setFullName] = useState('')
@@ -16,7 +16,7 @@ const MultiOrderShow = () => {
     const [address, setAddress] = useState('')
     const [status, setStatus] = useState('')
     const [orderDates, setOrderDates] = useState([])
-    const [allItems, setAllItems] = useState([])
+    const [showComponent, setShowComponent] = useState(false)
 
 
 
@@ -58,28 +58,14 @@ const MultiOrderShow = () => {
                 setAddress(address)
                 setStatus(status)
                 setOrderDates(orderDates)
-                setSelectedOrder({ index: 0, date: Object.keys(orderDates[0])[0], orderType: 'Lunch' })
+                setSelectedOrder({ index: 0, date: Object.keys(orderDates[0])[0], orderType: 'Breakfast' })
                 console.log('check here order dates', orderDates)
                 console.log(Object.keys(orderDates[0])[0])
 
+
+
                 const dates = orderDates.map(order => Object.keys(order)[0])
                 setDates(dates)
-
-                // let allItems = []
-                // orderDates.map(order => {
-                //     for (let date in order) {
-                //         // console.log(order[date])
-                //         for (let orderType in order[date]) {
-                //             // console.log('debug:', order[date][orderType])
-                //             order[date][orderType].items.map(item => {
-                //                 console.log('debug:', item.name)
-                //                 allItems.push(item.name)
-                //                 // return (<div>{item.name}</div>)
-                //             })
-                //         }
-                //     }
-                // })
-                // setAllItems(allItems)
 
                 const emptyDates = dates.map(date =>
                 ({
@@ -102,7 +88,6 @@ const MultiOrderShow = () => {
 
 
 
-                // let eventName = order.customer.eventName
                 // let numberOfPeople = order.customer.numberOfPeople
                 // console.log('numberOfPeople :', order.customer.numberOfPeople)
 
@@ -218,33 +203,36 @@ const MultiOrderShow = () => {
                 //     localStorage.setItem("order", JSON.stringify(orderPrint))
 
                 // }
-
+                setShowComponent(true)
             })
         //     .catch(err => {
         //         console.log(err)
         //     })
     }, [])
 
-    return (
-        <div>
-            show component
-            <div>
-                Name :{fullName}<br />
-                email :{email}<br />
-                phoneNumber :{phoneNumber}<br />
-                address :{address}<br />
-                status :{status}<br />
-                orderid :{orderId}<br />
+    const itemRender = () => {
+        return <>{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0 ?
+            (<tbody>
+                {
+                    orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.map((item, i) => {
+                        const { name, price, quantity, measured } = item
+                        return (<tr>
+                            <td>{i + 1}</td>
+                            <td>{name}</td>
+                            <td>{price}</td>
+                            <td>{quantity} {measured}</td>
+                        </tr>)
+                    })
+                }
+                {<td colSpan={4}>Order total -{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].amount}</td>}
+            </tbody>) : (null)}</>
 
-                <div>
-                    {dates.map((date, i) =>
-                        <button onClick={() => {
-                            setSelectedOrder({ index: i, date, orderType: selectedOrder['orderType'] })
-                            console.log('selectedIndex', selectedOrder)
-                        }
-                        }>{date}</button>
-                    )}
+    }
 
+    const renderBLD = () => {
+        return <>
+            {(selectedOrder != 'undefined' ? (
+                <>
                     {
                         <ul>
                             <li onClick={() => {
@@ -263,22 +251,67 @@ const MultiOrderShow = () => {
                         </ul>
                     }
                     {selectedOrder.index} - {selectedOrder.date} - {selectedOrder.orderType}
-
-                    {
-                        (orderDates.length != 0) ? (orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.map(item => {
-                            const { name, price, quantity, measured } = item
-                            return (<div>{name} - {price} - {quantity}{measured}</div>)
-                        })) : (null)
-                    }
+                </>
+            ) : (null))}
+        </>
+    }
 
 
-                    {/* {orderDates[0]['Lunch'].items[0].name} */}
+    const renderDetails = () => {
+        return <>
+            {selectedOrder != 'undefined' ? (<>
+                Event Name :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName} <br />
+                Number of People :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}<br />
+                Notes :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}<br />
+                Home Delivery :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].homedelivery) ? ("Yes") : ("No")}<br />
+                Service :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].service) ? ("Yes") : ("No")}<br />
+            </>) : (null)}
+        </>
+    }
+    return (
+        <div>
+            showing multiorder component
+            <div>
+                Name :{fullName}<br />
+                email :{email}<br />
+                phoneNumber :{phoneNumber}<br />
+                address :{address}<br />
+                status :{status}<br />
+                orderid :{orderId}<br />
 
-                    {/* {allItems} */}
+                {showComponent && <div>
+                    {dates.map((date, i) =>
+                        <button onClick={() => {
+                            setSelectedOrder({ index: i, date, orderType: selectedOrder['orderType'] })
+                            console.log('selectedIndex', selectedOrder)
+                        }
+                        }>{date}</button>
+                    )}
 
-                </div>
+                    {renderBLD()}
+
+                    {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0) ? (
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Sl No</td>
+                                        <td>Name</td>
+                                        <td>Price</td>
+                                        <td>Quantity</td>
+                                    </tr>
+                                </thead>
+                                {itemRender()}
+
+                            </table>
+                            <br />
+                            {renderDetails()}
+                        </div>
+                    ) : (null)}
+                </div>}
+
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -78,8 +78,28 @@ const UserDetailsFormModal = (props) => {
             }
         })
 
+        // calculating amount and total amount 
+        console.log('calculating amount and total amount ')
+        // console.log('orderDates', orderDates)
+        orderDates.forEach(index => {
+            for (let date in orderDates[index]) {
+                for (let orderType in orderDates[index][date]) {
+                    let sum = 0
+                    orderDates[index][date][orderType].items.reduce((sum, i) => {
+                        sum += i.quantity * i.price
+                        console.log('sum', sum)
+                        orderDates[index][date][orderType]['amount'] = sum
+                    }, 0)
+                }
+            }
+        })
 
+        // orderDates[i][date][orderType].items.reduce((sum, i) => (
+        //     sum += i.quantity * i.price
+        // ), 0)
 
+        console.log('check sum object here: ', orderDates)
+        console.log('calculating amount and total amount end ')
 
         const order = {
             customer: { customer_id: customerId, fullName: name, email, phoneNumber: phonenumber, address, },
@@ -90,36 +110,37 @@ const UserDetailsFormModal = (props) => {
 
         // console.log(order)
 
-        // post request 
-        axios.post('/multiOrders', order, {
-            headers: {
-                "x-auth": localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data.errors) {
-                    console.log('Validation Error : ', response.data.errors)
-                    window.alert(response.data.message)
-                }
-                else {
-                    console.log('success', response.data)
-                    // localStorage.removeItem("cartItems")
-                    // localStorage.removeItem("order")
 
-                    // window.location.href = '/menu'
+        // // post request 
+        // axios.post('/multiOrders', order, {
+        //     headers: {
+        //         "x-auth": localStorage.getItem('token')
+        //     }
+        // })
+        //     .then(response => {
+        //         if (response.data.errors) {
+        //             console.log('Validation Error : ', response.data.errors)
+        //             window.alert(response.data.message)
+        //         }
+        //         else {
+        //             console.log('success', response.data)
+        //             // localStorage.removeItem("cartItems")
+        //             // localStorage.removeItem("order")
 
-                    // Email notification
-                    // emailNotify(order)
-                }
-            })
-            .catch(err => console.log(err))
+        //             // window.location.href = '/menu'
+
+        //             // Email notification
+        //             // emailNotify(order)
+        //         }
+        //     })
+        //     .catch(err => console.log(err))
 
 
-        // delete bulkOrders , bulkSettings
-        localStorage.removeItem('bulkOrders')
-        localStorage.removeItem('bulkOrderSetting')
-        // redirect to multiorders view page
-        window.location.href = '/multiorders'
+        // // delete bulkOrders , bulkSettings
+        // localStorage.removeItem('bulkOrders')
+        // localStorage.removeItem('bulkOrderSetting')
+        // // redirect to multiorders view page
+        // window.location.href = '/multiorders'
 
     }
     return (
