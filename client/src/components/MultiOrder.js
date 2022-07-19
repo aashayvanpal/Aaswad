@@ -1,6 +1,7 @@
 import axios from '../config/axios.js'
 import React, { useState, useEffect } from 'react'
 import confirm from 'reactstrap-confirm'
+import { Link } from 'react-router-dom'
 
 const MultiOrder = () => {
 
@@ -117,7 +118,7 @@ const MultiOrder = () => {
                         return (<tr key={order._id}>
                             <td>{i + 1}.</td>
                             <td>
-                                {fullName}<br />
+                                <Link to={`/multiorders/${order._id}`}>{fullName}</Link><br />
                                 <div>
                                     {order.orderDates.map(o => {
                                         return (

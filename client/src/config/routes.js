@@ -49,6 +49,7 @@ router.get('/myOrders/show/:id', approveController.show)
 router.post('/multiOrders', multiOrderController.createMultiOrder)
 router.get('/multiOrders', multiOrderController.list)
 router.delete('/multiOrders/:id', multiOrderController.destroy)
+router.get('/multiOrders/:id', multiOrderController.show)
 
 
 // Registeration 

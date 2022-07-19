@@ -65,23 +65,23 @@ module.exports.destroy = (req, res) => {
 }
 
 // // show
-// module.exports.show = (req, res) => {
-//     id = req.params.id
-//     Order.findById(id)
-//         .then(order => {
-//             if (order) {
-//                 // note will be either object or null value 
-//                 // checks to see if the note is present in the db
-//                 res.json(order) //sends the note 
+module.exports.show = (req, res) => {
+    id = req.params.id
+    MultiOrder.findById(id)
+        .then(order => {
+            if (order) {
+                // note will be either object or null value 
+                // checks to see if the note is present in the db
+                res.json(order) //sends the note 
 
-//             } else { //send an empty object 
-//                 res.json({})
-//             }
-//         })
-//         .catch(err => {
-//             res.json(err)
-//         })
-// }
+            } else { //send an empty object 
+                res.json({})
+            }
+        })
+        .catch(err => {
+            res.json(err)
+        })
+}
 
 
 // // update 

@@ -10,6 +10,7 @@ import MyOrdersList from "./components/MyOrdersList.js";
 import OrderList from "./components/OrderList";
 import OrderShow from "./components/order/Show.js";
 import MultiOrder from "./components/MultiOrder.js";
+import MultiOrderShow from "./components/MultiOrderShow.js";
 import OrderPrint from "./components/order/Print.js";
 import OrderPrintDelivery from "./components/order/PrintDelivery";
 
@@ -288,12 +289,18 @@ function App() {
                       <Queries />
                     </Route>
 
-                    <Route path="/multiorders">
-                      <Header />
-                      this is multi order page
-                      <MultiOrder />
-                    </Route>
+                    <Switch>
+                      <Route exact path="/multiOrders">
+                        <Header />
+                        <MultiOrder />
+                      </Route>
 
+                      <Route exact path="/multiOrders/:id">
+                        <Header />
+                        <MultiOrderShow />
+                      </Route>
+
+                    </Switch>
                     <Route path="*">
                       <Header />
                       <NotFoundPage />
