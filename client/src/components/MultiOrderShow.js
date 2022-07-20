@@ -4,6 +4,8 @@ import _ from 'lodash'
 import { Link } from 'react-router-dom'
 import AdvancePaymentForm from './order/AdvancePaymentForm.js'
 import AdvanceTable from './order/AdvanceTable.js'
+import TransportForm from './order/TransportForm.js'
+import TransportTable from './order/TransportTable.js'
 
 const MultiOrderShow = () => {
 
@@ -21,8 +23,10 @@ const MultiOrderShow = () => {
     const [orderDates, setOrderDates] = useState([])
     const [showComponent, setShowComponent] = useState(false)
     const [showAdvancePaymentForm, setShowAdvancePaymentForm] = useState(false)
+    const [showTransportForm, setShowTransportForm] = useState(false)
     const [advanceAmount, setAdvanceAmount] = useState('')
-
+    const [rate, setRate] = useState(0)
+    const [medium, setMedium] = useState('')
 
 
     useEffect(async () => {
@@ -50,6 +54,14 @@ const MultiOrderShow = () => {
                 let status = order.status
                 let orderDates = order.orderDates
                 let advanceAmount = order.AdvanceAmount
+
+                if (order.transport) {
+                    console.log('inside transport condition')
+                    let medium = order.transport.medium
+                    let rate = order.transport.rate
+                    setMedium(medium)
+                    setRate(rate)
+                }
 
                 // console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status, orderDates })
                 console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status })
@@ -281,6 +293,9 @@ const MultiOrderShow = () => {
     const ShowAdvancePaymentForm = () => {
         setShowAdvancePaymentForm(false)
     }
+    const ShowTransportForm = () => {
+        setShowTransportForm(false)
+    }
 
     const ShowAdvancePaymentTable = (amount) => {
         // change the order model
@@ -310,6 +325,37 @@ const MultiOrderShow = () => {
             })
     }
 
+    const ShowTransportTable = (medium, rate) => {
+        // change the order model
+        // create controller
+        // post request to update transport
+        console.log('id to edit', window.location.href.split('/')[4])
+        const id = window.location.href.split('/')[4]
+
+        axios.put(`/multiOrders/${id}`, { "transport": { "medium": medium, "rate": rate } }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                setMedium(medium)
+                setRate(rate)
+                // const oldmedium = JSON.parse(localStorage.getItem('order'))
+                // oldmedium.medium = medium
+                // oldmedium.rate = rate
+                // localStorage.setItem('order', JSON.stringify(oldmedium))
+                // console.log('orer to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+    }
+
     const deleteAdvancePaymentTable = () => {
         console.log('inside parent to delete the AdvancePayment table')
         // put request to delete the transport table
@@ -332,6 +378,34 @@ const MultiOrderShow = () => {
                 // const newObj = { ...item.customer, items: item.items, status: item.status, ...item.transport, _id: item._id }
                 // console.log("--Debug-- latest check for flat:", newObj)
                 // localStorage.setItem('order', JSON.stringify(newObj))
+                // console.log('order amount to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    const deleteTransportTable = () => {
+        console.log('inside parent to delete the transport table')
+        // put request to delete the transport table
+        console.log('check for state here', order)
+        const { _id } = order
+
+        axios.put(`/multiOrders/${_id}`, { transport: {} }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                setMedium('')
+                setRate('')
+                // const oldTransport = JSON.parse(localStorage.getItem('order'))
+                // delete oldTransport.transport
+                // localStorage.setItem('order', JSON.stringify(oldTransport))
                 // console.log('order amount to check', localStorage.getItem('order'))
 
             })
@@ -387,7 +461,9 @@ const MultiOrderShow = () => {
                             <button onClick={() => {
                                 setShowAdvancePaymentForm(!showAdvancePaymentForm)
                             }}>Enter Advance Amount</button>
-                            <button>Transport</button>
+                            <button onClick={() => {
+                                setShowTransportForm(!showTransportForm)
+                            }}>Transport</button>
                             <button>Generate Bill</button>
 
                             {showAdvancePaymentForm && <AdvancePaymentForm
@@ -399,6 +475,20 @@ const MultiOrderShow = () => {
                                 deleteTable={deleteAdvancePaymentTable}
                                 advanceAmount={advanceAmount}
                             />}
+
+                            {showTransportForm && <TransportForm
+                                ShowTransportForm={ShowTransportForm}
+                                ShowTransportTable={ShowTransportTable}
+                                price={rate}
+                                medium={medium}
+                            />}
+
+                            {medium ? (
+                                <TransportTable
+                                    deleteTable={deleteTransportTable}
+                                    medium={medium}
+                                    rate={rate} />
+                            ) : null}
                         </div>
                     ) : (null)}
 
