@@ -52,20 +52,6 @@ const UserDetailsFormModal = (props) => {
 
 
         // if the orders have empty array , remove the property
-
-        // order.forEach(orderObj => {
-        //     for (let obj in orderObj) {
-        //         // console.log(orderObj[obj])
-        //         for (let mealType in orderObj[obj]) {
-        //             // console.log(orderObj[obj][mealType].items.length)
-        //             if (orderObj[obj][mealType].items.length === 0) {
-        //                 delete orderObj[obj][mealType]
-        //             }
-        //         }
-        //     }
-        // })
-
-
         orderDates.forEach(orderObj => {
             for (let obj in orderObj) {
                 // console.log(orderObj[obj])
@@ -81,22 +67,42 @@ const UserDetailsFormModal = (props) => {
         // calculating amount and total amount 
         console.log('calculating amount and total amount ')
         // console.log('orderDates', orderDates)
-        orderDates.forEach(index => {
-            for (let date in orderDates[index]) {
-                for (let orderType in orderDates[index][date]) {
-                    let sum = 0
-                    orderDates[index][date][orderType].items.reduce((sum, i) => {
-                        sum += i.quantity * i.price
-                        console.log('sum', sum)
-                        orderDates[index][date][orderType]['amount'] = sum
-                    }, 0)
-                }
-            }
-        })
+        // orderDates.forEach(index => {
+        //     for (let date in orderDates[index]) {
+        //         for (let orderType in orderDates[index][date]) {
+        //             console.log('orderDates[index][date]', orderDates[index][date])
+        //             const value = orderDates[index][date][orderType].items.reduce((sum, i) => {
+        //                 return sum += i.quantity * i.price
+        //             }, 0)
+        //             console.log('value debug', value)
+        //             orderDates[index][date][orderType].amount = value
+        //         }
+        //     }
+        // })
 
         // orderDates[i][date][orderType].items.reduce((sum, i) => (
         //     sum += i.quantity * i.price
         // ), 0)
+
+        let amounts = []
+
+        for (let index in orderDates) {
+            for (let date in orderDates[index]) {
+                for (let orderType in orderDates[index][date]) {
+                    const value = orderDates[index][date][orderType].items.reduce((sum, i) => {
+                        return sum += i.quantity * i.price
+                    }, 0)
+                    orderDates[index][date][orderType].amount = value
+                    amounts.push(value)
+                }
+            }
+        }
+
+        console.log('amounts with undefined', amounts)
+
+        amounts = amounts.filter((element) => { return element !== undefined }).reduce((acc, sum) => { return sum += acc })
+
+        console.log('amounts final debug', amounts)
 
         console.log('check sum object here: ', orderDates)
         console.log('calculating amount and total amount end ')
@@ -104,6 +110,7 @@ const UserDetailsFormModal = (props) => {
         const order = {
             customer: { customer_id: customerId, fullName: name, email, phoneNumber: phonenumber, address, },
             orderDates,
+            total: amounts,
             status: 'approve'
         }
         console.log('order to submit', order)
@@ -111,36 +118,36 @@ const UserDetailsFormModal = (props) => {
         // console.log(order)
 
 
-        // // post request 
-        // axios.post('/multiOrders', order, {
-        //     headers: {
-        //         "x-auth": localStorage.getItem('token')
-        //     }
-        // })
-        //     .then(response => {
-        //         if (response.data.errors) {
-        //             console.log('Validation Error : ', response.data.errors)
-        //             window.alert(response.data.message)
-        //         }
-        //         else {
-        //             console.log('success', response.data)
-        //             // localStorage.removeItem("cartItems")
-        //             // localStorage.removeItem("order")
+        // post request 
+        axios.post('/multiOrders', order, {
+            headers: {
+                "x-auth": localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (response.data.errors) {
+                    console.log('Validation Error : ', response.data.errors)
+                    window.alert(response.data.message)
+                }
+                else {
+                    console.log('success', response.data)
+                    // localStorage.removeItem("cartItems")
+                    // localStorage.removeItem("order")
 
-        //             // window.location.href = '/menu'
+                    // window.location.href = '/menu'
 
-        //             // Email notification
-        //             // emailNotify(order)
-        //         }
-        //     })
-        //     .catch(err => console.log(err))
+                    // Email notification
+                    // emailNotify(order)
+                }
+            })
+            .catch(err => console.log(err))
 
 
-        // // delete bulkOrders , bulkSettings
-        // localStorage.removeItem('bulkOrders')
-        // localStorage.removeItem('bulkOrderSetting')
-        // // redirect to multiorders view page
-        // window.location.href = '/multiorders'
+        // delete bulkOrders , bulkSettings
+        localStorage.removeItem('bulkOrders')
+        localStorage.removeItem('bulkOrderSetting')
+        // redirect to multiorders view page
+        window.location.href = '/multiorders'
 
     }
     return (

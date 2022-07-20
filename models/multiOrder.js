@@ -30,6 +30,10 @@ const orderSchema = new Schema({
         type: Array,
         required: true
     },
+    total: {
+        type: Number,
+        required: true
+    },
     customer: {
         customer_id: {
             type: String,

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../config/axios.js'
 import _ from 'lodash'
+import { Link } from 'react-router-dom'
+import AdvancePaymentForm from './order/AdvancePaymentForm.js'
+import AdvanceTable from './order/AdvanceTable.js'
 
 const MultiOrderShow = () => {
 
@@ -17,6 +20,8 @@ const MultiOrderShow = () => {
     const [status, setStatus] = useState('')
     const [orderDates, setOrderDates] = useState([])
     const [showComponent, setShowComponent] = useState(false)
+    const [showAdvancePaymentForm, setShowAdvancePaymentForm] = useState(false)
+    const [advanceAmount, setAdvanceAmount] = useState('')
 
 
 
@@ -44,6 +49,7 @@ const MultiOrderShow = () => {
                 let address = order.customer.address
                 let status = order.status
                 let orderDates = order.orderDates
+                let advanceAmount = order.AdvanceAmount
 
                 // console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status, orderDates })
                 console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status })
@@ -57,6 +63,7 @@ const MultiOrderShow = () => {
                 setPhoneNumber(phoneNumber)
                 setAddress(address)
                 setStatus(status)
+                setAdvanceAmount(advanceAmount)
                 setOrderDates(orderDates)
                 setSelectedOrder({ index: 0, date: Object.keys(orderDates[0])[0], orderType: 'Breakfast' })
                 console.log('check here order dates', orderDates)
@@ -260,17 +267,84 @@ const MultiOrderShow = () => {
     const renderDetails = () => {
         return <>
             {selectedOrder != 'undefined' ? (<>
+                Grand Total : {order.total}<br />
                 Event Name :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName} <br />
                 Number of People :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}<br />
                 Notes :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}<br />
                 Home Delivery :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].homedelivery) ? ("Yes") : ("No")}<br />
                 Service :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].service) ? ("Yes") : ("No")}<br />
+
             </>) : (null)}
         </>
+    }
+
+    const ShowAdvancePaymentForm = () => {
+        setShowAdvancePaymentForm(false)
+    }
+
+    const ShowAdvancePaymentTable = (amount) => {
+        // change the order model
+        // create controller
+        // post request to update transport
+        console.log('id to edit', window.location.href.split('/')[4])
+        const id = window.location.href.split('/')[4]
+
+        axios.put(`/multiOrders/${id}`, { "AdvanceAmount": amount }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                setAdvanceAmount(amount)
+                // const oldAmount = JSON.parse(localStorage.getItem('order'))
+                // oldAmount.advanceAmount = advanceAmount
+                // localStorage.setItem('order', JSON.stringify(oldAmount))
+                // console.log('order amount to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
+    const deleteAdvancePaymentTable = () => {
+        console.log('inside parent to delete the AdvancePayment table')
+        // put request to delete the transport table
+        console.log('check for state here', order)
+        const { _id } = order
+
+        axios.put(`/multiOrders/${_id}`, { AdvanceAmount: '' }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                const item = response.data
+
+                console.log('Edited order :', item)
+                setAdvanceAmount(null)
+
+                delete item.AdvanceAmount
+                // console.log("--Debug-- latest:", { ...item.customer })
+                // const newObj = { ...item.customer, items: item.items, status: item.status, ...item.transport, _id: item._id }
+                // console.log("--Debug-- latest check for flat:", newObj)
+                // localStorage.setItem('order', JSON.stringify(newObj))
+                // console.log('order amount to check', localStorage.getItem('order'))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
     return (
         <div>
             showing multiorder component
+            <Link to="/multiorders"><button>Back</button></Link>
+            <button>Edit</button>
+
             <div>
                 Name :{fullName}<br />
                 email :{email}<br />
@@ -278,6 +352,9 @@ const MultiOrderShow = () => {
                 address :{address}<br />
                 status :{status}<br />
                 orderid :{orderId}<br />
+
+                {renderDetails()}
+
 
                 {showComponent && <div>
                     {dates.map((date, i) =>
@@ -305,9 +382,26 @@ const MultiOrderShow = () => {
 
                             </table>
                             <br />
-                            {renderDetails()}
+                            {/* {renderDetails()} */}
+
+                            <button onClick={() => {
+                                setShowAdvancePaymentForm(!showAdvancePaymentForm)
+                            }}>Enter Advance Amount</button>
+                            <button>Transport</button>
+                            <button>Generate Bill</button>
+
+                            {showAdvancePaymentForm && <AdvancePaymentForm
+                                ShowAdvancePaymentTable={ShowAdvancePaymentTable}
+                                ShowAdvancePaymentForm={ShowAdvancePaymentForm}
+                                advanceAmount={advanceAmount}
+                            />}
+                            {advanceAmount && <AdvanceTable
+                                deleteTable={deleteAdvancePaymentTable}
+                                advanceAmount={advanceAmount}
+                            />}
                         </div>
                     ) : (null)}
+
                 </div>}
 
             </div>
