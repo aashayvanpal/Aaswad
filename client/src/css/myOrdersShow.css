@@ -1,8 +1,8 @@
-#OrderShowContainer{
+#OrderShowContainer {
     display: flex;
 }
 
-#ShowContainer1{
+#ShowContainer1 {
     border: 2px solid black;
     background-color: #ffe175;
     margin: 10px;
@@ -12,7 +12,7 @@
     width: 60%;
 }
 
-#ShowContainer2{
+#ShowContainer2 {
     border: 2px solid black;
     padding: 10px;
     background-color: #ffe175;
@@ -24,39 +24,64 @@
     text-align: center;
 }
 
-#OrderDetails{
+#OrderDetails {
     text-align: center;
     font-weight: bold;
 }
 
 
 @media screen and (max-width:900px) {
-    #OrderShowContainer{
-        display:flex;
+    #OrderShowContainer {
+        display: flex;
         flex-direction: column-reverse;
 
     }
 
-    #ShowContainer1{
+    #ShowContainer1 {
         padding: 10px;
         margin: 10px 0px;
         width: 100%;
         text-align: center;
     }
-    
-    #ShowContainer1 h2{
-        font-size:22px
+
+    #ShowContainer1 h2 {
+        font-size: 22px
     }
 
-    #ShowContainer2{
+    #ShowContainer2 {
         padding: 10px;
         margin: 0px;
         width: 100%;
     }
 
-    #OrderDetails{
+    #OrderDetails {
         font-weight: bold;
         font-size: 30px;
     }
 
+}
+
+.BLD-li {
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.BLD-li:hover {
+    background-color: #ff881a;
+}
+
+.render-table {
+    border-collapse: collapse;
+    border: 2px solid black;
+    width: 100%;
+}
+
+.styled-btn {
+    background-color: rgb(255, 136, 26);
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
 }

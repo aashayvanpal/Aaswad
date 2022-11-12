@@ -105,6 +105,9 @@ Add the loading animation everywhere:
 /items
 /orders
 
+-------------------------------------------------------------------------------
+Versioning Doc :v1.0.5.8 T23
+v1->App stable version /.0->release type /.5->feature addition /.8->bug fix + css changes /T23-> Testing phase version
 
 -------------------------------------------------------------------------------
 Change notes v1.0.3 (only customer view focused): 
@@ -212,7 +215,9 @@ found a small bug in /menu , in the menu component the filteredSearch state is r
 bug fix: if item is edited , the new value of the item.price will not reflect in /menu
 Added icons for home delivery and service gif
 
-Changes for v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix:
+Changes for (exception for these 2 versions):
+v1.0.5.8 T23 clear buttons + myOrdersEdit bug fix + 
+v1.0.6.1 T3 Multi Order functionality feature
 Table sorting
 Added Admin Cart component , Clear form button , transport table in /show/:id
 added button for delivery
@@ -292,6 +297,9 @@ when internet is lost , keeping data and updating when internet is back up
 
 
 
+v1.0.6.2 (feature requirement phase)
+
+
 ==========================
 Currently Working :
 Multiple order taking at once for many days
@@ -341,7 +349,13 @@ Build 3 types of users: Admin , Customer and caterer
 Get current location and integration of google map
 create pdf generator for billing 
 (bug) - when new item is added in card , the previous quantity value is lost 
+bug: Home Delivery and Service checkboxs check , changes for only first order in /bulk-orders
+bug: /multiOrders/:id generating transport table and advance payment rendering errors when generating bills(refreshing page working as of now)
 myOrdersShow component and myOrdersView component division because both components are independent of each other
+correction: /multiorders/:id -> the amount is being rendered(price*qty) , it should be saved and retrieved from DB when creating order
+correction Fix:/multiorders/:id -> renderDetails() function is commented, is incomplete Fix! it should render event details correctly
+bug :/bulk-orders -> Rate,other details are not being rendered correctly when creating multiorder, fix this important!
+
 ===========================
 
 

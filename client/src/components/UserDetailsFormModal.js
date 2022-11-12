@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import axios from '../config/axios.js'
+import { reduceOrders } from './order/orderHelper.js';
 
 const UserDetailsFormModal = (props) => {
     const {
@@ -51,18 +52,7 @@ const UserDetailsFormModal = (props) => {
 
 
 
-        // if the orders have empty array , remove the property
-        orderDates.forEach(orderObj => {
-            for (let obj in orderObj) {
-                // console.log(orderObj[obj])
-                for (let mealType in orderObj[obj]) {
-                    // console.log(orderObj[obj][mealType].items.length)
-                    if (orderObj[obj][mealType].items.length === 0) {
-                        delete orderObj[obj][mealType]
-                    }
-                }
-            }
-        })
+        reduceOrders(orderDates)
 
         // calculating amount and total amount 
         console.log('calculating amount and total amount ')
@@ -89,16 +79,14 @@ const UserDetailsFormModal = (props) => {
         for (let index in orderDates) {
             for (let date in orderDates[index]) {
                 for (let orderType in orderDates[index][date]) {
-                    const value = orderDates[index][date][orderType].items.reduce((sum, i) => {
-                        return sum += i.quantity * i.price
-                    }, 0)
-                    orderDates[index][date][orderType].amount = value
-                    amounts.push(value)
+                    amounts.push(orderDates[index][date][orderType].amount)
                 }
             }
         }
 
         console.log('amounts with undefined', amounts)
+
+        console.log('DEBUG orderDates', orderDates)
 
         amounts = amounts.filter((element) => { return element !== undefined }).reduce((acc, sum) => { return sum += acc })
 

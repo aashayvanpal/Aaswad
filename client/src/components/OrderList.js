@@ -284,6 +284,7 @@ const ItemList = () => {
             <div style={{ 'display': 'flex' }}>
                 <NavigationBar />
                 <div style={{ "margin": "10px", "width": "100%" }}>
+                    <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Single date orders list</h2>
                     <div className='order-container' style={{ "backgroundColor": "#e3c57e" }}>
                         <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Approve orders - {approves.length}</h2>
 

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../config/axios.js'
-import _ from 'lodash'
+import _, { set } from 'lodash'
 import { Link } from 'react-router-dom'
 import AdvancePaymentForm from './order/AdvancePaymentForm.js'
 import AdvanceTable from './order/AdvanceTable.js'
 import TransportForm from './order/TransportForm.js'
 import TransportTable from './order/TransportTable.js'
+import '../css/myOrdersShow.css'
+// renderDetails is incomplete Fix!
 
 const MultiOrderShow = () => {
 
@@ -24,9 +26,11 @@ const MultiOrderShow = () => {
     const [showComponent, setShowComponent] = useState(false)
     const [showAdvancePaymentForm, setShowAdvancePaymentForm] = useState(false)
     const [showTransportForm, setShowTransportForm] = useState(false)
-    const [advanceAmount, setAdvanceAmount] = useState('')
+    const [advanceAmount, setAdvanceAmount] = useState(0)
     const [rate, setRate] = useState(0)
     const [medium, setMedium] = useState('')
+    const [balanceAmount, setBalanceAmount] = useState(0)
+    const [total, setTotal] = useState(0)
 
 
     useEffect(async () => {
@@ -54,19 +58,25 @@ const MultiOrderShow = () => {
                 let status = order.status
                 let orderDates = order.orderDates
                 let advanceAmount = order.AdvanceAmount
+                let total = order.total
+                setTotal(total)
 
                 if (order.transport) {
-                    console.log('inside transport condition')
                     let medium = order.transport.medium
                     let rate = order.transport.rate
                     setMedium(medium)
                     setRate(rate)
+                    if ((advanceAmount != 'undefined')) {
+                        console.log('else undefined part', balanceAmount + order.total - order.AdvanceAmount + order.transport.rate)
+                        setBalanceAmount(balanceAmount + order.total - order.AdvanceAmount + order.transport.rate)
+                    }
+                } else {
+                    console.log('else part final')
+                    setBalanceAmount(total)
+                    // setRate(0)
                 }
 
-                // console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status, orderDates })
                 console.log('fetching', { id, customer_id, fullName, email, phoneNumber, address, status })
-
-
 
                 setOrderId(id)
                 setCustomerId(customer_id)
@@ -97,136 +107,9 @@ const MultiOrderShow = () => {
                 const combinedDates = _.merge(orderDates, emptyDates)
                 console.log('debug===:', combinedDates)
                 setOrderDates(combinedDates)
-                // console.log('debug===:', orderDates[0]['19/07/2022']['Lunch'].items)
-                // console.log('debug===final:', orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items)
-                // console.log('debug===final:', orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items)
 
-
-
-                // console.log('check here', allItems)
-
-
-
-                // let numberOfPeople = order.customer.numberOfPeople
-                // console.log('numberOfPeople :', order.customer.numberOfPeople)
-
-                // let eventTime = order.customer.eventTime
-                // let queries = order.customer.queries
-
-                // let homeDelivery = order.customer.homeDelivery
-                // console.log('homeDelivery', homeDelivery)
-                // let service = order.customer.service
-                // let items = order.items
-                // console.log("====debug items====", items)
-                // let eventDate = order.customer.eventDate.toString()
-                // let advanceAmount = order.AdvanceAmount
-                // // console.log("Event Date check:", eventDate)
-                // // console.log("Event Date check typeof:", typeof (eventDate))
-                // // console.log("Event Date check here:", eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4))
-                // eventDate = eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4)
-                // // console.log("The Date is :",eventDate.subStr(8, 2) + "/" + eventDate.subStr(5, 2) + "/" + eventDate.subStr(0, 4))
-
-                // setSelectedItems([...items])
-
-                // if (order.transport) {
-                //     console.log('inside transport condition')
-                //     let medium = order.transport.medium
-                //     let rate = order.transport.rate
-
-                //     setId(id)
-                //     setCustomerId(customer_id)
-                //     setFullName(fullName)
-                //     setAddress(address)
-                //     setEmail(email)
-                //     setEventDate(eventDate)
-                //     setEventName(eventName)
-                //     setNumberOfPeople(numberOfPeople)
-                //     setEventTime(eventTime)
-                //     setQueries(queries)
-                //     setHomeDelievery(homeDelivery)
-                //     setPhoneNumber(phoneNumber)
-                //     setService(service)
-                //     // setSelectedItems([...items])
-                //     setStatus(status)
-                //     setRate(rate)
-                //     setMedium(medium)
-                //     setAdvanceAmount(advanceAmount)
-
-                //     const orderPrint = {
-                //         fullName: fullName,
-                //         email: email,
-                //         eventDate: eventDate,
-                //         eventTime: eventTime,
-                //         phoneNumber: phoneNumber,
-                //         items: items,
-                //         total: total,
-                //         id: id,
-                //         customer_id: customer_id,
-                //         address: address,
-                //         eventName: eventName,
-                //         numberOfPeople: numberOfPeople,
-                //         medium,
-                //         rate,
-                //         advanceAmount,
-                //         service: service,
-                //         homeDelivery: homeDelivery,
-                //         queries: queries
-                //     }
-
-                //     console.log('orderPrint to check', orderPrint)
-                //     localStorage.setItem("order", JSON.stringify(orderPrint))
-                //     console.log('inside transport condition end')
-
-                // } else {
-                //     console.log('outside transport condition')
-
-                //     setId(id)
-                //     setCustomerId(customer_id)
-                //     setFullName(fullName)
-                //     setAddress(address)
-                //     setEmail(email)
-                //     setEventDate(eventDate)
-                //     setEventName(eventName)
-                //     setNumberOfPeople(numberOfPeople)
-                //     setEventTime(eventTime)
-                //     setQueries(queries)
-                //     setHomeDelievery(homeDelivery)
-                //     setPhoneNumber(phoneNumber)
-                //     setService(service)
-                //     // console.log('need to setSelectedItems here:', items)
-                //     // setSelectedItems([...items])
-
-                //     setStatus(status)
-                //     setAdvanceAmount(advanceAmount)
-                //     const orderPrint = {
-                //         fullName: fullName,
-                //         eventDate: eventDate,
-                //         eventTime: eventTime,
-                //         phoneNumber: phoneNumber,
-                //         email: email,
-                //         items: items,
-                //         total: total,
-                //         address: address,
-                //         eventName: eventName,
-                //         id: id,
-                //         customer_id: customer_id,
-                //         numberOfPeople: numberOfPeople,
-                //         homeDelivery: homeDelivery,
-                //         service: service,
-                //         queries: queries,
-                //         advanceAmount
-                //     }
-
-
-                //     console.log('orderPrint', orderPrint)
-                //     localStorage.setItem("order", JSON.stringify(orderPrint))
-
-                // }
                 setShowComponent(true)
             })
-        //     .catch(err => {
-        //         console.log(err)
-        //     })
     }, [])
 
     const itemRender = () => {
@@ -240,10 +123,11 @@ const MultiOrderShow = () => {
                             <td>{name}</td>
                             <td>{price}</td>
                             <td>{quantity} {measured}</td>
+                            <td>{quantity * price}</td>
                         </tr>)
                     })
                 }
-                {<td colSpan={4}>Order total -{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].amount}</td>}
+                {<td colSpan={4}></td>}
             </tbody>) : (null)}</>
 
     }
@@ -253,20 +137,27 @@ const MultiOrderShow = () => {
             {(selectedOrder != 'undefined' ? (
                 <>
                     {
-                        <ul>
-                            <li onClick={() => {
-                                setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Breakfast' })
-                                console.log('selectedOrder', selectedOrder)
-                            }
-                            } >Breakfast</li>
-                            <li onClick={() => {
-                                setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Lunch' })
-                                console.log('selectedOrder', selectedOrder)
-                            }}>Lunch</li>
-                            <li onClick={() => {
-                                setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Dinner' })
-                                console.log('selectedOrder', selectedOrder)
-                            }}>Dinner</li>
+                        <ul style={{
+                            "display": "flex",
+                            "justifyContent": "space-evenly",
+                            "listStyle": "none"
+                        }}>
+                            <li className='BLD-li'
+                                onClick={() => {
+                                    setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Breakfast' })
+                                    console.log('selectedOrder', selectedOrder)
+                                }
+                                } >Breakfast</li>
+                            <li className='BLD-li'
+                                onClick={() => {
+                                    setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Lunch' })
+                                    console.log('selectedOrder', selectedOrder)
+                                }}>Lunch</li>
+                            <li className='BLD-li'
+                                onClick={() => {
+                                    setSelectedOrder({ index: selectedOrder.index, date: selectedOrder.date, orderType: 'Dinner' })
+                                    console.log('selectedOrder', selectedOrder)
+                                }}>Dinner</li>
                         </ul>
                     }
                     {selectedOrder.index} - {selectedOrder.date} - {selectedOrder.orderType}
@@ -279,13 +170,20 @@ const MultiOrderShow = () => {
     const renderDetails = () => {
         return <>
             {selectedOrder != 'undefined' ? (<>
-                Grand Total : {order.total}<br />
-                Event Name :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName} <br />
-                Number of People :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}<br />
-                Notes :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}<br />
-                Home Delivery :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].homedelivery) ? ("Yes") : ("No")}<br />
-                Service :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].service) ? ("Yes") : ("No")}<br />
+                {/* Event Name :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName} <br /> */}
+                {/* Number of People :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}<br /> */}
+                {/* Notes :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}<br /> */}
+                {/* Home Delivery :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].homedelivery) ? ("Yes") : ("No")}<br /> */}
+                {/* Service :{(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].service) ? ("Yes") : ("No")}<br /> */}
+            </>) : (null)}
+        </>
+    }
 
+    const renderAmounts = () => {
+        return <>
+            {selectedOrder != 'undefined' ? (<>
+                Grand Total : {total}<br />
+                Balance Amount : {balanceAmount}<br />
             </>) : (null)}
         </>
     }
@@ -314,6 +212,8 @@ const MultiOrderShow = () => {
 
                 console.log('Edited order :', item)
                 setAdvanceAmount(amount)
+                setBalanceAmount(balanceAmount - amount)
+                setOrder(item)
                 // const oldAmount = JSON.parse(localStorage.getItem('order'))
                 // oldAmount.advanceAmount = advanceAmount
                 // localStorage.setItem('order', JSON.stringify(oldAmount))
@@ -343,6 +243,7 @@ const MultiOrderShow = () => {
                 console.log('Edited order :', item)
                 setMedium(medium)
                 setRate(rate)
+                setBalanceAmount(Number(balanceAmount) + Number(rate))
                 // const oldmedium = JSON.parse(localStorage.getItem('order'))
                 // oldmedium.medium = medium
                 // oldmedium.rate = rate
@@ -361,6 +262,7 @@ const MultiOrderShow = () => {
         // put request to delete the transport table
         console.log('check for state here', order)
         const { _id } = order
+        setBalanceAmount(Number(balanceAmount) + Number(advanceAmount))
 
         axios.put(`/multiOrders/${_id}`, { AdvanceAmount: '' }, {
             headers: {
@@ -372,7 +274,6 @@ const MultiOrderShow = () => {
 
                 console.log('Edited order :', item)
                 setAdvanceAmount(null)
-
                 delete item.AdvanceAmount
                 // console.log("--Debug-- latest:", { ...item.customer })
                 // const newObj = { ...item.customer, items: item.items, status: item.status, ...item.transport, _id: item._id }
@@ -391,7 +292,7 @@ const MultiOrderShow = () => {
         // put request to delete the transport table
         console.log('check for state here', order)
         const { _id } = order
-
+        setBalanceAmount(Number(balanceAmount) - Number(rate))
         axios.put(`/multiOrders/${_id}`, { transport: {} }, {
             headers: {
                 'x-auth': localStorage.getItem('token')
@@ -413,87 +314,131 @@ const MultiOrderShow = () => {
                 console.log(err)
             })
     }
+    const generateBillDelivery = () => {
+        console.log("Print Delivery button clicked!")
+        console.log("Find order id and assign to orderid")
+        // console.log(id)
+        // const orderid = this.state.id
+
+        console.log('order bill check', { ...order, balanceAmount, transport: { medium, rate } })
+        localStorage.setItem('order', JSON.stringify({
+            ...order, total: (Number(rate) + Number(order.total)),
+            balanceAmount,
+            transport: { medium, rate }
+        }))
+        window.open(window.location.href + `/printDelivery`, '_blank')
+    }
     return (
-        <div>
-            showing multiorder component
-            <Link to="/multiorders"><button>Back</button></Link>
-            <button>Edit</button>
+        <div >
+            <div id='OrderShowContainer'>
+                <div id='ShowContainer1'>
+                    <Link to="/multiorders">
+                        <button className='styled-btn'>
+                            <img src="/static/media/back-icon.5fdd76d3.png" alt="backIcon" height="30px" width="30px" />
+                            Back</button></Link>
+                    <button className='styled-btn'>
+                        <img src="/static/media/update-icon.67816de3.jpg" alt="updateIcon" height="30px" width="30px" />
+                        Edit</button>
+                    <h2>Showing Multi-order Details:-</h2>
+                    <h2>Name :{fullName}</h2>
+                    <h2>Email :{email}</h2>
+                    <h2>PhoneNumber :{phoneNumber}</h2>
+                    <h2>Address :{address}</h2>
+                    <h2>Status :{status}</h2>
+                    <h2>Orderid :{orderId}</h2>
+                    {renderDetails()}
+                </div>
 
-            <div>
-                Name :{fullName}<br />
-                email :{email}<br />
-                phoneNumber :{phoneNumber}<br />
-                address :{address}<br />
-                status :{status}<br />
-                orderid :{orderId}<br />
-
-                {renderDetails()}
-
-
-                {showComponent && <div>
-                    {dates.map((date, i) =>
-                        <button onClick={() => {
-                            setSelectedOrder({ index: i, date, orderType: selectedOrder['orderType'] })
-                            console.log('selectedIndex', selectedOrder)
-                        }
-                        }>{date}</button>
-                    )}
-
-                    {renderBLD()}
-
-                    {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0) ? (
-                        <div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Sl No</td>
-                                        <td>Name</td>
-                                        <td>Price</td>
-                                        <td>Quantity</td>
-                                    </tr>
-                                </thead>
-                                {itemRender()}
-
-                            </table>
-                            <br />
-                            {/* {renderDetails()} */}
-
-                            <button onClick={() => {
-                                setShowAdvancePaymentForm(!showAdvancePaymentForm)
-                            }}>Enter Advance Amount</button>
-                            <button onClick={() => {
-                                setShowTransportForm(!showTransportForm)
-                            }}>Transport</button>
-                            <button>Generate Bill</button>
-
-                            {showAdvancePaymentForm && <AdvancePaymentForm
-                                ShowAdvancePaymentTable={ShowAdvancePaymentTable}
-                                ShowAdvancePaymentForm={ShowAdvancePaymentForm}
-                                advanceAmount={advanceAmount}
-                            />}
-                            {advanceAmount && <AdvanceTable
-                                deleteTable={deleteAdvancePaymentTable}
-                                advanceAmount={advanceAmount}
-                            />}
-
-                            {showTransportForm && <TransportForm
-                                ShowTransportForm={ShowTransportForm}
-                                ShowTransportTable={ShowTransportTable}
-                                price={rate}
-                                medium={medium}
-                            />}
-
-                            {medium ? (
-                                <TransportTable
-                                    deleteTable={deleteTransportTable}
-                                    medium={medium}
-                                    rate={rate} />
-                            ) : null}
+                <div id='ShowContainer2'>
+                    {showComponent && <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                            {dates.map((date, i) =>
+                                <button
+                                    style={{
+                                        backgroundColor: '#ff881a',
+                                        borderRadius: '5px',
+                                        padding: '10px',
+                                        fontWeight: 'bold'
+                                    }}
+                                    onClick={() => {
+                                        setSelectedOrder({ index: i, date, orderType: selectedOrder['orderType'] })
+                                        console.log('selectedIndex', selectedOrder)
+                                    }
+                                    }>{date}</button>
+                            )}
                         </div>
-                    ) : (null)}
 
-                </div>}
+                        {renderBLD()}
 
+                        {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0) ? (
+                            <div>
+                                <table className='render-table'>
+                                    <thead style={{ border: "2px solid black" }}>
+                                        <tr>
+                                            <td>Sl No</td>
+                                            <td>Name</td>
+                                            <td>Price</td>
+                                            <td>Quantity</td>
+                                            <td>Amount</td>
+                                        </tr>
+                                    </thead>
+                                    {itemRender()}
+                                </table>
+                                Order total :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].amount}
+                                <br />
+                                {renderAmounts()}
+
+                                <button
+                                    className='styled-btn'
+                                    onClick={() => {
+                                        setShowTransportForm(!showTransportForm)
+                                    }}>
+                                    <img src="/static/media/transport-icon.58cfff96.png" alt="transportIcon" height="30px" width="30px"></img>
+                                    Enter Transport</button>
+                                <button
+                                    className='styled-btn'
+                                    onClick={() => {
+                                        setShowAdvancePaymentForm(!showAdvancePaymentForm)
+                                    }}>
+                                    <img src="/static/media/payment-icon.2c9687e8.png" alt="advanceIcon" height="30px" width="30px"></img>
+                                    Enter Advance Payment</button>
+
+                                {showAdvancePaymentForm && <AdvancePaymentForm
+                                    ShowAdvancePaymentTable={ShowAdvancePaymentTable}
+                                    ShowAdvancePaymentForm={ShowAdvancePaymentForm}
+                                    advanceAmount={advanceAmount}
+                                />}
+                                {advanceAmount && <AdvanceTable
+                                    deleteTable={deleteAdvancePaymentTable}
+                                    advanceAmount={advanceAmount}
+                                />}
+
+                                {showTransportForm && <TransportForm
+                                    ShowTransportForm={ShowTransportForm}
+                                    ShowTransportTable={ShowTransportTable}
+                                    price={rate}
+                                    medium={medium}
+                                />}
+
+                                {medium ? (
+                                    <TransportTable
+                                        deleteTable={deleteTransportTable}
+                                        medium={medium}
+                                        rate={rate} />
+                                ) : null}
+                                <br />
+                                <button
+                                    className='styled-btn'
+                                    onClick={() => generateBillDelivery()}>
+                                    <img src="/static/media/billing-icon.cfaf1bcb.jpg" alt="billIcon" width="30px" height="30px"></img>
+                                    Generate Bill</button>
+
+                            </div>
+                        ) : (null)}
+
+                    </div>}
+
+                </div>
             </div>
         </div >
     )

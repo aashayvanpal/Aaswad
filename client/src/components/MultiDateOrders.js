@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import VisibilityContext from './Context'
 import axios from "../config/axios.js";
 import UserDetailsFormModal from "./UserDetailsFormModal.js";
+import { Link } from 'react-router-dom'
 // adding validation and post request and CSS to make the form look modern
 // clear button removing the element form orderDates array 
 
@@ -61,9 +62,9 @@ export default function MultiDateOrders() {
         const emptyDates = allDates.map(date =>
         ({
             [date]: {
-                'Breakfast': { items: [] },
-                'Lunch': { items: [] },
-                'Dinner': { items: [] }
+                'Breakfast': { items: [], rate: 0 },
+                'Lunch': { items: [], rate: 0 },
+                'Dinner': { items: [], rate: 0 }
             }
         }))
 
@@ -109,7 +110,6 @@ export default function MultiDateOrders() {
 
 
     const confirmDate = (mealType, date, i) => {
-        // props.showMenuComponent(false)
         console.log('confirmDate:', mealType, date, i)
 
         // setup localstorage for settings
@@ -142,8 +142,11 @@ export default function MultiDateOrders() {
 
     const handleInput = (e, index, date, orderType, type) => {
         console.log('inside handleInput index,date, orderType:', index, date, orderType)
-        orderDates[index][date][orderType][type] = e.target.value
+        orderDates[index][date][orderType][type] = Number(e.target.value)
+        orderDates[index][date][orderType].rate = orderDates[index][date][orderType].amount / orderDates[index][date][orderType][type]
         console.log(`orderDates[index][orderType][${type}]`, orderDates[index][date][orderType][type])
+        console.log(`orderDates[index][orderType][amount]`, orderDates[index][date][orderType].amount)
+        console.log(`orderDates[index][orderType][rate]`, orderDates[index][date][orderType].rate)
         setOrderDates([...orderDates])
         localStorage.setItem('bulkOrders', JSON.stringify([...orderDates]))
     }
@@ -153,6 +156,7 @@ export default function MultiDateOrders() {
             <div>
                 {ShowMultiDateComponent ? (
                     <div>
+                        <Link to='/menu'><button>Back</button></Link>
                         Select your dates < br />
                         Dates : <DatePicker
                             multiple
@@ -218,24 +222,21 @@ export default function MultiDateOrders() {
                                                             </tbody>
                                                         </table>
                                                         <br />
-
-                                                        <b>Total Amount - {
-                                                            orderDates[i][date][orderType].items.reduce((sum, i) => (
-                                                                sum += i.quantity * i.price
-                                                            ), 0)}
-                                                        </b>
+                                                        Rate -{orderDates[i][date][orderType].amount / orderDates[i][date][orderType]['numberOfPeople']}
+                                                        <br />
+                                                        <strong>Total Amount - {orderDates[i][date][orderType].amount}</strong>
                                                         <br />
                                                         <br />
 
                                                         <button onClick={() => {
                                                             setShowMultiDateComponent(false)
                                                             confirmDate(orderType, date, i)
-                                                        }}>Add/Edit items</button><br/>
+                                                        }}>Add/Edit items</button><br />
 
                                                         Event Name <input type="text" onChange={(e) => { handleInput(e, i, date, orderType, "eventName") }} value={orderDates[i][date][orderType]['eventName']} /><br />
                                                         Number of people <input type="number" onChange={(e) => { handleInput(e, i, date, orderType, "numberOfPeople") }} value={orderDates[i][date][orderType]['numberOfPeople']} /><br />
                                                         Notes<input type="text" onChange={(e) => { handleInput(e, i, date, orderType, "notes") }} value={orderDates[i][date][orderType]['notes']} /><br />
-                                                        
+
                                                         <input type="checkbox" id="homedelivery" name="homedelivery" value="homedelivery" checked={orderDates[i][date][orderType]['homedelivery']} onChange={() => handleCheckboxChange(i, date, orderType, "homedelivery")} />
                                                         <label for="homedelivery">Home delivery</label><br />
                                                         <input type="checkbox" id="service" name="service" value="service" checked={orderDates[i][date][orderType]['service']} onChange={() => handleCheckboxChange(i, date, orderType, "service")} />
@@ -243,8 +244,6 @@ export default function MultiDateOrders() {
                                                     </h2>
                                                 </div>
                                             )}
-
-
                                         </Accordion.Body >
                                     </Accordion.Item >
                                 )}

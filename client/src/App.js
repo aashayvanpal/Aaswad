@@ -1,4 +1,4 @@
-// App version v1.0.6.0 T2 Complete Refactored Code
+// App version v1.0.6.1 T3 Multi Order functionality feature
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -12,7 +12,8 @@ import OrderShow from "./components/order/Show.js";
 import MultiOrder from "./components/MultiOrder.js";
 import MultiOrderShow from "./components/MultiOrderShow.js";
 import OrderPrint from "./components/order/Print.js";
-import OrderPrintDelivery from "./components/order/PrintDelivery";
+import OrderPrintDelivery from "./components/order/PrintDelivery.js";
+import MultiOrderPrintDelivery from "./components/order/MultiOrderPrintDelivery.js";
 
 import MyOrdersShow from "./components/myOrdersShow.js";
 
@@ -203,6 +204,10 @@ function App() {
 
                     <Route exact path="/orders/:id/printDelivery">
                       <OrderPrintDelivery />
+                    </Route>
+
+                    <Route exact path="/multiOrders/:id/printDelivery">
+                      <MultiOrderPrintDelivery />
                     </Route>
 
                     <Route path="/myOrders/show/:id">

@@ -305,11 +305,16 @@ const AdminCart = (props) => {
         // console.log('current state of orderDates', actions.orderDates)
         // console.log('current state of orderDates1', bulkDate)
         // console.log('current state of orderDates2', bulkMealType)
-        
+
         console.log('actions found from context API', actions)
         let order = actions.orderDates
         order[bulkIndex][bulkDate][bulkMealType].items = cartItems
+
+        const amount = cartItems.reduce((sum, i) => (
+            sum += i.quantity * i.price
+        ), 0)
         console.log('cart items', cartItems)
+        order[bulkIndex][bulkDate][bulkMealType].amount = amount
         console.log('order', order)
         actions.setOrderDates(order)
         localStorage.setItem('bulkOrders', JSON.stringify(order))
@@ -357,11 +362,7 @@ const AdminCart = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        // this.props.items.filter(item => item.isSelected === true).map((item, i) => {
                                         cartItems.map((item, i) => {
-                                            // total += item.quantity * item.price
-
-                                            // setTotal(total += item.quantity * item.price)
                                             return (
                                                 <tr key={item._id} >
                                                     <td style={{ "textAlign": "center" }}>{i + 1}</td>
@@ -406,11 +407,7 @@ const AdminCart = (props) => {
 
                                 <Link to='/request'
                                     id="proceed-btn"
-                                    onClick={() => {
-                                        // console.log('request button clicked!')
-                                        // window.alert('request button clicked')
-                                        props.requestOrder(cartItems)
-                                    }}>
+                                    onClick={() => { props.requestOrder(cartItems) }}>
                                     <Button
                                         style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }}
                                     >
@@ -427,4 +424,5 @@ const AdminCart = (props) => {
         </div >
     );
 }
+
 export default AdminCart
