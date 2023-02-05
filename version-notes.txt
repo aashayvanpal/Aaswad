@@ -298,7 +298,16 @@ when internet is lost , keeping data and updating when internet is back up
 
 
 v1.0.6.2 (feature requirement phase)
+FrontEnd fixes :
+1. /bulk-orders css is not responsive to mobile display
+2. Admin modal css fixing spacing
+3. /bulk-orders form making NaN values (check all the form submissions)
+4. after /bulk-order submission the page showing backend data ,(important fix)
+5. /bulk-order testing is required (when user is removing a date when entering , deleting from localstorage)
 
+Major feature requirement : 
+1. Creating pdf on click generate bill
+2. Calculating the price of single order -> making a good report for selected orders 
 
 ==========================
 Currently Working :
@@ -355,6 +364,20 @@ myOrdersShow component and myOrdersView component division because both componen
 correction: /multiorders/:id -> the amount is being rendered(price*qty) , it should be saved and retrieved from DB when creating order
 correction Fix:/multiorders/:id -> renderDetails() function is commented, is incomplete Fix! it should render event details correctly
 bug :/bulk-orders -> Rate,other details are not being rendered correctly when creating multiorder, fix this important!
+
+1. Task : Calculating the price of single order -> making a good report for selected orders 
+create a button Reporting -> onClick - show/hide the checkbox for selection
+must calulate all amounts and add to database (compulsary)
+
+add to localStorage.report
+calculate amount 
+make another button for showReport - Large modal opens 
+show: 
+Total selected orders
+username - amount - status [red-approve,blue-confirmed,green- paid/completed]
+
+Order total : 
+Total to be claimed :
 
 ===========================
 

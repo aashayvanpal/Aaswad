@@ -15,6 +15,7 @@ import serviceGif from '../images/service.gif'
 import upArrow from '../images/up-arrow.png'
 import downArrow from '../images/down-arrow.png'
 import DatePicker from "react-datepicker";
+import ReportModal from './ReportModal';
 
 const ItemList = () => {
 
@@ -24,7 +25,13 @@ const ItemList = () => {
     const [confirmed, setConfirmed] = useState([])
     const [startDateFrom, setStartDateFrom] = useState(new Date())
     const [startDateTo, setStartDateTo] = useState(new Date())
-
+    const [orderCheckBox, setOrderCheckBox] = useState(false)
+    const [reportingState, setReportingState] = useState([])
+    const [reportingOrders, setReportingOrders] = useState([
+        { name: 'abc', amount: 10, status: 'approve', isReportSelected: 'true' },
+        { name: 'abc2', amount: 10, status: 'completed', isReportSelected: 'true' },
+        // { name: 'abc3', amount: 10, status: 'approve',isReportSelected:'true' },
+    ])
     useEffect(() => {
         // get request for all items , filter approves,confirmed and completed
         axios.get('/api/orders', {
@@ -39,7 +46,7 @@ const ItemList = () => {
                 setOrders(orders)
 
                 // filter for approve 
-                const approves = orders.filter(order => order.status === 'approve')
+                const approves = orders.filter(order => order.status === 'approve').map(order => ({ ...order, isReportSelected: false }))
                 console.log('approves filtered:', approves)
                 setApproves(approves)
 
@@ -58,7 +65,16 @@ const ItemList = () => {
             .catch(err => {
                 console.log(err)
             })
+
+        reporting()
     }, [])
+
+    const reporting = () => {
+        console.log("now theres only emptyness ,i think im not the only one!")
+        const report = JSON.parse(localStorage.getItem('report'))
+        console.log("The limits ", report)
+        setReportingState(report)
+    }
 
     const handleRemoveOrder = async (id, name) => {
         console.log('remove this id:', id)
@@ -278,6 +294,45 @@ const ItemList = () => {
         setCompleted(filteredDateOrders)
     };
 
+    const selectOrders = () => {
+        console.log('clicked on order selection button before...', orderCheckBox)
+        // create checkbox state handler to show and hide the selection
+        setOrderCheckBox(!orderCheckBox)
+        console.log('after...', orderCheckBox)
+
+    }
+
+    const selectOrder = (order) => {
+        console.log('you have selected this order=>', order)
+
+        const output = {}
+        output.id = order._id
+        output.name = order.customer.fullName
+        output.amount = 10
+        output.status = order.status
+        output.isReportSelected = !order.isReportSelected
+        const isReportingValue = approves.find(order => order._id).isReportSelected
+        approves.find(order => order._id).isReportSelected = !isReportingValue
+        console.log("yey found:", approves)
+        const newApproves = approves
+        setApproves(newApproves)
+        // setApproves()
+        // .isReportSelected = !order.isReportSelected
+        console.log('i want this output for reporting', output)
+        // get this from the localStrorage.report 
+        const testSample = [
+            { name: 'abc', amount: 10, status: 'approve' },
+            { name: 'abc2', amount: 10, status: 'completed' },
+            { name: 'abc3', amount: 10, status: 'approve' },
+        ]
+        const report = JSON.parse(localStorage.getItem('report'))
+        // const outputString = JSON.stringify(output)
+        const addedReport = [...report, output]
+        localStorage.setItem('report', JSON.stringify(addedReport))
+        console.log('report ', report)
+
+    }
+
     return (
         <div>
             <ShowBtn />
@@ -285,6 +340,10 @@ const ItemList = () => {
                 <NavigationBar />
                 <div style={{ "margin": "10px", "width": "100%" }}>
                     <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Single date orders list</h2>
+                    <button onClick={selectOrders}>Select Orders</button>
+                    <ReportModal
+                        report={reportingState}
+                        buttonLabel="Show Selected Report" />
                     <div className='order-container' style={{ "backgroundColor": "#e3c57e" }}>
                         <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Approve orders - {approves.length}</h2>
 
@@ -295,7 +354,14 @@ const ItemList = () => {
                             </caption>
                             <Thead>
                                 <Tr>
-                                    <Th className="listing-table" >Sl no</Th>
+                                    <Th className="listing-table" >Sl no
+                                        {
+                                            orderCheckBox && <input type={"checkbox"}
+                                                style={{ height: '25px', width: '25px' }}
+                                            ></input>
+                                        }
+
+                                    </Th>
                                     <Th className="listing-table" >Date <button onClick={() => sortAscending(setApproves, approves)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
                                         <button onClick={() => sortDescending(setApproves, approves)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
                                     </Th>
@@ -308,7 +374,16 @@ const ItemList = () => {
                                     approves.map((item, i) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" >{i + 1}
+                                                    {
+                                                        orderCheckBox && <input type={"checkbox"}
+                                                            style={{ height: '25px', width: '25px' }}
+                                                            checked={item.isReportSelected}
+                                                            onChange={() => selectOrder(item)}
+                                                        />
+                                                    }
+
+                                                </Td>
 
                                                 <Td className="listing-table" >{
                                                     item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
@@ -388,7 +463,15 @@ const ItemList = () => {
                                     confirmed.map((item, i) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" >{i + 1}
+                                                    {
+                                                        orderCheckBox && <input type={"checkbox"}
+                                                            style={{ height: '25px', width: '25px' }}
+                                                            checked={item.isReportSelected}
+                                                            onChange={() => selectOrder(item)}
+                                                        />
+                                                    }
+                                                </Td>
                                                 <Td className="listing-table" >{
                                                     item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                 }</Td>
@@ -466,7 +549,15 @@ const ItemList = () => {
                                     completed.map((item, i) => {
                                         return (
                                             <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}</Td>
+                                                <Td className="listing-table" >{i + 1}
+                                                    {
+                                                        orderCheckBox && <input type={"checkbox"}
+                                                            style={{ height: '25px', width: '25px' }}
+                                                            checked={true}
+                                                            onChange={() => selectOrder(item)}
+                                                        />
+                                                    }
+                                                </Td>
                                                 <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
                                                     {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
                                                 </h3></Link></Td>
