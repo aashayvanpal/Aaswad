@@ -1,4 +1,4 @@
-// App version v1.0.6.1 T3 Multi Order functionality feature
+// App version v1.0.6.2 T1 Billing features
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";

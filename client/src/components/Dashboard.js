@@ -106,6 +106,22 @@ const Dashboard = () => {
                         <h2>Non-Displaying items : {items.length - itemsDisplay.length}</h2>
                     </div>
                 </div>
+                <h1>Multi Date Orders</h1>
+                <div style={{ display: "inline-flex" }}>
+                    <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <h2>Total orders : {}</h2>
+                    </div>
+                    <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <h2>Approve orders :{}</h2>
+                    </div>
+                    <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <h2>Confirmed orders :{}</h2>
+                    </div>
+                    <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <h2>Completed orders :{}</h2>
+                    </div>
+                </div>
+
             </div>) : (<LoadingSpinner />)}
         </div>
     )

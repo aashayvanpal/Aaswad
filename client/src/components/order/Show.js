@@ -11,6 +11,11 @@ import updateIcon from '../../images/update-icon.jpg'
 import advanceIcon from '../../images/payment-icon.png'
 import transportIcon from '../../images/transport-icon.png'
 import backIcon from '../../images/back-icon.png'
+import downloadBill from '../../assets/generateBill'
+import downloadType1Bill from '../../assets/generateBill/types/common-type1.js'
+import downloadType2Bill from '../../assets/generateBill/types/common-type2.js'
+import downloadType3Bill from '../../assets/generateBill/types/common-type3.js'
+
 
 const ItemShow = () => {
 
@@ -35,7 +40,12 @@ const ItemShow = () => {
     const [advanceAmount, setAdvanceAmount] = useState('')
     const [status, setStatus] = useState('')
     const [rate, setRate] = useState(0)
-    const [medium, setMedium] = useState('')
+    const [medium, setMedium] = useState()
+    const [balance, setBalance] = useState('')
+
+    useEffect(() => {
+        setTotal(calculateTotal)
+    }, [selectedItems])
 
 
     useEffect(() => {
@@ -53,6 +63,7 @@ const ItemShow = () => {
                 console.log('Showing check here :', order)
                 console.log('fullname :', order.customer.fullName)
                 console.log('id :', order._id)
+                console.log('order get the transport :', order)
 
                 let id = order._id
                 let fullName = order.customer.fullName
@@ -83,6 +94,7 @@ const ItemShow = () => {
 
                 setSelectedItems([...items])
 
+
                 if (order.transport) {
                     console.log('inside transport condition')
                     let medium = order.transport.medium
@@ -101,7 +113,6 @@ const ItemShow = () => {
                     setHomeDelievery(homeDelivery)
                     setPhoneNumber(phoneNumber)
                     setService(service)
-                    // setSelectedItems([...items])
                     setStatus(status)
                     setRate(rate)
                     setMedium(medium)
@@ -148,9 +159,6 @@ const ItemShow = () => {
                     setHomeDelievery(homeDelivery)
                     setPhoneNumber(phoneNumber)
                     setService(service)
-                    // console.log('need to setSelectedItems here:', items)
-                    // setSelectedItems([...items])
-
                     setStatus(status)
                     setAdvanceAmount(advanceAmount)
                     const orderPrint = {
@@ -371,6 +379,57 @@ const ItemShow = () => {
             })
     }
 
+    const calculateTotal = () => {
+        return selectedItems.reduce((sum, i) => (
+            sum += i.quantity * i.price
+        ), 0)
+    }
+
+    const calculateBalance = () => {
+
+        if (total && rate && advanceAmount) {
+            const balance = rate - advanceAmount + total
+            return balance
+        }
+
+        if (total && rate && !advanceAmount) {
+            console.log("Transportation medium", medium)
+            console.log("Transportation amount", rate)
+            const balance = rate + total
+            return balance
+        }
+        if (total && !rate && !advanceAmount) {
+            const balance = total
+            return balance
+        }
+        if (advanceAmount) {
+
+            console.log("Advance Payment", advanceAmount)
+        }
+        // console.log("Total", total)
+        console.log("Total", total, rate, advanceAmount)
+        console.log("Balance", balance)
+        // setBalance
+
+        return balance
+    }
+
+    const eventTimeCalculate = (time) => {
+        const convertedTime = Number(time?.split(':')[0])
+        console.log("time :", convertedTime, typeof time);
+
+        if ((convertedTime > 6) && (convertedTime <= 10)) {
+            return 'Breakfast'
+        } else if ((convertedTime >= 10) && (convertedTime < 19)) {
+            return 'Lunch'
+        } else if ((convertedTime > 19) && (convertedTime < 24)) {
+            return 'Dinner'
+        }
+        else {
+            return 'default'
+        }
+    }
+
     return (
         <div id="OrderShowContainer">
             <div id="ShowContainer1">
@@ -402,7 +461,10 @@ const ItemShow = () => {
 
                 <h2>Number of People : {numberOfPeople}</h2>
                 <h2>Event Date : {eventDate}</h2>
-                <h2>Event Time : {eventTime} (24 hours IST)</h2>
+                <h2>Event Time : {eventTime} (24 hours IST)/
+                    {/* Breakfast lunch dinner calculate */}
+                    {eventTimeCalculate(eventTime)}
+                </h2>
                 <h2>Phone Number : {phoneNumber}</h2>
                 <h2>Address : {address}</h2>
                 <h2>Email : {email}</h2>
@@ -450,13 +512,9 @@ const ItemShow = () => {
                     </tbody>
                 </table>
 
-                <h1>Grand Total = {selectedItems.reduce((sum, i) => (
-                    sum += i.quantity * i.price
-                ), 0)}</h1>
+                <h1>Grand Total = {total}</h1>
 
-                <h1>Per plate cost = {selectedItems.reduce((sum, i) => (
-                    sum += i.quantity * i.price
-                ), 0) / numberOfPeople}</h1>
+                <h1>Per plate cost = {total / numberOfPeople}</h1>
 
                 {homeDelivery ? (
                     <button style={{
@@ -516,17 +574,90 @@ const ItemShow = () => {
                     "cursor": "pointer",
                 }} onClick={() => generateBill()}>
                     <img src={billIcon} alt="billIcon" width="30px" height="30px" />
-                    Generate Bill</button>
-                {medium ? (
-                    <button style={{
-                        "backgroundColor": "#ff881a",
-                        "borderRadius": "10px",
-                        "padding": "10px",
-                        "marginRight": "10px",
-                        "cursor": "pointer",
-                    }} onClick={() => generateBillDelivery(id)}>
-                        <img src={billIcon} alt="billIcon" width="30px" height="30px" />
-                        Generate Bill Delivery</button>) : (null)}
+                    Generate Bill
+                </button>
+
+
+                <button onClick={() => downloadBill({
+                    name: fullName,
+                    date: eventDate,
+                    mobile: phoneNumber,
+                    items: selectedItems,
+                    transportation: { rate },
+                    total: total,
+                    advancePayment: advanceAmount,
+                    balanceAmount: calculateBalance()
+                })}>
+                    Download bill with items
+                </button>
+
+                <hr />
+
+                <button onClick={() => downloadType1Bill({
+                    name: fullName,
+                    date: eventDate,
+                    particulars: eventTimeCalculate(eventTime),
+                    numberOfPeople,
+                    mobile: phoneNumber,
+                    items: selectedItems,
+                    transportation: { rate },
+                    total: total,
+                    advancePayment: advanceAmount,
+                    balanceAmount: calculateBalance(),
+                    plateCost: (total / numberOfPeople)
+                })}>
+                    Download Type1 bill
+                </button>
+                <hr />
+                <button onClick={() => downloadType2Bill({
+                    name: fullName,
+                    date: eventDate,
+                    particulars: eventTimeCalculate(eventTime),
+                    numberOfPeople,
+                    mobile: phoneNumber,
+                    items: selectedItems,
+                    transportation: rate,
+                    total: total,
+                    advancePayment: advanceAmount,
+                    balanceAmount: calculateBalance(),
+                    plateCost: (total / numberOfPeople)
+                })}>
+                    Download Type2 bill
+                </button>
+                <hr />
+
+                <button onClick={() => downloadType3Bill({
+                    name: fullName,
+                    date: eventDate,
+                    particulars: eventTimeCalculate(eventTime),
+                    numberOfPeople,
+                    mobile: phoneNumber,
+                    items: selectedItems,
+                    transportation: rate,
+                    total: total,
+                    advancePayment: advanceAmount,
+                    balanceAmount: calculateBalance(),
+                    plateCost: (total / numberOfPeople)
+                })}>
+                    Download Type3 bill
+                </button>
+                <hr />
+
+                {
+                    medium ? (
+                        <button style={{
+                            "backgroundColor": "#ff881a",
+                            "borderRadius": "10px",
+                            "padding": "10px",
+                            "marginRight": "10px",
+                            "cursor": "pointer",
+                        }} onClick={() => generateBillDelivery(id)}>
+                            <img src={billIcon} alt="billIcon" width="30px" height="30px" />
+                            Generate Bill Delivery
+                        </button>)
+                        :
+                        (null)
+                }
             </div>
         </div >
     )

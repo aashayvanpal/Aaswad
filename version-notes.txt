@@ -306,7 +306,70 @@ FrontEnd fixes :
 5. /bulk-order testing is required (when user is removing a date when entering , deleting from localstorage)
 
 Major feature requirement : 
-1. Creating pdf on click generate bill
+1. Creating pdf on click generate bill(done for single orders)
+
+
+Steps to complete:
+1.pdf completion
+
+2.Logo image adding
+	placing image at the top  
+
+3.Transportation
+	Show only if needed or even show different bill when no transportation 
+	 
+4.Advance Payment 
+	Show only if needed or even show different bill when no transportation
+
+5.Balance
+	Calculating balance amount 
+
+6.Page 2 of bill is not showing background and even the borders and the color 
+
+
+
+
+
+
+
+Full Bill (mapping)
+1.Items
+2.Total
+3.Transportation
+4.Advance Payment 
+5.Balence
+6.Breakfast Lunch Dinner
+7.Multiple Breakfast Lunch Dinner
+
+
+
+Types of bills
+Common Bill - Type1
+6,2  (done)
+
+Common Bill with transportation - Type2
+6,2,3(done)
+
+Common Bill with Transportation and Advance Payment - Type3
+6,2,3,4,5(done)
+
+Common Bill with items Transportation and Advance Payment
+1,2,3,4,5(done , not required as of now)
+
+
+
+
+MultiDate Bill 
+7,2
+
+MultiDate Bill with transportation
+7,2,3
+
+MultiDate Bill with Transportation and Advance Payment
+7,2,3,4,5
+
+
+
 2. Calculating the price of single order -> making a good report for selected orders 
 
 ==========================
