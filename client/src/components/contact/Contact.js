@@ -54,8 +54,19 @@ const ContactUs = () => {
 
             <div id="location-container">
                 <h1 style={{ "textAlign": "center" }}>Our Location</h1>
-                <img src={location} alt="" style={{ "display": "block", "width": "100%", "marginLeft": "auto", "marginRight": "auto" }} />
+                {/* <img src={location} alt="" style={{ "display": "block", "width": "100%", "marginLeft": "auto", "marginRight": "auto" }} /> */}
+
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242.9414729208432!2d77.57857370734024!3d13.031624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae17c22c67e5d5%3A0xb78ebc83bd03aa60!2s33%2C%203rd%20Main%20Rd%2C%20Geddalahalli%2C%20KEB%20Layout%2C%20GMR%20Layout%2C%20Bengaluru%2C%20Karnataka%20560094%2C%20India!5e0!3m2!1sen!2sus!4v1679814589260!5m2!1sen!2sus"
+                    width="100%"
+                    height="600"
+                    style={{ border: "3px solid black", borderRadius: "10px" }}
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
+
+
             <Footer />
         </div>
     )
