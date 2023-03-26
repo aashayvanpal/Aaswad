@@ -609,7 +609,9 @@ const ItemShow = () => {
                     Download Type1 bill
                 </button>
                 <hr />
-                <button onClick={() => downloadType2Bill({
+
+                {/* transport and no advance payment */}
+                {medium && !advanceAmount && <button onClick={() => downloadType2Bill({
                     name: fullName,
                     date: eventDate,
                     particulars: eventTimeCalculate(eventTime),
@@ -623,10 +625,13 @@ const ItemShow = () => {
                     plateCost: (total / numberOfPeople)
                 })}>
                     Download Type2 bill
-                </button>
+                </button>}
+
                 <hr />
 
-                <button onClick={() => downloadType3Bill({
+
+                {/* Transport and advance payment required */}
+                {medium && advanceAmount && <button onClick={() => downloadType3Bill({
                     name: fullName,
                     date: eventDate,
                     particulars: eventTimeCalculate(eventTime),
@@ -640,7 +645,8 @@ const ItemShow = () => {
                     plateCost: (total / numberOfPeople)
                 })}>
                     Download Type3 bill
-                </button>
+                </button>}
+
                 <hr />
 
                 {

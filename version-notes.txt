@@ -369,7 +369,7 @@ MultiDate Bill with Transportation and Advance Payment
 7,2,3,4,5
 
 
-
+1. Hide/Show billing types when needed (correct rendering)
 2. Calculating the price of single order -> making a good report for selected orders 
 
 ==========================

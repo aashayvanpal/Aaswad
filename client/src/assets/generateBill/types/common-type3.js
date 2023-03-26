@@ -125,7 +125,7 @@ const pdfGenerate = ({ name = 'default name',
                     fontStyle: 'bold'
                 }
             }, {
-                content: `${total + transportation}/-`,
+                content: `${Number(total) + Number(transportation)}/-`,
                 colSpan: 1,
                 styles: {
                     halign: 'center',
