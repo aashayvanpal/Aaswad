@@ -388,7 +388,7 @@ const Menu = () => {
                 "color": "#dbc268",
                 "backgroundColor": "#353535"
             }}>
-                © Copyrights Reserved 2021
+                © Copyrights Reserved 2023
             </div>
         </div >
     );
