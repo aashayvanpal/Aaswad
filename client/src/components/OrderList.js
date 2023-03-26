@@ -362,7 +362,9 @@ const ItemList = () => {
                                         }
 
                                     </Th>
-                                    <Th className="listing-table" >Date <button onClick={() => sortAscending(setApproves, approves)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
+                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}  >
+                                        Date
+                                        <button onClick={() => sortAscending(setApproves, approves)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
                                         <button onClick={() => sortDescending(setApproves, approves)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
                                     </Th>
                                     <Th className="listing-table" >Name</Th>
@@ -433,22 +435,24 @@ const ItemList = () => {
                     <div className='order-container' style={{ "backgroundColor": "#98c8ab" }}>
                         <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Confirmed orders - {confirmed.length}</h2>
                         <div className='order-functions'>
-                            <input placeholder="Search Order" id="searchConfirmed" onChange={(e) => {
-                                console.log('inside search handleChange')
-                                console.log(e.target.value)
-                                const statusFilter = orders.filter(order => order.status === 'confirmed')
-                                console.log('filtered:', statusFilter)
-                                const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
-                                setConfirmed(nameFilter)
-                            }} className='order-search' />
-                            <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchConfirmed', setConfirmed, 'confirmed')}> Clear</button>
-                            <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
+                            <div>
+                                <input placeholder="Search Order" id="searchConfirmed" onChange={(e) => {
+                                    console.log('inside search handleChange')
+                                    console.log(e.target.value)
+                                    const statusFilter = orders.filter(order => order.status === 'confirmed')
+                                    console.log('filtered:', statusFilter)
+                                    const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
+                                    setConfirmed(nameFilter)
+                                }} className='order-search' />
+                                <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchConfirmed', setConfirmed, 'confirmed')}> Clear</button>
+                                <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
+                            </div>
                         </div>
                         <Table className='table-styling'>
                             <Thead>
                                 <Tr>
                                     <Th className="listing-table" >Sl no</Th>
-                                    <Th className="listing-table" >Date
+                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }} >Date
                                         <button onClick={() => sortAscending(setConfirmed, confirmed)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
                                         <button onClick={() => sortDescending(setConfirmed, confirmed)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
                                     </Th>
@@ -501,42 +505,52 @@ const ItemList = () => {
                     <div className='order-container' style={{ "backgroundColor": "#d7c7aa" }}>
                         <h2 style={{ 'textAlign': 'center', margin: '0px', fontWeight: 'bold' }}>Completed orders -{completed.length}</h2>
                         <div className='order-functions'>
-                            <input placeholder="Search Order" id='searchCompleted' className='order-search' onChange={(e) => {
-                                console.log('inside search handleChange')
-                                console.log(e.target.value)
-                                const statusFilter = orders.filter(order => order.status === 'completed')
-                                console.log('filtered:', statusFilter)
-                                const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
-                                setCompleted(nameFilter)
-                            }} />
-                            <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchCompleted', setCompleted, 'completed')}>Clear</button>
-                            From
-                            <DatePicker className=""
-                                wrapperClassName="datePickerStyle"
-                                selected={startDateFrom}
-                                onChange={(e) => {
-                                    handleDateChange(e, setStartDateFrom)
-                                }}
-                                dateFormat="dd/MM/yyyy"
+                            <div>
+                                <input placeholder="Search Order" id='searchCompleted' className='order-search' onChange={(e) => {
+                                    console.log('inside search handleChange')
+                                    console.log(e.target.value)
+                                    const statusFilter = orders.filter(order => order.status === 'completed')
+                                    console.log('filtered:', statusFilter)
+                                    const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
+                                    setCompleted(nameFilter)
+                                }} />
+                                <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchCompleted', setCompleted, 'completed')}>Clear</button>
+                            </div>
+                            <div style={{ display: 'flex', marginBottom: '20px' }}>
+                                <div>
+                                    From
+                                    <DatePicker className=""
+                                        wrapperClassName="datePickerStyle"
+                                        selected={startDateFrom}
+                                        onChange={(e) => {
+                                            handleDateChange(e, setStartDateFrom)
+                                        }}
+                                        dateFormat="dd/MM/yyyy"
 
-                            />
-                            To
-                            <DatePicker className=""
-                                wrapperClassName="datePickerStyle"
-                                selected={startDateTo}
-                                onChange={(e) => {
-                                    handleDateChange(e, setStartDateTo)
-                                }}
-                                dateFormat="dd/MM/yyyy"
+                                    />
+                                </div>
+                                <div>
 
-                            />
+                                    To
+                                    <DatePicker className=""
+                                        wrapperClassName="datePickerStyle"
+                                        selected={startDateTo}
+                                        onChange={(e) => {
+                                            handleDateChange(e, setStartDateTo)
+                                        }}
+                                        dateFormat="dd/MM/yyyy"
+
+                                    />
+                                </div>
+                            </div>
                         </div>
+
                         <Table className='table-styling'>
                             <Thead>
                                 <Tr>
                                     <Th className="listing-table">Sl no</Th>
                                     <Th className="listing-table">Name</Th>
-                                    <Th className="listing-table">Date
+                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}>Date
                                         <button onClick={() => sortAscending(setCompleted, completed)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
                                         <button onClick={() => sortDescending(setCompleted, completed)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
                                     </Th>

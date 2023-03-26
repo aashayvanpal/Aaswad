@@ -7,9 +7,11 @@
 
 .order-functions{
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
-    padding:20px;
+    gap: 20px;
+    align-items: center;
+    padding:10px;
 }
 
 .order-search{
