@@ -10,13 +10,13 @@ const ContactUsController = require('../controllers/contactUsController.js')
 const emailController = require('../controllers/emailController.js')
 
 
-// const customerController = require('../app/controllers/customerController.js')
+const customerController = require('../controllers/customerController.js')
 // // for customers 
-// router.get('/customers', customerController.list)
-// router.get('/customers/:id', customerController.show)
-// router.post('/customers', customerController.create)
-// router.put('/customers/:id', customerController.update)
-// router.delete('/customers/:id', customerController.destroy)
+router.get('/customers', customerController.list)
+router.get('/customers/:id', customerController.show)
+router.post('/customers', customerController.create)
+router.put('/customers/:id', customerController.update)
+router.delete('/customers/:id', customerController.destroy)
 
 // for Items
 router.post('/items/add', itemController.create)

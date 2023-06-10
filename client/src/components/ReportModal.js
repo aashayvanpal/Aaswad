@@ -8,7 +8,7 @@ const ReportModal = (props) => {
         resetIsSelected,
         requestOrder,
         userType,
-        report,
+        report=[], //default set to array
 
     } = props;
 
@@ -16,7 +16,7 @@ const ReportModal = (props) => {
 
     const toggle = () => setModal(!modal);
 
-    const statusApprove = report.filter(order => order.status === 'approve')
+    const statusApprove = report?.filter(order => order.status === 'approve')
     return (
         <div >
             <Button style={{
@@ -40,7 +40,7 @@ const ReportModal = (props) => {
                             <th>Status </th>
                         </thead>
                         <tbody>
-                            {report.map((order, i) => (<tr>
+                            {report?.map((order, i) => (<tr>
                                 <td>{i + 1}</td>
                                 <td>{order.name}</td>
                                 <td>{order.amount}</td>
@@ -52,12 +52,12 @@ const ReportModal = (props) => {
                 </ModalBody>
                 <ModalFooter> Order Total:
                     {
-                        report.reduce((acc, order) => acc + order.amount, 0)
+                        report?.reduce((acc, order) => acc + order.amount, 0)
                     }
                     <br />Total to be claimed:
                     {/* filter status approve and reduce */}
                     {
-                        statusApprove.reduce((acc, order) => acc + order.amount, 0)
+                        statusApprove?.reduce((acc, order) => acc + order.amount, 0)
                     }
                 </ModalFooter>
 

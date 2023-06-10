@@ -116,8 +116,6 @@ export default class AddUserData extends Component {
                 vendors: prevState.vendors.filter(vendor => vendor !== vendorToDelete)
             })
         )
-        
-        
     }
 
     render() {
@@ -133,16 +131,16 @@ export default class AddUserData extends Component {
                         <h1>Add Customers Component</h1>
                         <form onSubmit={this.addClickCustomer}>
                             <label>Name
-                        <input type="text" name="name" onChange={this.handleChange} />&nbsp;&nbsp;
-                    </label>
+                                <input type="text" name="name" onChange={this.handleChange} />&nbsp;&nbsp;
+                            </label>
 
                             <label>Email
-                        <input type="text" name="email" onChange={this.handleChange} />&nbsp;&nbsp;
-                    </label>
+                                <input type="text" name="email" onChange={this.handleChange} />&nbsp;&nbsp;
+                            </label>
 
                             <label>Phone Number
-                        <input type="text" name="phoneno" onChange={this.handleChange} />&nbsp;&nbsp;
-                    </label>
+                                <input type="text" name="phoneno" onChange={this.handleChange} />&nbsp;&nbsp;
+                            </label>
 
                             <input type="submit" value="Add Customer" />
 
@@ -159,19 +157,19 @@ export default class AddUserData extends Component {
                         <h1>Add Transport Component</h1>
                         <form onSubmit={this.addClickTransport}>
                             <label>Name
-                        <input type="text" name="name" onChange={this.handleChange} />&nbsp;&nbsp;
-                    </label>
+                                <input type="text" name="name" onChange={this.handleChange} />&nbsp;&nbsp;
+                            </label>
 
                             <label>Phone Number
-                        <input type="text" name="phoneno" onChange={this.handleChange} />&nbsp;&nbsp;
-                    </label>
+                                <input type="text" name="phoneno" onChange={this.handleChange} />&nbsp;&nbsp;
+                            </label>
 
                             <input type="submit" value="Add Transport" />
 
                         </form> &nbsp;
                         <h1>Listing Transports - {this.state.transports.length}</h1>
 
-                <DisplayTransport transports={this.state.transports} delete={this.delete} />
+                        <DisplayTransport transports={this.state.transports} delete={this.delete} />
                     </Route>
 
                     <Route path="/users/add/vendors">

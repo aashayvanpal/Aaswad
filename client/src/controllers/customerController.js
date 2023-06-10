@@ -50,7 +50,6 @@ module.exports.destroy = (req, res) => {
     Customer.findByIdAndDelete(id)
         .then(customer => {
             if (customer) {
-
                 res.json(customer)
             } else {
                 res.json({})

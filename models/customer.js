@@ -4,22 +4,38 @@ const Schema = mongoose.Schema
 // Create a categories Schema - with fields like name of type string and required true
 
 const customerSchema = new Schema({
-    name:{
-        type:String,
-        required:true
+    fullName: {
+        type: String,
+        required: true
     },
-    email:{
-        type:String,
-        required:true
+    phoneNumber: {
+        type: Array,
+        required: true
     },
-    mobile:{
-        type:String,
-        required:true
-    }
+    email: { type: String },
+    membership: {
+        status: {
+            type: String
+        },
+        level: {
+            type: String
+        },
+        points: {
+            type: Number
+        },
+    },
+    address: {
+        type: Array
+    },
+    birthday: { type: String },
+    gender: { type: String },
+    language: {
+        type: Array
+    },
+    profilePicture: { type: String },
 })
 
-
 //Create a model called as Category
-const Customer = mongoose.model('Customer',customerSchema) 
+const Customer = mongoose.model('Customer', customerSchema)
 
 module.exports = Customer

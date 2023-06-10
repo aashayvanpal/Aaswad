@@ -37,7 +37,7 @@ const MultiOrderPrintDelivery = () => {
         console.log("state of order :", order)
 
         const { fullName, phoneNumber } = order.customer
-        if (order.transport != undefined) {
+        if (order.transport !== undefined) {
             const { medium, rate } = order.transport
             setMedium(medium)
             setRate(rate)

@@ -1,4 +1,4 @@
-// App version v1.0.6.2 T1 Billing features
+// App version v1.0.6.2 T2 CRUD Customers
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -46,7 +46,9 @@ import NotFoundPage from './components/NotFoundPage.js'
 import ShowBtn from "./assets/ShowBtn.js";
 import { appVersion } from './config/main.js'
 import MultiDateOrders from "./components/MultiDateOrders.js";
-
+import DisplayCustomers from "./components/customer/DisplayCustomers.js";
+import AddCustomerForm from "./components/customer/AddCustomerForm.js";
+import ViewCustomer from './components/customer/ViewCustomer.js'
 function App() {
   return (
     <div className="app">
@@ -115,8 +117,27 @@ function App() {
                       <h1 style={{ backgroundColor: "green" }}>Cart:</h1>
                     </Route>
 
-                    <Route path="/users/add">
-                      <h1>Add User :</h1>
+                    <Route exact path="/customers">
+                      <Header />
+                      <DisplayCustomers />
+
+                      backup option<br />
+                      add footer
+                    </Route>
+                    <Route path="/customers/add">
+                      <Header />
+                      <AddCustomerForm />
+
+                    </Route>
+                    <Route path="/customers/edit/:id">
+                      <Header />
+                      Editing here
+                      <AddCustomerForm />
+
+                    </Route>
+                    <Route path="/customers/:id">
+                      <Header />
+                      <ViewCustomer />
                     </Route>
 
                     {/* Route for all types of users */}

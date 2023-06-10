@@ -49,24 +49,31 @@ const SignInForm = (props) => {
       password: password,
     };
 
-    axios.post("/login", user).then((response) => {
-      if (response.data.errors) {
-        console.log("Validation Error : ", response.data.errors);
-        window.alert(response.data.message);
-      } else {
-        console.log("typeof(response.data)", typeof response.data);
-        if (typeof response.data == "object") {
-          console.log("complete response", response);
-          console.log("token is :", response.data.token);
-          localStorage.setItem("token", response.data.token);
-          // props.history.push("/menu");
-          // createBrowserHistory.push("/menu");
-          window.location.href = '/menu'
-        } else {
-          window.alert(response.data);
-        }
-      }
-    });
+    try {
+      axios.post("/login", user)
+        .then((response) => {
+
+          if (response.data.errors) {
+            console.log("Validation Error : ", response.data.errors);
+            window.alert("Validation Error : ", response.data.message);
+          } else {
+            console.log("typeof(response.data)", typeof response.data);
+            if (typeof response.data == "object") {
+              console.log("complete response", response);
+              console.log("token is :", response.data.token);
+
+              localStorage.setItem("token", response.data.token);
+              // props.history.push("/menu");
+              // createBrowserHistory.push("/menu");
+              window.location.href = '/menu'
+            } else {
+              window.alert(response.data);
+            }
+          }
+        });
+    } catch (e) {
+      alert(" there is error in log in : " + e)
+    }
 
     // alert('account logged in successfully')
   };

@@ -297,7 +297,7 @@ when internet is lost , keeping data and updating when internet is back up
 
 
 
-v1.0.6.2 (feature requirement phase)
+v1.0.6.2 (feature requirement phase) CRUD Customers
 FrontEnd fixes :
 1. /bulk-orders css is not responsive to mobile display
 2. Admin modal css fixing spacing
@@ -306,7 +306,19 @@ FrontEnd fixes :
 5. /bulk-order testing is required (when user is removing a date when entering , deleting from localstorage)
 
 Major feature requirement : 
-1. Creating pdf on click generate bill(done for single orders)
+1. Creating pdf on click generate bill(done for single orders,check for multi orders remaining)
+2. Creating Customers collection 
+  -> store in db 
+  -> find all unique customers 
+  -> Store in DB (done , check for multi orders remaining)
+  -> document , add not to use , as it would rewrite the collection (very important warning!!!!)
+
+
+  working here
+  -> create an api and fill in dropdown for customers in STEP 3 form filling 
+  -> when new order is generated , check if customer is present in the collection 
+      *if customer is present : use the same customer to fill form 
+      *else create a new record in the same format and do an insertion in customers collection 
 
 
 Steps to complete:
@@ -369,8 +381,8 @@ MultiDate Bill with Transportation and Advance Payment
 7,2,3,4,5
 
 
-1. Hide/Show billing types when needed (correct rendering)
-2. Calculating the price of single order -> making a good report for selected orders 
+1. Hide/Show billing types when needed (done)
+2. Calculating the price of single orders -> making a good report for selected orders 
 
 ==========================
 Currently Working :
@@ -380,7 +392,6 @@ steps:
 2.check if getusermenu function is required
 3.open modal -> grab user information and display 
 4.Create post request to create multiOrder
-working here
 calculating amount and total amount for order and post request
 5.Read multiOrder
 6.Apply edit feature

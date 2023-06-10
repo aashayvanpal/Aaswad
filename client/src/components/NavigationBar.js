@@ -128,7 +128,7 @@ export default function NavigationBar() {
                     <li>Labourers</li>
                 </Link>
                 <Link
-                    to="/users/add"
+                    to="/customers"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >

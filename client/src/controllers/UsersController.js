@@ -56,9 +56,11 @@ router.post('/login', function (req, res) {
 
         })
         .catch(function (err) {
-            res.send(err)
+            console.log("caught error in login")
+            res.send("sorry there is error caught:" + err)
         })
-})
+}
+)
 
 
 // localhost:3001/users/account

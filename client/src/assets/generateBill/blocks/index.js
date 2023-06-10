@@ -48,8 +48,8 @@ const fillData = (items) => {
 
 const backgroundGenerate = (doc) => {
     // creates 2 pages fist
-    for (let i = 1; i <= 2; i++) {
-        if (i != 1) {
+    for (let i = 1; i <= 1; i++) {
+        if (i !== 1) {
 
             doc.addPage();
         }

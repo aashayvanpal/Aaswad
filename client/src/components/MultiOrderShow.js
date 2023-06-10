@@ -113,7 +113,7 @@ const MultiOrderShow = () => {
     }, [])
 
     const itemRender = () => {
-        return <>{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0 ?
+        return <>{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length !== 0 ?
             (<tbody>
                 {
                     orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.map((item, i) => {
@@ -134,7 +134,7 @@ const MultiOrderShow = () => {
 
     const renderBLD = () => {
         return <>
-            {(selectedOrder != 'undefined' ? (
+            {(selectedOrder !== 'undefined' ? (
                 <>
                     {
                         <ul style={{
@@ -169,7 +169,7 @@ const MultiOrderShow = () => {
 
     const renderDetails = () => {
         return <>
-            {selectedOrder != 'undefined' ? (<>
+            {selectedOrder !== 'undefined' ? (<>
                 {/* Event Name :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName} <br /> */}
                 {/* Number of People :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}<br /> */}
                 {/* Notes :{orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}<br /> */}
@@ -181,7 +181,7 @@ const MultiOrderShow = () => {
 
     const renderAmounts = () => {
         return <>
-            {selectedOrder != 'undefined' ? (<>
+            {selectedOrder !== 'undefined' ? (<>
                 Grand Total : {total}<br />
                 Balance Amount : {balanceAmount}<br />
             </>) : (null)}
@@ -370,7 +370,7 @@ const MultiOrderShow = () => {
 
                         {renderBLD()}
 
-                        {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length != 0) ? (
+                        {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length !== 0) ? (
                             <div>
                                 <table className='render-table'>
                                     <thead style={{ border: "2px solid black" }}>
