@@ -79,46 +79,46 @@ const Dashboard = () => {
             <div style={{ display: 'flex', gap: '20px' }}>
 
                 <NavigationBar />
-                {loading ? (<div>
+                {loading ? (<div style={{ border: '1px solid black ', borderRadius: '16px', padding: '20px', margin: '20px', width: '100%' }}>
                     <h1>Orders</h1>
                     <div style={{ display: "inline-flex" }}>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Total orders : {orders.length}</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Approve orders :{approves.length}</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Confirmed orders :{confirms.length}</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Completed orders :{completed.length}</h2>
                         </div>
                     </div>
                     <h1>Items</h1>
                     <div style={{ display: "inline-flex" }}>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Total items : {items.length}</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Displaying items : {itemsDisplay.length}</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Non-Displaying items : {items.length - itemsDisplay.length}</h2>
                         </div>
                     </div>
                     <h1>Multi Date Orders</h1>
                     <div style={{ display: "inline-flex" }}>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Total orders : { }</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Approve orders :{ }</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Confirmed orders :{ }</h2>
                         </div>
-                        <div style={{ border: "2px solid black", borderRadius: "5px", margin: "10px", textAlign: "center" }}>
+                        <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
                             <h2>Completed orders :{ }</h2>
                         </div>
                     </div>

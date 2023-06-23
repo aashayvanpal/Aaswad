@@ -27,13 +27,16 @@ const Address = ({ formFields, setAddressFields }) => {
                 setAddressFields([...data])
             }} />
 
-            <textarea id="address" placeholder="Address" onChange={(e) => {
+            <textarea id="address" value={`${form[Object.keys(form)[0]]}`} placeholder="Address" onChange={(e) => {
                 let data = formFields
                 data[index][`${Object.keys(data[index])[0]}`] = e.target.value
                 setAddressFields([...data])
             }} />
 
-            <button onClick={(e) => removeAddress(index)}>Remove Address</button>
+            <button onClick={(e) => {
+                e.preventDefault()
+                removeAddress(index)
+            }}>Remove Address</button>
         </div>)}
 
         <button onClick={(e) => addAddressField(e)}>Add Address</button><br />

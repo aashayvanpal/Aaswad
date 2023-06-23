@@ -1,4 +1,4 @@
-// App version v1.0.6.2 T2 CRUD Customers
+// App version v1.0.6.2 T3 Order to Customer integration
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";

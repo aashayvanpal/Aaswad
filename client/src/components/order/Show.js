@@ -422,7 +422,7 @@ const ItemShow = () => {
             return 'Breakfast'
         } else if ((convertedTime >= 10) && (convertedTime < 19)) {
             return 'Lunch'
-        } else if ((convertedTime > 19) && (convertedTime < 24)) {
+        } else if ((convertedTime >= 19) && (convertedTime < 24)) {
             return 'Dinner'
         }
         else {

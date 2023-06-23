@@ -8,6 +8,12 @@ import SubmitEnquiryModal from './SubmitEnquiryModal.js'
 import '../../css/CustomerRequest/request.css'
 import "react-datepicker/dist/react-datepicker.css";
 import { Stepper } from 'react-form-stepper'
+import { getUserDetails } from '../../assets/user-functions.js';
+import { getAllCustomers } from '../../apis/customers.js';
+import FilterableSelectBox from '../autoCompleteSelect/index.js';
+import CustomerModal from './CustomerModal/index.js';
+import { createCustomer, updateCustomer } from '../../apis/customers.js';
+
 
 const CustomerForm = (props) => {
     let time = String(new Date()).substr(16, 5)
@@ -33,7 +39,23 @@ const CustomerForm = (props) => {
     const [id, setId] = useState('')
     const [userType, setUserType] = useState('')
     const [openSubmitEnquiryModal, setOpenSubmitEnquiryModal] = useState(props.openSubmitEnquiryModal)
+    const [customers, setCustomers] = useState([])
 
+    const fetchCustomers = async () => {
+        const customers = await getAllCustomers()
+        console.log("customers.data:", customers.data)
+        setCustomers(customers.data)
+    }
+
+
+    const getUserType = async () => {
+        const user = await getUserDetails()
+        // console.log("Getting user Type and details ", user)
+        if (user.userType === "Admin") {
+            setUserType(user.userType)
+            fetchCustomers()
+        }
+    }
 
     useEffect(() => {
         console.log('Inside customer form')
@@ -118,6 +140,8 @@ const CustomerForm = (props) => {
                     console.log(err)
                 })
         }
+
+        getUserType()
 
     }, [])
 
@@ -218,8 +242,22 @@ const CustomerForm = (props) => {
 
     }
 
+    const findCustomerByName = (name) => {
 
-    const handleSubmit = e => {
+        const customer = customers.find(customer => customer.fullName === name)
+        console.log("customer", customer)
+        if (customer) {
+            // if found return the customer information
+            return customer
+        }
+        else {
+            // else return false
+            return false
+        }
+    }
+
+
+    const handleSubmit = async e => {
         e.preventDefault()
         console.log("submit enquiry button clicked! check this ")
 
@@ -252,6 +290,139 @@ const CustomerForm = (props) => {
 
             console.log("customer Data: ", customer)
             // this.setState({ openSubmitEnquiryModal: true })
+
+
+
+            const foundCustomer = findCustomerByName(fullName)
+            if (foundCustomer) {
+
+                // EDIT/PUT Api calls here
+                // Customer is found in DB
+                // check for phone number & compare
+                const DBPhoneNumber = foundCustomer.phoneNumber
+                console.log("phone number for customer found", DBPhoneNumber, foundCustomer._id, customer.phoneNumber)
+                // if new number ,add a new key value pair with save as prompt
+                const isNewNumber = DBPhoneNumber.reduce((acc, item) => {
+                    const found = Number(item[Object.keys(item)[0]]) === Number(customer.phoneNumber)
+                    if (found) { acc = 0 }
+                    return acc
+                }, 1)
+
+
+                const DBAddress = foundCustomer.address
+
+                const isNewAddress = DBAddress.reduce((acc, item) => {
+                    const found = item[Object.keys(item)[0]] === customer.address
+                    if (found) { acc = 0 }
+                    return acc
+                }, 1)
+
+                if (isNewAddress && isNewNumber) {
+                    alert("both need to be updated")
+                    const phoneKey = prompt("Save this number as ?")
+                    const phoneValue = customer.phoneNumber.toString()
+                    const phoneNumbers = [...DBPhoneNumber, { [phoneKey]: phoneValue }]
+
+                    const addressKey = prompt("Save this address as ?")
+                    const addressValue = customer.address
+                    const address = [...DBPhoneNumber, { [addressKey]: addressValue }]
+
+                    const customerBody = { ...foundCustomer, phoneNumber: phoneNumbers, address }
+                    console.log("this is a new number so PUT request here for:", customerBody, foundCustomer._id, phoneKey, phoneValue, addressKey, addressValue)
+                    try {
+
+                        await updateCustomer(foundCustomer._id, customerBody)
+                        alert("Phone number and address has been updated!")
+
+                    } catch (err) {
+                        alert("error in editing customer Phone number and address !")
+                    }
+
+                } else {
+
+                    if (isNewNumber) {
+                        // do save as prompt modal
+                        const key = prompt("Save this number as ?")
+                        const value = customer.phoneNumber.toString()
+                        const phoneNumbers = [...DBPhoneNumber, { [key]: value }]
+                        const customerBody = { ...foundCustomer, phoneNumber: phoneNumbers }
+                        console.log("this is a new number so PUT request here for:", customerBody, foundCustomer._id, key, value)
+                        try {
+
+                            await updateCustomer(foundCustomer._id, customerBody)
+                            alert("Phone number has been updated!")
+
+                        } catch (err) {
+                            alert("error in editing customer!")
+                        }
+                    } else {
+                        console.log("this is old number only do nothing")
+                    }
+
+
+                    // address part 
+                    // check for address & compare 
+                    console.log("Address for customer found", DBAddress, foundCustomer._id, customer.address)
+                    // if new address ,add a new key value pair with save as prompt
+
+
+                    if (isNewAddress) {
+                        // // do save as prompt modal
+                        const key = prompt("Save this address as ?")
+                        const value = customer.address
+                        const address = [...DBAddress, { [key]: value }]
+                        const customerBody = { ...foundCustomer, address }
+                        console.log("this is a new address so PUT request here for:", customerBody, foundCustomer._id, key, value)
+                        try {
+
+                            await updateCustomer(foundCustomer._id, customerBody)
+                            alert("Address has been updated!")
+                        } catch (err) {
+                            alert("error in editing customer!")
+                        }
+                    } else {
+                        console.log("this is old address only do nothing")
+                    }
+
+                }
+
+
+
+            } else {
+                // Customer is not found in DB
+                alert("customer is not found , a new customer will be added ")
+
+                const customer = {
+                    fullName,
+                    email: email ? email : 'test@gmail.com',
+                    phoneNumber: { primary: phoneNumber },
+                    birthday: '',
+                    gender: 'male',
+                    profilePicture: '',
+                    address: { Home: address },
+                    language: ['English'],
+                    membership: {
+                        status: 'inactive',
+                        level: 'basic',
+                        points: 0
+                    },
+
+                }
+                console.log("customer to add to db", customer)
+                // new customer should be added in DB POST api
+                // create default value of customer , add the form values , make POST request to customer DB
+                const customerCreated = await createCustomer(customer)
+                console.log("customer created!", customerCreated)
+                if (customerCreated.status === 200) {
+                    alert(`customer ${fullName} has been created successfully!`)
+                    // navigate to /customers
+                    // history.push("/customers")
+                } else {
+                    alert("there was something wrong with customer creation")
+                }
+            }
+
+
             props.handleCustomerSubmit(customer)
         }
     }
@@ -283,9 +454,25 @@ const CustomerForm = (props) => {
         setAddress('')
     }
 
+    const setSelectedCustomerDetails = ({ selectedCustomer, selectedPhoneNumber, selectedAddress }) => {
+        // console.log("yes i need to set here", { selectedCustomer, selectedPhoneNumber, selectedAddress })
+        setFullName(selectedCustomer)
+        setPhoneNumber(selectedPhoneNumber)
+        setAddress(selectedAddress)
+    }
+
     return (
         <form id='detailsForm' onSubmit={handleSubmit}>
-            {userType === 'Admin' ? <button onClick={clearForm}>Clear form</button> : null}
+            {userType === 'Admin' ? (
+                <div>
+                    {/* <div style={{ border: '3px solid black', padding: '10px' }}> */}
+                    <CustomerModal
+                        setSelectedCustomerDetails={setSelectedCustomerDetails}
+                        customers={customers}
+                        buttonLabel={`Select from Existing ${customers.length} Customers`} />
+                    {/* </div> */}
+                    <button onClick={clearForm}>Clear form</button>
+                </div>) : null}
 
             <h1 style={{ "fontSize": "28px", "textAlign": "center", "fontWeight": "bold", "color": "white", "textDecoration": "underline" }}>Add Your Event Details </h1><br />
             <Stepper className="stepper-color"

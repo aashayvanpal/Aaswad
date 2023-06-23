@@ -29,7 +29,10 @@ const Language = ({ languages, setLanguages }) => {
         <button onClick={(e) => addLanguage(e)}>Add Language</button><br />
         {languages.map((language, index) => <div key={index}>
             {language}
-            <button onClick={(e) => removeLanguage(index)}>Remove Language</button><br />
+            <button onClick={(e) => {
+                e.preventDefault()
+                removeLanguage(index)
+            }}>Remove Language</button><br />
 
             <br /></div>)}
     </div>

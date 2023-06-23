@@ -224,7 +224,7 @@ const AddCustomerForm = () => {
         Add new Customer<br />
         <Link to={'/customers'}>Back</Link>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'flex', border: '1px solid black', padding: '20px', width: '80%' }}>
+            <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'flex', border: '1px solid black', padding: '20px', margin: '20px', width: '100%', borderRadius: '16px' }}>
                 <div>
                     <label htmlFor="fullname">Full Name*</label>
                     <input id="fullname" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} /><br />

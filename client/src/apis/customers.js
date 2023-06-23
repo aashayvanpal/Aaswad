@@ -3,6 +3,13 @@
 import axios from "axios"
 
 // getAllCustomers
+export const getAllCustomers = () => {
+    return axios.get('/customers', {
+        headers: {
+            'x-auth': localStorage.getItem('token')
+        }
+    })
+}
 // getSingleCustomer
 export const getCustomerById = (id) => {
     return axios.get(`/customers/${id}`, { "x-auth": localStorage.getItem('token') })

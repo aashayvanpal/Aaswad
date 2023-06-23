@@ -83,16 +83,23 @@ const DisplayCustomers = () => {
 
             <div style={{ border: ' 2px solid black', margin: '20px', padding: '20px', borderRadius: '8px', width: '100%' }}>
 
-                <Link
-                    to="/customers/add"
-                >
-                    Add Customers
-                </Link><br />
-                Listing Customers : {filterCustomers().length}<br />
-                Search Customer <input value={searchedCustomer} onChange={(e) => setSearchedCustomer(e.target.value)} />
+                <div style={{ display: 'flex', gap: '20px' }}>
+
+                    <div>
+                        <h3>Listing Customers : {filterCustomers().length}</h3>
+                        <input value={searchedCustomer} placeholder="Search Customer" onChange={(e) => setSearchedCustomer(e.target.value)} />
+                    </div>
+                    <Link
+                        to="/customers/add"
+                    >
+                        <button style={{ border: "1px solid black", padding: '10px', borderRadius: '8px', }}>
+                            Add Customer
+                        </button>
+                    </Link>
+                </div>
                 Sort customer by membership , alphabetical order, number of orders given
-                <table>
-                    <thead>
+                <table style={{ width: "100%",border: "1px solid black", }}>
+                    <thead style={{ textAlign: 'center' }}>
                         <td>Sl No</td>
                         <td>Name</td>
                         <td>Actions</td>
@@ -101,9 +108,9 @@ const DisplayCustomers = () => {
 
                         {
                             filterCustomers().map((customer, index) => <tr key={index}>
-                                <td>{index + 1}</td>
+                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
                                 <td><Link to={`/customers/${customer._id}`}>{customer.fullName}</Link ></td>
-                                <td>
+                                <td style={{ display: 'flex', gap: '8px' }}>
                                     <Link to={`/customers/edit/${customer._id}`}>
                                         <button className="button-color4"
                                             style={{ width: "100%", fontWeight: "bold" }}
