@@ -18,6 +18,9 @@ const orderSchema = new Schema({
             reqiured: true,
         }
     },
+    misc: {
+        type: Array
+    },
     AdvanceAmount: {
         type: Number,
     },

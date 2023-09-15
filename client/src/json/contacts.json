@@ -1,0 +1,100 @@
+[
+    {
+        "name": "Mohommand Gause(Ismail)",
+        "phonenumber": 9738929221,
+        "type": "Fridge",
+        "notes": "For Deep freezer",
+        "address": "Adi kabir ashram main road ,near crown beauty parlour,RT Nagar back side"
+    },
+    {
+        "name": "John Pavwala",
+        "phonenumber": 9341771159,
+        "type": "Vada Pav",
+        "notes": "Pavwala",
+        "address": ""
+    },
+    {
+        "name": "Prakash Bapat",
+        "phonenumber": 9326874309,
+        "type": "Vipra Frozen Food",
+        "notes": "Frozen Ukdiche Modak",
+        "address": ""
+    },
+    {
+        "name": "Jagannath",
+        "phonenumber": 9980479063,
+        "type": "Auto",
+        "notes": "Autowala",
+        "address": ""
+    },
+    {
+        "name": "Manoj",
+        "phonenumber": 9901983792,
+        "type": "Auto",
+        "notes": "Autowala",
+        "address": ""
+    },
+    {
+        "name": "Satya/Satya2/Owner",
+        "phonenumber": [
+            8217444432,
+            9538972407,
+            9845753463
+        ],
+        "type": "Khavawala",
+        "notes": "",
+        "address": ""
+    },
+    {
+        "name": "Elavarsan",
+        "phonenumber": 9886694979,
+        "type": "Tempo",
+        "notes": "Tempowala",
+        "address": ""
+    },
+    {
+        "name": "Ganesh",
+        "phonenumber": 9880630781,
+        "type": "Milk",
+        "notes": "Doodhwala",
+        "address": ""
+    },
+    {
+        "name": "Sunil/Sunil2",
+        "phonenumber": [
+            8792532335,
+            8618587834
+        ],
+        "type": "Water",
+        "notes": "Paniwala",
+        "address": ""
+    },
+    {
+        "name": "Devendra",
+        "phonenumber": 7897696267,
+        "type": "Pan",
+        "notes": "Panwala",
+        "address": ""
+    },
+    {
+        "name": "Byra Trader",
+        "phonenumber": 9980962053,
+        "type": "Grocery",
+        "notes": "Grocery store",
+        "address": ""
+    },
+    {
+        "name": "Prashant Reddy",
+        "phonenumber": 7411269695,
+        "type": "Vegetable",
+        "notes": "Veggi seller",
+        "address": ""
+    },
+    {
+        "name": "Mukesh Marketing",
+        "phonenumber": 9845403267,
+        "type": "Sabudana",
+        "notes": "Sabudana",
+        "address": ""
+    }
+]

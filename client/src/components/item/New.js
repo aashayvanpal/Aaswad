@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ItemForm from './Form.js'
 import axios from '../../config/axios.js'
-
+import ShowBtn from '../../assets/ShowBtn.js'
+import NavigationBar from '../NavigationBar.js'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min.js'
+import { getIngredients } from './item-helpers/item-functions.js'
 const ItemNew = () => {
+    const [ingredients, setIngredients] = useState([])
 
     const handleItemSubmit = (item) => {
         console.log('New Component : ', item)
@@ -26,10 +30,28 @@ const ItemNew = () => {
             })
     }
 
+    const fetchIngredients = async () => {
+        const fetchedIngredients = await getIngredients()
+        setIngredients([...fetchedIngredients])
+    }
+    useEffect(() => {
+        fetchIngredients()
+    }, [])
+
     return (
         <div>
-            <h1>Add New Item</h1>
-            <ItemForm handleItemSubmit={handleItemSubmit} />
+            <ShowBtn />
+            <div style={{ display: 'flex', gap: '20px' }}>
+                <NavigationBar />
+                <div style={{ width: '100%' }}>
+                    <Link to='/items'>Back</Link>
+                    <h1>Add New Item</h1>
+                    <ItemForm handleItemSubmit={handleItemSubmit}
+                        ingredients2={ingredients} setIngredients2={setIngredients}
+
+                    />
+                </div>
+            </div>
         </div>
     )
 }

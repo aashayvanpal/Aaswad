@@ -9,8 +9,9 @@ const { usersRouter } = require('../controllers/UsersController.js')
 const ContactUsController = require('../controllers/contactUsController.js')
 const emailController = require('../controllers/emailController.js')
 
-
 const customerController = require('../controllers/customerController.js')
+const ingredientController = require('../controllers/ingredientsController.js')
+const eventOrderController = require('../controllers/eventOrderController.js')
 // // for customers 
 router.get('/customers', customerController.list)
 router.get('/customers/:id', customerController.show)
@@ -39,6 +40,7 @@ router.post('/request', approveController.createApprove)
 
 
 router.get('/api/orders', approveController.list)
+router.put('/orders/deleteKey/:id', approveController.deleteKey)
 router.put('/orders/:id', approveController.update)
 router.delete('/orders/:id', approveController.destroy)
 router.get('/api/orders/:id', approveController.show)
@@ -52,6 +54,22 @@ router.delete('/multiOrders/:id', multiOrderController.destroy)
 router.get('/multiOrders/:id', multiOrderController.show)
 router.put('/multiOrders/:id', multiOrderController.update)
 
+// For eventOrders
+router.get('/eventOrders', eventOrderController.list)
+router.get('/eventOrders/:id', eventOrderController.show)
+router.post('/eventOrders', eventOrderController.createEventOrder)
+router.delete('/eventOrders/:id', eventOrderController.destroy)
+router.put('/eventOrders/:id', eventOrderController.addOrder)
+router.put('/eventOrders/edit/:id', eventOrderController.update)
+router.put('/eventOrders/delete/:id', eventOrderController.deleteField)
+
+
+// for ingredients 
+router.get('/ingredients', ingredientController.list)
+// router.get('/ingredients/:id', ingredientController.show)
+router.post('/ingredients', ingredientController.create)
+// router.put('/ingredients/:id', ingredientController.update)
+router.delete('/ingredients/:id', ingredientController.destroy)
 
 
 // Registeration 

@@ -1,4 +1,4 @@
-// App version v1.0.6.2 T3 Order to Customer integration
+// App version v1.0.7.0 T1 eventOrders Feature integration
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -49,6 +49,10 @@ import MultiDateOrders from "./components/MultiDateOrders.js";
 import DisplayCustomers from "./components/customer/DisplayCustomers.js";
 import AddCustomerForm from "./components/customer/AddCustomerForm.js";
 import ViewCustomer from './components/customer/ViewCustomer.js'
+import Ingredients from "./components/ingredients";
+import EventOrders from "./components/eventOrders/index.js";
+import EventOrdersList from "./components/eventOrders/list";
+import Contacts from "./components/contacts/index.js";
 function App() {
   return (
     <div className="app">
@@ -140,6 +144,11 @@ function App() {
                       <ViewCustomer />
                     </Route>
 
+                    <Route path="/ingredients">
+                      <Header />
+                      <Ingredients />
+                    </Route>
+
                     {/* Route for all types of users */}
                     <Route
                       exact
@@ -163,6 +172,10 @@ function App() {
                       <Header />
                       <CustomerRequest />
                     </Route>
+                    <Route path="/requestEventOrder">
+                      <Header />
+                      <CustomerRequest type="eventOrder" />
+                    </Route>
 
                     <Route exact={true} path="/items">
                       <Header />
@@ -179,6 +192,7 @@ function App() {
                     </Route>
 
                     <Route path={"/items/edit/:id"}>
+                      <Header />
                       <ItemEdit />
                     </Route>
 
@@ -283,6 +297,11 @@ function App() {
                       {/* <h1 style={{ backgroundColor: "green" }}>Your Profile:</h1> */}
                       <UserProfile />
                     </Route>
+                    <Route exact path="/contacts">
+                      <Header />
+                      contacts section
+                      <Contacts />
+                    </Route>
 
                     <Route path="/aboutus">
                       <Header />
@@ -313,6 +332,21 @@ function App() {
                     <Route path="/queries">
                       <Header />
                       <Queries />
+                    </Route>
+
+                    <Route exact path="/eventOrders">
+                      <Header />
+                      <EventOrders />
+
+                    </Route>
+                    <Route exact path="/eventOrders/:id">
+                      <Header />
+                      <EventOrdersList />
+
+                    </Route>
+                    <Route exact path="/eventOrders/:id/customer">
+                      <Header />
+                      <OrderShow type={"eventOrder"} />
                     </Route>
 
                     <Switch>

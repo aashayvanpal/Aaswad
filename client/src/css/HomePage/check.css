@@ -22,9 +22,7 @@
 }
 
 .contents {
-  width: 390px;
-  position: absolute;
-  margin-left: 150px;
+  width: 60%;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
@@ -38,12 +36,13 @@
 
 #imageStyling {
   height: 130px;
-  width: 105px;
+  width: 230px;
   position: absolute;
   /* top:0px; */
   z-index: 2;
   border-radius: 10px 30px 30px 10px;
   margin: 10px 0px 0px 5px;
+  border: 2px solid black;
 }
 
 #checkBoxStyling {
@@ -81,6 +80,7 @@
     border-radius: 10px 60px 10px 10px;
     border: 2px solid #dbc268;
   }
+
   .card-body-style {
     /* display: inline-flex; */
     /* padding: 0px; */
@@ -90,6 +90,7 @@
     width: 100%;
     border-radius: 10px 60px 10px 10px;
   }
+
   .itemName {
     font-size: 20px;
     text-align: center;

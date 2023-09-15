@@ -296,7 +296,7 @@ when internet is lost , keeping data and updating when internet is back up
 
 
 
-
+v1.0.7.0 T1 Inclusive:
 v1.0.6.2 T3 (feature requirement phase) Order Customer integration
 FrontEnd fixes :
 1. /bulk-orders css is not responsive to mobile display
@@ -321,8 +321,100 @@ Major feature requirement :
 
 
   working here
+  Immediate change ::
+  Add a new section called Coupons(done as eventOrders)
+  Single date coupon section steps
+  -
+  All link tags and navigation fix
+  Basic table generation(done)
+
+  Create Event Backend (done)
+  Create Event Frontend (done)
+  Modal and event creation (done)
+  Validation for modal basic (done)
+
+
+  Event page
+  add order functionality(done)
+  table display (done)
+  view event order page navigation (done)
+
+  select orders
+  get array 
+  calculate total items count 
+  -
+  Working here :
+  sweet house box scan
+  eventOrder Advancepayment api creation (done)
+  Advance payment completion inside eventorder - add(done) and delete(done)
+
+  status update-(approve,confirmed,completed) functionality inside eventorder(done)
+  Bill generation for eventOrders
+  Bill generation bug => it must read the key and value , it is hard coded as of now 
+
+  delete functionality inside eventorder
+  /items update item is not working , check here bug
+  ------------------
+------------------
+  toggleSelect => select /deselect
+   calculate the total by using the same old calculation code
+    Steps:
+    1.Checkbox after select orders -> this is a all selector checkbox function->should check set all checked in orders
+    2.Get Item total => function => by item id calculate total and show Modal
+    finalCalcReact use this file from /home/aashay/code/mern_apps/Aaswad-bk
+
+    clearing cart items for eventorder last line
+    select all orders is buggy checkbox check on this 
+  
+  
+  
+   ,localstorage management check again , redirect after making an event order , delete order
+   Items adding new check with ingredients 
+
+
+
+
+
+  Multidate order , single person 2 orders with bill generation
+    Fix Event Name -> it is showing NAN
+    Fix Notes -> it is showing NAN
+    check home delivery and service
+    The bill generation should be download pdf function
+    Future update: Edit functionality to be implemented
+                   Misc items should also be implemented
+                   Change Accordian UI Color to rgb(235, 198, 66) 
+
+
+  Contacts json file
+  Misc items have been added
+  testing
+  validation
+  CRUD 
+  Applying in all bills integration
+  Download Type1 bill does not have misc items
+
+  Misc table delete Table , Edit not working
+  Rework customer selection , ganga was not working correctly 
+
+  
+  Minor tuning/perormance/memory fix : remove key from document is added , transport object removing from db code must be applied
+
+  -> Launch For Production !!!!!!!!!!!!!!!!
+  Add all images 
+  Add limit for 200 people 
+  Build a production ready Build
+  
+
+
+
 -> Calculating ingredients for number of people for selected items in the order (break into multiple steps) 
 
+(Review to add to Dipali patwardhan later) 
+काल चा कार्यक्रम सुरळीत पार पडला. जेवण खूप सुंदर झाल होत. खूप खूप धन्यवाद. Varsha🙏😊
+Future update:Create event /eventOrders ->Modal Add Event Details change to form input , currently need to click on create button
+Future update:Are you sure you want to delete event order modal,confirmation 
+Future update:when choosing existing customers , the email is not updating from db, check the code 
+Future update: Seasonal Booking for deals : example:modak ,set status like whatsapp
 
 -> dynamically add input field to billing , to add extra items (like plastic items)
 -> Adding rupee symbol image import as image in the pdf (pending)
@@ -346,6 +438,8 @@ Steps to complete:
 
 
 
+
+Minor UI+Data Fix : Add /items item description to be shown while on display in menu
 
 
 
@@ -497,3 +591,31 @@ important fix: if admin user in /myOrders , show all the orders (currently showi
 (((((((((((((((((((((((((((((
 Completed :
 )))))))))))))))))))))))))))))
+
+
+
+
+
+::::::::::::::::::::::::::::::::::::::::
+REDUX NOTES:
+store state :
+{
+  orders:[],
+  menu:[],
+  items:[],
+  MultiDateOrders:[],
+  customers:[],
+  recipies:[],
+  ingredients:[],
+
+
+}
+ 
+::::::::::::::::::::::::::::::::::::::::
+****************************************
+Biggest Components to create :
+Table 
+Calendar
+Carousel
+Slider
+****************************************

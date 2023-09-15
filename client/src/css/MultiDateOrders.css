@@ -2,6 +2,11 @@
     margin: 10px;
 }
 
+.accordion-header {
+    text-align: 'center';
+    background-color: rgb(235, 198, 66);
+}
+
 #accordion-list {
     display: flex;
     justify-content: space-evenly;

@@ -6,7 +6,7 @@ export default function SignupCenterContainer() {
   return (
     <div id="sign-in-container" >
       <div id="leftContainerImg">
-        <Link to="/AaswadMenuCard-2022.pdf" target="_blank" download>
+        <Link to="/AaswadMenuCard-2023.pdf" target="_blank" download>
           <button id="downloadBtn"
           >Download Menu Card <img src={downloadIcon} alt="downloadIcon" height="50px" /></button></Link>
       </div>

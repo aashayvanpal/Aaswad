@@ -3,6 +3,7 @@ import ShowBtn from '../assets/ShowBtn'
 import NavigationBar from './NavigationBar'
 import axios from 'axios'
 import LoadingSpinner from './LoadingSpinner'
+import { getMultiOrders } from '../apis/multiOrders'
 
 
 const Dashboard = () => {
@@ -15,6 +16,29 @@ const Dashboard = () => {
     const [itemsDisplay, setItemsDisplay] = useState([])
     const [loading, setLoading] = useState(true)
 
+    const [totalMultiOrders, setTotalMultiOrders] = useState([])
+    const [totalCompletedOrders, setTotalCompletedOrders] = useState(0)
+    const [totalApprovedOrders, setTotalApprovedOrders] = useState(0)
+    const [totalConfirmedOrders, setTotalConfirmedOrders] = useState(0)
+
+
+
+    const getMultiOrdersData = async () => {
+        const multiorders = await getMultiOrders()
+        setTotalMultiOrders(multiorders.data.length)
+        const completedOrders = multiorders.data.filter(order => order.status === 'completed')
+        const approveOrders = multiorders.data.filter(order => order.status === 'approve')
+        const confirmedOrders = multiorders.data.filter(order => order.status === 'confirmed')
+        setTotalCompletedOrders(completedOrders.length)
+        setTotalApprovedOrders(approveOrders.length)
+        setTotalConfirmedOrders(confirmedOrders.length)
+
+    }
+
+    // const getTotalApprove = async () => {
+    //     const multiorders = await getMultiOrders()
+    //     setTotalMultiOrders(multiorders.data.length)
+    // }
 
     useEffect(() => {
         console.log('inside use effect')
@@ -70,12 +94,20 @@ const Dashboard = () => {
             .catch(err => {
                 console.log(err)
             })
+
+        getMultiOrdersData()
+        // getTotalApprove()
+        // getTotalConfirmed()
+        // getTotalCompleted()
     }, [])
+
 
     return (
         <div>
 
             <ShowBtn />
+            <button style={{ backgroundColor: "purple", color: "white" }}>Backup = opens modal to backup all database into json </button>
+
             <div style={{ display: 'flex', gap: '20px' }}>
 
                 <NavigationBar />
@@ -110,16 +142,16 @@ const Dashboard = () => {
                     <h1>Multi Date Orders</h1>
                     <div style={{ display: "inline-flex" }}>
                         <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
-                            <h2>Total orders : { }</h2>
+                            <h2>Total orders : {totalMultiOrders}</h2>
                         </div>
                         <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
-                            <h2>Approve orders :{ }</h2>
+                            <h2>Approve orders :{totalApprovedOrders}</h2>
                         </div>
                         <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
-                            <h2>Confirmed orders :{ }</h2>
+                            <h2>Confirmed orders :{totalConfirmedOrders}</h2>
                         </div>
                         <div style={{ border: "2px solid black", borderRadius: "32px", padding: '20px', margin: '10px', textAlign: "center" }}>
-                            <h2>Completed orders :{ }</h2>
+                            <h2>Completed orders :{totalCompletedOrders}</h2>
                         </div>
                     </div>
 

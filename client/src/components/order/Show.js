@@ -3,6 +3,7 @@ import axios from '../../config/axios.js'
 import { Link } from 'react-router-dom'
 import '../../css/myOrdersShow.css'
 import TransportForm from './TransportForm.js'
+import MiscForm from './MiscForm.js'
 import AdvancePaymentForm from './AdvancePaymentForm.js'
 import TransportTable from './TransportTable.js'
 import AdvanceTable from './AdvanceTable.js'
@@ -15,9 +16,11 @@ import downloadBill from '../../assets/generateBill'
 import downloadType1Bill from '../../assets/generateBill/types/common-type1.js'
 import downloadType2Bill from '../../assets/generateBill/types/common-type2.js'
 import downloadType3Bill from '../../assets/generateBill/types/common-type3.js'
+import MiscTable from './MiscTable.js'
+import { updateEventOrder, deleteFieldFromEventOrder } from '../../apis/eventOrders.js'
 
 
-const ItemShow = () => {
+const ItemShow = ({ type }) => {
 
     const [order, setOrder] = useState({})
     const [id, setId] = useState('')
@@ -36,19 +39,24 @@ const ItemShow = () => {
     const [selectedItems, setSelectedItems] = useState([])
     const [total, setTotal] = useState(0)
     const [showTransportForm, setShowTransportForm] = useState(false)
+    const [showMiscForm, setShowMiscForm] = useState(false)
     const [showAdvancePaymentForm, setShowAdvancePaymentForm] = useState(false)
     const [advanceAmount, setAdvanceAmount] = useState('')
     const [status, setStatus] = useState('')
     const [rate, setRate] = useState(0)
     const [medium, setMedium] = useState()
     const [balance, setBalance] = useState('')
+    const [miscItems, setMiscParticulars] = useState([])
+    const [showMiscTable, setShowMiscTable] = useState(false)
+    const [eventOrderRoute, setEventOrderRoute] = useState('')
+    const [headingEventName, setHeadingEventName] = useState('')
+    const [headingEventDate, setHeadingEventDate] = useState('')
 
     useEffect(() => {
         setTotal(calculateTotal)
     }, [selectedItems])
 
-
-    useEffect(() => {
+    const singleOrderView = () => {
         console.log('Order Show component mounted !')
         console.log('id to show', window.location.href.split('/')[4])
         const id = window.location.href.split('/')[4]
@@ -93,6 +101,11 @@ const ItemShow = () => {
                 // console.log("The Date is :",eventDate.subStr(8, 2) + "/" + eventDate.subStr(5, 2) + "/" + eventDate.subStr(0, 4))
 
                 setSelectedItems([...items])
+                let misc = order.misc ? order.misc : []
+                setMiscParticulars(misc)
+                if (order.misc.length != 0) {
+                    setShowMiscTable(true)
+                }
 
 
                 if (order.transport) {
@@ -190,6 +203,46 @@ const ItemShow = () => {
             .catch(err => {
                 console.log(err)
             })
+    }
+
+    const eventOrderView = () => {
+        const orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+        console.log("orderDetails", orderDetails)
+        const route = window.location.href.split('/')[4]
+        setEventOrderRoute(route)
+        setHeadingEventName(orderDetails.eventName)
+        setHeadingEventDate(orderDetails.eventDate)
+        const order = orderDetails.order
+        setFullName(order.customer.fullName)
+        setNumberOfPeople(order.customer.numberOfPeople)
+        setEventDate(order.customer.eventDate)
+        setPhoneNumber(order.customer.phoneNumber)
+        setAddress(order.customer.address)
+        setEmail(order.customer.email)
+        setService(order.customer.service)
+        setHomeDelievery(order.customer.homeDelivery)
+        setStatus(order.status)
+        setId(order.orderId)
+        setSelectedItems(order.items)
+        setQueries(order.customer.queries)
+        if (orderDetails.AdvanceAmount) {
+            setAdvanceAmount(Number(orderDetails.AdvanceAmount))
+        }
+    }
+
+    useEffect(() => {
+        switch (type) {
+            case "eventOrder": {
+                console.log("Inside event order useEffect")
+                eventOrderView()
+            }
+                break;
+            default: {
+                console.log("Inside default useEffect")
+                singleOrderView()
+                break;
+            }
+        }
     }, [])
 
     const generateBill = () => {
@@ -258,10 +311,15 @@ const ItemShow = () => {
     const ShowTransportForm = () => {
         setShowTransportForm(false)
     }
+    const ShowMiscForm = () => {
+        // setShowTransportForm(false)
+        setShowMiscForm(false)
+    }
     const ShowAdvancePaymentForm = () => {
         setShowAdvancePaymentForm(false)
     }
-    const ShowAdvancePaymentTable = (amount) => {
+
+    const createAdvancePayment = (amount) => {
         // change the order model
         // create controller
         // post request to update transport
@@ -287,6 +345,35 @@ const ItemShow = () => {
             .catch(err => {
                 console.log(err)
             })
+    }
+    const setAdvanceAmountinLS = (amount) => {
+        // ui render
+        setAdvanceAmount(amount)
+
+        // localstorage setting state
+        let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+        orderDetails.AdvanceAmount = amount
+        localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
+    }
+    const ShowAdvancePaymentTable = (amount) => {
+
+        alert("type!:" + type)
+
+        switch (type) {
+            case "eventOrder": {
+                alert("Inside event order type")
+                // api call here
+                updateEventOrder(id, { AdvanceAmount: amount })
+                setAdvanceAmountinLS(amount)
+
+                break;
+            } default: {
+                alert("Normal flow edit")
+                createAdvancePayment(amount)
+                break;
+
+            }
+        }
     }
 
     const ShowTransportTable = (medium, rate) => {
@@ -317,7 +404,6 @@ const ItemShow = () => {
             .catch(err => {
                 console.log(err)
             })
-
     }
 
 
@@ -349,7 +435,7 @@ const ItemShow = () => {
             })
     }
 
-    const deleteAdvancePaymentTable = () => {
+    const deleteAdvancePayment = () => {
         console.log('inside parent to delete the AdvancePayment table')
         // put request to delete the transport table
         console.log('check for state here', order)
@@ -377,6 +463,31 @@ const ItemShow = () => {
             .catch(err => {
                 console.log(err)
             })
+    }
+    const deleteAdvanceAmountinLS = () => {
+        let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+        delete orderDetails.AdvanceAmount
+        localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
+    }
+    const deleteAdvancePaymentTable = () => {
+        switch (type) {
+            case "eventOrder": {
+                alert("Inside event order type Delete" + id)
+                // api call here to unset advancepayment field
+                deleteFieldFromEventOrder(id, 'AdvanceAmount') //fieldName:AdvanceAmount
+                // Should refresh the component here advanceAmount 
+                setAdvanceAmount(null)
+                deleteAdvanceAmountinLS()
+                break;
+            } default: {
+                alert("Normal flow delete advancepayment")
+                // normal flow
+                deleteAdvancePayment()
+                break;
+            }
+        }
+
+
     }
 
     const calculateTotal = () => {
@@ -430,21 +541,113 @@ const ItemShow = () => {
         }
     }
 
+    const generateMiscItems = () => {
+        alert('clicked on misc')
+        // setMiscParticulars([{ particular: '', rate: '' }])
+        setShowMiscForm(!showMiscForm)
+        setShowMiscTable(false)
+    }
+
+    const handleMiscSubmit = (e) => {
+        alert('inside handleform')
+
+        e.preventDefault()
+        // post request storing an object of string and number and then renedering a table 
+        // const transportObject = {
+        //     medium: medium, price: price
+        // }
+        // console.log('transportobject:', transportObject)
+
+        // post request find and replace or create new key value pair
+        // props.ShowTransportTable(medium, price)
+        // props.ShowTransportForm()
+
+
+
+        console.log("final to be submitted", miscItems)
+        // Validation here
+        const isValid = true
+        if (isValid) {
+            // PUT request on the id
+            console.log("Order id :", id)
+
+
+            axios.put(`/orders/${id}`, { "misc": miscItems }, {
+                headers: {
+                    'x-auth': localStorage.getItem('token')
+                }
+            })
+                .then(response => {
+                    const item = response.data
+
+                    console.log('Edited order :', item)
+                    setShowMiscForm(false)
+                    setShowMiscTable(true)
+
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+
+
+        }
+    }
+
+    const editMiscTable = () => {
+        // hide the table , show the form
+        setShowMiscTable(false)
+        setShowMiscForm(true)
+    }
+
+    const deleteMiscTable = () => {
+        // put request to delete key - "misc" from db document
+
+        axios.put(`/orders/deleteKey/${id}`, { "key": "misc" }, {
+            headers: {
+                'x-auth': localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                setShowMiscTable(false)
+            })
+            .catch(err => {
+                console.log("error in Misc deletion:", err)
+            })
+
+    }
+
     return (
         <div id="OrderShowContainer">
             <div id="ShowContainer1">
                 <div id="OrderShowContainer">
-                    <h2 ><Link to="/orders" ><button style={{
-                        "backgroundColor": "#ff881a",
-                        "borderRadius": "10px",
-                        "padding": "10px",
-                        "marginRight": "10px",
-                        "cursor": "pointer",
-                    }}
-                        onClick={() => { localStorage.removeItem('order') }}
-                    >
-                        <img src={backIcon} alt="backIcon" height="30px" width="30px" />
-                        Back</button></Link></h2>
+                    <h2 >
+                        {type === "eventOrder" ? <Link to={`/eventOrders/${eventOrderRoute}`} ><button style={{
+                            "backgroundColor": "#ff881a",
+                            "borderRadius": "10px",
+                            "padding": "10px",
+                            "marginRight": "10px",
+                            "cursor": "pointer",
+                        }}
+                            onClick={() => { localStorage.removeItem('orderDetails') }}
+                        >
+                            <img src={backIcon} alt="backIcon" height="30px" width="30px" />
+                            Back</button></Link> : (null)}
+                        {type === undefined ?
+                            <Link to="/orders" ><button style={{
+                                "backgroundColor": "#ff881a",
+                                "borderRadius": "10px",
+                                "padding": "10px",
+                                "marginRight": "10px",
+                                "cursor": "pointer",
+                            }}
+                                onClick={() => { localStorage.removeItem('order') }}
+                            >
+                                <img src={backIcon} alt="backIcon" height="30px" width="30px" />
+                                Back</button></Link>
+                            : (null)}
+
+
+                    </h2>
                     <h2 ><Link to="/menu"><button style={{
                         "backgroundColor": "#ff881a",
                         "borderRadius": "10px",
@@ -454,7 +657,12 @@ const ItemShow = () => {
                         <img src={updateIcon} alt="updateIcon" height="30px" width="30px" />
                         Edit</button></Link></h2>
                 </div>
-                <h1>Showing order details:-</h1>
+                {type === "eventOrder" ? <div>
+                    <h3>EventName  :{headingEventName}</h3>
+                    <h3>EventDate  :{headingEventDate}</h3>
+                </div> : null}
+
+                <h1>Showing order details:- {type}</h1>
                 <h2>Customer Name : {fullName}</h2>
                 <h2>Event Name : {eventName}</h2>
                 {queries ? (<h2 style={{ "backgroundColor": "red", "color": "white" }}>Queries : {queries}</h2>) : (null)}
@@ -554,13 +762,24 @@ const ItemShow = () => {
                     medium={medium}
                 />}
 
+
+
                 {medium ? (
                     <TransportTable
                         deleteTable={deleteTransportTable}
                         medium={medium}
                         rate={rate} />
                 ) : null}
-
+                {showMiscForm && <MiscForm
+                    miscItems={miscItems}
+                    setMiscParticulars={setMiscParticulars}
+                    handleMiscSubmit={handleMiscSubmit}
+                />}
+                {showMiscTable && <MiscTable
+                    miscItems={miscItems}
+                    editMiscTable={editMiscTable}
+                    deleteMiscTable={deleteMiscTable}
+                />}
                 {advanceAmount && <AdvanceTable
                     deleteTable={deleteAdvancePaymentTable}
                     advanceAmount={advanceAmount}
@@ -610,7 +829,7 @@ const ItemShow = () => {
                 </button>
                 <hr />
 
-                {/* transport and no advance payment */}
+                {/* transport and no advance payment + added miscItems*/}
                 {medium && !advanceAmount && <button onClick={() => downloadType2Bill({
                     name: fullName,
                     date: eventDate,
@@ -622,7 +841,8 @@ const ItemShow = () => {
                     total: total,
                     advancePayment: advanceAmount,
                     balanceAmount: calculateBalance(),
-                    plateCost: (total / numberOfPeople)
+                    plateCost: (total / numberOfPeople),
+                    miscItems
                 })}>
                     Download Type2 bill
                 </button>}
@@ -631,19 +851,23 @@ const ItemShow = () => {
 
 
                 {/* Transport and advance payment required */}
-                {medium && advanceAmount && <button onClick={() => downloadType3Bill({
-                    name: fullName,
-                    date: eventDate,
-                    particulars: eventTimeCalculate(eventTime),
-                    numberOfPeople,
-                    mobile: phoneNumber,
-                    items: selectedItems,
-                    transportation: rate,
-                    total: total,
-                    advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance(),
-                    plateCost: (total / numberOfPeople)
-                })}>
+                {medium && advanceAmount && <button onClick={() => {
+                    alert("miscItems " + JSON.stringify(miscItems))
+
+                    downloadType3Bill({
+                        name: fullName,
+                        date: eventDate,
+                        particulars: eventTimeCalculate(eventTime),
+                        numberOfPeople,
+                        mobile: phoneNumber,
+                        items: selectedItems,
+                        transportation: rate,
+                        total: total,
+                        advancePayment: advanceAmount,
+                        balanceAmount: calculateBalance(),
+                        plateCost: (total / numberOfPeople)
+                    })
+                }}>
                     Download Type3 bill
                 </button>}
 
@@ -664,6 +888,20 @@ const ItemShow = () => {
                         :
                         (null)
                 }
+                <hr />
+                <button style={{
+                    "backgroundColor": "green",
+                    "borderRadius": "10px",
+                    "padding": "10px",
+                    "marginRight": "10px",
+                    "cursor": "pointer",
+                }} onClick={() =>
+                    generateMiscItems()
+                }>
+                    <img src={billIcon} alt="billIcon" width="30px" height="30px" />
+                    Generate Misc Items
+                </button>
+
             </div>
         </div >
     )

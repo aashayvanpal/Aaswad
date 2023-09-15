@@ -100,3 +100,18 @@ module.exports.update = (req, res) => {
             res.json(err)
         })
 }
+
+// delete a key from document 
+module.exports.deleteKey = (req, res) => {
+    const id = req.params.id
+    const key = req.body.key
+    Order.updateOne({ _id: id }, { $unset: { [key]: 1 } }, (err, result) => {
+        if (err) {
+            console.error(`Error updating document with key ${key}:`, err);
+        } else {
+            console.log('Document updated successfully:');
+            // console.log('Document updated successfully:', result);
+        }
+    }).then(order => res.json(order))
+        .catch(err => res.json({ "error": "error updating document", err }))
+}

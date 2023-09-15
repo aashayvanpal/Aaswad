@@ -324,6 +324,12 @@ const AdminCart = (props) => {
         // actions.setTextvalue(`the value is changed to ${order[0]['2022/07/06']['Breakfast'][0].name}`)
         actions.setShowMultiDateComponent(true)
     }
+
+    const eventOrder = () => {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')).filter(item => item.isSelected)
+        console.log(cartItems)
+        localStorage.setItem('orderItems', JSON.stringify(cartItems))
+    }
     return (
         <div id="inner-Cart" >
             {/* <h1 id="cart-text-style" > Cart :</h1> */}
@@ -416,8 +422,19 @@ const AdminCart = (props) => {
                                 </Link>
 
                             </div >
+                            <hr />
                             {bulkDate} for {bulkMealType}
                             <button onClick={multiOrder}>Proceed to multiOrder</button>
+                            <hr />
+                            {/* {eventName} for {eventDate} */}
+                            <Link to='/requestEventOrder'
+                                onClick={eventOrder}
+                            // onClick={() => { props.requestOrder(cartItems) }}
+                            >
+                                <button >Proceed to EventOrder</button>
+
+
+                            </Link>
                         </div >
                     )
             }

@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 // import { Table } from 'reactstrap';
 import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import '../../css/itemForm.css'
 
+import AddIngredientModal from '../ingredients/modals/addIngredientsModal'
+
+
 const ItemForm = (props) => {
+    const { ingredients2, setIngredients2 } = props
     // const [] = useState('')
     const [selectedValues, setSelectedValues] = useState('')
     const [items, setItems] = useState([])
@@ -17,6 +21,8 @@ const ItemForm = (props) => {
     const [ingredients, setIngredients] = useState(props.item ? props.item.ingredients : "")
     const [recipie, setRecipie] = useState(props.item ? props.item.recipie : "")
 
+    // const [ingredients2, setIngredients2] = useState(Object.keys(props.mainIngredients).length !== 0 ? props.mainIngredients : [])
+
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -26,6 +32,8 @@ const ItemForm = (props) => {
         categories.push("all")
         category.split(",").map(category => { return categories.push(category) })
         console.log("categories setState array :", categories)
+        console.log("ingrediends2 array :", ingredients2)
+        alert("ig2" + JSON.stringify(ingredients2))
         const item = {
             name: name,
             price: price,
@@ -46,6 +54,28 @@ const ItemForm = (props) => {
 
     }
 
+    const append2InputFields = () => {
+        const newIngredient = { name: '', quantity: '' }
+        console.log("new Ingredient", newIngredient)
+        setIngredients2([...ingredients2, newIngredient])
+    }
+
+    const handleDynamicChange = (ingredient, index, key) => {
+        console.log("ingredients2 state", ingredients2)
+        console.log("to change", ingredient, index)
+        let tempIngredients = ingredients2
+        tempIngredients[index][key] = ingredient
+        setIngredients2([...tempIngredients])
+    }
+
+    useEffect(() => {
+        console.log("debug", ingredients2)
+    }, [ingredients2])
+    useEffect(() => {
+        console.log("mainIngredients", props.mainIngredients)
+        setIngredients2(props.mainIngredients)
+
+    }, [props.mainIngredients])
     return (
         <div className="content-primary">
             <h2 style={{
@@ -55,6 +85,9 @@ const ItemForm = (props) => {
                 "background": "#0173a9",
                 "fontWeight": "bold"
             }}>Add Item details</h2>
+            check both add and edit items for ingredient working code !!!!
+            dynamic category generation and multiple selection option ,CRUD operations for category <br />
+            dynamic ingredients generation and multiple selection option, CRUD operations for ingredients: {JSON.stringify([{ 'key': 'value' }, { 'key2': 'value2' }])}
             <Form onSubmit={handleSubmit} id='itemForm' >
                 <FormGroup row id='formGroup'>
                     <Label for="name" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Name</Label>
@@ -98,6 +131,14 @@ const ItemForm = (props) => {
                     <Label for="ingredients" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</Label>
                     <Col sm={10}>
                         <Input type="textarea" name="ingredients" id="ingredients" placeholder="Ingredients" value={ingredients} onChange={(e) => { setIngredients(e.target.value) }} />
+                        Ingredients new
+                        <AddIngredientModal buttonLabel="Open add ingredients Modal"
+                            append2InputFields={append2InputFields}
+                            ingredients2={ingredients2}
+                            handleDynamicChange={handleDynamicChange}
+                            setIngredients2={setIngredients2}
+                        />
+
                     </Col>
                 </FormGroup>
 
@@ -114,7 +155,7 @@ const ItemForm = (props) => {
                     <input className="button-color3" type="submit" value="Add Item" />
                 </div>
             </Form>
-        </div>
+        </div >
     )
 }
 export default ItemForm

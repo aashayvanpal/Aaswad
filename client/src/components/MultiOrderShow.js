@@ -369,7 +369,14 @@ const MultiOrderShow = () => {
                         </div>
 
                         {renderBLD()}
+                        <br />
+                        Number of People - {orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].numberOfPeople}
+                        <br />
 
+                        Event Name - {orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].eventName}
+                        <br />
+
+                        Notes - {orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].notes}
                         {(orderDates[selectedOrder['index']][selectedOrder['date']][selectedOrder['orderType']].items.length !== 0) ? (
                             <div>
                                 <table className='render-table'>
@@ -431,8 +438,11 @@ const MultiOrderShow = () => {
                                     className='styled-btn'
                                     onClick={() => generateBillDelivery()}>
                                     <img src="/static/media/billing-icon.cfaf1bcb.jpg" alt="billIcon" width="30px" height="30px"></img>
-                                    Generate Bill</button>
-
+                                    Generate Bill
+                                </button>
+                                <hr />
+                                <button>Download bill</button>
+                                <button>Generate Misc table</button>
                             </div>
                         ) : (null)}
 

@@ -142,9 +142,19 @@ export default function MultiDateOrders() {
 
     const handleInput = (e, index, date, orderType, type) => {
         console.log('inside handleInput index,date, orderType:', index, date, orderType)
-        orderDates[index][date][orderType][type] = Number(e.target.value)
+        console.log(`DDDDD -> orderDates[index][orderType][${type}]`, orderDates[index][date][orderType][type])
+
+        if (Number(orderDates[index][date][orderType][type]) === NaN &&
+            orderDates[index][date][orderType][type] != null) {
+            orderDates[index][date][orderType][type] = Number(e.target.value)
+        } else {
+            orderDates[index][date][orderType][type] = e.target.value
+
+        }
+
         orderDates[index][date][orderType].rate = orderDates[index][date][orderType].amount / orderDates[index][date][orderType][type]
         console.log(`orderDates[index][orderType][${type}]`, orderDates[index][date][orderType][type])
+        console.log(`orderDates[index][orderType][${type}]`, orderDates)
         console.log(`orderDates[index][orderType][amount]`, orderDates[index][date][orderType].amount)
         console.log(`orderDates[index][orderType][rate]`, orderDates[index][date][orderType].rate)
         setOrderDates([...orderDates])
@@ -176,8 +186,8 @@ export default function MultiDateOrders() {
                             >
                                 {dates.map((date, i) =>
                                     <Accordion.Item key={i} eventKey={i} className="accordion">
-                                        <Accordion.Header onClick={() => { console.log('clicked:', date, i) }} targetid={i} style={{ textAlign: 'center' }}>
-                                            {date}
+                                        <Accordion.Header className="accordion-header" style={{ "border": "8px solid blue", backgroundColor: "!red" }} onClick={() => { console.log('clicked:', date, i) }} targetid={i}>
+                                            {date} + extra text
                                         </Accordion.Header>
                                         <Accordion.Body accordianid={i} >
                                             <strong>

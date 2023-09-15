@@ -114,6 +114,17 @@ export default function NavigationBar() {
                 </Link>
 
                 <Link
+                    to="/eventOrders"
+                    className="Nav-barLink"
+                    style={{ textDecoration: "none" }}
+                >
+                    <li><img src={ordersImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Event orders</li>
+                </Link>
+
+                <Link
                     to="/users/add"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
@@ -135,11 +146,18 @@ export default function NavigationBar() {
                     <li>Customers</li>
                 </Link>
                 <Link
-                    to="/users/add"
+                    to="/recipies"
                     className="Nav-barLink"
                     style={{ textDecoration: "none" }}
                 >
                     <li>Recipies</li>
+                </Link>
+                <Link
+                    to="/ingredients"
+                    className="Nav-barLink"
+                    style={{ textDecoration: "none" }}
+                >
+                    <li>Ingredients</li>
                 </Link>
                 <Link
                     to="/calender"
@@ -161,6 +179,13 @@ export default function NavigationBar() {
                     style={{ textDecoration: "none" }}
                 >
                     <li>Deals</li>
+                </Link>
+                <Link
+                    to="/contacts"
+                    className="Nav-barLink"
+                    style={{ textDecoration: "none" }}
+                >
+                    <li>Contacts</li>
                 </Link>
             </ul>
         </div>

@@ -352,12 +352,12 @@ const Menu = () => {
                                                         newCheckboxChange(item)
                                                     }}>
                                                         <div className="card-body-style">
-                                                            <div style={{ "height": "150px", "width": "100%" }}>
+                                                            <div style={{ "height": "150px", "width": "45%" }}>
 
                                                                 <img src={`/images/food-item-images/${item.imgUrl}`} alt={item.name + " image"} id="imageStyling" />
 
                                                                 {/* <img src={item.imgUrl} alt={item.name + " image"} id="imageStyling" /> */}
-                                                                <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} />
+                                                                {/* <img src={cardCurve} width="305px" height="148px" alt="" style={{ "position": "relative", "left": "-7px" }} /> */}
                                                             </div>
                                                             <div className="contents">
                                                                 <h1 className="itemName" style={{ "textAlign": "center", "width": "90%" }}>{i+1}.{item.name}</h1>
