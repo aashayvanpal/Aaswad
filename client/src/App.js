@@ -1,4 +1,4 @@
-// App version v1.0.7.0 T1 eventOrders Feature integration
+// App version v1.0.7.0 T1 eventOrders Feature + item update Feature
 // Check version-notes.txt for version updates
 // Working on css for both desktop and mobile(only customer view)
 import React from "react";
@@ -53,6 +53,7 @@ import Ingredients from "./components/ingredients";
 import EventOrders from "./components/eventOrders/index.js";
 import EventOrdersList from "./components/eventOrders/list";
 import Contacts from "./components/contacts/index.js";
+import BusinessAnalyzer from "./components/businessAnalyzer/index.js";
 function App() {
   return (
     <div className="app">
@@ -358,6 +359,11 @@ function App() {
                       <Route exact path="/multiOrders/:id">
                         <Header />
                         <MultiOrderShow />
+                      </Route>
+                      <Route path="/profit-loss">
+                        <Header />
+                        <BusinessAnalyzer />
+                        
                       </Route>
 
                     </Switch>

@@ -153,3 +153,29 @@ module.exports.deleteField = (req, res) => {
         }
     )
 }
+
+
+module.exports.deleteEventOrderByID = (req, res) => {
+    const orderIdToDelete = req.params.id; // Specify the ID you want to delete from the "items" array
+    const deleteOrder = { orders: { orderId: orderIdToDelete } }
+
+    // Use findOneAndUpdate to delete the order with the matched "orderId"
+    EventOrder.findOneAndUpdate(
+        { 'orders.orderId': orderIdToDelete }, // Find the document containing the specified orderId in the "orders" array
+        { $pull: deleteOrder }, // Pull (remove) the item with the matched "orderId"
+        { new: true }, // Return the updated document
+        (error, updatedDocument) => {
+            if (error) {
+                console.error('Error updating document:', error);
+                return;
+            }
+            if (updatedDocument) {
+                console.log('Updated document:', updatedDocument);
+            } else {
+                console.error('Item with ID not found:', orderIdToDelete);
+            }
+        }
+    );
+
+
+}

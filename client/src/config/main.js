@@ -1,4 +1,4 @@
-// for deployment file
+// making 2 files for easy deployment and management for configurations (Local)
 module.exports.axiosURL = 'https://aaswad.herokuapp.com'
 module.exports.mongodburl = process.env.MONGODB_URI
 module.exports.appVersion = 'v1.0.7.0 T1'

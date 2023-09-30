@@ -1,28 +1,38 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-// import { Table } from 'reactstrap';
 import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
+// import { Table } from 'reactstrap';
+
 import '../../css/itemForm.css'
 
 import AddIngredientModal from '../ingredients/modals/addIngredientsModal'
 
 
 const ItemForm = (props) => {
+    const checkforAll = () => {
+        // this function matches for "all" value and removes it else returns the array
+        if (props.item.category.includes('all')) {
+            let newCategory = props.item.category
+            newCategory.shift()
+            // alert("entering true part" + newCategory)
+        }
+        else {
+            return props.item.category
+        }
+    }
+
     const { ingredients2, setIngredients2 } = props
-    // const [] = useState('')
-    const [selectedValues, setSelectedValues] = useState('')
-    const [items, setItems] = useState([])
+    // const [items, setItems] = useState([])
     const [name, setName] = useState(props.item ? props.item.name : "")
     const [price, setPrice] = useState(props.item ? props.item.price : "")
-    const [category, setCategory] = useState(props.item ? props.item.category : "")
+    const [category, setCategory] = useState(props.item ? checkforAll() : "") // if it contains all , remove it here
     const [measured, setMeasured] = useState(props.item ? props.item.measured : "")
     const [imgeURL, setImgeURL] = useState(props.item ? props.item.imgUrl : "default.png")
-    const [display, setDisplay] = useState(props.item ? props.item.display : "")
-    const [ingredients, setIngredients] = useState(props.item ? props.item.ingredients : "")
+    // const [display, setDisplay] = useState(props.item ? props.item.display : "")
+    const [ingredients, setIngredients] = useState(props.item ? props.item.ingredients : [])
+    const [selectedValues, setSelectedValues] = useState(ingredients)
+
     const [recipie, setRecipie] = useState(props.item ? props.item.recipie : "")
-
-    // const [ingredients2, setIngredients2] = useState(Object.keys(props.mainIngredients).length !== 0 ? props.mainIngredients : [])
-
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -30,10 +40,16 @@ const ItemForm = (props) => {
 
         let categories = []
         categories.push("all")
-        category.split(",").map(category => { return categories.push(category) })
+        let categoryArray = []
+        if (Array.isArray(category)) {
+            categories = category
+        } else {
+
+            category.split(",").map(category => { return categories.push(category) })
+        }
         console.log("categories setState array :", categories)
         console.log("ingrediends2 array :", ingredients2)
-        alert("ig2" + JSON.stringify(ingredients2))
+        // alert("ig2" + JSON.stringify(selectedValues))
         const item = {
             name: name,
             price: price,
@@ -41,7 +57,7 @@ const ItemForm = (props) => {
             measured: measured,
             imgUrl: imgeURL,
             display: false,
-            ingredients: ingredients,
+            ingredients: selectedValues,
             recipie: recipie
         }
         props.item && (item.id = props.item._id)
@@ -76,6 +92,11 @@ const ItemForm = (props) => {
         setIngredients2(props.mainIngredients)
 
     }, [props.mainIngredients])
+    useEffect(() => {
+        setIngredients(selectedValues)
+    }, [selectedValues])
+
+
     return (
         <div className="content-primary">
             <h2 style={{
@@ -85,9 +106,8 @@ const ItemForm = (props) => {
                 "background": "#0173a9",
                 "fontWeight": "bold"
             }}>Add Item details</h2>
-            check both add and edit items for ingredient working code !!!!
+
             dynamic category generation and multiple selection option ,CRUD operations for category <br />
-            dynamic ingredients generation and multiple selection option, CRUD operations for ingredients: {JSON.stringify([{ 'key': 'value' }, { 'key2': 'value2' }])}
             <Form onSubmit={handleSubmit} id='itemForm' >
                 <FormGroup row id='formGroup'>
                     <Label for="name" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Name</Label>
@@ -130,13 +150,16 @@ const ItemForm = (props) => {
                 <FormGroup row id='formGroup'>
                     <Label for="ingredients" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</Label>
                     <Col sm={10}>
-                        <Input type="textarea" name="ingredients" id="ingredients" placeholder="Ingredients" value={ingredients} onChange={(e) => { setIngredients(e.target.value) }} />
-                        Ingredients new
-                        <AddIngredientModal buttonLabel="Open add ingredients Modal"
+                        {Array.isArray(ingredients) ? <>{
+                            ingredients.map(ingredient => <div>{ingredient.name} {ingredient.quantity}</div>)
+                        }</> : "old ingregients"}
+                        <AddIngredientModal buttonLabel="Add ingredients"
                             append2InputFields={append2InputFields}
                             ingredients2={ingredients2}
                             handleDynamicChange={handleDynamicChange}
                             setIngredients2={setIngredients2}
+                            selectedValues={ingredients}
+                            setSelectedValues={setSelectedValues}
                         />
 
                     </Col>
@@ -151,7 +174,6 @@ const ItemForm = (props) => {
 
                 <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "30px" }}>
                     <Link to='/items'><button className="button-color3" >Back</button></Link>
-
                     <input className="button-color3" type="submit" value="Add Item" />
                 </div>
             </Form>

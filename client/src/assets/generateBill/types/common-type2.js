@@ -99,6 +99,7 @@ const pdfGenerate = ({ name = 'default name',
             },
             {
                 content: particulars,
+                // content: 'Hi-Tea',
                 styles: {
                     halign: 'center',
                     valign: 'middle',
@@ -128,7 +129,9 @@ const pdfGenerate = ({ name = 'default name',
             // (() => true ? getMiscItems() : null),
 
             [{
-                content: 'Transportation (Tempo)',
+                // content: 'Transportation (Tempo)',
+                content: 'Porter',
+                // content: 'Dunzo',
                 colSpan: 4,
                 styles: {
                     halign: 'right',

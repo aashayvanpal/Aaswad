@@ -59,6 +59,9 @@ const Ingredients = () => {
             <div>
                 U for Ingredients
                 <br />
+                Make another recorder ---- ingredients recorder==== this will contain previous records for number of ingredients required for a set number for people
+                example : 500 people --- buy rice -60kg , coconut = 60 ,etc
+                <br />
 
                 Listing ingredients :{ingredients.length}
                 <br />

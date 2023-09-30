@@ -154,6 +154,8 @@ const Dashboard = () => {
                             <h2>Completed orders :{totalCompletedOrders}</h2>
                         </div>
                     </div>
+                    <h1>Event Orders</h1>
+
 
                 </div>) : (<LoadingSpinner />)}
             </div>

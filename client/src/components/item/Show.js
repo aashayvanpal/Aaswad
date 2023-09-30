@@ -77,7 +77,10 @@ const ItemShow = () => {
                     </tr>
                     <tr>
                         <td><h2>Ingredients</h2></td>
-                        <td><h2>{ingredients}</h2></td>
+                        {Array.isArray(ingredients) ? <>{
+                            ingredients.map(ingredient => <div>{ingredient.name} {ingredient.quantity}</div>)
+                        }</> : "old ingregients"}
+                        {/* <td><h2>{}</h2></td> */}
                     </tr>
                     <tr>
                         <td><h2>Recipie</h2></td>

@@ -187,6 +187,16 @@ export default function NavigationBar() {
                 >
                     <li>Contacts</li>
                 </Link>
+                <Link
+                    to="/profit-loss"
+                    className="Nav-barLink"
+                    style={{ textDecoration: "none" }}
+                >
+                    <li><img src={ordersImg} alt=""
+                        style={{
+                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
+                        }} height="40px" width="40px" />Profit-Loss</li>
+                </Link>
             </ul>
         </div>
     )

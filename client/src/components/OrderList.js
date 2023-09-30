@@ -240,10 +240,10 @@ const ItemList = () => {
             })
     }
 
-    // doubt
+    // doubt - not working in mobile view
     const sortAscending = (settingFunction, value) => {
-        console.log('settingFunction', settingFunction)
-        console.log('value', value)
+        // console.log('settingFunction', settingFunction)
+        console.log('valueasc', value)
         const sorted = value.sort(function (a, b) {
             return (a.customer.eventDate > b.customer.eventDate) ? -1 : ((a.customer.eventDate < b.customer.eventDate) ? 1 : 0);
         })
@@ -251,11 +251,12 @@ const ItemList = () => {
         settingFunction([...sorted])
     }
 
-    // doubt
+    // doubt - not working in mobile view
     const sortDescending = (settingFunction, value) => {
-        console.log('settingFunction', settingFunction)
-        console.log('value', value)
+        // console.log('settingFunction', settingFunction)
+        console.log('valuedes', value)
         const sorted = value.sort(function (a, b) {
+            console.log('a,b',a,b);
             return (a.customer.eventDate < b.customer.eventDate) ? -1 : ((a.customer.eventDate > b.customer.eventDate) ? 1 : 0);
         })
         console.log('sorted', sorted)
@@ -387,7 +388,7 @@ const ItemList = () => {
 
                                                 </Td>
 
-                                                <Td className="listing-table" >{
+                                                <Td className="listing-table" onClick={() => { console.log("selected :", item) }}>{
                                                     item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
                                                 }</Td>
                                                 <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}

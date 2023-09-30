@@ -61,7 +61,8 @@ router.post('/eventOrders', eventOrderController.createEventOrder)
 router.delete('/eventOrders/:id', eventOrderController.destroy)
 router.put('/eventOrders/:id', eventOrderController.addOrder)
 router.put('/eventOrders/edit/:id', eventOrderController.update)
-router.put('/eventOrders/delete/:id', eventOrderController.deleteField)
+router.put('/eventOrders/deleteField/:id', eventOrderController.deleteField)
+router.put('/eventOrders/delete/:id', eventOrderController.deleteEventOrderByID)
 
 
 // for ingredients 

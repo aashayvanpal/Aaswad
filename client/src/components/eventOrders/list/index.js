@@ -7,10 +7,12 @@ import generateObjectID from "../../../helperFunctions/generateObjectID"
 import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table';
 import backIcon from '../../../images/back-icon.png'
 import homeDeliveryMan from '../../../images/home-delivery-man.png'
+import confirm from 'reactstrap-confirm'
+
 
 import CalculateTotalQuantity from "../modals/calculateTotalQuantityModal"
 import calculateOrderTotal from '../../../helperFunctions/calculateOrderTotal'
-import { updateEventOrder } from "../../../apis/eventOrders"
+import { updateEventOrder, deleteOrderFromEventOrders } from "../../../apis/eventOrders"
 
 const EventOrdersList = () => {
     const [eventName, setEventName] = useState('')
@@ -72,6 +74,7 @@ const EventOrdersList = () => {
         // when modal opens it sets the state
         // setSelectedOrders(orders.filter(order => order.isSelected))
         const selectedOrders = orders.filter(order => order.isSelected)
+        console.log("selected orders to debug ::::", selectedOrders);
         if (selectedOrders.length != 0) {
             const calculatedTotal = calculateOrderTotal(selectedOrders)
             console.log("calculated Total :", calculatedTotal)
@@ -108,6 +111,32 @@ const EventOrdersList = () => {
         let statusUpdatedOrders = orders
         statusUpdatedOrders[index]['status'] = statusValue
         setOrders([...statusUpdatedOrders])
+    }
+    const removeEventOrder = async (name, orderID) => {
+        // add confirmation here
+        let result = await confirm({
+            title: (
+                <div style={{ "color": "black", "fontWeight": "bold" }}>
+                    Delete Order Confirmation
+                </div>
+            ),
+            message: (
+                <div style={{ "color": "green" }}>
+                    Are you sure you want to delete : {name}??
+                </div>
+            ),
+            confirmText: "Delete",
+            confirmColor: "warning",
+            cancelColor: "link text-danger",
+            classNames: 'confirmModal'
+        })
+        console.log("result is :", result)
+        if (result) {
+            deleteOrderFromEventOrders(orderID)
+            setOrders(orders.filter(order => order.orderId != orderID))
+        } else {
+            console.log("do not delete the order")
+        }
     }
     return <>
         <ShowBtn />
@@ -175,7 +204,7 @@ const EventOrdersList = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {orders.map((order, index) => <Tr key={index}>
+                                {orders.map((order, index) => <Tr key={index} style={{ backgroundColor: order.status === "completed" ? "#006400" : "" }}>
                                     <Td className='listing-table'>
                                         <input type="checkbox" checked={order.isSelected} onClick={() => toggleSelect(index)} />
                                         {order.isSelected ? "yes" : "no"}
@@ -210,7 +239,7 @@ const EventOrdersList = () => {
                                         </select>
                                     </Td>
                                     <Td className='listing-table'>
-                                        <button>Delete</button>
+                                        <button onClick={(e) => removeEventOrder(order.customer.fullName, order.orderId)}>Delete</button>
                                     </Td>
                                 </Tr>)}
                             </Tbody>

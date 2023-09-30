@@ -3,6 +3,7 @@
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { fillData, backgroundGenerate, showAdvancePayment } from './blocks'
+import moment from 'moment'
 
 // Image import SVG
 import imgData from './images/image-exports'
@@ -28,6 +29,7 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
     doc.text(45, 150, `Name :  ${name}`,)
+    // doc.text(45, 165, `Date :  ${moment(date).format('DD-MM-YYYY')}`)
     doc.text(45, 165, `Date :  ${date}`)
     doc.text(45, 180, `Mobile : ${mobile}`)
 
@@ -68,22 +70,23 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
                     halign: 'center'
                 }
             }],
-            [{
-                content: 'Transportation',
-                colSpan: 4,
-                styles: {
-                    halign: 'right',
-                }
-            },
-            {
-                content: `${transportation.rate}/-`,
-                colSpan: 1,
-                styles: {
-                    halign: 'center',
+            // [{
+            //     // content: 'Transportation',
+            //     content: `${transportation.medium}`,
+            //     colSpan: 4,
+            //     styles: {
+            //         halign: 'right',
+            //     }
+            // },
+            // {
+            //     content: `${transportation.rate}/-`,
+            //     colSpan: 1,
+            //     styles: {
+            //         halign: 'center',
 
-                }
-            }],
-            showAdvancePayment(advancePayment),
+            //     }
+            // }],
+            // showAdvancePayment(advancePayment),
             [{
                 content: 'Balance',
                 colSpan: 4,
@@ -130,6 +133,7 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
 
     // Sets name of the file
     doc.save(`${name}-${date}.pdf`)
+    // doc.save(`${name}-${moment(date).format('DD-MM-YYYY')}.pdf`)
 }
 
 export default pdfGenerate

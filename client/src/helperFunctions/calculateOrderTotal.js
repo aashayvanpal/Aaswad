@@ -249,7 +249,6 @@ function getResult(items) {
 
     // console.log('desired result :',result)
 
-
     return desiredResult
 
 
@@ -261,6 +260,8 @@ const calculateOrderTotal = (orders) => {
     // console.log("Orders:" , orders)
     console.log("Length of orders:", orders.length)
     console.log("All:", All)
+    globalArr = []
+
     return All.slice(-1)[0] //accessing last array element and returning first index value
 }
 export default calculateOrderTotal

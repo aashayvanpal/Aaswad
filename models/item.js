@@ -26,7 +26,7 @@ const itemSchema = new Schema({
         type: Boolean,
     },
     ingredients: {
-        type: String
+        type: Array
     },
     recipie: {
         type: String

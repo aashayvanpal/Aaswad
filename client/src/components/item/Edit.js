@@ -44,26 +44,26 @@ const EditItem = (props) => {
         console.log('ingredients : ', ingredients)
 
 
-        // axios.put(`/items/edit/${item.id}`, item, {
-        //     headers: {
-        //         "x-auth": localStorage.getItem('token')
-        //     }
-        // })
-        //     .then(response => {
-        //         if (response.data.errors) {
-        //             console.log('Validation Error : ', response.data.errors)
-        //             window.alert(response.data.message)
-        //         }
-        //         else {
-        //             console.log('success', response.data)
-        //             localStorage.removeItem("cartItems")
-        //             console.log('localstorage cleared')
-        //             // this.props.history.push(`/items/show/${response.data._id}`)
-        //             window.location.href = '/items'
+        axios.put(`/items/edit/${item.id}`, item, {
+            headers: {
+                "x-auth": localStorage.getItem('token')
+            }
+        })
+            .then(response => {
+                if (response.data.errors) {
+                    console.log('Validation Error : ', response.data.errors)
+                    window.alert(response.data.message)
+                }
+                else {
+                    console.log('success', response.data)
+                    localStorage.removeItem("cartItems")
+                    console.log('localstorage cleared')
+                    // this.props.history.push(`/items/show/${response.data._id}`)
+                    window.location.href = '/items'
 
-        //         }
-        //     })
-        //     .catch(err => alert("There was an error in adding item " + err))
+                }
+            })
+            .catch(err => alert("There was an error in adding item " + err))
     }
 
     return (
@@ -74,8 +74,11 @@ const EditItem = (props) => {
                 <div style={{ width: '100%' }}>
                     <Link to='/items'>Back</Link>
                     <h1 style={{ "textAlign": "center", "padding": "10px" }}>Edit Item - {item.name}</h1>
-                    {item.name && <ItemForm item={item} handleItemSubmit={handleItemSubmit} mainIngredients={ingredients}
-                        ingredients2={ingredients} setIngredients2={setIngredients}
+                    {item.name && <ItemForm item={item}
+                        handleItemSubmit={handleItemSubmit}
+                        mainIngredients={ingredients}
+                        ingredients2={ingredients}
+                        setIngredients2={setIngredients}
                     />}
                 </div>
             </div>

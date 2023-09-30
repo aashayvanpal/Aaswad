@@ -59,6 +59,7 @@ const CustomerForm = (props) => {
 
     useEffect(() => {
         console.log('Inside customer form')
+        console.log('Inside customer form order',localStorage.getItem('order'))
         // Adding focus to the fullName on form load
         // console.log('Check this ============>', this)
         // console.log('Check this.fullName ============>', this.fullName)
@@ -69,6 +70,7 @@ const CustomerForm = (props) => {
 
         // Filling the form with known data , if editing ,use that localstorage.order ,else /account api
         if (JSON.parse(localStorage.getItem('order'))) {
+            alert("yes i got an previous order customer details! working here!")
             console.log('order found from localstorage details edit feature')
             console.log(JSON.parse(localStorage.getItem('order')))
             const { customer_id, numberOfPeople, email, fullName, phoneNumber, eventDate, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))

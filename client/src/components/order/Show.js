@@ -18,6 +18,9 @@ import downloadType2Bill from '../../assets/generateBill/types/common-type2.js'
 import downloadType3Bill from '../../assets/generateBill/types/common-type3.js'
 import MiscTable from './MiscTable.js'
 import { updateEventOrder, deleteFieldFromEventOrder } from '../../apis/eventOrders.js'
+import moment from 'moment'
+import { deleteOrderFromEventOrders } from '../../apis/eventOrders.js'
+
 
 
 const ItemShow = ({ type }) => {
@@ -225,8 +228,12 @@ const ItemShow = ({ type }) => {
         setId(order.orderId)
         setSelectedItems(order.items)
         setQueries(order.customer.queries)
-        if (orderDetails.AdvanceAmount) {
-            setAdvanceAmount(Number(orderDetails.AdvanceAmount))
+        if (order.AdvanceAmount) {
+            setAdvanceAmount(Number(order.AdvanceAmount))
+        }
+        if (order.transport) {
+            setMedium(order.transport.medium)
+            setRate(order.transport.rate)
         }
     }
 
@@ -262,6 +269,32 @@ const ItemShow = ({ type }) => {
 
     const EditOrder = () => {
         console.log("Inside EditOrder")
+        alert("EDIT ORDER :" + type)
+        switch (type) {
+            case "eventOrder": {
+                alert("Inside event order type")
+                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+                console.log("I need customer object here", orderDetails.order.customer)
+                console.log("I need customer object eventDate", moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY'))
+                console.log("I need customer object eventTime", moment(orderDetails.order.customer.eventDate).format('H:m'))
+                // const { customer_id, numberOfPeople, email, fullName, phoneNumber, eventDate, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
+                orderDetails.order.customer.eventTime = moment(orderDetails.order.customer.eventDate).format('H:m')
+                orderDetails.order.customer.eventDate = moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY')
+                console.log("I need customer object order", orderDetails)
+
+                localStorage.setItem('order', JSON.stringify(orderDetails.order.customer))
+
+                const eventId = window.location.href.split('/')[4]
+                localStorage.setItem('eventId', eventId)
+
+                deleteOrderFromEventOrders(id)
+
+                break;
+            } default: {
+                alert("Normal flow edit")
+                break;
+            }
+        }
 
         axios.get('/api/menu', {
             headers: {
@@ -352,7 +385,7 @@ const ItemShow = ({ type }) => {
 
         // localstorage setting state
         let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-        orderDetails.AdvanceAmount = amount
+        orderDetails.order.AdvanceAmount = amount
         localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
     }
     const ShowAdvancePaymentTable = (amount) => {
@@ -376,7 +409,7 @@ const ItemShow = ({ type }) => {
         }
     }
 
-    const ShowTransportTable = (medium, rate) => {
+    const updateTransport = (medium, rate) => {
         // change the order model
         // create controller
         // post request to update transport
@@ -406,33 +439,80 @@ const ItemShow = ({ type }) => {
             })
     }
 
+    const ShowTransportTable = (medium, rate) => {
+
+
+        alert("type for entering medium:" + type)
+
+        switch (type) {
+            case "eventOrder": {
+                alert("Inside event order type" + medium + rate)
+                // api call here
+                updateEventOrder(id, { transport: { medium, rate } })
+                setMedium(medium)
+                setRate(rate)
+                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+                orderDetails.order.transport = { medium, rate }
+                localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
+
+                break;
+            } default: {
+                alert("Normal flow edit")
+                updateTransport(medium, rate)
+                break;
+
+            }
+        }
+    }
+
 
     const deleteTransportTable = () => {
-        console.log('inside parent to delete the transport table')
-        // put request to delete the transport table
-        console.log('check for state here', order)
-        const { _id } = order
+        alert("type for deleting medium:")
 
-        axios.put(`/orders/${_id}`, { transport: {} }, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                const item = response.data
+        switch (type) {
+            case "eventOrder": {
+                alert("Inside event order type" + id)
+                // api call here remove transport object
+                deleteFieldFromEventOrder(id, 'transport')
 
-                console.log('Edited order :', item)
                 setMedium('')
-                setRate('')
-                const oldTransport = JSON.parse(localStorage.getItem('order'))
-                delete oldTransport.transport
-                localStorage.setItem('order', JSON.stringify(oldTransport))
-                console.log('order amount to check', localStorage.getItem('order'))
+                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
+                delete orderDetails.order.transport
+                localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
+                break;
+            } default: {
+                alert("Normal flow edit transport")
+                console.log('inside parent to delete the transport table')
+                // put request to delete the transport table
+                console.log('check for state here', order)
+                const { _id } = order
 
-            })
-            .catch(err => {
-                console.log(err)
-            })
+                axios.put(`/orders/${_id}`, { transport: {} }, {
+                    headers: {
+                        'x-auth': localStorage.getItem('token')
+                    }
+                })
+                    .then(response => {
+                        const item = response.data
+
+                        console.log('Edited order :', item)
+                        setMedium('')
+                        setRate('')
+                        const oldTransport = JSON.parse(localStorage.getItem('order'))
+                        delete oldTransport.transport
+                        localStorage.setItem('order', JSON.stringify(oldTransport))
+                        console.log('order amount to check', localStorage.getItem('order'))
+
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                break;
+
+            }
+        }
+
+
     }
 
     const deleteAdvancePayment = () => {
@@ -466,7 +546,7 @@ const ItemShow = ({ type }) => {
     }
     const deleteAdvanceAmountinLS = () => {
         let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-        delete orderDetails.AdvanceAmount
+        delete orderDetails.order.AdvanceAmount
         localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
     }
     const deleteAdvancePaymentTable = () => {
@@ -497,7 +577,7 @@ const ItemShow = ({ type }) => {
     }
 
     const calculateBalance = () => {
-
+        alert("misssc calc balance :", JSON.stringify(miscItems))
         if (total && rate && advanceAmount) {
             const balance = rate - advanceAmount + total
             return balance
@@ -506,7 +586,8 @@ const ItemShow = ({ type }) => {
         if (total && rate && !advanceAmount) {
             console.log("Transportation medium", medium)
             console.log("Transportation amount", rate)
-            const balance = rate + total
+            console.log("total", total)
+            const balance = Number(rate) + Number(total)
             return balance
         }
         if (total && !rate && !advanceAmount) {
@@ -802,7 +883,7 @@ const ItemShow = ({ type }) => {
                     date: eventDate,
                     mobile: phoneNumber,
                     items: selectedItems,
-                    transportation: { rate },
+                    transportation: { medium, rate },
                     total: total,
                     advancePayment: advanceAmount,
                     balanceAmount: calculateBalance()
@@ -823,7 +904,8 @@ const ItemShow = ({ type }) => {
                     total: total,
                     advancePayment: advanceAmount,
                     balanceAmount: calculateBalance(),
-                    plateCost: (total / numberOfPeople)
+                    plateCost: (total / numberOfPeople),
+                    miscItems
                 })}>
                     Download Type1 bill
                 </button>
@@ -842,7 +924,7 @@ const ItemShow = ({ type }) => {
                     advancePayment: advanceAmount,
                     balanceAmount: calculateBalance(),
                     plateCost: (total / numberOfPeople),
-                    miscItems
+                    // miscItems
                 })}>
                     Download Type2 bill
                 </button>}
@@ -865,7 +947,8 @@ const ItemShow = ({ type }) => {
                         total: total,
                         advancePayment: advanceAmount,
                         balanceAmount: calculateBalance(),
-                        plateCost: (total / numberOfPeople)
+                        plateCost: (total / numberOfPeople),
+                        miscItems
                     })
                 }}>
                     Download Type3 bill

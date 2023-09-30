@@ -49,7 +49,15 @@ export const updateEventOrder = (id, updateObject) => {
 }
 
 export const deleteFieldFromEventOrder = (id, fieldName) => {
-    return (axios.put(`/eventOrders/delete/${id}`, { fieldName }, {
+    return (axios.put(`/eventOrders/deleteField/${id}`, { fieldName }, {
+        headers: {
+            'x-auth': localStorage.getItem('token')
+        }
+    }))
+}
+
+export const deleteOrderFromEventOrders = (id) => {
+    return (axios.put(`/eventOrders/delete/${id}`, {
         headers: {
             'x-auth': localStorage.getItem('token')
         }

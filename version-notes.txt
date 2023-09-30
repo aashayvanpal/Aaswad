@@ -294,7 +294,25 @@ giving focus on top to user
 selecting time compulsary
 when internet is lost , keeping data and updating when internet is back up
 
+v1.0.7.1 T2 Feature list : 
 
+ADD CSS where ever needed for time pass
+5.Bug report : search - not working in mobile view => sort function is not working correctly 
+4.Bug report : fixing all bill generations
+
+
+-------------------done------------------------
+v1.0.7.0 T2 Feature list : 
+1. eventOrders Delete feature at least to recreate order(done) 
+2. eventOrders edit feature ==> this feature is done but it needs to be fixed , where id is changing , do the correct update feature, customer object must be passed(done)
+3. Profit loss balance sheet calculator,save as json option to be added ,read a file (done)
+Modal open => get object => render in ui 
+  BugResolved : eventOrders - get Item for this event button => the ui is not rendering correctly , the quantity is doubling every time modal is opened
+6.eventOrder Render state correctly when adding transportation(done)
+7.Bug report : fix the item update query with the new ingredients list
+  Create item , check the structure
+  edit item , check for new structure
+    work on adding ingredients , structure and flow(done)
 
 v1.0.7.0 T1 Inclusive:
 v1.0.6.2 T3 (feature requirement phase) Order Customer integration
@@ -619,3 +637,10 @@ Calendar
 Carousel
 Slider
 ****************************************
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++
+PERFORMANCE ISSUES:
+eventOrders update code -> 2 api calls are being made . delete and create , ideally it should be a put operation 
++++++++++++++++++++++++++++++++++++++++++++++

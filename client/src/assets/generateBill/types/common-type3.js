@@ -1,5 +1,6 @@
 
 // PDF Generator imports
+import moment from 'moment'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { fillData, backgroundGenerate, showAdvancePayment } from '../blocks'
@@ -18,12 +19,33 @@ const pdfGenerate = ({ name = 'default name',
     balanceAmount = 'default balanceAmount',
     particulars = "default particulars",
     numberOfPeople = "default no of people",
-    plateCost = "default plate cost"
+    plateCost = "default plate cost",
+    miscItems = [] //default
 }) => {
 
     var doc = new jsPDF('protrait', 'px', 'a4', 'false')
 
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
+
+    const getMiscItems = () => {
+        // alert("misc items:"+miscItems)
+
+        if (miscItems.length != 0) {
+            return miscItems?.map(item => [{
+                content: `${item.particular}`,
+                colSpan: 4,
+                styles: {
+                    halign: 'right',
+                }
+            }, {
+                content: `${item.rate}/-`,
+                colSpan: 1,
+                styles: {
+                    halign: 'center',
+                }
+            }])[0]
+        }
+    }
 
 
     backgroundGenerate(doc)
@@ -38,7 +60,8 @@ const pdfGenerate = ({ name = 'default name',
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
     doc.text(45, 150, `Name  :  ${name}`,)
-    doc.text(45, 165, `Date    :  ${date}`)
+    // doc.text(45, 165, `Date    :  ${date}`)
+    doc.text(45, 165, `Date :  ${moment(date).format('DD-MM-YYYY')}`)
     doc.text(45, 180, `Mobile :  ${mobile}`)
 
 
@@ -104,8 +127,11 @@ const pdfGenerate = ({ name = 'default name',
                     valign: 'middle',
                 }
             }],
+            // (() => true ? getMiscItems() : null),
+            // getMiscItems(),
             [{
                 content: 'Transportation(Tempo)',
+                // content: 'Porter',
                 colSpan: 4,
                 styles: {
                     halign: 'right',
@@ -125,7 +151,8 @@ const pdfGenerate = ({ name = 'default name',
                     fontStyle: 'bold'
                 }
             }, {
-                content: `${Number(total) + Number(transportation)}/-`,
+                content: `${Number(total) + Number(transportation) + Number(miscItems.reduce((acc, item) => acc + item.rate, 0))}/-`,
+                // content: `${Number(total) + Number(transportation)}/-`,
                 colSpan: 1,
                 styles: {
                     halign: 'center',
@@ -178,7 +205,9 @@ const pdfGenerate = ({ name = 'default name',
 
 
     // Sets name of the file
-    doc.save(`${name}-${date}.pdf`)
+    // doc.save(`${name}-${date}.pdf`)
+    doc.save(`${name}-${moment(date).format('DD-MM-YYYY')}.pdf`)
+
 }
 
 export default pdfGenerate
