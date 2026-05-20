@@ -104,38 +104,38 @@ const pdfGenerate = ({
           },
         },
       ],
-      // miscItems?.map((item) => [
-      //   {
-      //     content: `${item.particular}`,
-      //     colSpan: 4,
-      //     styles: {
-      //       halign: "right",
-      //     },
-      //   },
-      //   {
-      //     content: `${item.rate}/-`,
-      //     colSpan: 1,
-      //     styles: {
-      //       halign: "center",
-      //     },
-      //   },
-      // ])[0], // this is not working correctly , fix for dynamic table display
-      // miscItems?.map((item) => [
-      //   {
-      //     content: `${item.particular}`,
-      //     colSpan: 4,
-      //     styles: {
-      //       halign: "right",
-      //     },
-      //   },
-      //   {
-      //     content: `${item.rate}/-`,
-      //     colSpan: 1,
-      //     styles: {
-      //       halign: "center",
-      //     },
-      //   },
-      // ])[1], // this is not working correctly , fix for dynamic table display
+      miscItems?.map((item) => [
+        {
+          content: `${item.particular}`,
+          colSpan: 4,
+          styles: {
+            halign: "right",
+          },
+        },
+        {
+          content: `${item.rate}/-`,
+          colSpan: 1,
+          styles: {
+            halign: "center",
+          },
+        },
+      ])[0], // this is not working correctly , fix for dynamic table display
+      miscItems?.map((item) => [
+        {
+          content: `${item.particular}`,
+          colSpan: 4,
+          styles: {
+            halign: "right",
+          },
+        },
+        {
+          content: `${item.rate}/-`,
+          colSpan: 1,
+          styles: {
+            halign: "center",
+          },
+        },
+      ])[1], // this is not working correctly , fix for dynamic table display
       [
         {
           content: "Total",
@@ -146,8 +146,8 @@ const pdfGenerate = ({
           },
         },
         {
-          content: `${total}/-`,
-          // content: `11300/-`, //Fix with misc totaling
+          // content: `${total}/-`,
+          content: `11065/-`, //Fix with misc totaling
           colSpan: 1,
           styles: {
             halign: "center",

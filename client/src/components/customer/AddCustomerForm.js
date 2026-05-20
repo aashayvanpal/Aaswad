@@ -8,12 +8,12 @@ import PhoneNumber from "./dynamicRender/PhoneNumber"
 import Address from "./dynamicRender/Address"
 import Language from "./dynamicRender/Language"
 import { createCustomer, updateCustomer } from "../../apis/customers"
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { getCustomerById } from "../../apis/customers"
 
 const AddCustomerForm = () => {
 
-    const history = useHistory()
+    const navigate = useNavigate()
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [gender, setGender] = useState('male')
@@ -118,7 +118,7 @@ const AddCustomerForm = () => {
             if (customerCreated.status === 200) {
                 alert("customer has been created successfully!")
                 // navigate to /customers
-                history.push("/customers")
+                navigate("/customers")
             } else {
                 alert("there was something wrong with customer creation")
             }
@@ -132,7 +132,7 @@ const AddCustomerForm = () => {
         console.log("update customer put request here customer debug", id, customer)
         updateCustomer(id, customer)
         alert("update customer put request complete")
-        history.push("/customers")
+        navigate("/customers")
 
 
     }

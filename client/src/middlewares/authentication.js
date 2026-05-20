@@ -10,11 +10,11 @@ const authenticateUser = function (req, res, next) {
                 req.token = token
                 next()
             } else {
-                res.status('401').send({ notice: 'token not available' })
+                res.status(401).send({ notice: 'token not available' })
             }
         })
         .catch(function (err) {
-            res.status('401').send(err)
+            res.status(401).send(err)
         })
 
 }

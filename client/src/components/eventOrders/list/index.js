@@ -2,7 +2,7 @@ import ShowBtn from "../../../assets/ShowBtn"
 import { useEffect, useState } from "react"
 import NavigationBar from "../../NavigationBar"
 import { showEventOrders } from "../../../apis/eventOrders"
-import { Link } from "react-router-dom/cjs/react-router-dom.min"
+import { Link } from "react-router-dom"
 import generateObjectID from "../../../helperFunctions/generateObjectID"
 import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table';
 import backIcon from '../../../images/back-icon.png'

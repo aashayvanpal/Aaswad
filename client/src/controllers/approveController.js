@@ -66,7 +66,7 @@ module.exports.destroy = (req, res) => {
 
 // show
 module.exports.show = (req, res) => {
-    id = req.params.id
+    const id = req.params.id
     Order.findById(id)
         .then(order => {
             if (order) {
@@ -101,17 +101,11 @@ module.exports.update = (req, res) => {
         })
 }
 
-// delete a key from document 
+// delete a key from document
 module.exports.deleteKey = (req, res) => {
     const id = req.params.id
     const key = req.body.key
-    Order.updateOne({ _id: id }, { $unset: { [key]: 1 } }, (err, result) => {
-        if (err) {
-            console.error(`Error updating document with key ${key}:`, err);
-        } else {
-            console.log('Document updated successfully:');
-            // console.log('Document updated successfully:', result);
-        }
-    }).then(order => res.json(order))
-        .catch(err => res.json({ "error": "error updating document", err }))
+    Order.updateOne({ _id: id }, { $unset: { [key]: 1 } })
+        .then(result => res.json(result))
+        .catch(err => res.json({ error: 'error updating document', err }))
 }

@@ -1,7 +1,7 @@
 import Axios from 'axios'
-import { axiosURL } from './main.js'
 
-const axios = Axios.create({
-    baseURL: axiosURL
-})
+// No baseURL — requests are relative, proxied to the backend by Vite in dev
+// and served from the same Express server in production
+const axios = Axios.create()
+
 export default axios

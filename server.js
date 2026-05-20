@@ -1,3 +1,8 @@
+// Make Web Crypto API available globally (required by mongodb driver 7.x on Node 18)
+if (typeof crypto === 'undefined') {
+    global.crypto = require('crypto').webcrypto
+}
+
 // import npm packages
 const express = require('express')
 const mongoose = require('./client/src/config/database.js')
@@ -81,9 +86,9 @@ app.use(router)
 
 // Deployment Step3
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('client/build'))
+    app.use(express.static('client/dist'))
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client/build", "index.html"));
+        res.sendFile(path.resolve(__dirname, "client/dist", "index.html"));
     });
 }
 
