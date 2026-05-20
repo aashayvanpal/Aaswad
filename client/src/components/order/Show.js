@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../config/axios.js'
 import { Link } from 'react-router-dom'
-import '../../css/myOrdersShow.css'
+import '../../css/myOrdersShow.scss'
 import TransportForm from './TransportForm.js'
 import MiscForm from './MiscForm.js'
 import AdvancePaymentForm from './AdvancePaymentForm.js'

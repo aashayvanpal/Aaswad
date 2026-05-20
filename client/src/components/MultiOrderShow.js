@@ -6,7 +6,7 @@ import AdvancePaymentForm from "./order/AdvancePaymentForm.js";
 import AdvanceTable from "./order/AdvanceTable.js";
 import TransportForm from "./order/TransportForm.js";
 import TransportTable from "./order/TransportTable.js";
-import "../css/myOrdersShow.css";
+import "../css/myOrdersShow.scss";
 import downloadMultiOrderTypeBill from "../assets/generateBill/multiOrder/types/common-type1.js";
 import billIcon from "../images/billing-icon.jpg";
 import MiscForm from "./order/MiscForm.js";

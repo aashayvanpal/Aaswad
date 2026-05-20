@@ -12,7 +12,7 @@ import MultiOrderShow from "./components/MultiOrderShow.js";
 import OrderPrint from "./components/order/Print.js";
 import OrderPrintDelivery from "./components/order/PrintDelivery.js";
 import MultiOrderPrintDelivery from "./components/order/MultiOrderPrintDelivery.js";
-import MyOrdersShow from "./components/myOrdersShow.js";
+import MyOrdersShow from "./components/myOrdersShow";
 import AddUserData from "./components/AddUserData.js";
 import ItemList from "./components/item/List.js";
 import ItemEdit from "./components/item/Edit.js";
@@ -67,8 +67,6 @@ function App() {
                     <Route path="/myOrders" element={
                       <div style={{ height: "100vh" }}>
                         <Header />
-                        <h1 style={{ textAlign: "center" }}>Your order history:</h1>
-                        <br />
                         <MyOrdersList />
                       </div>
                     } />

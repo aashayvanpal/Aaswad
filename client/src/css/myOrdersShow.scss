@@ -1,0 +1,390 @@
+// ─── Variables ──────────────────────────────────────────────
+$gold:        #C9A227;
+$gold-light:  #e8c84d;
+$gold-dim:    rgba(201, 162, 39, 0.12);
+$gold-border: rgba(201, 162, 39, 0.25);
+$dark-mid:    #161616;
+$surface:     #fafaf7;
+$white:       #ffffff;
+$text:        #1a1a1a;
+$text-muted:  #6b7280;
+
+// ─── Page ────────────────────────────────────────────────────
+.mos {
+  min-height: calc(100vh - 64px);
+  background: $surface;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 20px; // base — everything scales from here
+
+  *, *::before, *::after { box-sizing: border-box; }
+  h1, h2, h3 { margin: 0; }
+  p, ul       { margin: 0; padding: 0; }
+  ul          { list-style: none; }
+
+  // ── Back nav ────────────────────────────────────────────
+  &__nav {
+    background: $dark-mid;
+    padding: 1rem 2rem;
+  }
+
+  &__back {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover { color: $gold; }
+  }
+
+  // ── Body ────────────────────────────────────────────────
+  &__body {
+    padding: 2rem 2rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  // ── Two-column grid ─────────────────────────────────────
+  &__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  // ── Card ────────────────────────────────────────────────
+  &__card {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 14px;
+    padding: 2.5rem 2.5rem 2rem;
+  }
+
+  // ── Card header (event name + status badge) ─────────────
+  &__card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.07);
+    flex-wrap: wrap;
+  }
+
+  &__card-event-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  &__card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: $text;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__item-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $gold-dim;
+    border: 1px solid $gold-border;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $gold;
+    font-family: 'Inter', sans-serif;
+  }
+
+  // ── Status badges ───────────────────────────────────────
+  &__badge {
+    display: inline-block;
+    padding: 0.5rem 1.4rem;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &--pending {
+      background: rgba(201, 162, 39, 0.12);
+      color: #a07c10;
+      border: 1px solid rgba(201, 162, 39, 0.3);
+    }
+    &--approved {
+      background: rgba(59, 130, 246, 0.1);
+      color: #1d4ed8;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    &--completed {
+      background: rgba(34, 197, 94, 0.1);
+      color: #15803d;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+    &--rejected {
+      background: rgba(239, 68, 68, 0.1);
+      color: #b91c1c;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+  }
+
+  // ── Detail list ─────────────────────────────────────────
+  &__detail-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__detail-item {
+    display: grid;
+    grid-template-columns: 2.8rem 300px 1fr;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__detail-icon {
+    font-size: 2.2rem;
+    line-height: 1.4;
+  }
+
+  &__detail-label {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: $text-muted;
+  }
+
+  &__detail-value {
+    font-size: 2.5rem;
+    color: $text;
+    font-weight: 500;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  // ── Item list ───────────────────────────────────────────
+  &__item-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.75rem;
+  }
+
+  &__item-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    &:last-child { border-bottom: none; }
+  }
+
+  &__item-index {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    background: $gold-dim;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $gold;
+    flex-shrink: 0;
+  }
+
+  &__item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  &__item-name {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: $text;
+  }
+
+  &__item-qty {
+    font-size: 2rem;
+    color: $text-muted;
+  }
+
+  &__item-rating {
+    flex-shrink: 0;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  &__no-items {
+    font-size: 1.2rem;
+    color: $text-muted;
+    margin-bottom: 1.25rem;
+  }
+
+  &__billing-note {
+    font-size: 1.15rem;
+    color: $text-muted;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    font-style: italic;
+  }
+
+  // ── Feedback card ───────────────────────────────────────
+  &__feedback-done {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  &__feedback-check {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #15803d;
+    flex-shrink: 0;
+  }
+
+  &__feedback-done-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 0.5rem;
+  }
+
+  &__feedback-note-display {
+    font-size: 1.35rem;
+    color: $text-muted;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  &__feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__overall-rating {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  &__overall-label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: $text-muted;
+    white-space: nowrap;
+  }
+
+  &__feedback-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 1.1rem 1.25rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.35rem;
+    color: $text;
+    background: $surface;
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &::placeholder { color: rgba(0, 0, 0, 0.3); }
+
+    &:focus {
+      border-color: $gold;
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
+    }
+  }
+
+  &__submit-btn {
+    align-self: flex-start;
+    padding: 1.1rem 3rem;
+    background: $gold;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+
+    &:hover {
+      background: $gold-light;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+    }
+
+    &:active { transform: translateY(0); }
+  }
+
+  // ── Skeleton loader ─────────────────────────────────────
+  &__skeleton {
+    background: linear-gradient(90deg, #e8e8e3 25%, #f2f2ee 50%, #e8e8e3 75%);
+    background-size: 200% 100%;
+    animation: mos-shimmer 1.4s infinite;
+    border-radius: 14px;
+
+    &--card { height: 420px; }
+  }
+
+  &__skeleton-body {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  @keyframes mos-shimmer {
+    0%   { background-position:  200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  // ── Responsive ──────────────────────────────────────────
+  @media (max-width: 900px) {
+    &__grid            { grid-template-columns: 1fr; }
+    &__skeleton-body   { grid-template-columns: 1fr; }
+    &__body            { padding: 1.5rem 1.25rem 4rem; }
+    &__card            { padding: 2rem 1.75rem; }
+    &__detail-item     { grid-template-columns: 2rem 180px 1fr; }
+  }
+
+  @media (max-width: 540px) {
+    &__body            { padding: 1rem 0.75rem 3rem; }
+    &__card            { padding: 1.5rem 1.25rem; }
+    &__card-header     { flex-direction: column; }
+    &__detail-item     { grid-template-columns: 2rem 1fr; }
+    &__detail-value    { grid-column: 2; }
+  }
+}

@@ -1,278 +1,239 @@
-import React, { useState, useEffect } from 'react'
-import axios from '../config/axios.js'
-import { Link } from 'react-router-dom'
-import '../css/myOrdersShow.css'
-import Star from '../assets/Star.js'
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from '../config/axios.js';
+import Star from '../assets/Star.js';
+import '../css/myOrdersShow.scss';
 
-const MyOrdersShow = () => {
+const fadeUp = {
+  hidden: { opacity: 0, y: 18 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
+};
 
-    const [order, setOrder] = useState({})
-    const [overallRating, setOverallRating] = useState(0)
-    const [id, setId] = useState('')
-    const [fullName, setFullName] = useState('')
-    const [address, setAddress] = useState('')
-    const [email, setEmail] = useState('')
-    const [eventDate, setEventDate] = useState('')
-    const [eventName, setEventName] = useState('')
-    const [numberOfPeople, setNumberOfPeople] = useState('')
-    const [status, setStatus] = useState('')
-    const [eventTime, setEventTime] = useState('')
-    const [homeDelivery, setHomeDelivery] = useState(false)
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [service, setService] = useState(false)
-    const [selectedItems, setSelectedItems] = useState([])
-    const [total, setTotal] = useState(0)
-    const [feedback, setFeedback] = useState(false)
-    const [feedbackNote, setFeedbackNote] = useState('')
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.08 } },
+};
 
-    useEffect(() => {
-        console.log('Order Show component mounted !')
-        console.log('id to show', window.location.href.split('/')[4])
-        const id = window.location.href.split('/')[5]
-        axios.get(`/myOrders/show/${id}`, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                const order = response.data
-                console.log('grab this order =>', order)
-                setOrder(order)
+const STATUS_META = {
+  pending:   { label: 'Pending',   className: 'mos__badge--pending'   },
+  approved:  { label: 'Approved',  className: 'mos__badge--approved'  },
+  completed: { label: 'Completed', className: 'mos__badge--completed' },
+  rejected:  { label: 'Rejected',  className: 'mos__badge--rejected'  },
+};
 
-                console.log('Showing :', order)
-                console.log('fullname :', order.customer.fullName)
-                console.log('id :', order._id)
-                let overallRating = typeof (order.overallRating) === 'undefined' ? (
-                    0
-                ) : (order.overallRating)
-                // console.log('obeeeeer all rating here ->', this.state.overallRating)
-
-                let id = order._id
-                let fullName = order.customer.fullName
-                let address = order.customer.address
-                let email = order.customer.email
-                let eventName = order.customer.eventName
-                let numberOfPeople = order.customer.numberOfPeople
-                console.log('numberOfPeople :', order.customer.numberOfPeople)
-
-                let eventTime = order.customer.eventTime
-
-
-                let homeDelivery = order.customer.homeDelivery
-                console.log('homeDelivery', homeDelivery)
-                let phoneNumber = order.customer.phoneNumber
-                let service = order.customer.service
-                let items = order.items
-                let status = order.status
-                let eventDate = order.customer.eventDate.toString()
-                // console.log("Event Date check:", eventDate)
-                // console.log("Event Date check typeof:", typeof (eventDate))
-                // console.log("Event Date check here:", eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4))
-                eventDate = eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4)
-                // console.log("The Date is :",eventDate.subStr(8, 2) + "/" + eventDate.subStr(5, 2) + "/" + eventDate.subStr(0, 4))
-                // console.log("The Date is :",eventDate.subString(0,5))
-
-                let feedback = typeof (order.feedback) === 'undefined' || !order.feedback ? false : true
-                let feedbackNote = order.feedbackNote
-
-                setId(id)
-                setFullName(fullName)
-                setAddress(address)
-                setEmail(email)
-                setEventDate(eventDate)
-                setEventName(eventName)
-                setNumberOfPeople(numberOfPeople)
-                setEventTime(eventTime)
-                setHomeDelivery(homeDelivery)
-                setPhoneNumber(phoneNumber)
-                setService(service)
-                setSelectedItems(items)
-                setStatus(status)
-                setFeedback(feedback)
-                setFeedbackNote(feedbackNote)
-                setOverallRating(overallRating)
-
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
-    }, [])
-
-    const submitFeedback = () => {
-        console.log('inside the feedback section')
-        // grab all state and do update here and disable the feedback button 
-        // console.log("complete order object")
-        // console.log(this.state.order)
-
-
-        // const id = id
-        axios.put(`/orders/${id}`,
-            {
-                "items": selectedItems,
-                "overallRating": overallRating,
-                "feedback": true,
-                "feedbackNote": feedbackNote
-            },
-            {
-                headers: {
-                    'x-auth': localStorage.getItem('token')
-                }
-            })
-            .then(response => {
-                const order = response.data
-
-                console.log('Edited order :', order)
-
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
-
-        setFeedback(true)
-    }
-
-    const ChangeItemRating = (newRating, id) => {
-        console.log('inside change item rating', newRating)
-        // update the state item rating
-        console.log('state items,id', selectedItems, id)
-        const items = selectedItems
-
-        //Find index of specific object using findIndex method.    
-        const objIndex = items.findIndex((obj => obj._id == id));
-
-        //Log object to Console.
-        console.log("Before update: ", items[objIndex])
-
-        // //Update object's name property.
-        items[objIndex].rating = newRating
-
-        // //Log object to console again.
-        console.log("After update: ", items[objIndex])
-        setSelectedItems([...items])
-
-    }
-
-    const ChangeOverallRating = (newRating) => {
-        setOverallRating(newRating)
-    }
-
-    return (
-        <div id="OrderShowContainer">
-            <div id="ShowContainer1">
-                {/* <h1>Showing myOrders details:-</h1> */}
-                <h1 id="OrderDetails">Your Order Details:-</h1><hr />
-                <h2><b>OrderID :</b> {id}</h2>
-                <h2><b>Customer Name :</b> {fullName}</h2>
-                <h2><b>Event Name :</b> {eventName}</h2>
-                <h2><b>Number of People :</b> {numberOfPeople}</h2>
-                <h2><b>Event Date :</b> {eventDate}</h2>
-                {/* <h1>Event Time : {this.state.eventTime} (24 hours IST)</h1> */}
-                {/* <h1>Phone Number : {this.state.phoneNumber}</h1> */}
-                <h2><b>Address :</b> {address}</h2>
-                {/* <h1>Email : {this.state.email}</h1> */}
-                <h2><b>Service :</b> {service ? "Yes" : "No"}</h2>
-                <h2><b>Home Delivery :</b> {homeDelivery ? "Yes" : "No"}</h2>
-                <h2><b>Status :</b> {status}</h2>
-                <h2><Link to="/myOrders"><button style={{
-                    "backgroundColor": "#ff881a",
-                    "borderRadius": "10px",
-                    "padding": "10px",
-                    "cursor": "pointer",
-                }}>Back</button></Link></h2>
-            </div>
-
-            <div id="ShowContainer2">
-                <h1><b>Order Items - {selectedItems.length}</b></h1>
-
-                <table style={{
-                    "borderCollapse": "collapse",
-                    "border": "2px solid black",
-                    "padding": "10px",
-                    // "backgroundColor": "green",
-                    "margin": "10px 0px",
-                    "width": "100%",
-                }}>
-                    <thead style={{ "border": "2px solid black" }}>
-                        <tr style={{ "fontWeight": "bold" }}>
-                            <td>Sl No.</td>
-                            <td>Item Name</td>
-                            <td>Quantity</td>
-                            {status === 'completed' ? <td>Rating</td> : null}
-                            {/* <td>Price</td>
-                            <td>Total</td> */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            selectedItems.map((item, i) => {
-                                // This line shows the total for rates (must fix the bug here)
-                                // this.state.total += item.quantity * item.price
-                                // this.setState(prevState => { prevState.total += item.quantity * item.price })
-                                return (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.quantity} {item.measured}</td>
-                                        {status === 'completed' ?
-                                            <td>
-                                                {typeof (item.starRating) === 'undefined' ? (
-                                                    <Star name={item.name}
-                                                        id={item._id}
-                                                        rating={item.rating}
-                                                        ChangeItemRating={ChangeItemRating}
-                                                    />
-                                                ) : (item.starRating)}
-                                            </td> :
-                                            null}
-                                        {/* <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.price}</td>
-                                        {!this.state.status ? (<>
-                                            <td><span style={{ "fontFamily": "Arial" }}>&#8377;</span>{item.quantity * item.price}</td>
-                                        </>
-                                        ) : (null)} */}
-                                    </tr>
-                                )
-
-                                // return <h1 key={item.id}><li>{item.name} - {item.quantity} - {item.price} -{item.quantity * item.price}</li></h1>
-                            })
-                        }
-
-                    </tbody>
-                </table>
-
-                <h3>Billing estimate will be added here after order approval</h3>
-                {/* <h2>Grand Total = <span style={{ "fontFamily": "Arial" }}>&#8377;</span>{this.state.total}</h2> */}
-                {/* <h1>Per plate cost = {this.state.total / this.state.numberOfPeople}</h1> */}
-
-                {status === 'completed' ?
-                    (
-                        <div>
-                            <h3> Overall Rating :
-                                <Star name="overallRating"
-                                    id={id}
-                                    rating={overallRating}
-                                    overallRating={true}
-                                    ChangeOverallRating={ChangeOverallRating}
-                                />
-                            </h3>
-
-                            {!feedback ? (
-                                <div>
-                                    <textarea name="feedbackNote" value={feedbackNote} placeholder='Please leave a feeeback here...' onChange={(e) => setFeedbackNote(e.target.value)} />
-                                    <button onClick={submitFeedback}>Submit Feedback</button>
-                                </div>) : (
-                                <div>
-                                    <p>Feedback Submitted!</p>
-                                    <p>{feedbackNote}</p>
-                                </div>
-                            )}
-                        </div>
-                    ) : null
-                }
-            </div>
-        </div>
-    )
+function formatDate(iso) {
+  if (!iso) return '—';
+  const s = iso.toString();
+  return s.substr(8, 2) + '/' + s.substr(5, 2) + '/' + s.substr(0, 4);
 }
 
-export default MyOrdersShow
+export default function MyOrdersShow() {
+  const { id } = useParams();
+
+  const [order,         setOrder]         = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [overallRating, setOverallRating] = useState(0);
+  const [feedback,      setFeedback]      = useState(false);
+  const [feedbackNote,  setFeedbackNote]  = useState('');
+  const [loading,       setLoading]       = useState(true);
+
+  useEffect(() => {
+    axios.get(`/myOrders/show/${id}`, {
+      headers: { 'x-auth': localStorage.getItem('token') },
+    })
+      .then(res => {
+        const o = res.data;
+        setOrder(o);
+        setSelectedItems(o.items ?? []);
+        setOverallRating(o.overallRating ?? 0);
+        setFeedback(!!o.feedback);
+        setFeedbackNote(o.feedbackNote ?? '');
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  const submitFeedback = () => {
+    axios.put(`/orders/${id}`,
+      { items: selectedItems, overallRating, feedback: true, feedbackNote },
+      { headers: { 'x-auth': localStorage.getItem('token') } },
+    ).catch(err => console.error(err));
+    setFeedback(true);
+  };
+
+  const changeItemRating = (newRating, itemId) => {
+    setSelectedItems(prev => {
+      const next = [...prev];
+      const idx  = next.findIndex(o => o._id === itemId);
+      if (idx !== -1) next[idx] = { ...next[idx], rating: newRating };
+      return next;
+    });
+  };
+
+  const status   = order?.status ?? '';
+  const meta     = STATUS_META[status] ?? { label: status, className: '' };
+  const customer = order?.customer ?? {};
+
+  const DETAIL_ROWS = [
+    { icon: '🪪', label: 'Order ID',      value: order?._id },
+    { icon: '👤', label: 'Name',           value: customer.fullName },
+    { icon: '📅', label: 'Event Date',     value: formatDate(customer.eventDate) },
+    { icon: '⏰', label: 'Event Time',     value: customer.eventTime },
+    { icon: '👥', label: 'Guests',         value: customer.numberOfPeople },
+    { icon: '📍', label: 'Address',        value: customer.address },
+    { icon: '📞', label: 'Phone',          value: customer.phoneNumber },
+    { icon: '✉',  label: 'Email',          value: customer.email },
+    { icon: '🍽', label: 'Service',        value: customer.service      ? 'Yes' : 'No' },
+    { icon: '🚚', label: 'Home Delivery',  value: customer.homeDelivery ? 'Yes' : 'No' },
+  ].filter(r => r.value !== undefined && r.value !== null && r.value !== '');
+
+  if (loading) {
+    return (
+      <div className="mos">
+        <div className="mos__nav">
+          <Link to="/myOrders" className="mos__back">← Back to Orders</Link>
+        </div>
+        <div className="mos__skeleton-body">
+          <div className="mos__skeleton mos__skeleton--card" />
+          <div className="mos__skeleton mos__skeleton--card" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mos">
+
+      {/* ── Back nav ───────────────────────────────────── */}
+      <div className="mos__nav">
+        <Link to="/myOrders" className="mos__back">← Back to Orders</Link>
+      </div>
+
+      {/* ── Main body ──────────────────────────────────── */}
+      <div className="mos__body">
+        <motion.div
+          className="mos__grid"
+          initial="hidden"
+          animate="show"
+          variants={stagger}
+        >
+
+          {/* ── Details card ─────────────────────────── */}
+          <motion.div className="mos__card" variants={fadeUp}>
+            {/* Event name + status at top */}
+            <div className="mos__card-header">
+              <h2 className="mos__card-event-name">
+                {customer.eventName || 'Your Order'}
+              </h2>
+              <span className={`mos__badge ${meta.className}`}>{meta.label}</span>
+            </div>
+
+            <ul className="mos__detail-list">
+              {DETAIL_ROWS.map(({ icon, label, value }) => (
+                <li key={label} className="mos__detail-item">
+                  <span className="mos__detail-icon" aria-hidden="true">{icon}</span>
+                  <span className="mos__detail-label">{label}</span>
+                  <span className="mos__detail-value">{value}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          {/* ── Items card ───────────────────────────── */}
+          <motion.div className="mos__card" variants={fadeUp}>
+            <h2 className="mos__card-title">
+              Order Items
+              <span className="mos__item-count">{selectedItems.length}</span>
+            </h2>
+
+            {selectedItems.length === 0 ? (
+              <p className="mos__no-items">No items recorded.</p>
+            ) : (
+              <ul className="mos__item-list">
+                {selectedItems.map((item, i) => (
+                  <li key={item._id ?? i} className="mos__item-row">
+                    <span className="mos__item-index">{i + 1}</span>
+                    <div className="mos__item-info">
+                      <span className="mos__item-name">{item.name}</span>
+                      <span className="mos__item-qty">
+                        {item.quantity} {item.measured}
+                      </span>
+                    </div>
+                    {status === 'completed' && (
+                      <div className="mos__item-rating">
+                        <Star
+                          name={item.name}
+                          id={item._id}
+                          rating={item.rating}
+                          ChangeItemRating={changeItemRating}
+                        />
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p className="mos__billing-note">
+              Billing estimate will be shared after order approval.
+            </p>
+          </motion.div>
+
+        </motion.div>
+
+        {/* ── Feedback section (completed orders only) ── */}
+        <AnimatePresence>
+          {status === 'completed' && (
+            <motion.div
+              className="mos__card mos__feedback"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <h2 className="mos__card-title">Your Feedback</h2>
+
+              {feedback ? (
+                <div className="mos__feedback-done">
+                  <span className="mos__feedback-check">✓</span>
+                  <div>
+                    <p className="mos__feedback-done-title">Feedback submitted — thank you!</p>
+                    {feedbackNote && (
+                      <p className="mos__feedback-note-display">"{feedbackNote}"</p>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="mos__feedback-form">
+                  <div className="mos__overall-rating">
+                    <span className="mos__overall-label">Overall Rating</span>
+                    <Star
+                      name="overallRating"
+                      id={id}
+                      rating={overallRating}
+                      overallRating={true}
+                      ChangeOverallRating={setOverallRating}
+                    />
+                  </div>
+                  <textarea
+                    className="mos__feedback-textarea"
+                    placeholder="Share your experience — how was the food, service, and overall event?"
+                    value={feedbackNote}
+                    onChange={e => setFeedbackNote(e.target.value)}
+                  />
+                  <button className="mos__submit-btn" onClick={submitFeedback}>
+                    Submit Feedback
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+      </div>
+    </div>
+  );
+}
