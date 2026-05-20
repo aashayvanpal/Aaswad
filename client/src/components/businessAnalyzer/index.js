@@ -1,202 +1,339 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import IncomeModal from "./modals/incomeModal"
 import ExpenseModal from "./modals/expenseModal"
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import DeleteIcon from '@mui/icons-material/Delete'
+import FolderOpenIcon from '@mui/icons-material/FolderOpen'
+import SaveIcon from '@mui/icons-material/Save'
+import SaveAsIcon from '@mui/icons-material/SaveAs'
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile'
+
+const FSA_SUPPORTED = 'showOpenFilePicker' in window
+
+const FS = '2.5rem'
+const FS_HEADING = '3rem'
+const FS_SECTION = '2.75rem'
 
 const BusinessAnalyzer = () => {
     const [incomeItems, setIncomeItems] = useState([])
     const [expenseItems, setExpenseItems] = useState([])
-    const [jsonData, setJsonData] = useState(null);
-    const calculateTotal = (myArr) => {
-        const totalAmount = myArr.reduce(function (acc, item) { return acc + item.amount }, 0)
-        return totalAmount
+    const [fileHandle, setFileHandle] = useState(null)
+    const [fileName, setFileName] = useState('')
+    const [dirty, setDirty] = useState(false)
+    const fileInputRef = useRef(null)
+
+    const totalIncome = incomeItems.reduce((acc, i) => acc + i.amount, 0)
+    const totalExpense = expenseItems.reduce((acc, i) => acc + i.amount, 0)
+    const result = totalIncome - totalExpense
+
+    // Restore last session from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem('business')
+        if (saved) {
+            try {
+                const data = JSON.parse(saved)
+                setIncomeItems(data.income || [])
+                setExpenseItems(data.expense || [])
+                setDirty(true)
+            } catch (e) { }
+        }
+    }, [])
+
+    // Auto-save working copy to localStorage
+    useEffect(() => {
+        localStorage.setItem('business', JSON.stringify({ income: incomeItems, expense: expenseItems }))
+    }, [incomeItems, expenseItems])
+
+    const confirmDiscard = () => {
+        if (!dirty || (incomeItems.length === 0 && expenseItems.length === 0)) return true
+        return window.confirm('You have unsaved changes. Discard and continue?')
     }
 
-    const calculateResult = () => {
-        const result = calculateTotal(incomeItems) - calculateTotal(expenseItems)
-        return result
-    }
-
-    const clearAll = () => {
+    const handleNew = () => {
+        if (!confirmDiscard()) return
         setIncomeItems([])
         setExpenseItems([])
+        setFileHandle(null)
+        setFileName('')
+        setDirty(false)
         localStorage.removeItem('business')
     }
-    const saveAll = () => {
-        // grab income
-        // grab expense
-        const business = { income: incomeItems, expense: expenseItems }
-        // set to LS
-        localStorage.setItem('business', JSON.stringify(business))
+
+    const loadData = (data, handle, name) => {
+        setIncomeItems(data.income || [])
+        setExpenseItems(data.expense || [])
+        setFileHandle(handle || null)
+        setFileName(name || '')
+        setDirty(false)
     }
-    const checkLSNSetState = () => {
-        const business = JSON.parse(localStorage.getItem('business'))
-        if (business) {
-            setIncomeItems(business.income)
-            setExpenseItems(business.expense)
+
+    const handleOpen = async () => {
+        if (!confirmDiscard()) return
+        if (FSA_SUPPORTED) {
+            try {
+                const [handle] = await window.showOpenFilePicker({
+                    types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }]
+                })
+                const file = await handle.getFile()
+                const text = await file.text()
+                const data = JSON.parse(text)
+                loadData(data, handle, handle.name.replace(/\.json$/i, ''))
+            } catch (e) {
+                if (e.name !== 'AbortError') console.error(e)
+            }
+        } else {
+            fileInputRef.current.click()
+        }
+    }
+
+    const handleFileInputChange = (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result)
+                loadData(data, null, file.name.replace(/\.json$/i, ''))
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        reader.readAsText(file)
+        e.target.value = ''
+    }
+
+    const handleSave = async () => {
+        const data = JSON.stringify({ income: incomeItems, expense: expenseItems }, null, 2)
+        if (fileHandle && FSA_SUPPORTED) {
+            try {
+                const writable = await fileHandle.createWritable()
+                await writable.write(data)
+                await writable.close()
+                setDirty(false)
+            } catch (e) {
+                console.error(e)
+            }
+        } else {
+            await handleSaveAs()
+        }
+    }
+
+    const handleSaveAs = async () => {
+        const data = JSON.stringify({ income: incomeItems, expense: expenseItems }, null, 2)
+        if (FSA_SUPPORTED) {
+            try {
+                const handle = await window.showSaveFilePicker({
+                    suggestedName: `${fileName || 'profit-loss'}.json`,
+                    types: [{ description: 'JSON Files', accept: { 'application/json': ['.json'] } }]
+                })
+                const writable = await handle.createWritable()
+                await writable.write(data)
+                await writable.close()
+                setFileHandle(handle)
+                setFileName(handle.name.replace(/\.json$/i, ''))
+                setDirty(false)
+            } catch (e) {
+                if (e.name !== 'AbortError') console.error(e)
+            }
+        } else {
+            const name = fileName || 'profit-loss'
+            const blob = new Blob([data], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `${name}.json`
+            a.click()
+            URL.revokeObjectURL(url)
+            setDirty(false)
         }
     }
 
     const removeIncomeItem = (index) => {
-        const newIncomItems = incomeItems.filter((item, i) => i != index)
-        setIncomeItems(newIncomItems)
-
-        const business = { income: newIncomItems, expense: expenseItems }
-        // set to LS
-        localStorage.setItem('business', JSON.stringify(business))
+        setIncomeItems(incomeItems.filter((_, i) => i !== index))
+        setDirty(true)
     }
+
     const removeExpenseItem = (index) => {
-        const newExpenseItems = expenseItems.filter((item, i) => i != index)
-        setExpenseItems(newExpenseItems)
-
-        const business = { income: incomeItems, expense: newExpenseItems }
-        // set to LS
-        localStorage.setItem('business', JSON.stringify(business))
+        setExpenseItems(expenseItems.filter((_, i) => i !== index))
+        setDirty(true)
     }
 
-    const saveAsJSON = () => {
-        const fileName = prompt('inside save as json')
-        const business = localStorage.getItem('business')
-        const blob = new Blob([business], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${fileName}.json`; // Specify the file name here
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Clean up the object URL to release memory
-        URL.revokeObjectURL(url);
+    const onAddIncome = (items) => {
+        setIncomeItems(items)
+        setDirty(true)
     }
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
+    const onAddExpense = (items) => {
+        setExpenseItems(items)
+        setDirty(true)
+    }
 
-        if (!file) {
-            // No file selected, do nothing
-            return;
-        }
+    return (
+        <Box sx={{ p: 1 }}>
+            {/* Header */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, flexWrap: 'wrap', gap: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Typography fontWeight="bold" sx={{ fontSize: FS_HEADING }}>Profit & Loss</Typography>
+                    {fileName ? (
+                        <Chip
+                            icon={<InsertDriveFileIcon sx={{ fontSize: '1.6rem !important' }} />}
+                            label={dirty ? `${fileName} •` : fileName}
+                            color={dirty ? 'warning' : 'default'}
+                            variant="outlined"
+                            sx={{ fontSize: '1.6rem', height: 'auto', py: 0.5 }}
+                        />
+                    ) : (dirty && (incomeItems.length > 0 || expenseItems.length > 0)) ? (
+                        <Chip label="Unsaved" color="warning" variant="outlined" sx={{ fontSize: '1.6rem', height: 'auto', py: 0.5 }} />
+                    ) : null}
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Tooltip title="Start a new sheet">
+                        <Button variant="outlined" startIcon={<NoteAddIcon sx={{ fontSize: '2rem !important' }} />} onClick={handleNew} sx={{ fontSize: FS }}>
+                            New
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Open a saved JSON file from your laptop">
+                        <Button variant="outlined" startIcon={<FolderOpenIcon sx={{ fontSize: '2rem !important' }} />} onClick={handleOpen} sx={{ fontSize: FS }}>
+                            Open
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title={fileHandle ? 'Save back to the same file' : 'Save to a file on your laptop'}>
+                        <Button variant="contained" startIcon={<SaveIcon sx={{ fontSize: '2rem !important' }} />} onClick={handleSave} sx={{ fontSize: FS }}>
+                            Save
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title="Save to a new file">
+                        <Button variant="outlined" startIcon={<SaveAsIcon sx={{ fontSize: '2rem !important' }} />} onClick={handleSaveAs} sx={{ fontSize: FS }}>
+                            Save As
+                        </Button>
+                    </Tooltip>
+                    <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileInputChange} style={{ display: 'none' }} />
+                </Box>
+            </Box>
 
-        const reader = new FileReader();
+            {/* Income + Expense panels */}
+            <Box sx={{ display: 'flex', gap: 1, flexDirection: { xs: 'column', md: 'row' } }}>
+                {/* Income */}
+                <Paper sx={{ flex: 1, p: 1.5, borderTop: '6px solid #4caf50' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                        <Typography color="success.main" fontWeight="bold" sx={{ fontSize: FS_SECTION }}>Income</Typography>
+                        <IncomeModal incomeItems={incomeItems} setIncomeItems={onAddIncome} />
+                    </Box>
+                    <Divider sx={{ mb: 1 }} />
+                    {incomeItems.length === 0 ? (
+                        <Typography color="text.secondary" sx={{ py: 2, textAlign: 'center', fontSize: FS }}>
+                            No income entries yet
+                        </Typography>
+                    ) : (
+                        <Table sx={{ '& .MuiTableCell-root': { py: 0.5 } }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS, width: 60 }}>#</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS }}>Particular</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS }} align="right">Amount</TableCell>
+                                    <TableCell sx={{ width: 60 }} />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {incomeItems.map((item, i) => (
+                                    <TableRow key={i} hover>
+                                        <TableCell sx={{ fontSize: FS }}>{i + 1}</TableCell>
+                                        <TableCell sx={{ fontSize: FS }}>{item.particular}</TableCell>
+                                        <TableCell sx={{ fontSize: FS }} align="right">₹{item.amount.toLocaleString('en-IN')}</TableCell>
+                                        <TableCell padding="none">
+                                            <IconButton color="error" onClick={() => removeIncomeItem(i)}>
+                                                <DeleteIcon sx={{ fontSize: '2rem' }} />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                    <Divider sx={{ mt: 1, mb: 0.5 }} />
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Typography fontWeight="bold" color="success.main" sx={{ fontSize: FS }}>
+                            Total: ₹{totalIncome.toLocaleString('en-IN')}
+                        </Typography>
+                    </Box>
+                </Paper>
 
-        reader.onload = (e) => {
-            try {
-                const jsonData = JSON.parse(e.target.result);
-                localStorage.setItem('business', JSON.stringify(jsonData))
-                checkLSNSetState()
+                {/* Expense */}
+                <Paper sx={{ flex: 1, p: 1.5, borderTop: '6px solid #f44336' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                        <Typography color="error.main" fontWeight="bold" sx={{ fontSize: FS_SECTION }}>Expense</Typography>
+                        <ExpenseModal expenseItems={expenseItems} setExpenseItems={onAddExpense} />
+                    </Box>
+                    <Divider sx={{ mb: 1 }} />
+                    {expenseItems.length === 0 ? (
+                        <Typography color="text.secondary" sx={{ py: 2, textAlign: 'center', fontSize: FS }}>
+                            No expense entries yet
+                        </Typography>
+                    ) : (
+                        <Table sx={{ '& .MuiTableCell-root': { py: 0.5 } }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS, width: 60 }}>#</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS }}>Particular</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', fontSize: FS }} align="right">Amount</TableCell>
+                                    <TableCell sx={{ width: 60 }} />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {expenseItems.map((item, i) => (
+                                    <TableRow key={i} hover>
+                                        <TableCell sx={{ fontSize: FS }}>{i + 1}</TableCell>
+                                        <TableCell sx={{ fontSize: FS }}>{item.particular}</TableCell>
+                                        <TableCell sx={{ fontSize: FS }} align="right">₹{item.amount.toLocaleString('en-IN')}</TableCell>
+                                        <TableCell padding="none">
+                                            <IconButton color="error" onClick={() => removeExpenseItem(i)}>
+                                                <DeleteIcon sx={{ fontSize: '2rem' }} />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                    <Divider sx={{ mt: 1, mb: 0.5 }} />
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Typography fontWeight="bold" color="error.main" sx={{ fontSize: FS }}>
+                            Total: ₹{totalExpense.toLocaleString('en-IN')}
+                        </Typography>
+                    </Box>
+                </Paper>
+            </Box>
 
-                // setJsonData(jsonData);
-            } catch (error) {
-                console.error('Error parsing JSON:', error);
-            }
-        };
-
-        reader.readAsText(file);
-    };
-
-
-    useEffect(() => {
-        checkLSNSetState()
-    }, [])
-    return <div>
-
-        <h3 style={{ textAlign: 'center', fontWeight: 'bold', marginTop: '20px' }}>Profit and Loss Calculator </h3>
-
-        <br />
-        <div style={{ padding: '20px' }}>
-            <div>
-                <button onClick={clearAll}>Clear All</button>
-                <button onClick={saveAll}>Save</button>
-                <button onClick={saveAsJSON}>SaveAsJSON</button>
-                <input type="file" accept=".json" onChange={handleFileChange} />
-                {jsonData ? (
-                    <div>
-                        <h3>JSON Data:</h3>
-                        <pre>{JSON.stringify(jsonData, null, 2)}</pre>
-                    </div>
-                ) : null}
-
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                <div style={{ display: 'flex', }}>
-                    <div style={{ backgroundColor: '#79ea86', width: '50%', padding: '20px', borderRadius: '16px' }}>
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-evenly' }}>
-                            <h4 style={{ textAlign: 'center' }}>Income section</h4>
-
-                            <IncomeModal
-                                // refresh={refresh}
-                                // setRefresh={setRefresh}
-                                incomeItems={incomeItems}
-                                setIncomeItems={setIncomeItems}
-                                buttonLabel="Add Income" />
-                        </div>
-                        <table style={{ width: '100%', margin: '20px' }}>
-                            <thead>
-                                <tr>
-                                    <td>Slno</td>
-                                    <td>Particular</td>
-                                    <td>Amount</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {incomeItems.map((item, index) => <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.particular}</td>
-                                    <td>{item.amount}<button onClick={() => removeIncomeItem(index)}>X</button></td>
-                                </tr>
-                                )}
-
-                            </tbody>
-                        </table>
-                        <div style={{ width: '100%' }}>Total Income - {calculateTotal(incomeItems)}</div>
-
-
-                    </div>
-                    <div style={{ backgroundColor: '#e75757', width: '50%', padding: '20px', borderRadius: '16px' }}>
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', justifyContent: 'space-evenly' }}>
-                            <h4 style={{ textAlign: 'center' }}>Expense section</h4>
-
-                            <ExpenseModal
-                                // refresh={refresh}
-                                // setRefresh={setRefresh}
-                                expenseItems={expenseItems}
-                                setExpenseItems={setExpenseItems}
-                                buttonLabel="Add Expense" />
-                        </div>
-                        <table style={{ width: '100%', margin: '20px' }}>
-                            <thead>
-                                <tr>
-                                    <td>Slno</td>
-                                    <td>Particular</td>
-                                    <td>Amount</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {expenseItems.map((item, index) => <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.particular}</td>
-                                    <td>{item.amount}<button onClick={() => removeExpenseItem(index)}>X</button></td>
-                                </tr>
-                                )}
-
-                            </tbody>
-                        </table>
-                        <div style={{ width: '100%' }}>Total Expense - {calculateTotal(expenseItems)}</div>
-
-                    </div>
-                </div>
-                <div>
-                    {calculateResult() >= 0 ?
-                        <div style={{ fontWeight: 'bold', border: '2px solid black', padding: '20px', width: '100%', backgroundColor: '#79ea86', textAlign: 'center', fontSize: '24px' }}>Total Profit - {calculateResult()}</div>
-
-                        :
-                        <div style={{ fontWeight: 'bold', border: '2px solid black', padding: '20px', width: '100%', backgroundColor: '#e75757', textAlign: 'center', fontSize: '24px' }}>Total Loss  {calculateResult()}</div>
-
+            {/* Result summary */}
+            <Paper
+                sx={{
+                    mt: 1, p: 1.5, textAlign: 'center',
+                    bgcolor: result >= 0 ? '#e8f5e9' : '#ffebee',
+                    border: `2px solid ${result >= 0 ? '#4caf50' : '#f44336'}`
+                }}
+            >
+                <Typography fontWeight="bold" color={result >= 0 ? 'success.main' : 'error.main'} sx={{ fontSize: FS_HEADING }}>
+                    {result >= 0
+                        ? `Net Profit: ₹${result.toLocaleString('en-IN')}`
+                        : `Net Loss: ₹${Math.abs(result).toLocaleString('en-IN')}`
                     }
-                </div>
-            </div>
-        </div >
-    </div >
+                </Typography>
+            </Paper>
+        </Box>
+    )
 }
+
 export default BusinessAnalyzer

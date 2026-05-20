@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 // Make Web Crypto API available globally (required by mongodb driver 7.x on Node 18)
 if (typeof crypto === 'undefined') {
     global.crypto = require('crypto').webcrypto
