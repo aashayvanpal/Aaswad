@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "checkJs": false,
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true
+  },
+  "include": [
+    "server.js",
+    "models",
+    "client/src/controllers",
+    "client/src/config",
+    "client/src/middlewares"
+  ],
+  "exclude": [
+    "node_modules",
+    "client/node_modules",
+    "client/src/components",
+    "dist"
+  ]
+}

@@ -1,0 +1,728 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+// ─── Variables ──────────────────────────────────────────────
+$gold:        #C9A227;
+$gold-light:  #e8c84d;
+$gold-dim:    rgba(201, 162, 39, 0.12);
+$gold-border: rgba(201, 162, 39, 0.25);
+$dark:        #0d0d0d;
+$dark-mid:    #161616;
+$surface:     #fafaf7;
+$text:        #1a1a1a;
+$text-muted:  #6b7280;
+$white:       #ffffff;
+
+$container-width: 1160px;
+$section-v-pad:   7rem;
+
+// ─── Keyframes ──────────────────────────────────────────────
+@keyframes hp-fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes hp-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes hp-scrollLine {
+  0%, 100% { transform: scaleY(1);   opacity: 1;   }
+  50%       { transform: scaleY(0.4); opacity: 0.2; }
+}
+
+@keyframes hp-galleryScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes hp-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(201, 162, 39, 0);  }
+}
+
+// ─── Mixins ─────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin container {
+  max-width: $container-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: 100%;
+}
+
+// ─── Base ────────────────────────────────────────────────────
+.hp {
+  font-family: 'Inter', sans-serif;
+  color: $text;
+  overflow-x: hidden;
+
+  *, *::before, *::after { box-sizing: border-box; }
+  a { text-decoration: none; }
+  h1, h2, h3, h4 { margin: 0; }
+  p { margin: 0; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  img { display: block; }
+
+  // ─── SHARED ─────────────────────────────────────────────
+  &__container {
+    @include container;
+  }
+
+  &__section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  &__section-eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 0.8rem;
+  }
+
+  &__section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  &__section-title--light { color: $white; }
+
+  // ─── BUTTONS ────────────────────────────────────────────
+  &__btn-primary {
+    display: inline-block;
+    background: $gold;
+    color: #000;
+    padding: 0.9rem 2.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      background: $gold-light;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201, 162, 39, 0.45);
+    }
+  }
+
+  &__btn-ghost {
+    display: inline-block;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.9rem 2.4rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+
+    &:hover {
+      border-color: $gold;
+      color: $gold;
+      transform: translateY(-2px);
+    }
+
+    &--dark {
+      color: $text-muted;
+      border-color: rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        border-color: $gold;
+        color: $gold;
+      }
+    }
+  }
+
+  // ─── NAVBAR ─────────────────────────────────────────────
+  &__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 3rem;
+    transition: background 0.35s ease, backdrop-filter 0.35s ease,
+                padding 0.35s ease, box-shadow 0.35s ease;
+
+    &.scrolled {
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 1rem 3rem;
+      box-shadow: 0 1px 0 $gold-border;
+    }
+  }
+
+  &__nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: $gold;
+    letter-spacing: 0.01em;
+  }
+
+  &__nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+
+    a {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+
+      &:hover { color: $gold; }
+    }
+  }
+
+  &__nav-order {
+    background: $gold !important;
+    color: #000 !important;
+    padding: 0.5rem 1.4rem !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    transition: background 0.2s, transform 0.2s !important;
+
+    &:hover {
+      background: $gold-light !important;
+      transform: translateY(-1px);
+    }
+  }
+
+  // ─── HERO ───────────────────────────────────────────────
+  &__hero {
+    position: relative;
+    height: 100vh;
+    min-height: 620px;
+    overflow: hidden;
+    @include flex-center;
+  }
+
+  &__hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    transform: scale(1.06);
+    animation: hp-fadeIn 0.6s ease forwards;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        170deg,
+        rgba(0, 0, 0, 0.3)  0%,
+        rgba(0, 0, 0, 0.58) 55%,
+        rgba(0, 0, 0, 0.82) 100%
+      );
+    }
+  }
+
+  &__hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 820px;
+    width: 100%;
+  }
+
+  &__hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: $gold-dim;
+    border: 1px solid $gold-border;
+    color: $gold;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.4rem 1.1rem;
+    border-radius: 100px;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: hp-fadeUp 0.7s ease 0.1s forwards;
+  }
+
+  &__hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $gold;
+    flex-shrink: 0;
+    animation: hp-pulse 2s ease infinite;
+  }
+
+  &__hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5.2rem);
+    font-weight: 700;
+    color: $white;
+    line-height: 1.15;
+    margin-bottom: 1.4rem;
+    opacity: 0;
+    animation: hp-fadeUp 0.7s ease 0.3s forwards;
+
+    em {
+      font-style: italic;
+      color: $gold;
+    }
+  }
+
+  &__hero-subtitle {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 500px;
+    margin: 0 auto 2.8rem;
+    opacity: 0;
+    animation: hp-fadeUp 0.7s ease 0.5s forwards;
+  }
+
+  &__hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: hp-fadeUp 0.7s ease 0.7s forwards;
+  }
+
+  &__hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: hp-fadeIn 1s ease 1.2s forwards;
+
+    &::after {
+      content: '';
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, $gold, transparent);
+      animation: hp-scrollLine 1.8s ease-in-out infinite;
+    }
+  }
+
+  // ─── STATS ──────────────────────────────────────────────
+  &__stats {
+    background: $dark;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  &__stat {
+    padding: 2.8rem 1rem;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.2s;
+
+    &:last-child { border-right: none; }
+    &:hover { background: rgba(255, 255, 255, 0.03); }
+  }
+
+  &__stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $gold;
+    line-height: 1;
+    margin-bottom: 0.45rem;
+  }
+
+  &__stat-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  // ─── FEATURES ───────────────────────────────────────────
+  &__features {
+    background: $surface;
+    padding: $section-v-pad 0;
+  }
+
+  &__features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+
+  &__feature-card {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 14px;
+    padding: 2.4rem 2rem;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.5s ease, transform 0.5s ease,
+                box-shadow 0.3s ease, border-color 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &:hover {
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.08);
+      border-color: $gold-border;
+    }
+
+    &.visible:hover { transform: translateY(-5px); }
+  }
+
+  &__feature-icon {
+    width: 54px;
+    height: 54px;
+    background: $gold-dim;
+    border-radius: 12px;
+    @include flex-center;
+    margin-bottom: 1.5rem;
+
+    img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+  }
+
+  &__feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 0.7rem;
+  }
+
+  &__feature-desc {
+    font-size: 0.875rem;
+    color: $text-muted;
+    line-height: 1.8;
+  }
+
+  // ─── GALLERY ────────────────────────────────────────────
+  &__gallery {
+    background: $dark-mid;
+    padding: $section-v-pad 0;
+    overflow: hidden;
+  }
+
+  &__gallery-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  &__gallery-track-wrapper {
+    overflow: hidden;
+  }
+
+  &__gallery-track {
+    display: flex;
+    gap: 1.2rem;
+    width: max-content;
+    animation: hp-galleryScroll 35s linear infinite;
+    padding: 0 0.6rem;
+
+    &:hover { animation-play-state: paused; }
+  }
+
+  &__gallery-img {
+    width: 340px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+    transition: opacity 0.3s, transform 0.3s;
+
+    &:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+  }
+
+  // ─── CTA ────────────────────────────────────────────────
+  &__cta {
+    background: $surface;
+    padding: $section-v-pad 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, $gold-dim 0%, transparent 68%);
+      pointer-events: none;
+    }
+  }
+
+  &__cta-inner {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  &__cta-eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 1rem;
+  }
+
+  &__cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 700;
+    color: $text;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  &__cta-sub {
+    font-size: 1rem;
+    color: $text-muted;
+    line-height: 1.8;
+    margin-bottom: 2.8rem;
+  }
+
+  &__cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  // ─── FOOTER ─────────────────────────────────────────────
+  &__footer {
+    background: $dark;
+    border-top: 1px solid $gold-border;
+  }
+
+  &__footer-body {
+    @include container;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+
+  &__footer-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $gold;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  &__footer-brand-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.8;
+    margin-bottom: 1.8rem;
+    max-width: 240px;
+  }
+
+  &__footer-socials {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  &__footer-social-link {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @include flex-center;
+    transition: border-color 0.2s, background 0.2s;
+
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    &:hover {
+      border-color: $gold-border;
+      background: $gold-dim;
+    }
+  }
+
+  &__footer-col-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+  }
+
+  &__footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    a {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.45);
+      transition: color 0.2s;
+
+      &:hover { color: $gold; }
+    }
+  }
+
+  &__footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  &__footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.5;
+  }
+
+  &__footer-contact-icon {
+    font-size: 1rem;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+
+  &__footer-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  &__footer-bar-inner {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.4rem;
+    padding-bottom: 1.4rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  &__footer-bar-links {
+    display: flex;
+    gap: 1.8rem;
+
+    a {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.78rem;
+      transition: color 0.2s;
+
+      &:hover { color: rgba(255, 255, 255, 0.65); }
+    }
+  }
+
+  // ─── RESPONSIVE ─────────────────────────────────────────
+  @media (max-width: 1024px) {
+    &__nav          { padding: 1.2rem 2rem; }
+    &__nav.scrolled { padding: 0.9rem 2rem; }
+
+    &__footer-body {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__nav {
+      padding: 1rem 1.25rem;
+      &.scrolled { padding: 0.8rem 1.25rem; }
+    }
+
+    &__nav-links {
+      gap: 1.25rem;
+      li:not(:last-child) { display: none; }
+    }
+
+    &__hero-title { font-size: clamp(2.2rem, 9vw, 3rem); }
+
+    &__stats {
+      grid-template-columns: repeat(2, 1fr);
+
+      .hp__stat:nth-child(2) { border-right: none; }
+      .hp__stat:nth-child(1),
+      .hp__stat:nth-child(2) { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    }
+
+    &__features { padding: 5rem 0; }
+
+    &__features-grid { grid-template-columns: 1fr; }
+
+    &__gallery { padding: 5rem 0; }
+    &__gallery-img { width: 260px; height: 185px; }
+
+    &__cta { padding: 5rem 0; }
+
+    &__footer-body {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    &__footer-brand-desc { max-width: 100%; }
+
+    &__footer-bar-inner {
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: center;
+    }
+  }
+}

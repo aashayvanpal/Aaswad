@@ -24,7 +24,7 @@ import "./css/app-css.css";
 import SignUpForm from "./components/SignUpForm.js";
 import UserProfile from "./components/UserProfile.js";
 import Contact from "./components/contact/Contact.js";
-import HomePage from "./components/HomePage.js";
+import HomePage from "./components/HomePage.tsx";
 import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
 import { Container, Row, Col } from "reactstrap";
