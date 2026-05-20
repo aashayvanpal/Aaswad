@@ -1,4 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Divider from '@mui/material/Divider'
 import axios from '../../config/axios.js'
 import { Link } from 'react-router-dom'
 import '../../css/myOrdersShow.scss'
@@ -22,7 +30,22 @@ import { updateEventOrder, deleteFieldFromEventOrder } from '../../apis/eventOrd
 import moment from 'moment'
 import { deleteOrderFromEventOrders } from '../../apis/eventOrders.js'
 
+const fadeUp = {
+    hidden: { opacity: 0, y: 18 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
+}
 
+const stagger = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.08 } },
+}
+
+const STATUS_META = {
+    pending:   { label: 'Pending',   className: 'mos__badge--pending'   },
+    approved:  { label: 'Approved',  className: 'mos__badge--approved'  },
+    completed: { label: 'Completed', className: 'mos__badge--completed' },
+    rejected:  { label: 'Rejected',  className: 'mos__badge--rejected'  },
+}
 
 const ItemShow = ({ type }) => {
 
@@ -100,11 +123,7 @@ const ItemShow = ({ type }) => {
                 let eventDate = order.customer.eventDate.toString()
                 let eventDateNew = order.customer.eventDate
                 let advanceAmount = order.AdvanceAmount
-                // console.log("Event Date check:", eventDate)
-                // console.log("Event Date check typeof:", typeof (eventDate))
-                // console.log("Event Date check here:", eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4))
                 eventDate = eventDate.substr(8, 2) + "/" + eventDate.substr(5, 2) + "/" + eventDate.substr(0, 4)
-                // console.log("The Date is :",eventDate.subStr(8, 2) + "/" + eventDate.subStr(5, 2) + "/" + eventDate.subStr(0, 4))
 
                 setSelectedItems([...items])
                 let misc = order.misc ? order.misc : []
@@ -269,9 +288,6 @@ const ItemShow = ({ type }) => {
         console.log("Print Delivery button clicked!")
         console.log("Find order id and assign to orderid")
         console.log(id)
-        // const orderid = this.state.id
-
-        // window.open(window.location.href + `/printDelivery/${orderid}`, '_blank')
         window.open(window.location.href + `/printDelivery`, '_blank')
     }
 
@@ -285,7 +301,6 @@ const ItemShow = ({ type }) => {
                 console.log("I need customer object here", orderDetails.order.customer)
                 console.log("I need customer object eventDate", moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY'))
                 console.log("I need customer object eventTime", moment(orderDetails.order.customer.eventDate).format('H:m'))
-                // const { customer_id, numberOfPeople, email, fullName, phoneNumber, eventDate, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
                 orderDetails.order.customer.eventTime = moment(orderDetails.order.customer.eventDate).format('H:m')
                 orderDetails.order.customer.eventDate = moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY')
                 console.log("I need customer object order", orderDetails)
@@ -317,31 +332,11 @@ const ItemShow = ({ type }) => {
                     item.isSelected = false
                     item.quantity = 1
                 })
-                // combine the this.state.items and the filteredItems into single array and set in localStorage
-                // console.log("==Debug==")
                 console.log("selectedItems", selectedItems)
                 console.log("filteredItems", filteredItems)
 
-                // var updatedCart = this.state.filteredItems.filter(obj => this.state.items.find(p => p.id === obj.id) || obj);
-                // console.log("updated Cart check", updatedCart)
-                //     var defaultArray = [
-                //         {"id":'111',name:"item1",qty:1},
-                //         {id:'222',name:"item2",qty:1},
-                //         {id:'333',name:"item3",qty:1},
-                //         {id:'444',name:"item4",qty:1},
-                //         {id:'555',name:"item5",qty:1},
-                //         ]
-
-                //    var selectedArray =[{id:'333',name:"item1",qty:5},{id:'222',name:"item2",qty:10}]
-
-                //    var desiredResultArray = defaultArray.map(item => selectedArray.find(i => i.id === item.id) || item)
-                //    console.log("DesiredArray : ",desiredResultArray )
-                // var desiredResultArray = defaultArray.map(item => selectedArray.find(i => i.id === item.id) || item)
-
-
                 var desiredResultArray = filteredItems.map(item => selectedItems.find(i => i._id === item._id) || item)
                 console.log("desiredResultArray:", desiredResultArray)
-                // console.log("==Debug End==")
 
                 localStorage.setItem("cartItems", JSON.stringify(desiredResultArray))
 
@@ -353,7 +348,6 @@ const ItemShow = ({ type }) => {
         setShowTransportForm(false)
     }
     const ShowMiscForm = () => {
-        // setShowTransportForm(false)
         setShowMiscForm(false)
     }
     const ShowAdvancePaymentForm = () => {
@@ -361,9 +355,6 @@ const ItemShow = ({ type }) => {
     }
 
     const createAdvancePayment = (amount) => {
-        // change the order model
-        // create controller
-        // post request to update transport
         console.log('id to edit', window.location.href.split('/')[4])
         const id = window.location.href.split('/')[4]
 
@@ -388,10 +379,8 @@ const ItemShow = ({ type }) => {
             })
     }
     const setAdvanceAmountinLS = (amount) => {
-        // ui render
         setAdvanceAmount(amount)
 
-        // localstorage setting state
         let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
         orderDetails.order.AdvanceAmount = amount
         localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
@@ -403,7 +392,6 @@ const ItemShow = ({ type }) => {
         switch (type) {
             case "eventOrder": {
                 alert("Inside event order type")
-                // api call here
                 updateEventOrder(id, { AdvanceAmount: amount })
                 setAdvanceAmountinLS(amount)
 
@@ -418,9 +406,6 @@ const ItemShow = ({ type }) => {
     }
 
     const updateTransport = (medium, rate) => {
-        // change the order model
-        // create controller
-        // post request to update transport
         console.log('id to edit', window.location.href.split('/')[4])
         const id = window.location.href.split('/')[4]
 
@@ -449,13 +434,11 @@ const ItemShow = ({ type }) => {
 
     const ShowTransportTable = (medium, rate) => {
 
-
         alert("type for entering medium:" + type)
 
         switch (type) {
             case "eventOrder": {
                 alert("Inside event order type" + medium + rate)
-                // api call here
                 updateEventOrder(id, { transport: { medium, rate } })
                 setMedium(medium)
                 setRate(rate)
@@ -480,7 +463,6 @@ const ItemShow = ({ type }) => {
         switch (type) {
             case "eventOrder": {
                 alert("Inside event order type" + id)
-                // api call here remove transport object
                 deleteFieldFromEventOrder(id, 'transport')
 
                 setMedium('')
@@ -491,7 +473,6 @@ const ItemShow = ({ type }) => {
             } default: {
                 alert("Normal flow edit transport")
                 console.log('inside parent to delete the transport table')
-                // put request to delete the transport table
                 console.log('check for state here', order)
                 const { _id } = order
 
@@ -525,7 +506,6 @@ const ItemShow = ({ type }) => {
 
     const deleteAdvancePayment = () => {
         console.log('inside parent to delete the AdvancePayment table')
-        // put request to delete the transport table
         console.log('check for state here', order)
         const { _id } = order
 
@@ -561,15 +541,12 @@ const ItemShow = ({ type }) => {
         switch (type) {
             case "eventOrder": {
                 alert("Inside event order type Delete" + id)
-                // api call here to unset advancepayment field
-                deleteFieldFromEventOrder(id, 'AdvanceAmount') //fieldName:AdvanceAmount
-                // Should refresh the component here advanceAmount 
+                deleteFieldFromEventOrder(id, 'AdvanceAmount')
                 setAdvanceAmount(null)
                 deleteAdvanceAmountinLS()
                 break;
             } default: {
                 alert("Normal flow delete advancepayment")
-                // normal flow
                 deleteAdvancePayment()
                 break;
             }
@@ -606,10 +583,8 @@ const ItemShow = ({ type }) => {
 
             console.log("Advance Payment", advanceAmount)
         }
-        // console.log("Total", total)
         console.log("Total", total, rate, advanceAmount)
         console.log("Balance", balance)
-        // setBalance
 
         return balance
     }
@@ -632,7 +607,6 @@ const ItemShow = ({ type }) => {
 
     const generateMiscItems = () => {
         alert('clicked on misc')
-        // setMiscParticulars([{ particular: '', rate: '' }])
         setShowMiscForm(!showMiscForm)
         setShowMiscTable(false)
     }
@@ -641,23 +615,10 @@ const ItemShow = ({ type }) => {
         alert('inside handleform')
 
         e.preventDefault()
-        // post request storing an object of string and number and then renedering a table 
-        // const transportObject = {
-        //     medium: medium, price: price
-        // }
-        // console.log('transportobject:', transportObject)
-
-        // post request find and replace or create new key value pair
-        // props.ShowTransportTable(medium, price)
-        // props.ShowTransportForm()
-
-
 
         console.log("final to be submitted", miscItems)
-        // Validation here
         const isValid = true
         if (isValid) {
-            // PUT request on the id
             console.log("Order id :", id)
 
 
@@ -683,14 +644,11 @@ const ItemShow = ({ type }) => {
     }
 
     const editMiscTable = () => {
-        // hide the table , show the form
         setShowMiscTable(false)
         setShowMiscForm(true)
     }
 
     const deleteMiscTable = () => {
-        // put request to delete key - "misc" from db document
-
         axios.put(`/orders/deleteKey/${id}`, { "key": "misc" }, {
             headers: {
                 'x-auth': localStorage.getItem('token')
@@ -705,323 +663,398 @@ const ItemShow = ({ type }) => {
 
     }
 
+    const meta = STATUS_META[status] ?? { label: status, className: '' }
+
+    const thCell = {
+        backgroundColor: 'rgba(201, 162, 39, 0.12)',
+        color: '#6b7280',
+        fontWeight: 700,
+        fontSize: '1rem',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        fontFamily: 'inherit',
+        padding: '0.875rem 1.25rem',
+        borderBottom: '2px solid rgba(201, 162, 39, 0.3)',
+        whiteSpace: 'nowrap',
+    }
+
+    const tdCell = {
+        fontSize: '1.4rem',
+        fontFamily: 'inherit',
+        color: '#1a1a1a',
+        padding: '1rem 1.25rem',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+    }
+
     return (
-        <div id="OrderShowContainer">
-            <div id="ShowContainer1">
-                <div id="OrderShowContainer">
-                    <h2 >
-                        {type === "eventOrder" ? <Link to={`/eventOrders/${eventOrderRoute}`} ><button style={{
-                            "backgroundColor": "#ff881a",
-                            "borderRadius": "10px",
-                            "padding": "10px",
-                            "marginRight": "10px",
-                            "cursor": "pointer",
-                        }}
-                            onClick={() => { localStorage.removeItem('orderDetails') }}
-                        >
-                            <img src={backIcon} alt="backIcon" height="30px" width="30px" />
-                            Back</button></Link> : (null)}
-                        {type === undefined ?
-                            <Link to="/orders" ><button style={{
-                                "backgroundColor": "#ff881a",
-                                "borderRadius": "10px",
-                                "padding": "10px",
-                                "marginRight": "10px",
-                                "cursor": "pointer",
-                            }}
-                                onClick={() => { localStorage.removeItem('order') }}
-                            >
-                                <img src={backIcon} alt="backIcon" height="30px" width="30px" />
-                                Back</button></Link>
-                            : (null)}
+        <div className="mos">
 
-
-                    </h2>
-                    <h2 ><Link to="/menu"><button style={{
-                        "backgroundColor": "#ff881a",
-                        "borderRadius": "10px",
-                        "padding": "10px",
-                        "cursor": "pointer",
-                    }} onClick={() => EditOrder()}>
-                        <img src={updateIcon} alt="updateIcon" height="30px" width="30px" />
-                        Edit</button></Link></h2>
-                </div>
-                {type === "eventOrder" ? <div>
-                    <h3>EventName  :{headingEventName}</h3>
-                    <h3>EventDate  :{headingEventDate}</h3>
-                </div> : null}
-
-                <h1>Showing order details:- {type}</h1>
-                <h2>Customer Name : {fullName}</h2>
-                <h2>Event Name : {eventName}</h2>
-                {queries ? (<h2 style={{ "backgroundColor": "red", "color": "white" }}>Queries : {queries}</h2>) : (null)}
-
-                <h2>Number of People : {numberOfPeople}</h2>
-                <h2>Event Date : {eventDate}</h2>
-                <h2>Event DateNew : {eventDateNew}</h2>
-                <h2>Event Time : {eventTime} (24 hours IST)/
-                    {/* Breakfast lunch dinner calculate */}
-                    {eventTimeCalculate(eventTime)}
-                </h2>
-                <h2>Phone Number : {phoneNumber}</h2>
-                <h2>Address : {address}</h2>
-                <h2>Email : {email}</h2>
-                <h2>Service : {service ? "Yes" : "No"}</h2>
-                <h2>Home Delivery : {homeDelivery ? "Yes" : "No"}</h2>
-                <h2>Status : {status}</h2>
-                <h2>OrderID : {id}</h2>
-                add this user to db link feature : navigate to user account with prefilled fields
-            </div>
-
-            <div id="ShowContainer2" style={{ "border": "2px solid black", "padding": "20px" }}>
-                <h1>Listing Items - {selectedItems.length}</h1>
-
-                <table style={{ "borderCollapse": "collapse", "border": "2px solid black", width: "100%" }}>
-                    <thead style={{ "border": "2px solid black" }}>
-                        <tr>
-                            <td>Sl No.</td>
-                            <td>Item Name</td>
-                            <td>Quantity</td>
-                            <td>Price</td>
-                            <td>Total</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            selectedItems.map((item, i) => {
-                                // This line shows the total for rates (must fix the bug here)
-                                // this.state.total += item.quantity * item.price
-
-                                // this.setState(prevState => {prevState.total += item.quantity * item.price})
-                                // setTotal(total + item.quantity * item.price)
-
-                                return (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.quantity} {item.measured}</td>
-                                        <td>{item.price}</td>
-                                        <td>{item.quantity * item.price}</td>
-                                    </tr>
-                                )
-
-                                // return <h1 key={item.id}><li>{item.name} - {item.quantity} - {item.price} -{item.quantity * item.price}</li></h1>
-                            })
-                        }
-                    </tbody>
-                </table>
-
-                <h1>Grand Total = {total}</h1>
-
-                <h1>Per plate cost = {total / numberOfPeople}</h1>
-                <h1>Per plate cost dbnew = {order.amount}</h1>
-
-                {homeDelivery ? (
-                    <button style={{
-                        "backgroundColor": "#ff881a",
-                        "borderRadius": "10px",
-                        "padding": "10px",
-                        "cursor": "pointer",
-                    }} onClick={() => {
-                        console.log('Enter transport clicked')
-                        setShowTransportForm(!showTransportForm)
-                    }}>
-                        <img src={transportIcon} alt="transportIcon" height="30px" width="30px" />
-                        Enter Transport
+            {/* ── Back / Edit nav ──────────────────────────────────── */}
+            <div className="mos__nav" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {type === "eventOrder" && (
+                    <Link to={`/eventOrders/${eventOrderRoute}`}>
+                        <button className="mos__nav-btn" onClick={() => localStorage.removeItem('orderDetails')}>
+                            <img src={backIcon} alt="" height="20" width="20" />
+                            Back
+                        </button>
+                    </Link>
+                )}
+                {type === undefined && (
+                    <Link to="/orders">
+                        <button className="mos__nav-btn" onClick={() => localStorage.removeItem('order')}>
+                            <img src={backIcon} alt="" height="20" width="20" />
+                            Back
+                        </button>
+                    </Link>
+                )}
+                <Link to="/menu">
+                    <button className="mos__nav-btn" onClick={() => EditOrder()}>
+                        <img src={updateIcon} alt="" height="20" width="20" />
+                        Edit
                     </button>
-                ) : (null)}
+                </Link>
+            </div>
 
-                <button style={{
-                    "backgroundColor": "#ff881a",
-                    "borderRadius": "10px",
-                    "padding": "10px",
-                    "cursor": "pointer",
-                }} onClick={() => {
-                    setShowAdvancePaymentForm(!showAdvancePaymentForm)
-                }}>
-                    <img src={advanceIcon} alt="advanceIcon" height="30px" width="30px" />
-                    Enter Advance payment</button>
-                {showAdvancePaymentForm && <AdvancePaymentForm
-                    ShowAdvancePaymentTable={ShowAdvancePaymentTable}
-                    ShowAdvancePaymentForm={ShowAdvancePaymentForm}
-                    advanceAmount={advanceAmount}
-                />}
+            <div className="mos__body">
+                <motion.div
+                    className="mos__grid"
+                    initial="hidden"
+                    animate="show"
+                    variants={stagger}
+                >
 
-                {showTransportForm && <TransportForm
-                    ShowTransportForm={ShowTransportForm}
-                    ShowTransportTable={ShowTransportTable}
-                    price={rate}
-                    medium={medium}
-                />}
+                    {/* ── Customer details card ─────────────────────────── */}
+                    <motion.div className="mos__card" variants={fadeUp}>
+                        <div className="mos__card-header">
+                            <h2 className="mos__card-event-name">
+                                {type === "eventOrder" ? headingEventName : (eventName || 'Order Details')}
+                            </h2>
+                            <span className={`mos__badge ${meta.className}`}>
+                                {meta.label}
+                            </span>
+                        </div>
 
+                        {type === "eventOrder" && (
+                            <div className="mos__admin-event-meta">
+                                <span>Event: {headingEventName}</span>
+                                <span>Date: {headingEventDate}</span>
+                            </div>
+                        )}
 
+                        <ul className="mos__detail-list">
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">👤</span>
+                                <span className="mos__detail-label">Customer</span>
+                                <span className="mos__detail-value">{fullName}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">🎉</span>
+                                <span className="mos__detail-label">Event Name</span>
+                                <span className="mos__detail-value">{eventName}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">📅</span>
+                                <span className="mos__detail-label">Event Date</span>
+                                <span className="mos__detail-value">{eventDate}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">📅</span>
+                                <span className="mos__detail-label">Event Date (raw)</span>
+                                <span className="mos__detail-value">{eventDateNew}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">⏰</span>
+                                <span className="mos__detail-label">Event Time</span>
+                                <span className="mos__detail-value">
+                                    {eventTime} — {eventTimeCalculate(eventTime)}
+                                </span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">👥</span>
+                                <span className="mos__detail-label">Guests</span>
+                                <span className="mos__detail-value">{numberOfPeople}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">📞</span>
+                                <span className="mos__detail-label">Phone</span>
+                                <span className="mos__detail-value">{phoneNumber}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">📍</span>
+                                <span className="mos__detail-label">Address</span>
+                                <span className="mos__detail-value">{address}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">✉</span>
+                                <span className="mos__detail-label">Email</span>
+                                <span className="mos__detail-value">{email}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">🍽</span>
+                                <span className="mos__detail-label">Service</span>
+                                <span className="mos__detail-value">{service ? 'Yes' : 'No'}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">🚚</span>
+                                <span className="mos__detail-label">Home Delivery</span>
+                                <span className="mos__detail-value">{homeDelivery ? 'Yes' : 'No'}</span>
+                            </li>
+                            <li className="mos__detail-item">
+                                <span className="mos__detail-icon">🪪</span>
+                                <span className="mos__detail-label">Order ID</span>
+                                <span className="mos__detail-value">{id}</span>
+                            </li>
+                        </ul>
 
-                {medium ? (
-                    <TransportTable
-                        deleteTable={deleteTransportTable}
-                        medium={medium}
-                        rate={rate} />
-                ) : null}
-                {showMiscForm && <MiscForm
-                    miscItems={miscItems}
-                    setMiscParticulars={setMiscParticulars}
-                    handleMiscSubmit={handleMiscSubmit}
-                />}
-                {showMiscTable && <MiscTable
-                    miscItems={miscItems}
-                    editMiscTable={editMiscTable}
-                    deleteMiscTable={deleteMiscTable}
-                />}
-                {advanceAmount && <AdvanceTable
-                    deleteTable={deleteAdvancePaymentTable}
-                    advanceAmount={advanceAmount}
-                />}
-                <hr />
-                <button style={{
-                    "backgroundColor": "#ff881a",
-                    "borderRadius": "10px",
-                    "padding": "10px",
-                    "marginRight": "10px",
-                    "cursor": "pointer",
-                }} onClick={() => generateBill()}>
-                    <img src={billIcon} alt="billIcon" width="30px" height="30px" />
-                    Generate Bill
-                </button>
+                        {queries && (
+                            <div className="mos__admin-queries">
+                                Queries: {queries}
+                            </div>
+                        )}
 
+                        <p className="mos__billing-note" style={{ marginTop: '1rem' }}>
+                            add this user to db link feature : navigate to user account with prefilled fields
+                        </p>
+                    </motion.div>
 
-                <button onClick={() => downloadBill({
-                    name: fullName,
-                    // date: eventDate,
-                    date: eventDateNew,
-                    mobile: phoneNumber,
-                    items: selectedItems,
-                    transportation: { medium, rate },
-                    total: total,
-                    advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance(),
-                    miscItems
-                })}>
-                    Download bill with items
-                </button>
+                    {/* ── Items card ───────────────────────────────────── */}
+                    <motion.div className="mos__card" variants={fadeUp}>
+                        <h2 className="mos__card-title">
+                            Order Items
+                            <span className="mos__item-count">{selectedItems.length}</span>
+                        </h2>
 
-                <hr />
+                        <TableContainer sx={{ borderRadius: '10px', border: '1px solid rgba(201,162,39,0.2)', overflow: 'hidden', mb: 0 }}>
+                            <Table size="medium">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sx={{ ...thCell, width: 52, textAlign: 'center' }}>#</TableCell>
+                                        <TableCell sx={thCell}>Item Name</TableCell>
+                                        <TableCell sx={thCell}>Qty</TableCell>
+                                        <TableCell sx={{ ...thCell, textAlign: 'right' }}>Price</TableCell>
+                                        <TableCell sx={{ ...thCell, textAlign: 'right' }}>Total</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {selectedItems.map((item, i) => (
+                                        <TableRow
+                                            key={i}
+                                            sx={{
+                                                '&:hover': { backgroundColor: 'rgba(201,162,39,0.05)' },
+                                                '&:last-child td': { borderBottom: 'none' },
+                                            }}
+                                        >
+                                            <TableCell sx={{ ...tdCell, color: '#C9A227', fontWeight: 700, textAlign: 'center' }}>
+                                                {i + 1}
+                                            </TableCell>
+                                            <TableCell sx={{ ...tdCell, fontWeight: 600 }}>{item.name}</TableCell>
+                                            <TableCell sx={tdCell}>{item.quantity} {item.measured}</TableCell>
+                                            <TableCell sx={{ ...tdCell, textAlign: 'right' }}>&#8377;{item.price}</TableCell>
+                                            <TableCell sx={{ ...tdCell, textAlign: 'right', fontWeight: 700, color: '#C9A227' }}>
+                                                &#8377;{item.quantity * item.price}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
 
-                <button onClick={() => downloadType1Bill({
-                    name: fullName,
-                    // date: eventDate,
-                    date: eventDateNew,
-                    particulars: eventTimeCalculate(eventTime),
-                    numberOfPeople,
-                    mobile: phoneNumber,
-                    items: selectedItems,
-                    transportation: { rate },
-                    total: total,
-                    advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance(),
-                    plateCost: (total / numberOfPeople),
-                    miscItems
-                })}>
-                    Download Type1 bill
-                </button>
-                <hr />
+                        <Divider sx={{ my: 2.5 }} />
 
-                {/* transport and no advance payment + added miscItems*/}
-                {medium && !advanceAmount && <button onClick={() => downloadType2Bill({
-                    name: fullName,
-                    // date: eventDate,
-                    date: eventDateNew,
-                    particulars: eventTimeCalculate(eventTime),
-                    numberOfPeople,
-                    mobile: phoneNumber,
-                    items: selectedItems,
-                    transportation: rate,
-                    total: total,
-                    advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance(),
-                    plateCost: Math.round(total / numberOfPeople),
-                    miscItems,
-                    medium
-                })}>
-                    Download Type2 bill
-                </button>}
+                        <div className="mos__admin-totals">
+                            <div className="mos__admin-total-row mos__admin-total-row--grand">
+                                <span>Grand Total</span>
+                                <span>&#8377;{total}</span>
+                            </div>
+                            <div className="mos__admin-total-row">
+                                <span>Per Plate Cost</span>
+                                <span>&#8377;{total / numberOfPeople}</span>
+                            </div>
+                            <div className="mos__admin-total-row">
+                                <span>Per Plate (DB)</span>
+                                <span>&#8377;{order.amount}</span>
+                            </div>
+                        </div>
+                    </motion.div>
 
-                <hr />
+                </motion.div>
 
+                {/* ── Admin actions card ──────────────────────────────── */}
+                <motion.div
+                    className="mos__card"
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.45, delay: 0.18, ease: 'easeOut' }}
+                >
+                    <h2 className="mos__card-title" style={{ marginBottom: '1.5rem' }}>Admin Actions</h2>
 
-                {/* Transport and advance payment required */}
-                {medium && advanceAmount && <button onClick={() => {
-                    alert("miscItems " + JSON.stringify(miscItems))
+                    <div className="mos__admin-actions">
+                        {homeDelivery && (
+                            <button className="mos__action-btn" onClick={() => setShowTransportForm(!showTransportForm)}>
+                                <img src={transportIcon} alt="" height="24" width="24" />
+                                Enter Transport
+                            </button>
+                        )}
+                        <button className="mos__action-btn" onClick={() => setShowAdvancePaymentForm(!showAdvancePaymentForm)}>
+                            <img src={advanceIcon} alt="" height="24" width="24" />
+                            Enter Advance Payment
+                        </button>
+                        <button className="mos__action-btn" onClick={() => generateMiscItems()}>
+                            <img src={billIcon} alt="" height="24" width="24" />
+                            Generate Misc Items
+                        </button>
+                        <button className="mos__action-btn" onClick={() => generateBill()}>
+                            <img src={billIcon} alt="" height="24" width="24" />
+                            Generate Bill
+                        </button>
+                        {medium && (
+                            <button className="mos__action-btn" onClick={() => generateBillDelivery(id)}>
+                                <img src={billIcon} alt="" height="24" width="24" />
+                                Generate Bill Delivery
+                            </button>
+                        )}
+                    </div>
 
-                    downloadType3Bill({
-                        name: fullName,
-                        // date: eventDate,
-                        date: eventDateNew,
-                        particulars: eventTimeCalculate(eventTime),
-                        numberOfPeople,
-                        mobile: phoneNumber,
-                        items: selectedItems,
-                        transportation: rate,
-                        total: total,
-                        advancePayment: advanceAmount,
-                        balanceAmount: calculateBalance(),
-                        plateCost: (total / numberOfPeople),
-                        miscItems
-                    })
-                }}>
-                    Download Type3 bill
-                </button>}
+                    {showAdvancePaymentForm && (
+                        <AdvancePaymentForm
+                            ShowAdvancePaymentTable={ShowAdvancePaymentTable}
+                            ShowAdvancePaymentForm={ShowAdvancePaymentForm}
+                            advanceAmount={advanceAmount}
+                        />
+                    )}
+                    {showTransportForm && (
+                        <TransportForm
+                            ShowTransportForm={ShowTransportForm}
+                            ShowTransportTable={ShowTransportTable}
+                            price={rate}
+                            medium={medium}
+                        />
+                    )}
+                    {medium && (
+                        <TransportTable
+                            deleteTable={deleteTransportTable}
+                            medium={medium}
+                            rate={rate}
+                        />
+                    )}
+                    {showMiscForm && (
+                        <MiscForm
+                            miscItems={miscItems}
+                            setMiscParticulars={setMiscParticulars}
+                            handleMiscSubmit={handleMiscSubmit}
+                        />
+                    )}
+                    {showMiscTable && (
+                        <MiscTable
+                            miscItems={miscItems}
+                            editMiscTable={editMiscTable}
+                            deleteMiscTable={deleteMiscTable}
+                        />
+                    )}
+                    {advanceAmount && (
+                        <AdvanceTable
+                            deleteTable={deleteAdvancePaymentTable}
+                            advanceAmount={advanceAmount}
+                        />
+                    )}
 
-                <hr />
-                <button onClick={() => downloadCustomBill({
-                    name: fullName,
-                    // date: eventDate,
-                    date: eventDateNew,
-                    particulars: eventTimeCalculate(eventTime),
-                    numberOfPeople,
-                    mobile: phoneNumber,
-                    items: selectedItems,
-                    transportation: rate,
-                    total: total,
-                    advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance(),
-                    plateCost: Math.round(total / numberOfPeople),
-                    miscItems,
-                    medium
-                })}>
-                    Make custom Bill
-                </button>
+                    <Divider sx={{ my: 2.5 }} />
 
-                {
-                    medium ? (
-                        <button style={{
-                            "backgroundColor": "#ff881a",
-                            "borderRadius": "10px",
-                            "padding": "10px",
-                            "marginRight": "10px",
-                            "cursor": "pointer",
-                        }} onClick={() => generateBillDelivery(id)}>
-                            <img src={billIcon} alt="billIcon" width="30px" height="30px" />
-                            Generate Bill Delivery
-                        </button>)
-                        :
-                        (null)
-                }
-                <hr />
-                <button style={{
-                    "backgroundColor": "green",
-                    "borderRadius": "10px",
-                    "padding": "10px",
-                    "marginRight": "10px",
-                    "cursor": "pointer",
-                }} onClick={() =>
-                    generateMiscItems()
-                }>
-                    <img src={billIcon} alt="billIcon" width="30px" height="30px" />
-                    Generate Misc Items
-                </button>
+                    <p style={{ fontFamily: 'inherit', fontSize: '1rem', fontWeight: 700, color: '#6b7280', letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 1rem' }}>
+                        Bill Downloads
+                    </p>
+                    <div className="mos__admin-actions">
+                        <button className="mos__action-btn mos__action-btn--secondary" onClick={() => downloadBill({
+                            name: fullName,
+                            date: eventDateNew,
+                            mobile: phoneNumber,
+                            items: selectedItems,
+                            transportation: { medium, rate },
+                            total: total,
+                            advancePayment: advanceAmount,
+                            balanceAmount: calculateBalance(),
+                            miscItems
+                        })}>
+                            Download bill with items
+                        </button>
+                        <button className="mos__action-btn mos__action-btn--secondary" onClick={() => downloadType1Bill({
+                            name: fullName,
+                            date: eventDateNew,
+                            particulars: eventTimeCalculate(eventTime),
+                            numberOfPeople,
+                            mobile: phoneNumber,
+                            items: selectedItems,
+                            transportation: { rate },
+                            total: total,
+                            advancePayment: advanceAmount,
+                            balanceAmount: calculateBalance(),
+                            plateCost: (total / numberOfPeople),
+                            miscItems
+                        })}>
+                            Download Type1 bill
+                        </button>
+                        {medium && !advanceAmount && (
+                            <button className="mos__action-btn mos__action-btn--secondary" onClick={() => downloadType2Bill({
+                                name: fullName,
+                                date: eventDateNew,
+                                particulars: eventTimeCalculate(eventTime),
+                                numberOfPeople,
+                                mobile: phoneNumber,
+                                items: selectedItems,
+                                transportation: rate,
+                                total: total,
+                                advancePayment: advanceAmount,
+                                balanceAmount: calculateBalance(),
+                                plateCost: Math.round(total / numberOfPeople),
+                                miscItems,
+                                medium
+                            })}>
+                                Download Type2 bill
+                            </button>
+                        )}
+                        {medium && advanceAmount && (
+                            <button className="mos__action-btn mos__action-btn--secondary" onClick={() => {
+                                alert("miscItems " + JSON.stringify(miscItems))
+                                downloadType3Bill({
+                                    name: fullName,
+                                    date: eventDateNew,
+                                    particulars: eventTimeCalculate(eventTime),
+                                    numberOfPeople,
+                                    mobile: phoneNumber,
+                                    items: selectedItems,
+                                    transportation: rate,
+                                    total: total,
+                                    advancePayment: advanceAmount,
+                                    balanceAmount: calculateBalance(),
+                                    plateCost: (total / numberOfPeople),
+                                    miscItems
+                                })
+                            }}>
+                                Download Type3 bill
+                            </button>
+                        )}
+                        <button className="mos__action-btn mos__action-btn--secondary" onClick={() => downloadCustomBill({
+                            name: fullName,
+                            date: eventDateNew,
+                            particulars: eventTimeCalculate(eventTime),
+                            numberOfPeople,
+                            mobile: phoneNumber,
+                            items: selectedItems,
+                            transportation: rate,
+                            total: total,
+                            advancePayment: advanceAmount,
+                            balanceAmount: calculateBalance(),
+                            plateCost: Math.round(total / numberOfPeople),
+                            miscItems,
+                            medium
+                        })}>
+                            Make custom Bill
+                        </button>
+                    </div>
+                </motion.div>
 
             </div>
-        </div >
+        </div>
     )
 }
 

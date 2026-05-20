@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import { Tooltip } from 'reactstrap';
+import React from 'react';
+import Tooltip from '@mui/material/Tooltip';
 import infoIcon from '../../images/info-icon.svg'
 
-const ServiceToolTip = (props) => {
-    const [tooltipOpen, setTooltipOpen] = useState(false);
-
-    const toggle = () => setTooltipOpen(!tooltipOpen);
-
-    return (
-        <>
-            <img src={infoIcon} alt="infoIcon" href="#" id="servicetip" />
-            <Tooltip placement="right" isOpen={tooltipOpen} target="servicetip" toggle={toggle}>
-                Home Delivery + Buffet system is arranged from our side
-      </Tooltip>
-        </>
-    );
+const ServiceToolTip = () => {
+  return (
+    <Tooltip title="Home Delivery + Buffet system is arranged from our side" placement="right">
+      <img src={infoIcon} alt="infoIcon" style={{ cursor: 'pointer' }} />
+    </Tooltip>
+  );
 }
 
 export default ServiceToolTip;

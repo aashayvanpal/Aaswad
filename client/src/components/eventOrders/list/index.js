@@ -7,7 +7,7 @@ import generateObjectID from "../../../helperFunctions/generateObjectID"
 import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table';
 import backIcon from '../../../images/back-icon.png'
 import homeDeliveryMan from '../../../images/home-delivery-man.png'
-import confirm from 'reactstrap-confirm'
+import ConfirmDialog from '../../ConfirmDialog'
 
 
 import CalculateTotalQuantity from "../modals/calculateTotalQuantityModal"
@@ -22,7 +22,8 @@ const EventOrdersList = () => {
     const [searchOrder, setSearchOrder] = useState('')
     const [orders, setOrders] = useState([])
     const [selectedOrders, setSelectedOrders] = useState([]) // only passing the selected to modal
-    const [totalItems, setTotalItems] = useState([]) // 
+    const [totalItems, setTotalItems] = useState([])
+    const [confirmState, setConfirmState] = useState({ open: false })
 
 
     const addEventOrder = () => {
@@ -112,33 +113,27 @@ const EventOrdersList = () => {
         statusUpdatedOrders[index]['status'] = statusValue
         setOrders([...statusUpdatedOrders])
     }
-    const removeEventOrder = async (name, orderID) => {
-        // add confirmation here
-        let result = await confirm({
-            title: (
-                <div style={{ "color": "black", "fontWeight": "bold" }}>
-                    Delete Order Confirmation
-                </div>
-            ),
-            message: (
-                <div style={{ "color": "green" }}>
-                    Are you sure you want to delete : {name}??
-                </div>
-            ),
-            confirmText: "Delete",
-            confirmColor: "warning",
-            cancelColor: "link text-danger",
-            classNames: 'confirmModal'
+    const removeEventOrder = (name, orderID) => {
+        setConfirmState({
+            open: true,
+            title: 'Delete Order Confirmation',
+            message: `Are you sure you want to delete : ${name}??`,
+            onConfirm: () => {
+                setConfirmState(s => ({ ...s, open: false }))
+                deleteOrderFromEventOrders(orderID)
+                setOrders(o => o.filter(order => order.orderId !== orderID))
+            }
         })
-        console.log("result is :", result)
-        if (result) {
-            deleteOrderFromEventOrders(orderID)
-            setOrders(orders.filter(order => order.orderId != orderID))
-        } else {
-            console.log("do not delete the order")
-        }
     }
     return <>
+        <ConfirmDialog
+            open={confirmState.open}
+            title={confirmState.title}
+            message={confirmState.message}
+            confirmText="Delete"
+            onConfirm={confirmState.onConfirm}
+            onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
+        />
         <ShowBtn />
         <div >
             <div style={{ display: 'flex' }}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Table, Button } from 'reactstrap';
+import Button from '@mui/material/Button';
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import { Stepper } from 'react-form-stepper'
@@ -356,7 +356,7 @@ const AdminCart = (props) => {
                                     sum += i.quantity * i.price
                                 ), 0)}
                             </h2>
-                            <Table>
+                            <table>
                                 <thead>
                                     <tr>
                                         <th>Sl No</th>
@@ -390,7 +390,7 @@ const AdminCart = (props) => {
 
                                                     </td>
                                                     <td>
-                                                        <Button color="danger" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
+                                                                        <Button variant="contained" color="error" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
                                                             props.resetIsSelected(item._id)
                                                             handleRemove(item._id)
                                                         }}>
@@ -402,19 +402,20 @@ const AdminCart = (props) => {
                                         })
                                     }
                                 </tbody>
-                            </Table>
+                            </table>
 
                             <hr />
                             <div style={{ "display": "flex", "justifyContent": "space-evenly", padding: "10px" }}>
-                                <Button color="danger" style={{ "fontWeight": "bold" }} onClick={() => clearCart()}>
+                                <Button variant="contained" color="error" style={{ "fontWeight": "bold" }} onClick={() => clearCart()}>
                                     <img src={clearCartImg} alt="" height="25px" width="25px" />
-                                    Clear Cart
+                                    &nbsp;Clear Cart
                                 </Button>
 
                                 <Link to='/request'
                                     id="proceed-btn"
                                     onClick={() => { props.requestOrder(cartItems) }}>
                                     <Button
+                                        variant="contained"
                                         style={{ fontWeight: "bold", backgroundColor: '#dbc268', color: 'black' }}
                                     >
                                         Proceed admin &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />

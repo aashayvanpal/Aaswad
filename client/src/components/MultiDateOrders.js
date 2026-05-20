@@ -1,11 +1,13 @@
 import React, { useState, useEffect, createContext } from "react"
-import { Accordion } from 'react-bootstrap';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DatePicker from "react-multi-date-picker"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import Menu from './Menu.js'
 import _ from 'lodash'
 import '../css/MultiDateOrders.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import VisibilityContext from './Context'
 import axios from "../config/axios.js";
 import UserDetailsFormModal from "./UserDetailsFormModal.js";
@@ -180,17 +182,18 @@ export default function MultiDateOrders() {
                         />
                         {/* {orderDates[0]['2022/07/06'][orderType].items[0].name} */}
                         < div >
-                            <Accordion
-                                alwaysOpen
-                            // open='1'
-                            // toggle={function noRefCheck(target) { console.log('toggled target:', target) }}
-                            >
+                            <div>
                                 {dates.map((date, i) =>
-                                    <Accordion.Item key={i} eventKey={i} className="accordion">
-                                        <Accordion.Header className="accordion-header" style={{ "border": "8px solid blue", backgroundColor: "!red" }} onClick={() => { console.log('clicked:', date, i) }} targetid={i}>
+                                    <Accordion key={i} defaultExpanded className="accordion">
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            className="accordion-header"
+                                            style={{ border: '8px solid blue' }}
+                                            onClick={() => { console.log('clicked:', date, i) }}
+                                        >
                                             {date} + extra text
-                                        </Accordion.Header>
-                                        <Accordion.Body accordianid={i} >
+                                        </AccordionSummary>
+                                        <AccordionDetails>
                                             <strong>
                                                 <ul id="accordion-list">
                                                     <li className="accordion-li" onClick={() => dayNavigation('Breakfast', date, i)}>Breakfast</li>
@@ -255,10 +258,10 @@ export default function MultiDateOrders() {
                                                     </h2>
                                                 </div>
                                             )}
-                                        </Accordion.Body >
-                                    </Accordion.Item >
+                                        </AccordionDetails>
+                                    </Accordion>
                                 )}
-                            </Accordion >
+                            </div>
 
                             <UserDetailsFormModal
                                 orderDates={orderDates}

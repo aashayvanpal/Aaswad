@@ -8,7 +8,8 @@ import '../css/app-css.css'
 import { Stepper } from 'react-form-stepper'
 import { getUserDetails } from '../assets/user-functions.js'
 import NavigationBar from './NavigationBar'
-import { Alert, Button } from 'reactstrap';
+import MuiAlert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom'
 import ShowBtn from '../assets/ShowBtn'
 import clearIcon from '../images/clear-icon.png'
@@ -283,16 +284,17 @@ const Menu = () => {
                                     </ToastBody>
                                 </Toast>
                             </div> */}
-                        <Alert style={{
-                            "backgroundColor": "#dbc268", 'color': "green",
-                        }} isOpen={showAlert}>
+                        {showAlert && (
+                          <MuiAlert
+                            severity="success"
+                            style={{ backgroundColor: '#dbc268', color: 'green' }}
+                            action={
+                              <Button color="error" size="small" onClick={() => setShowAlert(false)}>X</Button>
+                            }
+                          >
                             Your enquiry is submitted successfully , you can view the status by clicking <Link to='/myOrders'>here</Link>
-                            <Button color="danger" style={{
-                                "float": "right",
-                                "color": "white",
-                                "marginTop": "-5px",
-                            }} onClick={() => setShowAlert(false)}>X</Button>
-                        </Alert>
+                          </MuiAlert>
+                        )}
                         <h1 id="Menu-style">Choose Your Menu</h1>
 
                         <div id="filteringOptions">

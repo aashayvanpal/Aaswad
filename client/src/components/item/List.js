@@ -7,13 +7,14 @@ import DisplayItems from './Item.js'
 import axios from '../../config/axios.js'
 import { Table, Thead, Tbody, Tr, Th } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
-import confirm from 'reactstrap-confirm'
+import ConfirmDialog from '../ConfirmDialog'
 import addIcon from '../../images/add-item-icon.png'
 
 
 const AddItems = (props) => {
     const [items, setItems] = useState([])
     const [searchFilter, setSearchFilter] = useState([])
+    const [confirmState, setConfirmState] = useState({ open: false })
 
     useEffect(() => {
         axios.get('/api/items', {
@@ -50,58 +51,25 @@ const AddItems = (props) => {
         // })
     }
 
-    const deleteItem = async (itemToDelete) => {
+    const deleteItem = (itemToDelete) => {
         console.log('called parent component delete id', itemToDelete)
-        // console.log("remove button clicked!")
-        // console.log("value of this ", this)
-        // console.log("value of this.items ", this.state.items)
-        // console.log("value of itemToDelete ", itemToDelete)
 
-        //confirm to delete
-        let result = await confirm({
-            title: (
-                <div style={{ "color": "black", "fontWeight": "bold" }}>
-                    Delete item Confirmation
-                </div>
-            ),
-            message: (
-                <div style={{ "color": "green" }}>
-                    Are you sure you want to delete this item ??
-                </div>
-            ),
-            confirmText: "Delete",
-            confirmColor: "warning",
-            cancelColor: "link text-danger",
-            classNames: 'confirmModal'
+        setConfirmState({
+            open: true,
+            title: 'Delete item Confirmation',
+            message: 'Are you sure you want to delete this item ??',
+            onConfirm: () => {
+                setConfirmState(s => ({ ...s, open: false }))
+                axios.delete(`/items/${itemToDelete}`, {
+                    headers: { 'x-auth': localStorage.getItem('token') }
+                })
+                    .then((response) => {
+                        console.log('response data', response.data)
+                        setSearchFilter(sf => sf.filter(item => item._id !== response.data._id))
+                    })
+                    .catch((err) => console.log(err))
+            }
         })
-        console.log("result is :", result)
-
-        if (result) {
-            axios.delete(`/items/${itemToDelete}`, {
-                headers: {
-                    'x-auth': localStorage.getItem('token')
-                }
-            })
-                .then((response) => {
-                    console.log('response data', response.data)
-                    console.log('Inside the .then promise')
-
-                    // this.setState((prevState) => ({
-                    //     searchFilter: prevState.searchFilter.filter(item => item._id !== response.data._id),
-                    // }))
-                    var filteredItems = searchFilter.filter(item => item._id !== response.data._id)
-                    // this.setState({ searchFilter: filteredItems })
-                    setSearchFilter(filteredItems)
-
-                    // this.setState({ items: this.state.searchFilter })
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-        } else {
-            console.log("dont delete the item")
-        }
     }
 
     const updateCheckbox = (itemToToggle) => {
@@ -152,6 +120,14 @@ const AddItems = (props) => {
 
     return (
         <div className="content-primary">
+            <ConfirmDialog
+                open={confirmState.open}
+                title={confirmState.title}
+                message={confirmState.message}
+                confirmText="Delete"
+                onConfirm={confirmState.onConfirm}
+                onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
+            />
             <div className="search-align">
                 <h2>Listing items - {searchFilter.length}</h2>
                 <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={handleChange} />&nbsp;&nbsp;

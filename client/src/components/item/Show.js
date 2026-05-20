@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../config/axios'
 import { Link } from 'react-router-dom'
-import { Table } from 'reactstrap';
 
 const ItemShow = () => {
     const [item, setItem] = useState({})
@@ -50,7 +49,7 @@ const ItemShow = () => {
                 "fontSize": "22px",
             }}>Back</button></Link>
             <h2>Showing item details :-</h2>
-            <Table responsive hover >
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <tbody>
                     <tr>
                         <td><h2>Item Name</h2></td>
@@ -92,7 +91,7 @@ const ItemShow = () => {
                         <td><h2>{recipie}</h2></td>
                     </tr>
                 </tbody>
-            </Table>
+            </table>
         </div >
     )
 }

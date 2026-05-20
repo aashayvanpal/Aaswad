@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Col, Form, FormGroup, Label, Input } from 'reactstrap';
-// import { Table } from 'reactstrap';
-
 import '../../css/itemForm.css'
+import '../../css/itemForm.scss'
 
 import AddIngredientModal from '../ingredients/modals/addIngredientsModal'
 
@@ -110,57 +108,57 @@ const ItemForm = (props) => {
             }}>Add Item details</h2>
 
             dynamic category generation and multiple selection option ,CRUD operations for category <br />
-            <Form onSubmit={handleSubmit} id='itemForm' >
-                <FormGroup row id='formGroup'>
-                    <Label for="name" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Name</Label>
-                    <Col sm={10}>
-                        <Input type="text" name="name" id="name" placeholder="Item name" value={name} onChange={(e) => { setName(e.target.value) }} />
-                    </Col>
-                </FormGroup>
-                <FormGroup row id='formGroup'>
-                    <Label for="price" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Price</Label>
-                    <Col sm={10}>
-                        <Input type="text" name="price" id="price" placeholder="Price" value={price} onChange={(e) => { setPrice(e.target.value) }} />
-                    </Col>
-                </FormGroup>
-                <FormGroup row id='formGroup'>
-                    <Label for="category" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Category</Label>
-                    <Col sm={10}>
-                        <Input type="text" name="category" id="category" placeholder="Category" value={category} onChange={(e) => { setCategory(e.target.value) }} />
-                    </Col>
-                </FormGroup>
+            <form onSubmit={handleSubmit} id='itemForm'>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="name" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Name</label>
+                    <div className="form-col">
+                        <input type="text" name="name" id="name" placeholder="Item name" value={name} onChange={(e) => { setName(e.target.value) }} />
+                    </div>
+                </div>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="price" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Price</label>
+                    <div className="form-col">
+                        <input type="text" name="price" id="price" placeholder="Price" value={price} onChange={(e) => { setPrice(e.target.value) }} />
+                    </div>
+                </div>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="category" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Category</label>
+                    <div className="form-col">
+                        <input type="text" name="category" id="category" placeholder="Category" value={category} onChange={(e) => { setCategory(e.target.value) }} />
+                    </div>
+                </div>
 
-                <FormGroup row id='formGroup'>
-                    <Label for="measured" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Measured In</Label>
-                    <Col sm={10}>
-                        <Input type="select" value={measured} onChange={(e) => { setMeasured(e.target.value) }} name="measured" id="measured">
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="measured" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Measured In</label>
+                    <div className="form-col">
+                        <select value={measured} onChange={(e) => { setMeasured(e.target.value) }} name="measured" id="measured">
                             <option value="">--</option>
                             <option value="pc">pc</option>
                             <option value="Kg">Kg</option>
                             <option value="plate">plate</option>
-                        </Input>
-                    </Col>
-                </FormGroup>
+                        </select>
+                    </div>
+                </div>
 
-                <FormGroup row id='formGroup'>
-                    <Label for="description" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Description</Label>
-                    <Col sm={10}>
-                        <Input type="textarea" name="description" id="imgeURL" placeholder="Item description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
-                    </Col>
-                </FormGroup>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="description" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Description</label>
+                    <div className="form-col">
+                        <textarea name="description" id="imgeURL" placeholder="Item description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
+                    </div>
+                </div>
 
-                <FormGroup row id='formGroup'>
-                    <Label for="imgURL" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Image URL</Label>
-                    <Col sm={10}>
-                        <Input type="textarea" name="imgURL" id="imgeURL" placeholder="Image URL" value={imgeURL} onChange={(e) => { setImgeURL(e.target.value) }} />
-                    </Col>
-                </FormGroup>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="imgURL" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Image URL</label>
+                    <div className="form-col">
+                        <textarea name="imgURL" id="imgeURL" placeholder="Image URL" value={imgeURL} onChange={(e) => { setImgeURL(e.target.value) }} />
+                    </div>
+                </div>
 
-                <FormGroup row id='formGroup'>
-                    <Label for="ingredients" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</Label>
-                    <Col sm={10}>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="ingredients" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</label>
+                    <div className="form-col">
                         {Array.isArray(ingredients) ? <>{
-                            ingredients.map(ingredient => <div>{ingredient.name} {ingredient.quantity}</div>)
+                            ingredients.map(ingredient => <div key={ingredient.name}>{ingredient.name} {ingredient.quantity}</div>)
                         }</> : "old ingregients"}
                         <AddIngredientModal buttonLabel="Add ingredients"
                             append2InputFields={append2InputFields}
@@ -170,22 +168,21 @@ const ItemForm = (props) => {
                             selectedValues={ingredients}
                             setSelectedValues={setSelectedValues}
                         />
+                    </div>
+                </div>
 
-                    </Col>
-                </FormGroup>
-
-                <FormGroup row id='formGroup'>
-                    <Label for="recipie" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Recipie</Label>
-                    <Col sm={10} style={{ marginBottom: "30px" }}>
-                        <Input type="textarea" name="recipie" id="recipie" placeholder="Recipie" value={recipie} onChange={(e) => { setRecipie(e.target.value) }} />
-                    </Col>
-                </FormGroup>
+                <div className="form-row" id="formGroup">
+                    <label htmlFor="recipie" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Recipie</label>
+                    <div className="form-col" style={{ marginBottom: "30px" }}>
+                        <textarea name="recipie" id="recipie" placeholder="Recipie" value={recipie} onChange={(e) => { setRecipie(e.target.value) }} />
+                    </div>
+                </div>
 
                 <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "30px" }}>
-                    <Link to='/items'><button className="button-color3" >Back</button></Link>
+                    <Link to='/items'><button className="button-color3">Back</button></Link>
                     <input className="button-color3" type="submit" value="Add Item" />
                 </div>
-            </Form>
+            </form>
         </div >
     )
 }

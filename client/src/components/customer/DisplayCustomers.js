@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import deleteImg from '../../images/delete-icon.png'
-import confirm from 'reactstrap-confirm'
+import ConfirmDialog from '../ConfirmDialog'
 import ShowBtn from "../../assets/ShowBtn"
 import NavigationBar from "../NavigationBar"
 import axios from "axios"
@@ -11,6 +11,7 @@ import updateIcon from '../../images/update-icon.jpg'
 const DisplayCustomers = () => {
     const [customers, setCustomers] = useState([])
     const [searchedCustomer, setSearchedCustomer] = useState('')
+    const [confirmState, setConfirmState] = useState({ open: false })
     useEffect(() => {
         // make api call here
         axios.get('/customers', {
@@ -28,54 +29,39 @@ const DisplayCustomers = () => {
             })
     }, [])
 
-    const handleRemoveCustomer = async (id, name) => {
+    const handleRemoveCustomer = (id, name) => {
         console.log('remove this id:', id)
         console.log('remove this name:', name)
-        // add confirmation here
-        let result = await confirm({
-            title: (
-                <div style={{ "color": "black", "fontWeight": "bold" }}>
-                    Delete Customer Confirmation
-                </div>
-            ),
-            message: (
-                <div style={{ "color": "green" }}>
-                    Are you sure you want to delete : {name}??
-                </div>
-            ),
-            confirmText: "Delete",
-            confirmColor: "warning",
-            cancelColor: "link text-danger",
-            classNames: 'confirmModal'
+
+        setConfirmState({
+            open: true,
+            title: 'Delete Customer Confirmation',
+            message: `Are you sure you want to delete : ${name}??`,
+            onConfirm: () => {
+                setConfirmState(s => ({ ...s, open: false }))
+                axios.delete(`/customers/${id}`, {
+                    headers: { 'x-auth': localStorage.getItem('token') }
+                })
+                    .then((response) => {
+                        console.log('response data', response.data)
+                        setCustomers(c => c.filter(item => item._id !== response.data._id))
+                    })
+                    .catch((err) => console.log(err))
+            }
         })
-        console.log("result is :", result)
-
-        if (result) {
-            console.log('delete here')
-
-
-            // DELETE Request
-            axios.delete(`/customers/${id}`, {
-                headers: {
-                    'x-auth': localStorage.getItem('token')
-                }
-            })
-                .then((response) => {
-                    console.log('response data', response.data)
-                    setCustomers(customers.filter(item => item._id !== response.data._id))
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
-
-        } else { console.log('dont delete the Customer!!') }
-
     }
     const filterCustomers = () => {
         return customers.filter(customer => customer.fullName.toLowerCase().includes(searchedCustomer.toLowerCase()))
     }
-    return <div >
+    return <div>
+        <ConfirmDialog
+            open={confirmState.open}
+            title={confirmState.title}
+            message={confirmState.message}
+            confirmText="Delete"
+            onConfirm={confirmState.onConfirm}
+            onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
+        />
         <ShowBtn />
         <div style={{ display: 'flex' }}>
 

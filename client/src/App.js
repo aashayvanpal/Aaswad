@@ -27,7 +27,6 @@ import Contact from "./components/contact/Contact.tsx";
 import HomePage from "./components/HomePage.tsx";
 import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
-import { Container, Row, Col } from "reactstrap";
 import NavigationBar from './components/NavigationBar.js'
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
@@ -46,17 +45,14 @@ import BusinessAnalyzer from "./components/businessAnalyzer/index.js";
 function App() {
   return (
     <div className="app">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://fonts.gstatic.com" />
       <link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet" />
 
-      <Container fluid>
-        <Row>
-          <Col style={{ paddingRight: "0px", paddingLeft: "0px" }}>
-            <BrowserRouter>
-              <div className="align">
-                <div className="content-showcase">
-                  <Routes>
+      <div style={{ width: '100%' }}>
+        <BrowserRouter>
+          <div className="align">
+            <div className="content-showcase">
+              <Routes>
 
                     <Route path="/" element={<HomePage />} />
 
@@ -168,13 +164,11 @@ function App() {
 
                     <Route path="*" element={<><Header /><NotFoundPage /></>} />
 
-                  </Routes>
-                </div>
-              </div>
-            </BrowserRouter>
-          </Col>
-        </Row>
-      </Container>
+              </Routes>
+            </div>
+          </div>
+        </BrowserRouter>
+      </div>
     </div>
   );
 }

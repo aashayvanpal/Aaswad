@@ -371,6 +371,169 @@ $text-muted:  #6b7280;
     100% { background-position: -200% 0; }
   }
 
+  // ── Admin: nav button ────────────────────────────────────
+  &__nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: $gold;
+    }
+  }
+
+  // ── Admin: event meta strip ──────────────────────────────
+  &__admin-event-meta {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: $text-muted;
+    font-weight: 500;
+    flex-wrap: wrap;
+  }
+
+  // ── Admin: queries banner ────────────────────────────────
+  &__admin-queries {
+    margin-top: 1.25rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #b91c1c;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  // ── Admin: items table ───────────────────────────────────
+  &__admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+
+    thead tr {
+      background: $gold-dim;
+      border-bottom: 2px solid $gold-border;
+    }
+
+    th, td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    th {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $text-muted;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    td {
+      font-size: 1.5rem;
+      color: $text;
+    }
+
+    &__index {
+      font-weight: 700;
+      color: $gold !important;
+      text-align: center;
+      width: 60px;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: rgba(201, 162, 39, 0.04); }
+  }
+
+  // ── Admin: totals ────────────────────────────────────────
+  &__admin-totals {
+    border-top: 2px solid rgba(0, 0, 0, 0.08);
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__admin-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 1.5rem;
+    color: $text-muted;
+
+    span:last-child { font-weight: 600; color: $text; }
+
+    &--grand {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: $text;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      margin-bottom: 0.3rem;
+      padding-bottom: 0.8rem;
+
+      span:last-child { color: $gold; }
+    }
+  }
+
+  // ── Admin: action buttons ────────────────────────────────
+  &__admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: $gold;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+
+    &:hover {
+      background: $gold-light;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+    }
+
+    &:active { transform: translateY(0); }
+
+    &--secondary {
+      background: $white;
+      color: $text;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+
+      &:hover {
+        background: $gold-dim;
+        border-color: $gold-border;
+        box-shadow: none;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
   // ── Responsive ──────────────────────────────────────────
   @media (max-width: 900px) {
     &__grid            { grid-template-columns: 1fr; }

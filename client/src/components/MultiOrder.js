@@ -1,6 +1,6 @@
 import axios from '../config/axios.js'
 import React, { useState, useEffect } from 'react'
-import confirm from 'reactstrap-confirm'
+import ConfirmDialog from './ConfirmDialog'
 import { Link } from 'react-router-dom'
 import '../css/OrderList.css'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
@@ -16,6 +16,7 @@ const MultiOrder = () => {
     const [approves, setApproves] = useState([])
     const [confirmed, setConfirmed] = useState([])
     const [completed, setCompleted] = useState([])
+    const [confirmState, setConfirmState] = useState({ open: false })
 
     useEffect(() => {
         //  get request to display all multi orders
@@ -168,60 +169,40 @@ const MultiOrder = () => {
             })
     }
 
-    const handleRemoveOrder = async (id, name) => {
+    const handleRemoveOrder = (id, name) => {
         console.log('remove this id:', id)
         console.log('remove this name:', name)
 
-        // add confirmation here
-        let result = await confirm({
-            title: (
-                <div style={{ "color": "black", "fontWeight": "bold" }}>
-                    Delete Order Confirmation
-                </div>
-            ),
-            message: (
-                <div style={{ "color": "green" }}>
-                    Are you sure you want to delete : {name}??
-                </div>
-            ),
-            confirmText: "Delete",
-            confirmColor: "warning",
-            cancelColor: "link text-danger",
-            classNames: 'confirmModal'
+        setConfirmState({
+            open: true,
+            title: 'Delete Order Confirmation',
+            message: `Are you sure you want to delete : ${name}??`,
+            onConfirm: () => {
+                setConfirmState(s => ({ ...s, open: false }))
+                axios.delete(`/multiOrders/${id}`, {
+                    headers: { 'x-auth': localStorage.getItem('token') }
+                })
+                    .then((response) => {
+                        console.log('response data', response.data)
+                        setApproves(a => a.filter(item => item._id !== response.data._id))
+                        setConfirmed(c => c.filter(item => item._id !== response.data._id))
+                        setCompleted(c => c.filter(item => item._id !== response.data._id))
+                        setOrders(o => o.filter(item => item._id !== response.data._id))
+                    })
+                    .catch((err) => console.log('there is an error!', err))
+            }
         })
-        console.log("result is :", result)
-
-        if (result) {
-            console.log('delete here')
-
-
-            // DELETE Request
-            axios.delete(`/multiOrders/${id}`, {
-                headers: {
-                    'x-auth': localStorage.getItem('token')
-                }
-            })
-                .then((response) => {
-                    console.log('response data', response.data)
-
-                    setApproves(approves.filter(item => item._id !== response.data._id))
-
-                    setConfirmed(confirmed.filter(item => item._id !== response.data._id))
-
-                    setCompleted(completed.filter(item => item._id !== response.data._id))
-
-                    setOrders(orders.filter(item => item._id !== response.data._id))
-
-                })
-                .catch((err) => {
-                    console.log('there is an error!', err)
-                })
-
-        } else { console.log('dont delete the order') }
-
     }
     return (
         <div>
+            <ConfirmDialog
+                open={confirmState.open}
+                title={confirmState.title}
+                message={confirmState.message}
+                confirmText="Delete"
+                onConfirm={confirmState.onConfirm}
+                onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
+            />
             <ShowBtn />
             <div style={{ display: 'flex' }}>
                 <NavigationBar />

@@ -1,27 +1,79 @@
+import React from 'react'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import IconButton from '@mui/material/IconButton'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
+
+const sectionStyle = {
+    backgroundColor: 'rgba(201,162,39,0.06)',
+    border: '1px solid rgba(201,162,39,0.28)',
+    borderRadius: '10px',
+    padding: '1.5rem',
+    marginTop: '1rem',
+}
+
+const thCell = {
+    backgroundColor: 'rgba(201,162,39,0.14)',
+    color: '#6b7280',
+    fontWeight: 700,
+    fontSize: '0.8rem',
+    letterSpacing: '0.07em',
+    textTransform: 'uppercase',
+    fontFamily: 'inherit',
+    padding: '0.75rem 1rem',
+    borderBottom: '2px solid rgba(201,162,39,0.3)',
+}
+
+const tdCell = {
+    fontFamily: 'inherit',
+    color: '#1a1a1a',
+    padding: '0.875rem 1rem',
+    borderBottom: 'none',
+    fontSize: '1rem',
+}
+
 const TranportTable = (props) => {
-    return <>
-        <hr />
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-            <table style={{ "borderCollapse": "collapse", "border": "2px solid black", width: "50%" }}>
-                <thead style={{ "border": "2px solid black" }}>
-                    <tr>
-                        <td>Transport</td>
-                        <td>Rate</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{props.medium}</td>
-                        <td>{props.rate}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button onClick={() => {
-                console.log('delete Transport table clicked')
-                props.deleteTable()
-            }}>Delete</button>
+    return (
+        <div style={sectionStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <LocalShippingOutlinedIcon sx={{ color: '#C9A227', fontSize: '1.4rem' }} />
+                    <span style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a' }}>Transport</span>
+                </div>
+                <IconButton
+                    size="small"
+                    onClick={() => { console.log('delete Transport table clicked'); props.deleteTable() }}
+                    sx={{ color: '#ef4444', '&:hover': { backgroundColor: 'rgba(239,68,68,0.08)' } }}
+                >
+                    <DeleteOutlineIcon fontSize="small" />
+                </IconButton>
+            </div>
+
+            <TableContainer sx={{ borderRadius: '8px', border: '1px solid rgba(201,162,39,0.2)', overflow: 'hidden' }}>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={thCell}>Medium</TableCell>
+                            <TableCell sx={{ ...thCell, textAlign: 'right' }}>Rate</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell sx={{ ...tdCell, fontWeight: 600 }}>{props.medium}</TableCell>
+                            <TableCell sx={{ ...tdCell, textAlign: 'right', fontWeight: 700, color: '#C9A227', fontSize: '1.1rem' }}>
+                                &#8377;{props.rate}
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
-    </>
+    )
 }
 
 export default TranportTable

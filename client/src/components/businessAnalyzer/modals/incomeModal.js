@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const IncomeModal = (props) => {
     const {
@@ -9,11 +15,6 @@ const IncomeModal = (props) => {
         setIncomeItems,
         refresh,
         setRefresh,
-        resetIsSelected,
-        requestOrder,
-        userType,
-        report = [], //default set to array
-
     } = props;
 
     const [modal, setModal] = useState(false);
@@ -22,9 +23,6 @@ const IncomeModal = (props) => {
 
     const toggle = () => setModal(!modal);
 
-    const cancelModal = () => {
-        toggle()
-    }
     const addIncome = () => {
         const income = { particular, amount: Number(amount) }
         const newIncomeItems = [...incomeItems, income]
@@ -35,44 +33,38 @@ const IncomeModal = (props) => {
         } else {
             business = { income: newIncomeItems, expense: [] }
         }
-
         localStorage.setItem('business', JSON.stringify(business))
         toggle()
-
     }
-    return (
-        <div >
-            <Button style={{
-                "backgroundColor": "#dbc268",
-                "color": "black",
-                "fontSize": "22px"
-            }} onClick={toggle}>
-                {buttonLabel}
 
+    return (
+        <div>
+            <Button
+                variant="contained"
+                style={{ backgroundColor: '#dbc268', color: 'black', fontSize: '22px' }}
+                onClick={toggle}
+            >
+                {buttonLabel}
             </Button>
-            <Modal isOpen={modal} toggle={toggle} className={className} >
-                <ModalHeader style={{ "backgroundColor": "#ebc642" }} toggle={toggle}>
+            <Dialog open={modal} onClose={toggle} className={className} fullWidth maxWidth="sm">
+                <DialogTitle style={{ backgroundColor: '#ebc642', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     Add Income Details
-                </ModalHeader>
-                <ModalBody style={{ "backgroundColor": "#fff5d2", padding: "20px" }} >
+                    <IconButton onClick={toggle} size="small"><CloseIcon /></IconButton>
+                </DialogTitle>
+                <DialogContent style={{ backgroundColor: '#fff5d2', padding: '20px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                         Particular <input value={particular} onChange={(e) => setParticular(e.target.value)} style={{ width: '248px' }} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         Amount <input value={amount} onChange={(e) => setAmount(e.target.value)} style={{ width: '248px' }} />
-
                     </div>
-
-                </ModalBody>
-                <ModalFooter style={{ backgroundColor: '#fff5d2', display: 'flex', gap: '280px' }}>
-
-                    <button style={{ backgroundColor: '#dc3545', color: 'white' }} onClick={cancelModal}>Cancel</button>
-                    <button style={{ backgroundColor: 'rgb(219, 194, 104)' }} onClick={(e) => addIncome()}>Add Income</button>
-
-                </ModalFooter>
-
-            </Modal >
-        </div >
+                </DialogContent>
+                <DialogActions style={{ backgroundColor: '#fff5d2', display: 'flex', gap: '280px' }}>
+                    <button style={{ backgroundColor: '#dc3545', color: 'white' }} onClick={toggle}>Cancel</button>
+                    <button style={{ backgroundColor: 'rgb(219, 194, 104)' }} onClick={addIncome}>Add Income</button>
+                </DialogActions>
+            </Dialog>
+        </div>
     );
 }
 

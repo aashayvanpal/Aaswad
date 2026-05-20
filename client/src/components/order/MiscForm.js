@@ -1,10 +1,31 @@
 // this is dynamic form when we need to extend the form contents
-import React, { useState } from 'react'
+import React from 'react'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
+import AddIcon from '@mui/icons-material/Add'
+
+const sectionStyle = {
+    backgroundColor: 'rgba(201,162,39,0.06)',
+    border: '1px solid rgba(201,162,39,0.28)',
+    borderRadius: '10px',
+    padding: '1.5rem',
+    marginTop: '1rem',
+}
+
+const goldBtn = {
+    backgroundColor: '#C9A227',
+    color: '#000',
+    fontWeight: 700,
+    fontFamily: 'inherit',
+    '&:hover': { backgroundColor: '#e8c84d' },
+}
 
 const MiscForm = ({ miscItems, setMiscParticulars, handleMiscSubmit }) => {
 
     const handleParticularsChange = (index, e, fieldName) => {
-        // console.log("index, item,name", index, e.target.value, fieldName)
         let oldItems = miscItems
         oldItems[index][fieldName] = e.target.value
         setMiscParticulars([...oldItems])
@@ -12,46 +33,72 @@ const MiscForm = ({ miscItems, setMiscParticulars, handleMiscSubmit }) => {
 
     const addNewFields = (e) => {
         e.preventDefault()
-        setMiscParticulars([...miscItems, {
-            particular: '', rate: ''
-        }])
+        setMiscParticulars([...miscItems, { particular: '', rate: '' }])
     }
+
     const handleDeleteField = (e, index) => {
         e.preventDefault()
-        // remove index from array
-        console.log("before", miscItems)
         miscItems.splice(index, 1)
-        console.log("after", miscItems)
         setMiscParticulars([...miscItems])
     }
 
-    return <div>
-        <form onSubmit={handleMiscSubmit}>
-            {/* <input type="text" placeholder="Enter Particulars" value={medium} required onChange={(e) => setMedium(e.target.value)} />
-            <input placeholder="Enter Price" value={price} required onChange={(e) => setPrice(e.target.value)} /><br />
-            <button type="submit">Submit</button> */}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Particulars</th>
-                        <th>Rate</th>
-                        <th><button onClick={(e) => addNewFields(e)}>Add New</button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {miscItems.map((item, index) => <tr key={index}>
-                        <td><input placeholder='Enter Particulars' name='particular' value={item.particular} onChange={(e) => handleParticularsChange(index, e, 'particular')} /></td>
-                        <td><input placeholder='Enter Rate' name='rate' value={item.rate} onChange={(e) => handleParticularsChange(index, e, 'rate')} /></td>
-                        <td><button onClick={(e) => handleDeleteField(e, index)}>Delete</button></td>
-                    </tr>)}
-                </tbody>
+    return (
+        <div style={sectionStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                <p style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>
+                    Extras / Misc Items
+                </p>
+                <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<AddIcon />}
+                    onClick={addNewFields}
+                    sx={{ borderColor: '#C9A227', color: '#C9A227', fontFamily: 'inherit', fontWeight: 600, '&:hover': { borderColor: '#e8c84d', backgroundColor: 'rgba(201,162,39,0.06)' } }}
+                >
+                    Add Row
+                </Button>
+            </div>
 
+            <form onSubmit={handleMiscSubmit}>
+                <Stack spacing={1.5} sx={{ mb: 2 }}>
+                    {miscItems.map((item, index) => (
+                        <Stack key={index} direction="row" spacing={1.5} alignItems="center" flexWrap="wrap" useFlexGap>
+                            <TextField
+                                label="Particular"
+                                placeholder="Description"
+                                size="small"
+                                value={item.particular}
+                                onChange={(e) => handleParticularsChange(index, e, 'particular')}
+                                sx={{ flex: 1, minWidth: 160 }}
+                            />
+                            <TextField
+                                label="Rate (₹)"
+                                placeholder="Amount"
+                                size="small"
+                                type="number"
+                                value={item.rate}
+                                onChange={(e) => handleParticularsChange(index, e, 'rate')}
+                                sx={{ width: 140 }}
+                            />
+                            <IconButton
+                                onClick={(e) => handleDeleteField(e, index)}
+                                size="small"
+                                sx={{ color: '#ef4444', '&:hover': { backgroundColor: 'rgba(239,68,68,0.08)' } }}
+                            >
+                                <DeleteOutlineIcon fontSize="small" />
+                            </IconButton>
+                        </Stack>
+                    ))}
+                </Stack>
 
-            </table>
-            <input type='submit' />
-        </form>
-        {/* {showTable && showTable1()} */}
-    </div >
+                {miscItems.length > 0 && (
+                    <Button type="submit" variant="contained" sx={goldBtn}>
+                        Save
+                    </Button>
+                )}
+            </form>
+        </div>
+    )
 }
 
 export default MiscForm

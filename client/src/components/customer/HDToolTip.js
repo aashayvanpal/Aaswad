@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import { Tooltip } from 'reactstrap';
+import React from 'react';
+import Tooltip from '@mui/material/Tooltip';
 import infoIcon from '../../images/info-icon.svg'
 
-const HDToolTip = (props) => {
-    const [tooltipOpen, setTooltipOpen] = useState(false);
-
-    const toggle = () => setTooltipOpen(!tooltipOpen);
-
-    return (
-        <>
-            <img src={infoIcon} alt="infoIcon" href="#" id="HDtip" />
-            <Tooltip placement="right" isOpen={tooltipOpen} target="HDtip" toggle={toggle}>
-                Door step delivery provided from our side
-      </Tooltip>
-        </>
-    );
+const HDToolTip = () => {
+  return (
+    <Tooltip title="Door step delivery provided from our side" placement="right">
+      <img src={infoIcon} alt="infoIcon" style={{ cursor: 'pointer' }} />
+    </Tooltip>
+  );
 }
 
 export default HDToolTip;

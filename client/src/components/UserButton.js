@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import MuiButton from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import axios from '../config/axios'
 import { Link } from 'react-router-dom'
 import anime from 'animejs'
@@ -11,15 +14,17 @@ import settingsImg from '../images/settings-icon.png'
 import logoutImg from '../images/logout-icon.png'
 
 const UserButton = (props) => {
-  const [dropdownOpen, setOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null)
 
-  const toggle = () => setOpen(!dropdownOpen)
+  const handleOpen = (e) => setAnchorEl(e.currentTarget)
+  const handleClose = () => setAnchorEl(null)
 
   useEffect(() => {
     anime({ targets: '.user', translateX: [10, 0], easing: 'easeInOutSine', opacity: [0, 1], delay: 500 })
   }, [])
 
   const logout = () => {
+    handleClose()
     console.log('logout clicked!')
     axios.delete('/logout', {
       headers: { 'x-auth': localStorage.getItem('token') }
@@ -33,37 +38,47 @@ const UserButton = (props) => {
   }
 
   return (
-    <ButtonDropdown direction="left" isOpen={dropdownOpen} toggle={toggle}>
-      <DropdownToggle className="user" style={{ border: 'none', backgroundColor: '#dbc268' }} />
-      <DropdownMenu>
-        <DropdownItem id="dropdown-item" header>
+    <>
+      <MuiButton
+        className="user"
+        onClick={handleOpen}
+        style={{ border: 'none', backgroundColor: '#dbc268', minWidth: 0 }}
+      />
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuItem disabled id="dropdown-item">
           {props.userName}
-        </DropdownItem>
-        <Link style={{ textDecoration: 'none' }} to="/profile">
-          <DropdownItem id="dropdown-item">
+        </MenuItem>
+        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/profile">
+          <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={profileImg} alt="" />
-            Profile
-          </DropdownItem>
+            &nbsp;Profile
+          </MenuItem>
         </Link>
-        <Link style={{ textDecoration: 'none' }} to="/myOrders">
-          <DropdownItem id="dropdown-item">
+        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/myOrders">
+          <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={myOrdersImg} alt="" />
-            My Orders
-          </DropdownItem>
+            &nbsp;My Orders
+          </MenuItem>
         </Link>
-        <Link style={{ textDecoration: 'none' }} to="/settings">
-          <DropdownItem id="dropdown-item">
+        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/settings">
+          <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={settingsImg} alt="" />
-            Settings
-          </DropdownItem>
+            &nbsp;Settings
+          </MenuItem>
         </Link>
-        <DropdownItem divider />
-        <DropdownItem id="dropdown-item" onClick={logout}>
+        <Divider />
+        <MenuItem id="dropdown-item" onClick={logout}>
           <img src={logoutImg} alt="" height="20px" width="20px" />
-          Logout
-        </DropdownItem>
-      </DropdownMenu>
-    </ButtonDropdown>
+          &nbsp;Logout
+        </MenuItem>
+      </Menu>
+    </>
   )
 }
 
