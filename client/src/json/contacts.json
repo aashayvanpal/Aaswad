@@ -1,100 +1,276 @@
 [
-    {
-        "name": "Mohommand Gause(Ismail)",
-        "phonenumber": 9738929221,
-        "type": "Fridge",
-        "notes": "For Deep freezer per day 300 rs",
-        "address": "Adi kabir ashram main road ,near crown beauty parlour,RT Nagar back side"
-    },
-    {
-        "name": "John Pavwala",
-        "phonenumber": 9341771159,
-        "type": "Vada Pav",
-        "notes": "Pavwala",
-        "address": ""
-    },
-    {
-        "name": "Prakash Bapat",
-        "phonenumber": 9326874309,
-        "type": "Vipra Frozen Food",
-        "notes": "Frozen Ukdiche Modak, ====> Ukdicha modak 18Rs. per piece ,1 Trip 1143pc can fit in 200Lts deep freezer,ice box (2)->750,Totaling to 17074" ,
-        "address": ""
-    },
-    {
-        "name": "Jagannath",
-        "phonenumber": 9980479063,
-        "type": "Auto",
-        "notes": "Autowala",
-        "address": ""
-    },
-    {
-        "name": "Manoj",
-        "phonenumber": 9901983792,
-        "type": "Auto",
-        "notes": "Autowala",
-        "address": ""
-    },
-    {
-        "name": "Satya/Satya2/Owner",
-        "phonenumber": [
-            8217444432,
-            9538972407,
-            9845753463
-        ],
-        "type": "Khavawala",
-        "notes": "",
-        "address": ""
-    },
-    {
-        "name": "Elavarsan",
-        "phonenumber": 9886694979,
-        "type": "Tempo",
-        "notes": "Tempowala",
-        "address": ""
-    },
-    {
-        "name": "Ganesh",
-        "phonenumber": 9880630781,
-        "type": "Milk",
-        "notes": "Doodhwala",
-        "address": ""
-    },
-    {
-        "name": "Sunil/Sunil2",
-        "phonenumber": [
-            8792532335,
-            8618587834
-        ],
-        "type": "Water",
-        "notes": "Paniwala",
-        "address": ""
-    },
-    {
-        "name": "Devendra",
-        "phonenumber": 7897696267,
-        "type": "Pan",
-        "notes": "Panwala",
-        "address": ""
-    },
-    {
-        "name": "Byra Trader",
-        "phonenumber": 9980962053,
-        "type": "Grocery",
-        "notes": "Grocery store",
-        "address": ""
-    },
-    {
-        "name": "Prashant Reddy",
-        "phonenumber": 7411269695,
-        "type": "Vegetable",
-        "notes": "Veggi seller",
-        "address": ""
-    },
-    {
-        "name": "Mukesh Marketing",
-        "phonenumber": 9845403267,
-        "type": "Sabudana",
-        "notes": "Sabudana",
-        "address": ""
-    }
+  {
+    "name": "Mohommad Mustaq",
+    "phonenumber": 9341279261,
+    "type": "Fridge",
+    "notes": "For Deep freezer per day 300 rs,4500 for 15 Days , Sunday is closed Fits 1617 Modak in 300Liters , half fridge is filled",
+    "address": "Adi kabir ashram main road ,near crown beauty parlour,RT Nagar back side"
+  },
+  {
+    "name": "Mohommand Gause(Ismail)",
+    "phonenumber": 9738929221,
+    "type": "Fridge",
+    "notes": "For Deep freezer per day 300 rs",
+    "address": "Adi kabir ashram main road ,near crown beauty parlour,RT Nagar back side"
+  },
+  {
+    "name": "John Pavwala",
+    "phonenumber": 9341771159,
+    "type": "Vada Pav",
+    "notes": "Pavwala",
+    "address": ""
+  },
+  {
+    "name": "Prakash Bapat",
+    "phonenumber": 9326874309,
+    "type": "Vipra Frozen Food",
+    "notes": "Frozen Ukdiche Modak, ====> Ukdicha modak 18Rs. per piece ,1 Trip 1143pc can fit in 200Lts deep freezer,ice box (2)->750,Totaling to 17074 1 pack modak 21 modak , 1 modak=19Rs We bought 24 Packets=34323(Transportation + icebox packing)  from Prakash Bapat(Vipra Frozen Food) ",
+    "address": ""
+  },
+  {
+    "name": "Jagannath",
+    "phonenumber": 9980479063,
+    "type": "Auto",
+    "notes": "Autowala",
+    "address": ""
+  },
+  {
+    "name": "Manoj",
+    "phonenumber": 9901983792,
+    "type": "Auto",
+    "notes": "Autowala",
+    "address": ""
+  },
+  {
+    "name": "Satya/Satya2/Owner",
+    "phonenumber": [8217444432, 9538972407, 9845753463],
+    "type": "Khavawala",
+    "notes": "",
+    "address": "Rt Nagar"
+  },
+  {
+    "name": "Elavarsan",
+    "phonenumber": 9886694979,
+    "type": "Tempo",
+    "notes": "Tempowala",
+    "address": ""
+  },
+  {
+    "name": "Ganesh",
+    "phonenumber": [9880630781, 7090136439],
+    "type": "Milk",
+    "notes": "Doodhwala",
+    "address": ""
+  },
+  {
+    "name": "Sunil/Sunil2",
+    "phonenumber": [8792532335, 8618587834],
+    "type": "Water",
+    "notes": "Paniwala",
+    "address": ""
+  },
+  {
+    "name": "Devendra",
+    "phonenumber": 7897696267,
+    "type": "Pan",
+    "notes": "Panwala",
+    "address": ""
+  },
+  {
+    "name": "Byra Trader",
+    "phonenumber": 9980962053,
+    "type": "Grocery",
+    "notes": "Grocery store",
+    "address": ""
+  },
+  {
+    "name": "Prashant Reddy",
+    "phonenumber": 7411269695,
+    "type": "Vegetable",
+    "notes": "Veggi seller",
+    "address": ""
+  },
+  {
+    "name": "Mukesh Marketing",
+    "phonenumber": 9845403267,
+    "type": "Sabudana",
+    "notes": "Sabudana",
+    "address": ""
+  },
+  {
+    "name": "Jayaram bapat",
+    "phonenumber": 9449632334,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Lakshman guruji",
+    "phonenumber": 9482460756,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Raghavendra guruji",
+    "phonenumber": 9845633295,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Kulkarni guruji",
+    "phonenumber": 9972954509,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Tushar sathe guruji",
+    "phonenumber": 8792586814,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Kanade guruji",
+    "phonenumber": 9449719967,
+    "type": "Guruji",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Silver and golen items(Chetan bhai)",
+    "phonenumber": [9092575723],
+    "type": "Silver and golen items",
+    "notes": "Whatsapp no :-9590035324, Assistant- kaushik :-7676570618,24hours shop is open Original rate \n Thali - 100 \n katori - 20 \n small spoon - 10 \n Customer rate \n Thali - 250 for 1 pc \n katori - 50  \n small spoon - 20",
+    "address": "Near Indian Petrol pump pipeline road , vijaynagar"
+  },
+
+  {
+    "name": "Mangalore store",
+    "phonenumber": [9886114906],
+    "type": "Cocum,kadhi",
+    "notes": "sol kadhi",
+    "address": "Near sanjaynagar petrol pump"
+  },
+  {
+    "name": "Raghu Condiments",
+    "phonenumber": [9731941430],
+    "type": "kurdai",
+    "notes": "kurdai",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Bisleri Water(bottles)",
+    "phonenumber": [9900499183, 9845513141],
+    "type": "Bisleri bottles 250ml,1l",
+    "notes": "Bisleri",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Raju Paniwala (water can) Girija CS",
+    "phonenumber": [9844382705],
+    "type": "20l Water Can",
+    "notes": "Water Can",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Some gawda",
+    "phonenumber": [9945121046],
+    "type": "Auto",
+    "notes": "Auto",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Mahabazaar ( Shamshad )",
+    "phonenumber": [9164224224],
+    "type": "Grocery",
+    "notes": "",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Pavan Sabjiwala ( Hasiru thotte Vegitables ) ",
+    "phonenumber": [8867214300],
+    "type": "Vegetable",
+    "notes": "",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "Radha Marketting ( Plastic Items )",
+    "phonenumber": 9742681601,
+    "type": "Plastic",
+    "notes": "Plastic",
+    "address": "sanjaynagar"
+  },
+  {
+    "name": "S Anil Kumar",
+    "phonenumber": 9341211470,
+    "type": "Paneer",
+    "notes": "Paneer",
+    "address": "dollerscolony,sanjaynagar"
+  },
+  {
+    "name": "Anand Tempowala",
+    "phonenumber": 9731879026,
+    "type": "Tempo",
+    "notes": "Tempowala",
+    "address": ""
+  },
+  {
+    "name": "Yogesh Tentwala ( GBR Furniture )",
+    "phonenumber": 9341211376,
+    "type": "Tent",
+    "notes": "Tentwala",
+    "address": "Rt Nagar"
+  },
+  {
+    "name": "Rakesh Electrition",
+    "phonenumber": 8145124471,
+    "type": "Electrition",
+    "notes": "Electrition",
+    "address": ""
+  },
+  {
+    "name": "Plumber",
+    "phonenumber": 9900321816,
+    "type": "Plumber",
+    "notes": "Plumber",
+    "address": ""
+  },
+  {
+    "name": "Ujwal KEB",
+    "phonenumber": 9164754951,
+    "type": "KEB",
+    "notes": "KEB",
+    "address": ""
+  },
+  {
+    "name": "Nagraj Carpenter",
+    "phonenumber": 8105085013,
+    "type": "Carpenter",
+    "notes": "Carpenter",
+    "address": ""
+  },
+  {
+    "name": "Arjun",
+    "phonenumber": [9972255507, 7019339545, 9199846718],
+    "type": "",
+    "notes": "",
+    "address": ""
+  },
+  {
+    "name": "Jaymatadi Farsan ( Arjun )",
+    "phonenumber": 9008094252,
+    "type": "Farsan",
+    "notes": "Farsan",
+    "address": "Sheshadripuram"
+  },
+  {
+    "name": "Naggama ( Arjun Amma )",
+    "phonenumber": [7483983197, 7829440527],
+    "type": "Cleaning",
+    "notes": "Cleaning",
+    "address": "Sheshadripuram"
+  }
 ]

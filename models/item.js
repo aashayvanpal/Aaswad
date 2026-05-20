@@ -19,6 +19,9 @@ const itemSchema = new Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+    },
     imgUrl: {
         type: String,
     },

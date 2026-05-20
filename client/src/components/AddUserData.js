@@ -2,9 +2,9 @@
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 import React, { Component } from 'react'
-import DisplayCustomers from './DisplayCustomers.js'
-import DisplayTransport from './DisplayTransport.js'
-import DisplayVendors from './DisplayVendors.js'
+// import DisplayCustomers from './DisplayCustomers.js'
+// import DisplayTransport from './DisplayTransport.js'
+// import DisplayVendors from './DisplayVendors.js'
 
 export default class AddUserData extends Component {
     constructor() {
@@ -147,7 +147,7 @@ export default class AddUserData extends Component {
                         </form>
                         <h1>Listing Customers - {this.state.customers.length}</h1>
 
-                        <DisplayCustomers customers={this.state.customers} delete={this.delete} />
+                        {/* <DisplayCustomers customers={this.state.customers} delete={this.delete} /> */}
                     </Route>
 
 
@@ -169,7 +169,7 @@ export default class AddUserData extends Component {
                         </form> &nbsp;
                         <h1>Listing Transports - {this.state.transports.length}</h1>
 
-                        <DisplayTransport transports={this.state.transports} delete={this.delete} />
+                        {/* <DisplayTransport transports={this.state.transports} delete={this.delete} /> */}
                     </Route>
 
                     <Route path="/users/add/vendors">
@@ -192,7 +192,7 @@ export default class AddUserData extends Component {
 
                         </form> &nbsp;
                         <h1>Listing Vendors - {this.state.vendors.length}</h1>
-                        <DisplayVendors vendors={this.state.vendors} delete={this.delete} />
+                        {/* <DisplayVendors vendors={this.state.vendors} delete={this.delete} /> */}
                     </Route >
 
                 </BrowserRouter>

@@ -135,7 +135,7 @@ const UserDetailsFormModal = (props) => {
         localStorage.removeItem('bulkOrders')
         localStorage.removeItem('bulkOrderSetting')
         // redirect to multiorders view page
-        window.location.href = '/multiorders'
+        // window.location.href = '/multiorders'
 
     }
     return (

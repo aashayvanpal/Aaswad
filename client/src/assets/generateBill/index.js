@@ -9,8 +9,17 @@ import moment from 'moment'
 import imgData from './images/image-exports'
 
 
-const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'default mobile', items = 'default items',
-    transportation = 'default transportation', total = 'default total', advancePayment = 'default advancepayment', balanceAmount = 'default balanceAmount' }) => {
+const pdfGenerate = ({ 
+    name = 'default name',
+    date = 'default date', 
+    mobile = 'default mobile',
+    items = 'default items',
+    transportation = 'default transportation', 
+    total = 'default total',
+    advancePayment = 'default advancepayment',
+    balanceAmount = 'default balanceAmount',
+    miscItems = [], //default
+    }) => {
 
     var doc = new jsPDF('protrait', 'px', 'a4', 'false')
 
@@ -28,9 +37,9 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
     // User details
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
-    doc.text(45, 150, `Name :  ${name}`,)
-    // doc.text(45, 165, `Date :  ${moment(date).format('DD-MM-YYYY')}`)
-    doc.text(45, 165, `Date :  ${date}`)
+    doc.text(45, 150, `Name :  ${name}`)
+    doc.text(45, 165, `Date :  ${moment(date).format('DD-MM-YYYY')}`)
+    // doc.text(45, 165, `Date :  ${date}`)
     doc.text(45, 180, `Mobile : ${mobile}`)
 
 
@@ -57,22 +66,38 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
         startY: 220,
         body: [
             ...fillData(items),
-            [{
-                content: 'Total',
-                colSpan: 4,
-                styles: {
-                    halign: 'right'
-                }
-            }, {
-                content: `${total}/-`,
-                colSpan: 1,
-                styles: {
-                    halign: 'center'
-                }
-            }],
+            // [{
+            //     content: 'Total',
+            //     colSpan: 4,
+            //     styles: {
+            //         halign: 'right'
+            //     }
+            // }, {
+            //     content: `${total}/-`,
+            //     colSpan: 1,
+            //     styles: {
+            //         halign: 'center'
+            //     }
+            // }],
+            // miscItems?.map((item) => [
+            //     {
+            //       content: `${item.particular}`,
+            //       colSpan: 4,
+            //       styles: {
+            //         halign: "right",
+            //       },
+            //     },
+            //     {
+            //       content: `${item.rate}/-`,
+            //       colSpan: 1,
+            //       styles: {
+            //         halign: "center",
+            //       },
+            //     },
+            //   ])[0], // this is not working correctly , fix for dynamic table display
             // [{
             //     // content: 'Transportation',
-            //     content: `${transportation.medium}`,
+            //     content: `Transportation (${transportation.medium})`,
             //     colSpan: 4,
             //     styles: {
             //         halign: 'right',
@@ -87,8 +112,25 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
             //     }
             // }],
             // showAdvancePayment(advancePayment),
+            // [{
+            //     content: 'Discount',
+            //     colSpan: 4,
+            //     styles: {
+            //         halign: 'right',
+            //         fontStyle: 'bold'
+            //     }
+            // },
+            // {
+            //     content: `170/-`,
+            //     colSpan: 1,
+            //     styles: {
+            //         halign: 'center',
+            //         fontStyle: 'bold'
+            //     }
+            // }],
             [{
-                content: 'Balance',
+                // content: 'Balance',
+                content: 'Total',
                 colSpan: 4,
                 styles: {
                     halign: 'right',
@@ -96,6 +138,7 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
                 }
             },
             {
+                // content: `450/-`,
                 content: `${balanceAmount}/-`,
                 colSpan: 1,
                 styles: {
@@ -132,8 +175,8 @@ const pdfGenerate = ({ name = 'default name', date = 'default date', mobile = 'd
 
 
     // Sets name of the file
-    doc.save(`${name}-${date}.pdf`)
-    // doc.save(`${name}-${moment(date).format('DD-MM-YYYY')}.pdf`)
+    // doc.save(`${name}-${date}.pdf`)
+    doc.save(`${name}-${moment(date).format('DD-MM-YYYY')}.pdf`)
 }
 
 export default pdfGenerate

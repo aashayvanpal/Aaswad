@@ -86,7 +86,7 @@ const UserProfile = () => {
                 }}>Change Password</button>
             </div>
             <h5 id="footer-style">
-                © Copyrights Reserved 2023
+                © Copyrights Reserved 2026
             </h5>
         </div>
     )

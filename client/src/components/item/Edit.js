@@ -3,7 +3,7 @@ import axios from '../../config/axios'
 import ItemForm from './Form.js'
 import NavigationBar from '../NavigationBar'
 import ShowBtn from '../../assets/ShowBtn'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min'
+import { Link } from 'react-router-dom'
 import { getIngredients } from './item-helpers/item-functions'
 const EditItem = (props) => {
     const [item, setItem] = useState({})

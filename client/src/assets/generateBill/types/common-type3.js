@@ -61,7 +61,7 @@ const pdfGenerate = ({ name = 'default name',
     doc.setFontSize(18);
     doc.text(45, 150, `Name  :  ${name}`,)
     // doc.text(45, 165, `Date    :  ${date}`)
-    doc.text(45, 165, `Date :  ${moment(date).format('DD-MM-YYYY')}`)
+    doc.text(45, 165, `Date    :  ${moment(date).format('DD-MM-YYYY')}`)
     doc.text(45, 180, `Mobile :  ${mobile}`)
 
 
@@ -101,6 +101,8 @@ const pdfGenerate = ({ name = 'default name',
             },
             {
                 content: particulars,
+                // content: `Hi-Tea`,
+                // content: `Lunch`,
                 styles: {
                     halign: 'center',
                     valign: 'middle',
@@ -114,7 +116,7 @@ const pdfGenerate = ({ name = 'default name',
 
                 }
             }, {
-                content: `${plateCost}/-`,
+                content: `${Math.round(plateCost * 100) / 100}/-`,
                 styles: {
                     halign: 'center',
                     valign: 'middle',
@@ -128,9 +130,13 @@ const pdfGenerate = ({ name = 'default name',
                 }
             }],
             // (() => true ? getMiscItems() : null),
+            // Fix this
             // getMiscItems(),
             [{
-                content: 'Transportation(Tempo)',
+                // Fix this
+                content: 'Transportation(Auto)',
+                // content: 'Transportation(Cab)',
+                // content: 'Transportation(Tempo)',
                 // content: 'Porter',
                 colSpan: 4,
                 styles: {
@@ -169,7 +175,9 @@ const pdfGenerate = ({ name = 'default name',
                 }
             },
             {
+                // Fix this for misc calculations
                 content: `${balanceAmount}/-`,
+                // content: `2985/-`,
                 colSpan: 1,
                 styles: {
                     halign: 'center',

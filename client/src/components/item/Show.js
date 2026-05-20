@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import axios from '../../config/axios'
 import { Link } from 'react-router-dom'
@@ -28,7 +29,7 @@ const ItemShow = () => {
     }, [])
 
 
-    const { display, name, price, category, imgUrl, measured, ingredients, recipie } = item
+    const { display, name, price, category, imgUrl, measured, ingredients, recipie,description } = item
     console.log("display item? :", display)
     console.log("category isArray? :", Array.isArray(category))
     return (
@@ -66,6 +67,10 @@ const ItemShow = () => {
                     <tr>
                         <td><h2>Measured in </h2></td>
                         <td><h2>{measured}</h2></td>
+                    </tr>
+                    <tr>
+                        <td><h2>Item description </h2></td>
+                        <td><h2>{description}</h2></td>
                     </tr>
                     <tr>
                         <td><h2>Image-URL</h2></td>

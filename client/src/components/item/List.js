@@ -1,3 +1,4 @@
+"use client"
 // fix url config (store in folder)
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -182,6 +183,7 @@ const AddItems = (props) => {
                                 return (
                                     <DisplayItems
                                         key={i}
+                                        description={item.description}
                                         name={item.name}
                                         price={item.price}
                                         deleteItem={deleteItem}

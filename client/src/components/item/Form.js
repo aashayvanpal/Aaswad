@@ -28,6 +28,7 @@ const ItemForm = (props) => {
     const [category, setCategory] = useState(props.item ? checkforAll() : "") // if it contains all , remove it here
     const [measured, setMeasured] = useState(props.item ? props.item.measured : "")
     const [imgeURL, setImgeURL] = useState(props.item ? props.item.imgUrl : "default.png")
+    const [description, setDescription] = useState(props.item ? props.item.description : "")
     // const [display, setDisplay] = useState(props.item ? props.item.display : "")
     const [ingredients, setIngredients] = useState(props.item ? props.item.ingredients : [])
     const [selectedValues, setSelectedValues] = useState(ingredients)
@@ -58,7 +59,8 @@ const ItemForm = (props) => {
             imgUrl: imgeURL,
             display: false,
             ingredients: selectedValues,
-            recipie: recipie
+            recipie: recipie,
+            description: description
         }
         props.item && (item.id = props.item._id)
 
@@ -137,6 +139,13 @@ const ItemForm = (props) => {
                             <option value="Kg">Kg</option>
                             <option value="plate">plate</option>
                         </Input>
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row id='formGroup'>
+                    <Label for="description" sm={2} style={{ textAlign: "center", fontSize: "22px" }}>Description</Label>
+                    <Col sm={10}>
+                        <Input type="textarea" name="description" id="imgeURL" placeholder="Item description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
                     </Col>
                 </FormGroup>
 

@@ -194,7 +194,7 @@ const CustomerRequest = ({ type = "default" }) => {
                 "color": "#dbc268",
                 "backgroundColor": "#353535"
             }}>
-                © Copyrights Reserved 2023
+                © Copyrights Reserved 2026
             </div>
         </div>
     )

@@ -157,6 +157,7 @@ export default function MultiDateOrders() {
         console.log(`orderDates[index][orderType][${type}]`, orderDates)
         console.log(`orderDates[index][orderType][amount]`, orderDates[index][date][orderType].amount)
         console.log(`orderDates[index][orderType][rate]`, orderDates[index][date][orderType].rate)
+        // console.log(`DEBUG HERE ->`, [...orderDates])
         setOrderDates([...orderDates])
         localStorage.setItem('bulkOrders', JSON.stringify([...orderDates]))
     }

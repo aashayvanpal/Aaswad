@@ -295,6 +295,8 @@ selecting time compulsary
 when internet is lost , keeping data and updating when internet is back up
 
 v1.0.7.1 T2 Feature list : 
+targeting customers by sales
+get all customers , 
 
 ADD CSS where ever needed for time pass
 5.Bug report : search - not working in mobile view => sort function is not working correctly 
@@ -644,3 +646,11 @@ Slider
 PERFORMANCE ISSUES:
 eventOrders update code -> 2 api calls are being made . delete and create , ideally it should be a put operation 
 +++++++++++++++++++++++++++++++++++++++++++++
+
+TODOS:
+Search Customer by Address
+In customer view itself add all the orders filtered to that customer, Create Time history
+Edit order there only to make the DB change
+Multiorder bill generation completely
+
+

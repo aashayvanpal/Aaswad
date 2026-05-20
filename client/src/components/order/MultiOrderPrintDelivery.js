@@ -64,11 +64,11 @@ const MultiOrderPrintDelivery = () => {
     return (
         <div id="Bill-Card">
             <img src={logo} alt="logo" id='logo' />
-            <h4 style={{ "marginBottom": "50px" }}>
+            {/* <h4 style={{ "marginBottom": "50px" }}>
                 In an attempt to go paperless, we are sending all the billing estimates over WhatsApp.<br />
                 Your estimate is as follows : -
                 (multi order)
-            </h4>
+            </h4> */}
             <h3>Name   : {fullName}</h3>
             <h3>Mobile : {phoneNumber}</h3>
             <h3>
@@ -96,7 +96,7 @@ const MultiOrderPrintDelivery = () => {
                                 <td className='td-style' >
                                     {
                                         Object.keys(order.orderDates[index][date]).map(orderType =>
-                                            <div>{order.orderDates[index][date][orderType].numberOfPeople} people<br /></div>
+                                            <div>{order.orderDates[index][date][orderType].numberOfPeople} person<br /></div>
                                         )
                                     } 
                                 </td>
@@ -160,7 +160,7 @@ const MultiOrderPrintDelivery = () => {
                                 </tr>
                             )}
 
-                        <tr>
+                        {/* <tr>
                             <td style={{
                                 "border": "1px solid black",
                                 "textAlign": "right",
@@ -168,7 +168,7 @@ const MultiOrderPrintDelivery = () => {
                                 "fontWeight": "bold",
                             }} colSpan="5">Balance:
                                 &#x20B9; {order.balanceAmount}/-</td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
             </h3>
@@ -190,7 +190,7 @@ const MultiOrderPrintDelivery = () => {
                 Happy Diwali</b>
             </h3><br /> <br /> */}
 
-            <img src={diwaliImg} alt=""
+            {/* <img src={diwaliImg} alt=""
                 style={{
                     'display': "block",
                     "marginRight": "auto",
@@ -198,7 +198,7 @@ const MultiOrderPrintDelivery = () => {
                     'width': "400px",
                     'height': "300px",
                     'borderRadius': "10px"
-                }} />
+                }} /> */}
 
             <br /> <br /><br /> <br />
             <h5 style={{ "textAlign": "right" }}><b>

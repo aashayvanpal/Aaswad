@@ -1,154 +1,214 @@
-
 // PDF Generator imports
-import jsPDF from 'jspdf'
-import 'jspdf-autotable'
-import { fillData, backgroundGenerate, showAdvancePayment } from '../blocks'
+import moment from "moment";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { fillData, backgroundGenerate, showAdvancePayment } from "../blocks";
 
 // Image import SVG
-import imgData from '../images/image-exports'
+import imgData from "../images/image-exports";
 
-
-const pdfGenerate = ({ name = 'default name',
-    date = 'default date',
-    mobile = 'default mobile',
-    items = 'default items',
-    transportation = 'default transportation',
-    total = 'default total',
-    advancePayment = 'default advancepayment',
-    balanceAmount = 'default balanceAmount',
-    particulars = "default particulars",
-    numberOfPeople = "default no of people",
-    plateCost = "default plate cost"
+const pdfGenerate = ({
+  name = "default name",
+  date = "default date",
+  mobile = "default mobile",
+  items = "default items",
+  transportation = "default transportation",
+  total = "default total",
+  advancePayment = "default advancepayment",
+  balanceAmount = "default balanceAmount",
+  particulars = "default particulars",
+  numberOfPeople = "default no of people",
+  plateCost = "default plate cost",
+  miscItems = [], //default
 }) => {
+  var doc = new jsPDF("protrait", "px", "a4", "false");
 
-    var doc = new jsPDF('protrait', 'px', 'a4', 'false')
+  // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
 
-    // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
+  backgroundGenerate(doc);
 
+  doc.setPage(1);
 
-    backgroundGenerate(doc)
+  doc.addImage(imgData, "JPEG", 120, 30, 200, 80);
 
-    doc.setPage(1)
+  // User details
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(18);
+  doc.text(45, 150, `Name  :  ${name}`);
+  // doc.text(45, 165, `Date    :  ${date}`)
+  doc.text(45, 165, `Date    :  ${moment(date).format("DD-MM-YYYY")}`);
+  doc.text(45, 180, `Mobile :  ${mobile}`);
 
-
-    doc.addImage(imgData, 'JPEG', 120, 30, 200, 80)
-
-
-    // User details
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(18);
-    doc.text(45, 150, `Name  :  ${name}`,)
-    doc.text(45, 165, `Date    :  ${date}`)
-    doc.text(45, 180, `Mobile :  ${mobile}`)
-
-
-
-    // Order table
-    doc.autoTable({
-        head: [['Sl No', 'Particulars', 'Quantity', 'Rate(Rs.)', 'Amount(Rs.)']],
-        theme: 'grid',
-        headStyles: {
-            fillColor: [226, 189, 56],
-            lineWidth: 0.5, // 1 is too thick for me
-            lineColor: [220, 220, 220], // Or gray level single value from 0-255 
-            halign: 'center',
-            valign: 'middle',
+  // Order table
+  doc.autoTable({
+    head: [["Sl No", "Particulars", "Quantity", "Rate(Rs.)", "Amount(Rs.)"]],
+    theme: "grid",
+    headStyles: {
+      fillColor: [226, 189, 56],
+      lineWidth: 0.5, // 1 is too thick for me
+      lineColor: [220, 220, 220], // Or gray level single value from 0-255
+      halign: "center",
+      valign: "middle",
+    },
+    columnStyles: {
+      0: { cellWidth: 40 },
+      1: { cellWidth: 110 },
+      2: { cellWidth: 65 },
+      3: { cellWidth: 65 },
+      4: { cellWidth: 100 },
+    },
+    styles: {
+      fontSize: 17,
+    },
+    startY: 220,
+    body: [
+      [
+        {
+          content: 1,
+          colSpan: 1,
+          styles: {
+            halign: "center",
+            valign: "middle",
+            with: "200",
+          },
         },
-        columnStyles: {
-            0: { cellWidth: 40 },
-            1: { cellWidth: 110 },
-            2: { cellWidth: 65 },
-            3: { cellWidth: 65 },
-            4: { cellWidth: 100 },
+        {
+          content: particulars,
+          // content: 'Puran Poli',
+          styles: {
+            halign: "center",
+            valign: "middle",
+          },
         },
-        styles: {
-            fontSize: 17
+        {
+          content: `${numberOfPeople} plates`,
+          // content: `46 Pc`,
+          styles: {
+            halign: "center",
+            valign: "middle",
+          },
         },
-        startY: 220,
-        body: [
-            [{
-                content: 1,
-                colSpan: 1,
-                styles: {
-                    halign: 'center',
-                    valign: 'middle',
-                    with: '200'
+        {
+          // content: `${Math.round(plateCost)}/-`,
+          content: `${plateCost.toFixed(2)}/-`,
+          styles: {
+            halign: "center",
+            valign: "middle",
+          },
+        },
+        {
+          content: `${numberOfPeople * plateCost}/- `,
+          styles: {
+            halign: "center",
+            valign: "middle",
+          },
+        },
+      ],
+      // miscItems?.map((item) => [
+      //   {
+      //     content: `${item.particular}`,
+      //     colSpan: 4,
+      //     styles: {
+      //       halign: "right",
+      //     },
+      //   },
+      //   {
+      //     content: `${item.rate}/-`,
+      //     colSpan: 1,
+      //     styles: {
+      //       halign: "center",
+      //     },
+      //   },
+      // ])[0], // this is not working correctly , fix for dynamic table display
+      // miscItems?.map((item) => [
+      //   {
+      //     content: `${item.particular}`,
+      //     colSpan: 4,
+      //     styles: {
+      //       halign: "right",
+      //     },
+      //   },
+      //   {
+      //     content: `${item.rate}/-`,
+      //     colSpan: 1,
+      //     styles: {
+      //       halign: "center",
+      //     },
+      //   },
+      // ])[1], // this is not working correctly , fix for dynamic table display
+      [
+        {
+          content: "Total",
+          colSpan: 4,
+          styles: {
+            halign: "right",
+            fontStyle: "bold",
+          },
+        },
+        {
+          content: `${total}/-`,
+          // content: `11300/-`, //Fix with misc totaling
+          colSpan: 1,
+          styles: {
+            halign: "center",
+            fontStyle: "bold",
+          },
+        },
+      ],
+      // showAdvancePayment(advancePayment),
+      //  [
+      //   {
+      //     content: "Balance",
+      //     colSpan: 4,
+      //     styles: {
+      //       halign: "right",
+      //       fontStyle: "bold",
+      //     },
+      //   },
+      //   {
+      //     // content: `${total}/-`,
+      //     content: `${total - advancePayment}/-`, //Fix with misc totaling
+      //     // content: `9300/-`,
+      //     colSpan: 1,
+      //     styles: {
+      //       halign: "center",
+      //       fontStyle: "bold",
+      //     },
+      //   },
+      // ],
+    ],
+    didDrawPage: function (data) {
+      // check if the current page is full
+      // if (doc.autoTable.previous.finalY >= doc.internal.pageSize.getHeight()) {
+      //     // render the background color to all pages in the document
+      //     backgroundGenerate()
+      //     //   doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
+      // }
+      if (doc.autoTable.previous.finalY >= doc.internal.pageSize.height - 10) {
+        // add a new page to the document
+        doc.addPage();
 
-                }
-            },
-            {
-                content: particulars,
-                styles: {
-                    halign: 'center',
-                    valign: 'middle',
+        // set the background color for the new page
+        doc.setFillColor("#ffe175");
+        doc.rect(
+          0,
+          0,
+          doc.internal.pageSize.width,
+          doc.internal.pageSize.height,
+          "F"
+        );
+      }
+    },
+  });
 
-                }
-            }, {
-                content: `${numberOfPeople} plates`,
-                styles: {
-                    halign: 'center',
-                    valign: 'middle',
+  let finalY = doc.lastAutoTable.finalY; // The y position on the page
+  // Caterer details
+  doc.text(45, finalY + 50, "From : Varsha Vanpal");
+  doc.text(45, finalY + 50 + 15, "Mobile : 9742814239");
 
-                }
-            }, {
-                content: `${plateCost}/-`,
-                styles: {
-                    halign: 'center',
-                    valign: 'middle',
+  // Sets name of the file
+  // doc.save(`${name}-${date}.pdf`)
+  doc.save(`${name}-${moment(date).format("DD-MM-YYYY")}.pdf`);
+};
 
-                }
-            }, {
-                content: `${numberOfPeople * plateCost}/- `,
-                styles: {
-                    halign: 'center',
-                    valign: 'middle',
-                }
-            }],
-            [{
-                content: 'Total',
-                colSpan: 4,
-                styles: {
-                    halign: 'right',
-                    fontStyle: 'bold'
-                }
-            }, {
-                content: `${total}/-`,
-                colSpan: 1,
-                styles: {
-                    halign: 'center',
-                    fontStyle: 'bold'
-                }
-            }],
-        ],
-        didDrawPage: function (data) {
-            // check if the current page is full
-            // if (doc.autoTable.previous.finalY >= doc.internal.pageSize.getHeight()) {
-            //     // render the background color to all pages in the document
-            //     backgroundGenerate()
-            //     //   doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
-            // }
-            if (doc.autoTable.previous.finalY >= doc.internal.pageSize.height - 10) {
-                // add a new page to the document
-                doc.addPage();
-
-                // set the background color for the new page
-                doc.setFillColor('#ffe175');
-                doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
-            }
-        }
-
-    }
-    )
-
-    let finalY = doc.lastAutoTable.finalY; // The y position on the page
-    // Caterer details
-    doc.text(45, finalY + 50, 'From : Varsha Vanpal')
-    doc.text(45, finalY + 50 + 15, 'Mobile : 9742814239')
-
-
-
-    // Sets name of the file
-    doc.save(`${name}-${date}.pdf`)
-}
-
-export default pdfGenerate
+export default pdfGenerate;

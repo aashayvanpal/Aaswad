@@ -22,6 +22,7 @@ const fillData = (items) => {
             }
         }, {
             content: `${item.quantity} ${item.measured}`,
+            // content: `${item.quantity} Kg`,
             styles: {
                 halign: 'center',
                 valign: 'middle',

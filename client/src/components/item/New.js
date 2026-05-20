@@ -1,9 +1,10 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import ItemForm from './Form.js'
 import axios from '../../config/axios.js'
 import ShowBtn from '../../assets/ShowBtn.js'
-import NavigationBar from '../NavigationBar.js'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min.js'
+import NavigationBar from '../NavigationBar'
+import { Link } from 'react-router-dom'
 import { getIngredients } from './item-helpers/item-functions.js'
 const ItemNew = () => {
     const [ingredients, setIngredients] = useState([])

@@ -37,7 +37,7 @@ export default function Footer() {
                     "textAlign": "center",
                     "color": "#dbc268",
                 }}>
-                    © Copyrights Reserved 2023
+                    © Copyrights Reserved 2026
                 </div>
             </div>
         </footer>

@@ -16,6 +16,7 @@ import downloadBill from '../../assets/generateBill'
 import downloadType1Bill from '../../assets/generateBill/types/common-type1.js'
 import downloadType2Bill from '../../assets/generateBill/types/common-type2.js'
 import downloadType3Bill from '../../assets/generateBill/types/common-type3.js'
+import downloadCustomBill from '../../assets/generateBill/types/custom.js'
 import MiscTable from './MiscTable.js'
 import { updateEventOrder, deleteFieldFromEventOrder } from '../../apis/eventOrders.js'
 import moment from 'moment'
@@ -32,6 +33,7 @@ const ItemShow = ({ type }) => {
     const [address, setAddress] = useState('')
     const [email, setEmail] = useState('')
     const [eventDate, setEventDate] = useState('')
+    const [eventDateNew, setEventDateNew] = useState('')
     const [eventName, setEventName] = useState('')
     const [numberOfPeople, setNumberOfPeople] = useState('')
     const [eventTime, setEventTime] = useState('')
@@ -96,6 +98,7 @@ const ItemShow = ({ type }) => {
                 console.log("====debug items====", items)
                 let status = order.status
                 let eventDate = order.customer.eventDate.toString()
+                let eventDateNew = order.customer.eventDate
                 let advanceAmount = order.AdvanceAmount
                 // console.log("Event Date check:", eventDate)
                 // console.log("Event Date check typeof:", typeof (eventDate))
@@ -122,6 +125,7 @@ const ItemShow = ({ type }) => {
                     setAddress(address)
                     setEmail(email)
                     setEventDate(eventDate)
+                    setEventDateNew(eventDateNew)
                     setEventName(eventName)
                     setNumberOfPeople(numberOfPeople)
                     setEventTime(eventTime)
@@ -168,6 +172,8 @@ const ItemShow = ({ type }) => {
                     setAddress(address)
                     setEmail(email)
                     setEventDate(eventDate)
+                    setEventDateNew(eventDateNew)
+
                     setEventName(eventName)
                     setNumberOfPeople(numberOfPeople)
                     setEventTime(eventTime)
@@ -219,6 +225,8 @@ const ItemShow = ({ type }) => {
         setFullName(order.customer.fullName)
         setNumberOfPeople(order.customer.numberOfPeople)
         setEventDate(order.customer.eventDate)
+        setEventDateNew(order.customer.eventDate)
+
         setPhoneNumber(order.customer.phoneNumber)
         setAddress(order.customer.address)
         setEmail(order.customer.email)
@@ -618,7 +626,7 @@ const ItemShow = ({ type }) => {
             return 'Dinner'
         }
         else {
-            return 'default'
+            return 'Lunch'
         }
     }
 
@@ -750,6 +758,7 @@ const ItemShow = ({ type }) => {
 
                 <h2>Number of People : {numberOfPeople}</h2>
                 <h2>Event Date : {eventDate}</h2>
+                <h2>Event DateNew : {eventDateNew}</h2>
                 <h2>Event Time : {eventTime} (24 hours IST)/
                     {/* Breakfast lunch dinner calculate */}
                     {eventTimeCalculate(eventTime)}
@@ -761,6 +770,7 @@ const ItemShow = ({ type }) => {
                 <h2>Home Delivery : {homeDelivery ? "Yes" : "No"}</h2>
                 <h2>Status : {status}</h2>
                 <h2>OrderID : {id}</h2>
+                add this user to db link feature : navigate to user account with prefilled fields
             </div>
 
             <div id="ShowContainer2" style={{ "border": "2px solid black", "padding": "20px" }}>
@@ -804,6 +814,7 @@ const ItemShow = ({ type }) => {
                 <h1>Grand Total = {total}</h1>
 
                 <h1>Per plate cost = {total / numberOfPeople}</h1>
+                <h1>Per plate cost dbnew = {order.amount}</h1>
 
                 {homeDelivery ? (
                     <button style={{
@@ -880,13 +891,15 @@ const ItemShow = ({ type }) => {
 
                 <button onClick={() => downloadBill({
                     name: fullName,
-                    date: eventDate,
+                    // date: eventDate,
+                    date: eventDateNew,
                     mobile: phoneNumber,
                     items: selectedItems,
                     transportation: { medium, rate },
                     total: total,
                     advancePayment: advanceAmount,
-                    balanceAmount: calculateBalance()
+                    balanceAmount: calculateBalance(),
+                    miscItems
                 })}>
                     Download bill with items
                 </button>
@@ -895,7 +908,8 @@ const ItemShow = ({ type }) => {
 
                 <button onClick={() => downloadType1Bill({
                     name: fullName,
-                    date: eventDate,
+                    // date: eventDate,
+                    date: eventDateNew,
                     particulars: eventTimeCalculate(eventTime),
                     numberOfPeople,
                     mobile: phoneNumber,
@@ -914,7 +928,8 @@ const ItemShow = ({ type }) => {
                 {/* transport and no advance payment + added miscItems*/}
                 {medium && !advanceAmount && <button onClick={() => downloadType2Bill({
                     name: fullName,
-                    date: eventDate,
+                    // date: eventDate,
+                    date: eventDateNew,
                     particulars: eventTimeCalculate(eventTime),
                     numberOfPeople,
                     mobile: phoneNumber,
@@ -923,8 +938,9 @@ const ItemShow = ({ type }) => {
                     total: total,
                     advancePayment: advanceAmount,
                     balanceAmount: calculateBalance(),
-                    plateCost: (total / numberOfPeople),
-                    // miscItems
+                    plateCost: Math.round(total / numberOfPeople),
+                    miscItems,
+                    medium
                 })}>
                     Download Type2 bill
                 </button>}
@@ -938,7 +954,8 @@ const ItemShow = ({ type }) => {
 
                     downloadType3Bill({
                         name: fullName,
-                        date: eventDate,
+                        // date: eventDate,
+                        date: eventDateNew,
                         particulars: eventTimeCalculate(eventTime),
                         numberOfPeople,
                         mobile: phoneNumber,
@@ -955,6 +972,24 @@ const ItemShow = ({ type }) => {
                 </button>}
 
                 <hr />
+                <button onClick={() => downloadCustomBill({
+                    name: fullName,
+                    // date: eventDate,
+                    date: eventDateNew,
+                    particulars: eventTimeCalculate(eventTime),
+                    numberOfPeople,
+                    mobile: phoneNumber,
+                    items: selectedItems,
+                    transportation: rate,
+                    total: total,
+                    advancePayment: advanceAmount,
+                    balanceAmount: calculateBalance(),
+                    plateCost: Math.round(total / numberOfPeople),
+                    miscItems,
+                    medium
+                })}>
+                    Make custom Bill
+                </button>
 
                 {
                     medium ? (
