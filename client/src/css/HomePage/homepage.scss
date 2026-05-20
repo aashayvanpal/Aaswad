@@ -220,6 +220,12 @@ $section-v-pad:   7rem;
     min-height: 620px;
     overflow: hidden;
     @include flex-center;
+
+    // override base p { margin: 0 } reset so margin: 0 auto centres the block
+    .hp__hero-subtitle {
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   &__hero-bg {
@@ -303,6 +309,7 @@ $section-v-pad:   7rem;
     line-height: 1.8;
     max-width: 500px;
     margin: 0 auto 2.8rem;
+    text-align: center;
     opacity: 0;
     animation: hp-fadeUp 0.7s ease 0.5s forwards;
   }
@@ -540,144 +547,10 @@ $section-v-pad:   7rem;
     flex-wrap: wrap;
   }
 
-  // ─── FOOTER ─────────────────────────────────────────────
-  &__footer {
-    background: $dark;
-    border-top: 1px solid $gold-border;
-  }
-
-  &__footer-body {
-    @include container;
-    display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr;
-    gap: 3rem;
-    padding-top: 4.5rem;
-    padding-bottom: 4.5rem;
-  }
-
-  &__footer-brand-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: $gold;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
-
-  &__footer-brand-desc {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.45);
-    line-height: 1.8;
-    margin-bottom: 1.8rem;
-    max-width: 240px;
-  }
-
-  &__footer-socials {
-    display: flex;
-    gap: 0.75rem;
-  }
-
-  &__footer-social-link {
-    width: 38px;
-    height: 38px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    @include flex-center;
-    transition: border-color 0.2s, background 0.2s;
-
-    img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-
-    &:hover {
-      border-color: $gold-border;
-      background: $gold-dim;
-    }
-  }
-
-  &__footer-col-title {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 1.5rem;
-  }
-
-  &__footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-
-    a {
-      font-size: 0.875rem;
-      color: rgba(255, 255, 255, 0.45);
-      transition: color 0.2s;
-
-      &:hover { color: $gold; }
-    }
-  }
-
-  &__footer-contact-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-  }
-
-  &__footer-contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.45);
-    line-height: 1.5;
-  }
-
-  &__footer-contact-icon {
-    font-size: 1rem;
-    line-height: 1.5;
-    flex-shrink: 0;
-  }
-
-  &__footer-bar {
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  &__footer-bar-inner {
-    @include container;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 1.4rem;
-    padding-bottom: 1.4rem;
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.3);
-  }
-
-  &__footer-bar-links {
-    display: flex;
-    gap: 1.8rem;
-
-    a {
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 0.78rem;
-      transition: color 0.2s;
-
-      &:hover { color: rgba(255, 255, 255, 0.65); }
-    }
-  }
-
   // ─── RESPONSIVE ─────────────────────────────────────────
   @media (max-width: 1024px) {
     &__nav          { padding: 1.2rem 2rem; }
     &__nav.scrolled { padding: 0.9rem 2rem; }
-
-    &__footer-body {
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-    }
   }
 
   @media (max-width: 768px) {
@@ -709,20 +582,5 @@ $section-v-pad:   7rem;
     &__gallery-img { width: 260px; height: 185px; }
 
     &__cta { padding: 5rem 0; }
-
-    &__footer-body {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-    }
-
-    &__footer-brand-desc { max-width: 100%; }
-
-    &__footer-bar-inner {
-      flex-direction: column;
-      gap: 0.75rem;
-      text-align: center;
-    }
   }
 }

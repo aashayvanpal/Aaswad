@@ -10,9 +10,7 @@ import buffet21  from '../images/landing-page-images/buffet21.png';
 import orderfood from '../images/landing-page-images/order-food.svg';
 import cook      from '../images/landing-page-images/cook.svg';
 import deliver   from '../images/landing-page-images/deliver.svg';
-import facebook  from '../images/landing-page-images/facebook-logo.png';
-import gmail     from '../images/landing-page-images/gmail-icon.png';
-import whatsApp  from '../images/landing-page-images/whatsApp-icon.png';
+import Footer from './Footer';
 
 import '../css/HomePage/homepage.scss';
 
@@ -91,7 +89,7 @@ export default function HomePage() {
         <Link to="/" className="hp__nav-logo">Aaswad</Link>
         <ul className="hp__nav-links">
           <li><Link to="/menu">Menu</Link></li>
-          <li><Link to="/contactus">Contact</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
           <li><Link to="/SignIn" className="hp__nav-order">Order Now</Link></li>
         </ul>
       </nav>
@@ -197,90 +195,14 @@ export default function HomePage() {
           </p>
           <div className="hp__cta-actions">
             <Link to="/SignIn"    className="hp__btn-primary">Get Started</Link>
-            <Link to="/contactus" className="hp__btn-ghost hp__btn-ghost--dark">
+            <Link to="/contact" className="hp__btn-ghost hp__btn-ghost--dark">
               Contact Us
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Footer ──────────────────────────────────────── */}
-      <footer className="hp__footer">
-        <div className="hp__footer-body">
-
-          {/* Brand column */}
-          <div>
-            <span className="hp__footer-brand-name">Aaswad Caterers</span>
-            <p className="hp__footer-brand-desc">
-              Serving pure vegetarian food with love since 2010. From intimate
-              family meals to grand events, every dish is crafted with care.
-            </p>
-            <div className="hp__footer-socials">
-              <a href="#" className="hp__footer-social-link" aria-label="Facebook">
-                <img src={facebook} alt="Facebook" />
-              </a>
-              <a href="#" className="hp__footer-social-link" aria-label="WhatsApp">
-                <img src={whatsApp} alt="WhatsApp" />
-              </a>
-              <a href="#" className="hp__footer-social-link" aria-label="Email">
-                <img src={gmail} alt="Gmail" />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="hp__footer-col-title">Quick Links</h3>
-            <nav className="hp__footer-links">
-              <Link to="/SignIn">Order Now</Link>
-              <Link to="/menu">Menu</Link>
-              <Link to="/contactus">Contact Us</Link>
-              <Link to="/SignIn">Sign In</Link>
-            </nav>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h3 className="hp__footer-col-title">Services</h3>
-            <nav className="hp__footer-links">
-              <Link to="/SignIn">Catering Orders</Link>
-              <Link to="/SignIn">Event Orders</Link>
-              <Link to="/SignIn">Multi-Date Orders</Link>
-              <Link to="/SignIn">Custom Menus</Link>
-            </nav>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="hp__footer-col-title">Reach Us</h3>
-            <ul className="hp__footer-contact-list">
-              <li className="hp__footer-contact-item">
-                <span className="hp__footer-contact-icon">✉</span>
-                aaswadcaterers@gmail.com
-              </li>
-              <li className="hp__footer-contact-item">
-                <span className="hp__footer-contact-icon">📍</span>
-                Bangalore,Karnataka, India
-              </li>
-              <li className="hp__footer-contact-item">
-                <span className="hp__footer-contact-icon">⏰</span>
-                Mon – Sat, 9 AM – 8 PM
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-        <div className="hp__footer-bar">
-          <div className="hp__footer-bar-inner">
-            <span>© 2026 Aaswad Caterers. All rights reserved.</span>
-            <div className="hp__footer-bar-links">
-              <Link to="/contactus">Contact</Link>
-              <Link to="/SignIn">Order Now</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
     </div>
   );

@@ -18,7 +18,7 @@ export default function Header() {
             <div className="header-link-container">
                 <div style={{ display: 'flex' }}>
                     <Link to="/SignIn" className="linkEnquiry">Order Now !</Link>
-                    <Link to="/contactus" className="linkEnquiry">Contact Us</Link>
+                    <Link to="/contact" className="linkEnquiry">Contact Us</Link>
                 </div>
                 <UserOptions />
             </div>

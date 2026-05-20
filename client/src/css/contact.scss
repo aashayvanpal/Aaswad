@@ -1,0 +1,441 @@
+// ─── Variables (shared with homepage) ───────────────────────
+$gold:        #C9A227;
+$gold-light:  #e8c84d;
+$gold-dim:    rgba(201, 162, 39, 0.12);
+$gold-border: rgba(201, 162, 39, 0.25);
+$dark:        #0d0d0d;
+$dark-mid:    #161616;
+$surface:     #fafaf7;
+$text:        #1a1a1a;
+$text-muted:  #6b7280;
+$white:       #ffffff;
+$error:       #e53e3e;
+$success:     #38a169;
+
+$container-width: 1160px;
+
+// ─── Mixins ─────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin container {
+  max-width: $container-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  width: 100%;
+}
+
+// ─── Base ────────────────────────────────────────────────────
+.ct {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: $text;
+
+  *, *::before, *::after { box-sizing: border-box; }
+  a { text-decoration: none; }
+  h1, h2, h3, h4 { margin: 0; }
+  p { margin: 0; }
+
+  // ─── HERO ───────────────────────────────────────────────
+  &__hero {
+    background: $dark-mid;
+    padding: 5rem 2rem 4.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    // subtle grain texture overlay
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at 50% 0%,
+        rgba(201, 162, 39, 0.08) 0%,
+        transparent 65%
+      );
+      pointer-events: none;
+    }
+
+    // override base p { margin: 0 } reset so margin: 0 auto centres the block
+    .ct__hero-sub {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  &__hero-eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 1rem;
+  }
+
+  &__hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 700;
+    color: $white;
+    line-height: 1.15;
+    margin-bottom: 1.1rem;
+    position: relative;
+  }
+
+  &__hero-sub {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 300;
+    line-height: 1.75;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+
+  // ─── MAIN CONTENT ───────────────────────────────────────
+  &__main {
+    background: $surface;
+    padding: 6rem 0;
+  }
+
+  &__grid {
+    @include container;
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  // ─── INFO CARDS ─────────────────────────────────────────
+  &__info-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text;
+    margin-bottom: 0.5rem;
+  }
+
+  &__info-sub {
+    font-size: 0.88rem;
+    color: $text-muted;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding: 1.4rem 1.5rem;
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 12px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+
+    &:hover {
+      border-color: $gold-border;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  &__card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: $gold-dim;
+    @include flex-center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  &__card-body {}
+
+  &__card-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 0.3rem;
+  }
+
+  &__card-value {
+    font-size: 0.9rem;
+    color: $text;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  &__card-link {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: $gold;
+    font-weight: 500;
+    margin-top: 0.35rem;
+    letter-spacing: 0.04em;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  // ─── FORM PANEL ─────────────────────────────────────────
+  &__form-panel {
+    background: $white;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 16px;
+    padding: 2.8rem 2.5rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  &__form-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $text;
+    margin-bottom: 0.4rem;
+  }
+
+  &__form-sub {
+    font-size: 0.85rem;
+    color: $text-muted;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  &__form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: $text;
+  }
+
+  &__input,
+  &__textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: $text;
+    background: $surface;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+
+    &::placeholder { color: rgba(0, 0, 0, 0.28); }
+
+    &:focus {
+      border-color: $gold;
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
+    }
+
+    &--error {
+      border-color: $error;
+      &:focus { box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1); }
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.6;
+  }
+
+  &__field-error {
+    font-size: 0.75rem;
+    color: $error;
+    font-weight: 500;
+  }
+
+  &__submit {
+    width: 100%;
+    padding: 0.95rem;
+    background: $gold;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+
+    &:hover:not(:disabled) {
+      background: $gold-light;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+    }
+
+    &:active:not(:disabled) { transform: translateY(0); }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+
+  // ─── SUCCESS STATE ───────────────────────────────────────
+  &__success {
+    @include flex-center;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+
+  &__success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(56, 161, 105, 0.12);
+    border: 2px solid rgba(56, 161, 105, 0.35);
+    @include flex-center;
+    font-size: 1.6rem;
+    color: $success;
+  }
+
+  &__success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $text;
+  }
+
+  &__success-msg {
+    font-size: 0.88rem;
+    color: $text-muted;
+    line-height: 1.7;
+    max-width: 300px;
+  }
+
+  &__success-reset {
+    font-size: 0.8rem;
+    color: $gold;
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  // ─── FORM ERROR BANNER ───────────────────────────────────
+  &__form-error-banner {
+    background: rgba(229, 62, 62, 0.08);
+    border: 1px solid rgba(229, 62, 62, 0.2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.83rem;
+    color: $error;
+    font-weight: 500;
+  }
+
+  // ─── MAP ────────────────────────────────────────────────
+  &__map {
+    background: $dark;
+    padding: 0;
+  }
+
+  &__map-header {
+    @include container;
+    padding-top: 4.5rem;
+    padding-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  &__map-eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 0.75rem;
+  }
+
+  &__map-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: $white;
+  }
+
+  &__map-iframe-wrap {
+    position: relative;
+    overflow: hidden;
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 480px;
+      border: none;
+      filter: grayscale(20%);
+    }
+  }
+
+  // ─── RESPONSIVE ─────────────────────────────────────────
+  @media (max-width: 900px) {
+    &__grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    &__main { padding: 4rem 0; }
+
+    &__form-panel { padding: 2rem 1.5rem; }
+
+    &__form-row { grid-template-columns: 1fr; }
+
+    &__map-iframe-wrap iframe { height: 360px; }
+
+    &__map-header {
+      padding-top: 3rem;
+      padding-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__hero { padding: 3.5rem 1.25rem 3rem; }
+    &__form-panel { padding: 1.75rem 1.25rem; }
+  }
+}

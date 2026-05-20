@@ -23,7 +23,7 @@ import CustomerRequest from "./components/CustomerRequest.js";
 import "./css/app-css.css";
 import SignUpForm from "./components/SignUpForm.js";
 import UserProfile from "./components/UserProfile.js";
-import Contact from "./components/contact/Contact.js";
+import Contact from "./components/contact/Contact.tsx";
 import HomePage from "./components/HomePage.tsx";
 import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
@@ -128,7 +128,7 @@ function App() {
                       <div style={{ height: "100vh" }}><Header /><SignupCenterContainer /></div>
                     } />
 
-                    <Route path="/contactus" element={<><Header /><Contact /></>} />
+                    <Route path="/contact" element={<><Header /><Contact /></>} />
 
                     <Route path="/settings" element={
                       <div style={{ height: "100vh" }}>

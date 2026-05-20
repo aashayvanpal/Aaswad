@@ -1,95 +1,99 @@
-//User type is not required 
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { getUserDetails } from '../assets/user-functions.js';
+import '../css/profile.scss';
 
-import React, { useState, useEffect } from 'react'
-import heroUser from '../images/heroUser.svg'
-import { getUserDetails } from '../assets/user-functions.js'
-import "../css/profile.css"
-const UserProfile = () => {
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+};
 
-    const [username, setUserName] = useState('')
-    const [userType, setUserType] = useState('')
-    const [phonenumber, setPhoneNumber] = useState('')
-    const [address, setAddress] = useState('')
-    const [email, setEmail] = useState('')
+const stagger = {
+  hidden: {},
+  show:   { transition: { staggerChildren: 0.1 } },
+};
 
-    useEffect(() => {
-        getUserDetails()
-            .then(res => {
-                console.log("user data inside component did mount :", res)
+const INFO_FIELDS = [
+  { icon: '✉', label: 'Email',        key: 'email'       },
+  { icon: '📞', label: 'Phone',        key: 'phonenumber' },
+  { icon: '📍', label: 'Address',      key: 'address'     },
+];
 
-                setUserName(res.username)
-                setUserType(res.userType)
-                setEmail(res.email)
-                setPhoneNumber(res.phonenumber)
-                setAddress(res.address)
+export default function UserProfile() {
+  const [user, setUser] = useState(null);
 
-            })
-            .catch(err => {
-                console.log(err)
-                window.alert('Please login ,you will be redirected')
-                window.location.href = '/signin'
-            })
+  useEffect(() => {
+    getUserDetails()
+      .then(res => setUser(res))
+      .catch(() => {
+        window.alert('Please login, you will be redirected');
+        window.location.href = '/Signin';
+      });
+  }, []);
 
-    }, [])
+  const initials = user?.username
+    ? user.username.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+    : '?';
 
-    return (
-        <div id="profile-container">
-            <div id="profile-Overlap">
-                <img src={heroUser} alt="" style={{
-                    "display": "block",
-                    "marginLeft": "auto",
-                    "marginRight": "auto",
-                    "height": "100px",
-                }} />
-                <h2 style={{
-                    "textAlign": "center"
-                }}
-                >{username}</h2>
+  return (
+    <div className="up">
 
-            </div>
+      {/* ── Banner ─────────────────────────────────────── */}
+      <div className="up__banner">
+        <motion.div
+          className="up__avatar"
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          {initials}
+        </motion.div>
 
-            <div id="profile-inner-container">
-                <div id="profileDiv">
-                    <table >
-                        <tbody>
-                            {/* <tr>
-                                <td style={{ "padding": "10px" }}>UserType</td>
-                                <td style={{ "padding": "10px" }}>{this.state.userType}</td>
-                            </tr> */}
-                            <tr style={{ "width": "100%" }}>
-                                <td style={{ "padding": "10px" }}>Email</td>
-                                <td style={{ "padding": "10px" }}>{email}</td>
-                            </tr>
-                            <tr>
-                                <td style={{ "padding": "10px" }}>Phone Number</td>
-                                <td style={{ "padding": "10px" }}>{phonenumber}</td>
-                            </tr>
-                            <tr>
-                                <td style={{ "padding": "10px" }}>Address</td>
-                                <td style={{ "padding": "10px" }}>{address}</td>
-                                <td style={{ "padding": "10px", "maxWidth": "50px" }}></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <button style={{
-                    "display": "block",
-                    "margin": "10px auto",
-                    "padding": "10px 40px",
-                    "borderRadius": "10px",
-                    "fontSize": "20px",
-                    "fontWeight": "bold",
-                    "cursor": "pointer",
-                    "backgroundColor": "#ff881a",
-                    "boxShadow": "0px 4px 4px rgba(0, 0, 0, 0.25)"
+        <motion.div
+          className="up__banner-text"
+          initial="hidden"
+          animate="show"
+          variants={stagger}
+        >
+          <motion.h1 className="up__name" variants={fadeUp}>
+            {user?.username || '—'}
+          </motion.h1>
+          {user?.userType && (
+            <motion.span className="up__badge" variants={fadeUp}>
+              {user.userType}
+            </motion.span>
+          )}
+        </motion.div>
+      </div>
 
-                }}>Change Password</button>
-            </div>
-            <h5 id="footer-style">
-                © Copyrights Reserved 2026
-            </h5>
-        </div>
-    )
+      {/* ── Body ───────────────────────────────────────── */}
+      <motion.div
+        className="up__body"
+        initial="hidden"
+        animate="show"
+        variants={stagger}
+      >
+        <motion.h2 className="up__section-title" variants={fadeUp}>
+          Account Details
+        </motion.h2>
+
+        <motion.div className="up__cards" variants={stagger}>
+          {INFO_FIELDS.map(({ icon, label, key }) => (
+            <motion.div key={key} className="up__card" variants={fadeUp}>
+              <span className="up__card-icon" aria-hidden="true">{icon}</span>
+              <div>
+                <div className="up__card-label">{label}</div>
+                <div className="up__card-value">{user?.[key] || '—'}</div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div className="up__actions" variants={fadeUp}>
+          <button className="up__btn">Change Password</button>
+        </motion.div>
+      </motion.div>
+
+    </div>
+  );
 }
-
-export default UserProfile
