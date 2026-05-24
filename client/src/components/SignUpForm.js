@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from '../config/axios.js'
-import '../css/LoginDetails/Signup.css'
+import '../css/LoginDetails/Signup.scss'
 import { Link } from 'react-router-dom'
 
 // Make responsive
@@ -153,26 +153,23 @@ const SignUpForm = () => {
             <form onSubmit={handleSubmit} className="signup-form">
                 <div className="input-box">
                     <input id="inputName" placeholder="Full Name" name="name" onChange={(e) => { setName(e.target.value) }} value={name} /><br />
-                    {nameError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{nameError}</div>) : null}
+                    {nameError ? (<div className="signup-field-error">{nameError}</div>) : null}
 
                     <input id="inputEmail2" placeholder="Email" name="email" onChange={(e) => { setEmail(e.target.value) }} value={email} /><br />
-                    {emailError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{emailError}</div>) : null}
+                    {emailError ? (<div className="signup-field-error">{emailError}</div>) : null}
 
                     <input id="inputPhonenumber" placeholder="Phone number" name="phonenumber" onChange={(e) => { setPhoneNumber(e.target.value) }} value={phonenumber} /><br />
-                    {phonenumberError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{phonenumberError}</div>) : null}
+                    {phonenumberError ? (<div className="signup-field-error">{phonenumberError}</div>) : null}
 
                     <input id="inputPassword2" type="password" placeholder="Password" name="password" onChange={(e) => { setPassword(e.target.value) }} value={password} /><br />
 
                     <textarea id="inputAddress" placeholder="Address" name="address" onChange={(e) => { setAddress(e.target.value) }} value={address} /><br />
-                    {addressError ? (<div style={{ "color": "red", "marginLeft": "120px" }}>{addressError}</div>) : null}
+                    {addressError ? (<div className="signup-field-error">{addressError}</div>) : null}
                 </div>
 
                 <div className="signup-form-center">
                     <input type="checkbox" id="caterer" name="isCaterer" onChange={handleCheckboxChange} checked={isCaterer} />
-                    <label style={{
-                        "fontSize": "32px",
-                        "marginLeft": "30px",
-                    }} htmlFor="caterer" > I'm Caterer</label>
+                    <label className="signup-caterer-label" htmlFor="caterer" > I'm Caterer</label>
                 </div>
                 <br />
                 <div id="create-account-wrapper">

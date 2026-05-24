@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from '../config/axios.js'
+import './UserDetailsFormModal.scss'
 import { reduceOrders } from './order/orderHelper.js';
 
 const UserDetailsFormModal = (props) => {
@@ -93,18 +94,18 @@ const UserDetailsFormModal = (props) => {
         <div>
             <Button
                 variant="contained"
-                style={{ backgroundColor: '#dbc268', color: 'black', fontSize: '22px' }}
+                className="user-details-modal-trigger-btn"
                 onClick={toggle}
             >
                 {buttonLabel}
             </Button>
             <Dialog open={modal} onClose={toggle} className={className} fullWidth maxWidth="sm">
-                <DialogTitle style={{ backgroundColor: '#ebc642', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <DialogTitle className="user-details-modal-title">
                     Review your Details
                     {userType === 'Admin' && <> as Admin</>}
                     <IconButton onClick={toggle} size="small"><CloseIcon /></IconButton>
                 </DialogTitle>
-                <DialogContent style={{ backgroundColor: '#fff5d2', padding: '0px' }}>
+                <DialogContent className="user-details-modal-content">
                     <form onSubmit={orderSubmit}>
                         Name <br /><input value={name} onChange={(e) => setName(e.target.value)} /><br />
                         Email <br /><input value={email} onChange={(e) => setEmail(e.target.value)} /><br />

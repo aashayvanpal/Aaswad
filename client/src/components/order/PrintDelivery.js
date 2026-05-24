@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import '../../css/Print.css'
+import '../../css/Print.scss'
 import diwaliImg from '../../images/diw.jpeg'
 import logo from '../../images/aaswad-logo.svg'
 // Displaying image to center css :
@@ -47,7 +47,7 @@ const OrderPrintDelivery = () => {
     return (
         <div id="Bill-Card">
             <img src={logo} alt="logo" id='logo' />
-            <h4 style={{ "marginBottom": "50px" }}>
+            <h4 className="print-intro-text">
                 In an attempt to go paperless, we are sending all the billing estimates over WhatsApp.<br />
                 Your estimate is as follows : -
             </h4>
@@ -56,7 +56,7 @@ const OrderPrintDelivery = () => {
             <h3>Date   : {eventDate}</h3>
             <h3>
                 <table id='table-style'>
-                    <thead className='td-style' style={{ "fontWeight": "bold" }}>
+                    <thead className='td-style print-thead-bold'>
                         <tr>
                             <td className='td-style'>Sl No.</td>
                             <td className='td-style'>Particulars</td>
@@ -71,10 +71,7 @@ const OrderPrintDelivery = () => {
                                 return (
                                     <tr key={i}>
                                         <td className='td-style'>{i + 1}</td>
-                                        <td className='td-style' style={{
-                                            "textAlign": "left",
-                                            "paddingLeft": "20px"
-                                        }}>{item.name}</td>
+                                        <td className='td-style print-item-name-cell'>{item.name}</td>
                                         <td className='td-style'>{item.quantity} {item.measured}.</td>
                                         <td className='td-style'>&#x20B9; {item.price}/-</td>
                                         <td className='td-style'>&#x20B9; {item.price * item.quantity}/-</td>
@@ -84,24 +81,16 @@ const OrderPrintDelivery = () => {
                         }
                         <tr>
                             <td colSpan={4}>{medium}</td>
-                            <td style={{ border: "1px solid black" }}>&#x20B9; {rate} /-</td>
+                            <td className="print-total-value">&#x20B9; {rate} /-</td>
                         </tr>
                         {advanceAmount ? (<>
                             <tr>
-                                <td colSpan="4" style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right", fontWeight: "bold"
-                                }}> Advance payment(-)</td>
+                                <td colSpan="4" className="print-total-label"> Advance payment(-)</td>
                                 <td>  &#x20B9; {advanceAmount}/-</td>
                             </tr>
 
                             <tr>
-                                <td style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right",
-                                    "paddingRight": "80px",
-                                    "fontWeight": "bold",
-                                }} colSpan="5">Total:
+                                <td className="print-balance-row" colSpan="5">Total:
                                     &#x20B9; {items.reduce((sum, i) => (
                                         sum += i.quantity * i.price
                                     ), (Number(rate) - advanceAmount))} /-</td>
@@ -110,12 +99,7 @@ const OrderPrintDelivery = () => {
                         ) :
                             (
                                 <tr>
-                                    <td style={{
-                                        "border": "1px solid black",
-                                        "textAlign": "right",
-                                        "paddingRight": "80px",
-                                        "fontWeight": "bold",
-                                    }} colSpan="5">Total:
+                                    <td className="print-balance-row" colSpan="5">Total:
                                         &#x20B9; {items.reduce((sum, i) => (
                                             sum += i.quantity * i.price
                                         ), (Number(rate)))} /-</td>
@@ -126,7 +110,7 @@ const OrderPrintDelivery = () => {
             </h3>
             {/* <h3 style={{ fontWeight: "bold" }}>Special consession : Total: &#x20B9; 5350/-</h3> */}
 
-            <h4 style={{ "fontFamily": "'Lato' , sans-serif" }}>Contact :-<br />
+            <h4 className="print-contact-text">Contact :-<br />
                 Varsha Vanpal <br /> Mobile : 9742814239<br />
                 Email : varsha.vanpal@gmail.com <br /></h4>
 
@@ -142,18 +126,10 @@ const OrderPrintDelivery = () => {
                 Happy Diwali</b>
             </h3><br /> <br /> */}
 
-            <img src={diwaliImg} alt=""
-                style={{
-                    'display': "block",
-                    "marginRight": "auto",
-                    "marginLeft": "auto",
-                    'width': "400px",
-                    'height': "300px",
-                    'borderRadius': "10px"
-                }} />
+            <img src={diwaliImg} alt="" className="print-diwali-img" />
 
             <br /> <br /><br /> <br />
-            <h5 style={{ "textAlign": "right" }}><b>
+            <h5 className="print-order-id"><b>
                 OrderID :{id}</b>
             </h5>
         </div >

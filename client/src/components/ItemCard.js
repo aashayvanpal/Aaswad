@@ -1,6 +1,7 @@
 
 import React from 'react'
 import axios from '../config/axios'
+import './ItemCard.scss'
 // import Cart from './Cart.js'
 // Can render Cart compoennt for reusing cart component
 
@@ -331,28 +332,20 @@ export default class ItemCard extends React.Component {
     }
     render() {
         return (
-            <div className="Menu-Cart" style={{
-                "padding": "60px 10px 0px 10px",
-                "marginTop": "-20px"
-            }}>
+            <div className="Menu-Cart menu-cart--item-card">
                 <div className="inner-Menu" >
                     <h1 id="Menu-style">Item Card</h1>
 
                     <div>
 
-                        <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" placeholder="Search your item" style={{
-                            "padding": "5px",
-                            "fontSize": "22px",
-                            "backgroundColor": "#f5edc0",
-                            "margin": "10px"
-                        }} /><button style={{ "padding": "12px" }}>Search</button>
+                        <input onChange={this.handleChange} value={this.inputSearch} name="inputSearch" placeholder="Search your item" className="item-card-search-input" /><button className="item-card-search-btn">Search</button>
                     </div>
                     <div>
                         {
                             this.state.searchFilter.map((item, i) => {
                                 return (
                                     <div key={item._id}>
-                                        <h1 style={{ "textAlign": "left" }}>{i + 1}. {item.name}</h1>
+                                        <h1 className="item-card-result-name">{i + 1}. {item.name}</h1>
                                     </div>
                                 )
                             })

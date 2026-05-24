@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from '../config/axios.js'
 import ShowBtn from '../assets/ShowBtn.js'
 import NavigationBar from './NavigationBar.js'
+import './Queries.scss'
 // only admin should be able to reply to the query
 // render like to be provided to customer to view all FAQ
 
@@ -33,7 +34,7 @@ const Queries = () => {
     return (
         <div>
             <ShowBtn />
-            <div style={{ display: 'flex' }}>
+            <div className="queries-layout">
                 <NavigationBar />
                 <div>
                     <h1>Frequently Asked Queries</h1>

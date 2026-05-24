@@ -1,0 +1,45 @@
+.customers-layout {
+    display: flex;
+}
+
+.customers-panel {
+    border: 2px solid black;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.customers-panel-header {
+    display: flex;
+    gap: 20px;
+}
+
+.customers-add-btn {
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.customers-table {
+    width: 100%;
+    border: 1px solid black;
+}
+
+.customers-thead {
+    text-align: center;
+}
+
+.customers-index-cell {
+    text-align: center;
+}
+
+.customers-actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.customers-update-btn {
+    width: 100%;
+    font-weight: bold;
+}

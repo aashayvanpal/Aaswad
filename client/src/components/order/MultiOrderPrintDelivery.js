@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import '../../css/Print.css'
+import '../../css/Print.scss'
 import diwaliImg from '../../images/diw.jpeg'
 import logo from '../../images/aaswad-logo.svg'
 import { reduceOrders } from './orderHelper.js'
@@ -73,7 +73,7 @@ const MultiOrderPrintDelivery = () => {
             <h3>Mobile : {phoneNumber}</h3>
             <h3>
                 <table id='table-style'>
-                    <thead className='td-style' style={{ "fontWeight": "bold" }}>
+                    <thead className='td-style print-thead-bold'>
                         <tr>
                             <td className='td-style'>Date</td>
                             <td className='td-style'>Particulars</td>
@@ -123,39 +123,24 @@ const MultiOrderPrintDelivery = () => {
                         {medium ?
                             <tr>
                                 <td colSpan={4}>{medium}</td>
-                                <td style={{ border: "1px solid black" }}>&#x20B9; {rate} /-</td>
+                                <td className="print-total-value">&#x20B9; {rate} /-</td>
                             </tr> : (null)
                         }
 
                         {advanceAmount ? (<>
                             <tr>
-                                <td style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right",
-                                    "paddingRight": "80px",
-                                    "fontWeight": "bold",
-                                }} colSpan="4">Total</td>
-                                <td style={{
-                                    "border": "1px solid black",
-                                }}> &#x20B9; {order.total} /-</td>
+                                <td className="print-balance-row" colSpan="4">Total</td>
+                                <td className="print-total-value"> &#x20B9; {order.total} /-</td>
                             </tr>
                             <tr>
-                                <td colSpan="4" style={{
-                                    "border": "1px solid black",
-                                    "textAlign": "right", fontWeight: "bold"
-                                }}> Advance payment(-)</td>
+                                <td colSpan="4" className="print-total-label"> Advance payment(-)</td>
                                 <td>  &#x20B9; {advanceAmount}/-</td>
                             </tr>
                         </>
                         ) :
                             (
                                 <tr>
-                                    <td style={{
-                                        "border": "1px solid black",
-                                        "textAlign": "right",
-                                        "paddingRight": "80px",
-                                        "fontWeight": "bold",
-                                    }} colSpan="5">Total:
+                                    <td className="print-balance-row" colSpan="5">Total:
                                         &#x20B9; {order.total}/-</td>
                                 </tr>
                             )}
@@ -174,7 +159,7 @@ const MultiOrderPrintDelivery = () => {
             </h3>
             {/* <h3 style={{ fontWeight: "bold" }}>Special consession : Total: &#x20B9; 5350/-</h3> */}
 
-            <h4 style={{ "fontFamily": "'Lato' , sans-serif" }}>Contact :-<br />
+            <h4 className="print-contact-text">Contact :-<br />
                 Varsha Vanpal <br /> Mobile : 9742814239<br />
                 Email : varsha.vanpal@gmail.com <br /></h4>
 
@@ -201,7 +186,7 @@ const MultiOrderPrintDelivery = () => {
                 }} /> */}
 
             <br /> <br /><br /> <br />
-            <h5 style={{ "textAlign": "right" }}><b>
+            <h5 className="print-order-id"><b>
                 OrderID :{id}</b>
             </h5>
         </div >

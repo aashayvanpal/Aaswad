@@ -130,7 +130,7 @@ const AddItems = (props) => {
             />
             <div className="search-align">
                 <h2>Listing items - {searchFilter.length}</h2>
-                <input type="text" placeholder="Search Item" name="item" style={{ "textAlign": "center" }} onChange={handleChange} />&nbsp;&nbsp;
+                <input type="text" placeholder="Search Item" name="item" className="item-search-input" onChange={handleChange} />&nbsp;&nbsp;
             </div>
 
             <Link to='/items/add'>
@@ -140,10 +140,10 @@ const AddItems = (props) => {
                 </button>
             </Link>
 
-            <div style={{ "margin": "10px" }}>
+            <div className="item-list-wrapper">
                 <Table>
                     <Thead >
-                        <Tr className="listing-table" style={{ "fontWeight": "bold" }}>
+                        <Tr className="listing-table item-list-header-row">
                             <Th className="listing-table">Sl No</Th>
                             <Th className="listing-table">Name</Th>
                             <Th className="listing-table">Price</Th>

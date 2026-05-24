@@ -2,27 +2,20 @@ import React from 'react'
 import IconButton from '@mui/material/IconButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
-
-const sectionStyle = {
-    backgroundColor: 'rgba(201,162,39,0.06)',
-    border: '1px solid rgba(201,162,39,0.28)',
-    borderRadius: '10px',
-    padding: '1.5rem',
-    marginTop: '1rem',
-}
+import '../../css/orderForms.scss'
 
 const AdvanceTable = (props) => {
     return (
-        <div style={sectionStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="order-section-card">
+            <div className="order-section-header">
+                <div className="order-section-left">
                     <AccountBalanceWalletOutlinedIcon sx={{ color: '#C9A227', fontSize: '1.4rem' }} />
-                    <span style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a' }}>
+                    <span className="order-section-title">
                         Advance Payment
                     </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span style={{ fontFamily: 'inherit', fontSize: '1.6rem', fontWeight: 700, color: '#C9A227' }}>
+                <div className="order-section-right">
+                    <span className="order-advance-amount">
                         &#8377;{props.advanceAmount}
                     </span>
                     <IconButton

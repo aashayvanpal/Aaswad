@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './autoCompleteSelect.scss'
 
 const FilterableSelectBox = ({ options, selectedCustomer, setSelectedCustomer, selectedPhoneNumber, setSelectedPhoneNumber, selectedAddress, setSelectedAddress, filterValue, setFilterValue }) => {
 
@@ -20,7 +21,7 @@ const FilterableSelectBox = ({ options, selectedCustomer, setSelectedCustomer, s
 
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="autocomplete-container">
             <div>Selected Customer: {selectedCustomer}</div>
             <div>Selected phoneNumber: {selectedPhoneNumber}</div>
             <div>Selected address: {selectedAddress}</div>
@@ -47,7 +48,7 @@ const FilterableSelectBox = ({ options, selectedCustomer, setSelectedCustomer, s
                             </div>
                         ))} */}
 
-                <table style={{ width: "100%" }}>
+                <table className="autocomplete-table">
                     <thead>
                         <tr>
                             <td>Name </td>
@@ -60,10 +61,10 @@ const FilterableSelectBox = ({ options, selectedCustomer, setSelectedCustomer, s
                     <tbody>
                         {options.filter(option => option.fullName.toLowerCase().includes(filterValue.toLowerCase()))
                             .map((customer, index) => <tr key={index}
-                                style={{ border: '1px solid black', cursor: 'pointer' }}
+                                className="autocomplete-row"
                             >
                                 <td
-                                    style={{ padding: '20px' }}
+                                    className="autocomplete-name-cell"
                                     onClick={(e) => handleOptionClick(customer)}
                                 >{customer.fullName}</td>
                                 <td style={{ display: selectedCustomer ? "" : "none" }}

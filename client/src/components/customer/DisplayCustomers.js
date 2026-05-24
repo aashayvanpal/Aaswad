@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import './DisplayCustomers.scss'
 import { Link } from "react-router-dom"
 import deleteImg from '../../images/delete-icon.png'
 import ConfirmDialog from '../ConfirmDialog'
@@ -63,13 +64,13 @@ const DisplayCustomers = () => {
             onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
         />
         <ShowBtn />
-        <div style={{ display: 'flex' }}>
+        <div className="customers-layout">
 
             <NavigationBar />
 
-            <div style={{ border: ' 2px solid black', margin: '20px', padding: '20px', borderRadius: '8px', width: '100%' }}>
+            <div className="customers-panel">
 
-                <div style={{ display: 'flex', gap: '20px' }}>
+                <div className="customers-panel-header">
 
                     <div>
                         <h3>Listing Customers : {filterCustomers().length}</h3>
@@ -78,14 +79,14 @@ const DisplayCustomers = () => {
                     <Link
                         to="/customers/add"
                     >
-                        <button style={{ border: "1px solid black", padding: '10px', borderRadius: '8px', }}>
+                        <button className="customers-add-btn">
                             Add Customer
                         </button>
                     </Link>
                 </div>
                 Sort customer by membership , alphabetical order, number of orders given
-                <table style={{ width: "100%",border: "1px solid black", }}>
-                    <thead style={{ textAlign: 'center' }}>
+                <table className="customers-table">
+                    <thead className="customers-thead">
                         <td>Sl No</td>
                         <td>Name</td>
                         <td>Actions</td>
@@ -94,12 +95,11 @@ const DisplayCustomers = () => {
 
                         {
                             filterCustomers().map((customer, index) => <tr key={index}>
-                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                <td className="customers-index-cell">{index + 1}</td>
                                 <td><Link to={`/customers/${customer._id}`}>{customer.fullName}</Link ></td>
-                                <td style={{ display: 'flex', gap: '8px' }}>
+                                <td className="customers-actions-cell">
                                     <Link to={`/customers/edit/${customer._id}`}>
-                                        <button className="button-color4"
-                                            style={{ width: "100%", fontWeight: "bold" }}
+                                        <button className="button-color4 customers-update-btn"
                                         >
                                             <img src={updateIcon} alt="" height="30px" width="30px" />
                                             Update

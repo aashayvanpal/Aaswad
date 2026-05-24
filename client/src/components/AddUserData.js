@@ -2,6 +2,7 @@
 import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 import React, { Component } from 'react'
+import './AddUserData.scss'
 // import DisplayCustomers from './DisplayCustomers.js'
 // import DisplayTransport from './DisplayTransport.js'
 // import DisplayVendors from './DisplayVendors.js'
@@ -120,11 +121,11 @@ export default class AddUserData extends Component {
 
     render() {
         return (
-            <div style={{ "backgroundColor": "white" }}>
+            <div className="add-user-wrapper">
                 <BrowserRouter>
-                    <Link to='/users/add/customers' style={{ "color": "green" }} >Add Customers</Link>&nbsp;
-                    <Link to='/users/add/vendors' style={{ "color": "green" }} >Add Vendros</Link>&nbsp;
-                    <Link to='/users/add/transports' style={{ "color": "green" }} >Add Transport</Link>&nbsp;
+                    <Link to='/users/add/customers' className="add-user-nav-link" >Add Customers</Link>&nbsp;
+                    <Link to='/users/add/vendors' className="add-user-nav-link" >Add Vendros</Link>&nbsp;
+                    <Link to='/users/add/transports' className="add-user-nav-link" >Add Transport</Link>&nbsp;
 
 
                     <Route path="/users/add/customers">

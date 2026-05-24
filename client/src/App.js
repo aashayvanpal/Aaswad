@@ -3,8 +3,8 @@ import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from './components/Header.js'
 import MainLayout from "./components/MainLayout.js";
-import "./css/app-css.css";
-import "./css/HomePage/header.css";
+import "./css/app-css.scss";
+import "./css/HomePage/header.scss";
 import { appVersion } from './config/main.client.js'
 
 // Eagerly loaded (small, always needed on first paint)
@@ -69,7 +69,7 @@ function App() {
                     <>
                       <Header />
                       <div className="SignUpCard">
-                        <h1 style={{ fontSize: "36px", textAlign: "center" }}>Sign Up</h1>
+                        <h1 style={{ fontSize: "1.65rem", textAlign: "center" }}>Sign Up</h1>
                         <SignUpForm />
                       </div>
                     </>

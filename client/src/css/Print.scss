@@ -1,0 +1,80 @@
+#Bill-Card{
+    border: 5px solid black;
+    padding: 30px;
+    background-color: #f5edc0;
+    page-break-after: always;
+    margin-top: 40px;
+    margin-bottom: 50px;    
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;  
+}
+
+#logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+#table-style{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    width: 90%;
+    margin: 50px 0px 50px 50px;
+    padding: 20px;
+}
+
+.td-style{
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.print-intro-text {
+    margin-bottom: 50px;
+}
+
+.print-thead-bold {
+    font-weight: bold;
+}
+
+.print-item-name-cell {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.print-total-label {
+    border: 1px solid black;
+    text-align: right;
+    font-weight: bold;
+}
+
+.print-total-value {
+    border: 1px solid black;
+}
+
+.print-balance-row {
+    border: 1px solid black;
+    text-align: right;
+    padding-right: 80px;
+    font-weight: bold;
+}
+
+.print-contact-text {
+    font-family: 'Lato', sans-serif;
+}
+
+.print-diwali-img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+}
+
+.print-order-id {
+    text-align: right;
+}

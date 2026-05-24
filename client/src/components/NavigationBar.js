@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './NavigationBar.scss'
 import homeImg from '../images/home-icon.png'
 import dashboardImg from '../images/dashboard-icon.png'
 import itemsImg from '../images/items-icon.png'
@@ -8,17 +9,9 @@ import ordersImg from '../images/orders-icon.png'
 export default function NavigationBar({ onClose }) {
     return (
         <div id="Nav-bar" style={onClose ? { display: 'block' } : undefined}>
-            <ul style={{ listStyleImage: 'none', margin: '0px', padding: '0px' }}>
+            <ul className="nav-bar-list">
                 <button
-                    style={{
-                        marginLeft: "160px",
-                        background: "#04045f",
-                        border: "none",
-                        color: "white",
-                        cursor: "pointer",
-                        borderRadius: "20px",
-                        fontWeight: 'bold'
-                    }}
+                    className="nav-bar-close-btn"
                     onClick={onClose || (() => {
                         document.getElementById("Nav-bar").style.display = "none"
                         const showBtn = document.getElementById("ShowButton")
@@ -30,169 +23,131 @@ export default function NavigationBar({ onClose }) {
                 <Link
                     to="/"
                     className="Nav-barLink"
-                    style={{
-                        textDecoration: "none",
-                    }}
                 >
                     <li>
                         <img src={homeImg} alt=""
-                            style={{
-                                filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                            }} height="40px" width="40px" />
+                            className="nav-bar-icon" height="40px" width="40px" />
                         Home</li>
                 </Link>
                 <Link
                     to="/dashboard"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
 
                     <li><img src={dashboardImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />
+                        className="nav-bar-icon" height="40px" width="40px" />
                         Dashboard</li>
                 </Link>
                 <Link
                     to="/items"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
 
                     <li><img src={itemsImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Items</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Items</li>
                 </Link>
                 <Link
                     to="/menu"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
 
                     <li> <img src={menuImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Menu</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Menu</li>
                 </Link>
 
                 <Link
                     to="/orders"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
 
                     <li><img src={ordersImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Orders</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Orders</li>
                 </Link>
 
                 <Link
                     to="/bulk-orders"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li><img src={ordersImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Bulk Orders</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Bulk Orders</li>
                 </Link>
 
                 <Link
                     to="/multiOrders"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li><img src={ordersImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Multi orders</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Multi orders</li>
                 </Link>
 
                 <Link
                     to="/eventOrders"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li><img src={ordersImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Event orders</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Event orders</li>
                 </Link>
 
                 <Link
                     to="/users/add"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Vendors</li>
                 </Link>
                 <Link
                     to="/users/add"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Labourers</li>
                 </Link>
                 <Link
                     to="/customers"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Customers</li>
                 </Link>
                 <Link
                     to="/recipies"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Recipies</li>
                 </Link>
                 <Link
                     to="/ingredients"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Ingredients</li>
                 </Link>
                 <Link
                     to="/calender"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Calender</li>
                 </Link>
                 <Link
                     to="/queries"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Queries</li>
                 </Link>
                 <Link
                     to="/deals"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Deals</li>
                 </Link>
                 <Link
                     to="/contacts"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li>Contacts</li>
                 </Link>
                 <Link
                     to="/profit-loss"
                     className="Nav-barLink"
-                    style={{ textDecoration: "none" }}
                 >
                     <li><img src={ordersImg} alt=""
-                        style={{
-                            filter: 'invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)'
-                        }} height="40px" width="40px" />Profit-Loss</li>
+                        className="nav-bar-icon" height="40px" width="40px" />Profit-Loss</li>
                 </Link>
             </ul>
         </div>

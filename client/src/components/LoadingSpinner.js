@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './LoadingSpinner.scss'
 import { css } from "@emotion/react";
 import CircleLoader from "react-spinners/CircleLoader";
 
@@ -16,9 +17,7 @@ function LoadingSpinner() {
 
     return (
         <div className="sweet-loading">
-            <h1 style={{
-                "textAlign": "center",
-            }}>Loading...</h1>
+            <h1 className="loading-heading">Loading...</h1>
             <CircleLoader color={'rgb(219, 194, 104)'} loading={loading} css={override} size={200} />
             <br />
             <br />

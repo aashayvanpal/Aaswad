@@ -1,0 +1,32 @@
+.misc-table-section {
+    background-color: rgba(201, 162, 39, 0.06);
+    border: 1px solid rgba(201, 162, 39, 0.28);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.misc-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.misc-table-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.misc-table-title {
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.misc-table-actions {
+    display: flex;
+    gap: 0.25rem;
+}

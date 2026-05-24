@@ -26,7 +26,7 @@ const ShowCarousel = () => {
     >
       {images.map((src, i) => (
         <SwiperSlide key={i}>
-          <img src={src} alt={`buffet-${i + 1}`} id="carosel-styling" style={{ width: '100%', display: 'block' }} />
+          <img src={src} alt={`buffet-${i + 1}`} id="carosel-styling" />
         </SwiperSlide>
       ))}
     </Swiper>

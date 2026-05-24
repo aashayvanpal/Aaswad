@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import './addIngredientsModal.scss'
 
 const AddIngredient = (props) => {
     const {
@@ -42,21 +43,21 @@ const AddIngredient = (props) => {
         <div>
             <Button
                 variant="contained"
-                style={{ backgroundColor: '#dbc268', color: 'black', fontSize: '22px' }}
+                className="ingredient-modal-trigger-btn"
                 onClick={toggle}
             >
                 {buttonLabel}
             </Button>
             <Dialog open={modal} onClose={toggle} className={className} fullWidth maxWidth="sm">
-                <DialogTitle style={{ backgroundColor: '#ebc642', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <DialogTitle className="ingredient-modal-title">
                     Add Ingredients
                     <IconButton onClick={toggle} size="small"><CloseIcon /></IconButton>
                 </DialogTitle>
-                <DialogContent style={{ backgroundColor: '#fff5d2', padding: '0px' }}>
+                <DialogContent className="ingredient-modal-content">
                     <div>
-                        <div style={{ border: '2px solid black', margin: '10px', padding: '10px', borderRadius: '32px' }}>
-                            <h4 style={{ textAlign: 'center' }}>SelectedIngredients</h4>
-                            <table style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', width: '80%' }}>
+                        <div className="ingredient-selected-box">
+                            <h4 className="ingredient-selected-heading">SelectedIngredients</h4>
+                            <table className="ingredient-selected-table">
                                 <thead>
                                     <tr>
                                         <td>Sl no</td>
@@ -83,10 +84,10 @@ const AddIngredient = (props) => {
                                     ))}
                                 </tbody>
                             </table>
-                            <button style={{ width: '100%', marginTop: '10px', borderRadius: '16px' }} onClick={getSelectedIngregientList}>Submit Selected List</button>
+                            <button className="ingredient-submit-list-btn" onClick={getSelectedIngregientList}>Submit Selected List</button>
                         </div>
 
-                        <button style={{ margin: '20px' }} onClick={(e) => { e.preventDefault(); append2InputFields() }}>Add new Ingredient</button>
+                        <button className="ingredient-add-new-btn" onClick={(e) => { e.preventDefault(); append2InputFields() }}>Add new Ingredient</button>
 
                         {ingredients2?.map((ingredient, index) => (
                             <div key={index}>

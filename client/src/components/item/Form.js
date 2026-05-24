@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import '../../css/itemForm.css'
 import '../../css/itemForm.scss'
 
 import AddIngredientModal from '../ingredients/modals/addIngredientsModal'
@@ -99,37 +98,31 @@ const ItemForm = (props) => {
 
     return (
         <div className="content-primary">
-            <h2 style={{
-                "textAlign": "center",
-                "padding": "20px",
-                "color": "white",
-                "background": "#0173a9",
-                "fontWeight": "bold"
-            }}>Add Item details</h2>
+            <h2 className="item-form-heading">Add Item details</h2>
 
             dynamic category generation and multiple selection option ,CRUD operations for category <br />
             <form onSubmit={handleSubmit} id='itemForm'>
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="name" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Name</label>
+                    <label htmlFor="name" className="form-label">Name</label>
                     <div className="form-col">
                         <input type="text" name="name" id="name" placeholder="Item name" value={name} onChange={(e) => { setName(e.target.value) }} />
                     </div>
                 </div>
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="price" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Price</label>
+                    <label htmlFor="price" className="form-label">Price</label>
                     <div className="form-col">
                         <input type="text" name="price" id="price" placeholder="Price" value={price} onChange={(e) => { setPrice(e.target.value) }} />
                     </div>
                 </div>
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="category" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Category</label>
+                    <label htmlFor="category" className="form-label">Category</label>
                     <div className="form-col">
                         <input type="text" name="category" id="category" placeholder="Category" value={category} onChange={(e) => { setCategory(e.target.value) }} />
                     </div>
                 </div>
 
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="measured" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Measured In</label>
+                    <label htmlFor="measured" className="form-label">Measured In</label>
                     <div className="form-col">
                         <select value={measured} onChange={(e) => { setMeasured(e.target.value) }} name="measured" id="measured">
                             <option value="">--</option>
@@ -141,21 +134,21 @@ const ItemForm = (props) => {
                 </div>
 
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="description" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Description</label>
+                    <label htmlFor="description" className="form-label">Description</label>
                     <div className="form-col">
                         <textarea name="description" id="imgeURL" placeholder="Item description" value={description} onChange={(e) => { setDescription(e.target.value) }} />
                     </div>
                 </div>
 
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="imgURL" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Image URL</label>
+                    <label htmlFor="imgURL" className="form-label">Image URL</label>
                     <div className="form-col">
                         <textarea name="imgURL" id="imgeURL" placeholder="Image URL" value={imgeURL} onChange={(e) => { setImgeURL(e.target.value) }} />
                     </div>
                 </div>
 
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="ingredients" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Ingredients</label>
+                    <label htmlFor="ingredients" className="form-label">Ingredients</label>
                     <div className="form-col">
                         {Array.isArray(ingredients) ? <>{
                             ingredients.map(ingredient => <div key={ingredient.name}>{ingredient.name} {ingredient.quantity}</div>)
@@ -172,13 +165,13 @@ const ItemForm = (props) => {
                 </div>
 
                 <div className="form-row" id="formGroup">
-                    <label htmlFor="recipie" className="form-label" style={{ textAlign: "center", fontSize: "22px" }}>Recipie</label>
-                    <div className="form-col" style={{ marginBottom: "30px" }}>
+                    <label htmlFor="recipie" className="form-label">Recipie</label>
+                    <div className="form-col form-col--mb">
                         <textarea name="recipie" id="recipie" placeholder="Recipie" value={recipie} onChange={(e) => { setRecipie(e.target.value) }} />
                     </div>
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "30px" }}>
+                <div className="item-form-actions">
                     <Link to='/items'><button className="button-color3">Back</button></Link>
                     <input className="button-color3" type="submit" value="Add Item" />
                 </div>

@@ -5,6 +5,7 @@ import NavigationBar from '../NavigationBar'
 import ShowBtn from '../../assets/ShowBtn'
 import { Link } from 'react-router-dom'
 import { getIngredients } from './item-helpers/item-functions'
+import '../../css/itemForm.scss'
 const EditItem = (props) => {
     const [item, setItem] = useState({})
     const [ingredients, setIngredients] = useState([])
@@ -69,11 +70,11 @@ const EditItem = (props) => {
     return (
         <div>
             <ShowBtn />
-            <div style={{ display: 'flex', gap: '20px' }}>
+            <div className="item-page-layout">
                 <NavigationBar />
-                <div style={{ width: '100%' }}>
+                <div className="item-page-content">
                     <Link to='/items'>Back</Link>
-                    <h1 style={{ "textAlign": "center", "padding": "10px" }}>Edit Item - {item.name}</h1>
+                    <h1 className="item-form-heading">Edit Item - {item.name}</h1>
                     {item.name && <ItemForm item={item}
                         handleItemSubmit={handleItemSubmit}
                         mainIngredients={ingredients}

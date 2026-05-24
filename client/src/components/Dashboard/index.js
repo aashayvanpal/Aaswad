@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './Dashboard.scss'
 import axios from 'axios'
 import LoadingSpinner from '../LoadingSpinner'
 import { getMultiOrders } from '../../apis/multiOrders'
@@ -207,7 +208,7 @@ const Dashboard = () => {
     return (
         <div>
 
-            <button style={{ backgroundColor: "purple", color: "white" }}>Backup = opens modal to backup all database into json </button>
+            <button className="dashboard-backup-btn">Backup = opens modal to backup all database into json </button>
             <br />
             Chart
             <br />

@@ -3,6 +3,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import logo from '../images/aaswad-logo.svg'
+import './Header.scss'
 import UserOptions from './UserOptions.js'
 import { Link } from 'react-router-dom'
 
@@ -18,8 +19,8 @@ export default function Header() {
         >
             <Toolbar sx={{ px: { xs: 2, sm: 3 }, gap: 2, minHeight: { xs: 56, sm: 64 } }}>
                 {/* Logo */}
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-                    <img src={logo} alt="Aaswad Caterers" style={{ height: 40 }} />
+                <Link to="/" className="header-logo-link">
+                    <img src={logo} alt="Aaswad Caterers" className="header-logo-img" />
                 </Link>
 
                 <Box sx={{ flex: 1 }} />

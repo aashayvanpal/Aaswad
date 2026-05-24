@@ -289,7 +289,9 @@ Each new API service must be added to `rootReducer` and `middleware` chain in `s
 
 - **Design philosophy**: **Mobile-first**. Write base styles for mobile (xs), then layer up with `sm`, `md`, `lg` breakpoints. Never design desktop-first and patch mobile after.
 - **Target screen**: 2560×1440 @ 60Hz (Linux). Chrome viewport is ~2553×1317 (scrollbar + taskbar offset — normal).
-- **Font scaling**: `html { font-size: 22px }` in `client/src/index.css` is the rem anchor for 2560×1440. MUI theme (`client/src/theme.js`) has `htmlFontSize: 22, fontSize: 18` to match. **Both must stay in sync** — if the html font-size changes, update `htmlFontSize` in theme too. Do **not** hardcode small `fontSize` values in `sx` — let the rem cascade do the work. After changing `index.css`, always fully restart the dev server (CSS base font-size changes do NOT hot-reload).
+- **Font scaling**: `html { font-size: 22px }` in `client/src/index.css` is the rem anchor for 2560×1440. MUI theme (`client/src/theme.js`) has `htmlFontSize: 22, fontSize: 18` to match. **Both must stay in sync** — if the html font-size changes, update `htmlFontSize` in theme too. Do **not** hardcode `px` font sizes anywhere — always use `rem` so sizes scale with the base. The `/orders/:id` page (Show.js) is the reference for correct font sizing. After changing `index.css`, always fully restart the dev server (CSS base font-size changes do NOT hot-reload).
+- **Stylesheet format**: All stylesheets are `.scss` (converted from `.css`). `client/src/index.css` is the only `.css` file and must stay as-is (Vite entry point). Never create new `.css` files — always `.scss`.
+- **No inline styles**: Do not use `style={{...}}` on JSX elements for static styles. Put them in the component's `.scss` file as a class. Exception: truly dynamic styles (values computed from state/props/data at runtime) may stay inline. MUI `sx={{...}}` props are always fine — they are not inline styles.
 - **Responsive patterns to use**:
   - Layout: `Stack direction={{ xs: 'column', sm: 'row' }}`, `Grid size={{ xs: 12, md: 6 }}`
   - Typography: `sx={{ fontSize: { xs: '0.9rem', md: '1rem' } }}`

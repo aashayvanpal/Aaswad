@@ -11,7 +11,7 @@
     color: green;
     font-weight: bold;
     text-align: center;
-    font-size: 22px;
+    font-size: 1rem;
     padding: 10px;
     cursor: pointer;
 }
@@ -21,4 +21,15 @@
     margin-top: 5px;
     height:20px;
     width:20px;
+}
+
+.user-btn-trigger {
+    border: none;
+    background-color: #dbc268;
+    min-width: 0;
+}
+
+.user-btn-menu-link {
+    text-decoration: none;
+    color: inherit;
 }

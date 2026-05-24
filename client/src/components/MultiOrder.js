@@ -2,7 +2,7 @@ import axios from '../config/axios.js'
 import React, { useState, useEffect } from 'react'
 import ConfirmDialog from './ConfirmDialog'
 import { Link } from 'react-router-dom'
-import '../css/OrderList.css'
+import '../css/OrderList.scss'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import deleteImg from '../images/delete-icon.png'
 import approveImg from '../images/approve-icon.png'
@@ -204,17 +204,17 @@ const MultiOrder = () => {
                 onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
             />
             <ShowBtn />
-            <div style={{ display: 'flex' }}>
+            <div className="multiorder-layout">
                 <NavigationBar />
 
-                <div style={{ margin: '10px', "width": "100%" }}>
-                    <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Multiple date orders list</h2>
+                <div className="multiorder-content">
+                    <h2 className="multiorder-section-heading">Multiple date orders list</h2>
 
-                    <div className='order-container' style={{ backgroundColor: 'rgb(227, 197, 126)' }}>
+                    <div className='order-container order-container--approve'>
 
-                        <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Approve orders - {approves.length}</h2>
+                        <h2 className="multiorder-section-heading">Approve orders - {approves.length}</h2>
 
-                        <Table className='table-styling' style={{ "fontWeight": "bold" }}>
+                        <Table className='table-styling multiorder-table'>
                             <Thead>
                                 <Tr>
                                     <Th className="listing-table">Sl no</Th>
@@ -244,9 +244,7 @@ const MultiOrder = () => {
                                                 <img src={approveImg} alt="" height='25px' width='25px' />
                                             </button>
                                             <button className="button-color5" onClick={() => handleRemoveOrder(order._id, fullName)}>
-                                                <img src={deleteImg} alt="" style={{
-                                                    "filter": "brightness(0) invert(1)", height: '30px', width: '30px'
-                                                }} />
+                                                <img src={deleteImg} alt="" className="delete-btn-icon" />
                                             </button>
                                         </Td>
                                     </Tr>)
@@ -255,11 +253,11 @@ const MultiOrder = () => {
                         </Table>
                     </div>
 
-                    <div className='order-container' style={{ backgroundColor: '#98c8ab' }}>
+                    <div className='order-container order-container--confirmed'>
 
-                        <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}> Confirmed orders - {confirmed.length}</h2>
+                        <h2 className="multiorder-section-heading"> Confirmed orders - {confirmed.length}</h2>
 
-                        <Table className='table-styling' style={{ "fontWeight": "bold" }}>
+                        <Table className='table-styling multiorder-table'>
                             <Thead>
                                 <Tr>
                                     <Th className="listing-table">Sl no</Th>
@@ -290,9 +288,7 @@ const MultiOrder = () => {
                                                 Completed
                                             </button>
                                             <button className="button-color5" onClick={() => handleRemoveOrder(order._id, fullName)}>
-                                                <img src={deleteImg} alt="" style={{
-                                                    "filter": "brightness(0) invert(1)", height: '30px', width: '30px'
-                                                }} />
+                                                <img src={deleteImg} alt="" className="delete-btn-icon" />
                                                 delete
                                             </button>
                                         </Td>
@@ -302,11 +298,11 @@ const MultiOrder = () => {
                         </Table>
                     </div>
 
-                    <div className='order-container' style={{ backgroundColor: '#d7c7aa' }}>
+                    <div className='order-container order-container--completed'>
 
-                        <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}> Completed orders - {completed.length}</h2>
+                        <h2 className="multiorder-section-heading"> Completed orders - {completed.length}</h2>
 
-                        <Table className='table-styling' style={{ "fontWeight": "bold" }}>
+                        <Table className='table-styling multiorder-table'>
                             <Thead>
                                 <Tr>
                                     <Th className="listing-table">Sl no</Th>
@@ -333,9 +329,7 @@ const MultiOrder = () => {
                                         </Td>
                                         <Td className="listing-table">
                                             <button className="button-color5" onClick={() => handleRemoveOrder(order._id, fullName)}>
-                                                <img src={deleteImg} alt="" style={{
-                                                    "filter": "brightness(0) invert(1)", height: '30px', width: '30px'
-                                                }} />
+                                                <img src={deleteImg} alt="" className="delete-btn-icon" />
                                                 delete</button>
                                         </Td>
                                     </Tr>)

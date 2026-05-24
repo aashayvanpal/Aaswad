@@ -1,0 +1,58 @@
+.event-orders-layout {
+    display: flex;
+}
+
+.event-orders-content {
+    margin: 10px;
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid black;
+    width: 100%;
+    background-color: rgb(215, 199, 170);
+}
+
+.event-orders-heading {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.event-orders-actions {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.event-orders-list-layout {
+    display: flex;
+    gap: 32px;
+}
+
+.event-orders-back-link {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(255, 136, 26);
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.event-orders-add-btn {
+    padding: 10px;
+    border-radius: 16px;
+}
+
+.event-orders-search-input {
+    padding: 10px;
+    border-radius: 16px;
+}
+
+.event-orders-toolbar {
+    margin: 20px auto;
+    display: flex;
+    gap: 32px;
+}
+
+.event-orders-list-content {
+  width: 100%;
+  margin: 20px;
+}

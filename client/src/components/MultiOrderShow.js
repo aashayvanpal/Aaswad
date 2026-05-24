@@ -7,6 +7,7 @@ import AdvanceTable from "./order/AdvanceTable.js";
 import TransportForm from "./order/TransportForm.js";
 import TransportTable from "./order/TransportTable.js";
 import "../css/myOrdersShow.scss";
+import "../css/MultiDateOrders.scss";
 import downloadMultiOrderTypeBill from "../assets/generateBill/multiOrder/types/common-type1.js";
 import billIcon from "../images/billing-icon.jpg";
 import MiscForm from "./order/MiscForm.js";
@@ -174,13 +175,7 @@ const MultiOrderShow = () => {
         {selectedOrder !== "undefined" ? (
           <>
             {
-              <ul
-                style={{
-                  display: "flex",
-                  justifyContent: "space-evenly",
-                  listStyle: "none",
-                }}
-              >
+              <ul className="bld-list">
                 <li
                   className="BLD-li"
                   onClick={() => {
@@ -535,15 +530,10 @@ const MultiOrderShow = () => {
         <div id="ShowContainer2">
           {showComponent && (
             <div>
-              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+              <div className="multiorder-show-dates">
                 {dates.map((date, i) => (
                   <button
-                    style={{
-                      backgroundColor: "#ff881a",
-                      borderRadius: "5px",
-                      padding: "10px",
-                      fontWeight: "bold",
-                    }}
+                    className="multiorder-date-btn"
                     onClick={() => {
                       setSelectedOrder({
                         index: i,
@@ -591,7 +581,7 @@ const MultiOrderShow = () => {
               ].items.length !== 0 ? (
                 <div>
                   <table className="render-table">
-                    <thead style={{ border: "2px solid black" }}>
+                    <thead className="multiorder-show-thead">
                       <tr>
                         <td>Sl No</td>
                         <td>Name</td>

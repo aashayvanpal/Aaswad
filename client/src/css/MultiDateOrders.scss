@@ -48,3 +48,33 @@
     /* background-blend-mode: overlay; */
     /* background-color: rgba(249, 249, 223, 0.486); */
 }
+
+.accordion-header--highlighted {
+    border: 8px solid blue;
+}
+
+.multidate-items-table {
+    text-align: center;
+}
+
+.bld-list {
+    display: flex;
+    justify-content: space-evenly;
+    list-style: none;
+}
+
+.multiorder-show-dates {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.multiorder-date-btn {
+    background-color: #ff881a;
+    border-radius: 5px;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.multiorder-show-thead {
+    border: 2px solid black;
+}

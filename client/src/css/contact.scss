@@ -439,3 +439,14 @@ $container-width: 1160px;
     &__form-panel { padding: 1.75rem 1.25rem; }
   }
 }
+
+.form-field-error {
+  color: red;
+  margin-left: 10px;
+}
+
+.contact-textarea {
+  height: 150px;
+  border: 2px solid #767676;
+}
+

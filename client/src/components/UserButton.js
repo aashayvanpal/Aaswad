@@ -5,7 +5,7 @@ import MuiButton from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import axios from '../config/axios'
 import { Link } from 'react-router-dom'
-import '../css/UserButton.css'
+import '../css/UserButton.scss'
 import profileImg from '../images/profile-icon.png'
 import myOrdersImg from '../images/myOrders-icon.png'
 import settingsImg from '../images/settings-icon.png'
@@ -35,9 +35,8 @@ const UserButton = (props) => {
   return (
     <>
       <MuiButton
-        className="user"
+        className="user user-btn-trigger"
         onClick={handleOpen}
-        style={{ border: 'none', backgroundColor: '#dbc268', minWidth: 0 }}
       />
       <Menu
         anchorEl={anchorEl}
@@ -49,19 +48,19 @@ const UserButton = (props) => {
         <MenuItem disabled id="dropdown-item">
           {props.userName}
         </MenuItem>
-        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/profile">
+        <Link className="user-btn-menu-link" to="/profile">
           <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={profileImg} alt="" />
             &nbsp;Profile
           </MenuItem>
         </Link>
-        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/myOrders">
+        <Link className="user-btn-menu-link" to="/myOrders">
           <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={myOrdersImg} alt="" />
             &nbsp;My Orders
           </MenuItem>
         </Link>
-        <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/settings">
+        <Link className="user-btn-menu-link" to="/settings">
           <MenuItem id="dropdown-item" onClick={handleClose}>
             <img src={settingsImg} alt="" />
             &nbsp;Settings

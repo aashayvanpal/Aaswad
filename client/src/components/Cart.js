@@ -17,6 +17,7 @@ import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import clearCartImg from '../images/clear-cart-icon.png'
 import { useSelector, useDispatch } from 'react-redux'
+import '../css/AdminCart.scss'
 import { removeItem, updateQty, clearCart } from '../store/slices/cartSlice'
 
 const Cart = () => {
@@ -28,7 +29,7 @@ const Cart = () => {
         return (
             <Box sx={{ textAlign: 'center', py: 4 }}>
                 <Typography variant="h6" sx={{ mb: 2, color: '#5d522c' }}>No items in cart</Typography>
-                <img src={NoItemsInCart} alt="NoItemsInCart" style={{ width: '100%', maxHeight: 300, objectFit: 'cover' }} />
+                <img src={NoItemsInCart} alt="NoItemsInCart" className="cart-empty-img" />
             </Box>
         )
     }
@@ -56,17 +57,17 @@ const Cart = () => {
                                         <IconButton size="small" disabled={item.quantity <= 1}
                                             onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity - 1 }))}
                                             sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span style={{ fontSize: 16, lineHeight: 1 }}>−</span>
+                                            <span className="cart-qty-btn-icon">−</span>
                                         </IconButton>
                                         <input
                                             value={item.quantity}
                                             onChange={(e) => dispatch(updateQty({ id: item._id, qty: e.target.value }))}
-                                            style={{ width: 36, textAlign: 'center', border: '1px solid #ddd', borderRadius: 4, padding: '2px 0', fontSize: 14 }}
+                                            className="cart-qty-input"
                                         />
                                         <IconButton size="small"
                                             onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity + 1 }))}
                                             sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+                                            <span className="cart-qty-btn-icon">+</span>
                                         </IconButton>
                                     </Box>
                                 </TableCell>
@@ -96,7 +97,7 @@ const Cart = () => {
                     onClick={() => dispatch(clearCart())} sx={{ fontWeight: 600 }}>
                     Clear
                 </Button>
-                <Link to='/request' style={{ flex: 1 }}>
+                <Link to='/request' className="cart-proceed-link">
                     <Button variant="contained" fullWidth
                         sx={{ bgcolor: '#C9A227', color: '#000', fontWeight: 700, '&:hover': { bgcolor: '#e8c84d' } }}>
                         Proceed &nbsp;

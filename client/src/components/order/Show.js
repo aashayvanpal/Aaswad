@@ -632,7 +632,7 @@ const ItemShow = ({ type }) => {
         <div className="mos">
 
             {/* ── Back / Edit nav ──────────────────────────────────── */}
-            <div className="mos__nav" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="mos__nav mos__nav--flex">
                 {type === "eventOrder" && (
                     <Link to={`/eventOrders/${eventOrderRoute}`}>
                         <button className="mos__nav-btn" onClick={() => localStorage.removeItem('orderDetails')}>
@@ -658,7 +658,7 @@ const ItemShow = ({ type }) => {
                     Edit Details
                 </button>
                 {type === undefined && (
-                    <button className="mos__nav-btn" style={{ background: '#c62828', color: '#fff', border: 'none' }} onClick={handleDeleteOrder}>
+                    <button className="mos__nav-btn mos__nav-btn--danger" onClick={handleDeleteOrder}>
                         Delete
                     </button>
                 )}
@@ -691,7 +691,7 @@ const ItemShow = ({ type }) => {
                         )}
 
                         {editMode ? (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
+                            <div className="mos__edit-fields">
                                 <TextField
                                     label="Full Name"
                                     value={editFields.fullName || ''}
@@ -793,7 +793,7 @@ const ItemShow = ({ type }) => {
                                     rows={3}
                                     sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
                                 />
-                                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                                <div className="mos__edit-addr-row">
                                     <Button
                                         variant="contained"
                                         onClick={saveEdit}
@@ -978,7 +978,7 @@ const ItemShow = ({ type }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.45, delay: 0.18, ease: 'easeOut' }}
                 >
-                    <h2 className="mos__card-title" style={{ marginBottom: '1.5rem' }}>Admin Actions</h2>
+                    <h2 className="mos__card-title mos__card-title--spaced">Admin Actions</h2>
 
                     <div className="mos__admin-actions">
                         {homeDelivery && (
@@ -1052,7 +1052,7 @@ const ItemShow = ({ type }) => {
 
                     <Divider sx={{ my: 2.5 }} />
 
-                    <p style={{ fontFamily: 'inherit', fontSize: '1rem', fontWeight: 700, color: '#6b7280', letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 1rem' }}>
+                    <p className="mos__section-label">
                         Bill Downloads
                     </p>
                     <div className="mos__admin-actions">

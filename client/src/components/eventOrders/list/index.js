@@ -8,6 +8,7 @@ import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table';
 import backIcon from '../../../images/back-icon.png'
 import homeDeliveryMan from '../../../images/home-delivery-man.png'
 import ConfirmDialog from '../../ConfirmDialog'
+import '../eventOrders.scss'
 
 
 import CalculateTotalQuantity from "../modals/calculateTotalQuantityModal"
@@ -136,26 +137,23 @@ const EventOrdersList = () => {
         />
         <ShowBtn />
         <div >
-            <div style={{ display: 'flex' }}>
+            <div className="event-orders-layout">
                 <NavigationBar />
-                <div style={{ width: '100%', margin: '20px' }}>
-                    <div style={{ display: 'flex', gap: '32px' }}>
-                        <Link to='/eventOrders' style={{
-                            padding: '10px', borderRadius: '16px',
-                            backgroundColor: 'rgb(255, 136, 26)', borderRadius: '10px', cursor: 'pointer', color: 'black'
-                        }}>
+                <div className="event-orders-list-content">
+                    <div className="event-orders-list-layout">
+                        <Link to='/eventOrders' className="event-orders-back-link">
                             <img src={backIcon} alt="backIcon" height="30px" width="30px" />
                             Back
                         </Link>
 
-                        <button style={{ padding: '10px', borderRadius: '16px' }} onClick={addEventOrder}>Add New order </button>
+                        <button className="event-orders-add-btn" onClick={addEventOrder}>Add New order </button>
                     </div>
-                    <h3 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Event Name - {eventName}</h3>
-                    <h3 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Event Date - {eventDate}</h3>
-                    <h3 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Listing Orders - {orders.length}</h3>
+                    <h3 className="event-orders-heading">Event Name - {eventName}</h3>
+                    <h3 className="event-orders-heading">Event Date - {eventDate}</h3>
+                    <h3 className="event-orders-heading">Listing Orders - {orders.length}</h3>
 
-                    <div style={{ margin: '20px auto', display: 'flex', gap: '32px' }}>
-                        <input placeholder="search name" style={{ padding: '10px', borderRadius: '16px' }} value={searchOrder} onChange={handleSearchOrder} />
+                    <div className="event-orders-toolbar">
+                        <input placeholder="search name" className="event-orders-search-input" value={searchOrder} onChange={handleSearchOrder} />
                         <button onClick={clearSearch}>Clear Search</button>
                         {/* <button style={{ padding: '10px', borderRadius: '16px' }}>Get Item total for this event </button> */}
                         <CalculateTotalQuantity

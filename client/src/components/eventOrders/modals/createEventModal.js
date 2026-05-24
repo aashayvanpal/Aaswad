@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
 import moment from 'moment'
 import { createEventOrder } from '../../../apis/eventOrders';
+import './eventModals.scss'
 
 const CreateEventModal = (props) => {
     const {
@@ -42,21 +43,21 @@ const CreateEventModal = (props) => {
         <div>
             <Button
                 variant="contained"
-                style={{ backgroundColor: '#dbc268', color: 'black', fontSize: '22px' }}
+                className="event-modal-trigger-btn"
                 onClick={toggle}
             >
                 {buttonLabel}
             </Button>
             <Dialog open={modal} onClose={toggle} className={className} fullWidth maxWidth="sm">
-                <DialogTitle style={{ backgroundColor: '#ebc642', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <DialogTitle className="event-modal-title">
                     Add Event Details
                     <IconButton onClick={toggle} size="small"><CloseIcon /></IconButton>
                 </DialogTitle>
-                <DialogContent style={{ backgroundColor: '#fff5d2', padding: '20px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                        Event Name <input value={eventName} onChange={(e) => setEventName(e.target.value)} style={{ width: '248px' }} />
+                <DialogContent className="event-modal-content">
+                    <div className="event-modal-field-row">
+                        Event Name <input value={eventName} onChange={(e) => setEventName(e.target.value)} className="event-modal-name-input" />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div className="event-modal-field-row--last">
                         Event Date
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -67,9 +68,9 @@ const CreateEventModal = (props) => {
                         </LocalizationProvider>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ backgroundColor: '#fff5d2', display: 'flex', gap: '320px' }}>
-                    <button style={{ backgroundColor: '#dc3545', color: 'white' }} onClick={toggle}>Cancel</button>
-                    <button style={{ backgroundColor: 'rgb(219, 194, 104)' }} onClick={createEvent}>Create</button>
+                <DialogActions className="event-modal-actions">
+                    <button className="event-modal-cancel-btn" onClick={toggle}>Cancel</button>
+                    <button className="event-modal-create-btn" onClick={createEvent}>Create</button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -23,7 +23,7 @@
   margin: 15px;
   text-align: center;
   margin: 20px 0px 5px 0px;
-  font-size: 32px;
+  font-size: 1.45rem;
   border-radius: 25px;
   /* box-shadow: 3px 3px white; */
   /* border: 2px solid black; */
@@ -80,7 +80,7 @@
   border: 2px solid black;
   color: white;
   background-color: rgba(219, 194, 104,0.9);
-  font-size: 32px;
+  font-size: 1.45rem;
   cursor: pointer;
 }
 
@@ -121,7 +121,7 @@
   display:block;
   margin-left: auto;
   margin-right: auto;
-  font-size: 25px;
+  font-size: 1.1rem;
   padding: 10px;
   box-shadow: 5px 5px #e2dbc2;
 }
@@ -147,7 +147,7 @@
 
 @media screen and (max-width: 514px) {
   #already-have-account {
-    font-size: 15px;
+    font-size: 0.68rem;
   }
 }
 .content-showcase {
@@ -159,3 +159,14 @@
     margin: 0px;
   }
 }
+
+.signup-field-error {
+  color: red;
+  margin-left: 120px;
+}
+
+.signup-caterer-label {
+  font-size: 1.45rem;
+  margin-left: 30px;
+}
+

@@ -5,6 +5,7 @@ import NavigationBar from '../NavigationBar'
 import EventModal from './modals/createEventModal'
 import { getEventOrders, deleteEventOrder } from '../../apis/eventOrders'
 import { Table, Thead, Tbody, Tr, Td } from 'react-super-responsive-table';
+import './eventOrders.scss'
 
 function EventOrders() {
     const [eventOrders, setEventOrders] = useState([])
@@ -31,11 +32,11 @@ function EventOrders() {
         <>
             <ShowBtn />
             <div >
-                <div style={{ display: 'flex' }}>
+                <div className="event-orders-layout">
                     <NavigationBar />
-                    <div style={{ margin: '10px', padding: '20px', borderRadius: '16px', border: '2px solid black', width: "100%", backgroundColor: 'rgb(215, 199, 170)' }}>
-                        <h3 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Event orders - {eventOrders.length}</h3>
-                        <div style={{ display: 'flex', marginBottom: '20px' }}>
+                    <div className="event-orders-content">
+                        <h3 className="event-orders-heading">Event orders - {eventOrders.length}</h3>
+                        <div className="event-orders-actions">
                             <EventModal
                                 refresh={refresh}
                                 setRefresh={setRefresh}

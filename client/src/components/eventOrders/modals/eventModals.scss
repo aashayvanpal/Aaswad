@@ -1,0 +1,55 @@
+.event-modal-trigger-btn {
+    background-color: #dbc268;
+    color: black;
+    font-size: 1rem;
+}
+
+.event-modal-title {
+    background-color: #ebc642;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-modal-content {
+    background-color: #fff5d2;
+    padding: 20px;
+}
+
+.event-modal-actions {
+    background-color: #fff5d2;
+    display: flex;
+    gap: 320px;
+}
+
+.event-modal-ok-btn {
+    background-color: #ebc642;
+}
+
+.event-modal-qty-cell {
+    text-align: center;
+}
+
+.event-modal-field-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.event-modal-field-row--last {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-modal-name-input {
+    width: 248px;
+}
+
+.event-modal-cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.event-modal-create-btn {
+    background-color: rgb(219, 194, 104);
+}

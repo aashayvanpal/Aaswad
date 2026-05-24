@@ -1,0 +1,43 @@
+#proceed-btn{
+    color: black;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+#proceed-btn :hover {
+    opacity: 1;
+    background-color: #ecbe16;
+}
+
+.cart-empty-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.cart-price-input {
+    width: 56px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 0.59rem;
+}
+
+.cart-qty-btn-icon {
+    font-size: 0.73rem;
+    line-height: 1;
+}
+
+.cart-qty-input {
+    width: 36px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 0;
+    font-size: 0.64rem;
+}
+
+.cart-proceed-link {
+    flex: 1;
+}

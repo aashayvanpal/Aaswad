@@ -7,7 +7,7 @@ import DatePicker from "react-multi-date-picker"
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import Menu from './Menu.js'
 import _ from 'lodash'
-import '../css/MultiDateOrders.css'
+import '../css/MultiDateOrders.scss'
 import VisibilityContext from './Context'
 import axios from "../config/axios.js";
 import UserDetailsFormModal from "./UserDetailsFormModal.js";
@@ -187,8 +187,7 @@ export default function MultiDateOrders() {
                                     <Accordion key={i} defaultExpanded className="accordion">
                                         <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
-                                            className="accordion-header"
-                                            style={{ border: '8px solid blue' }}
+                                            className="accordion-header accordion-header--highlighted"
                                             onClick={() => { console.log('clicked:', date, i) }}
                                         >
                                             {date} + extra text
@@ -213,7 +212,7 @@ export default function MultiDateOrders() {
                                             ) : (
                                                 <div>
                                                     <h2>items found<br />
-                                                        <table style={{ textAlign: 'center' }}>
+                                                        <table className="multidate-items-table">
                                                             <thead>
                                                                 <tr>
                                                                     <td>Sl no</td>

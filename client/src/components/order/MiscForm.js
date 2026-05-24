@@ -6,14 +6,7 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import AddIcon from '@mui/icons-material/Add'
-
-const sectionStyle = {
-    backgroundColor: 'rgba(201,162,39,0.06)',
-    border: '1px solid rgba(201,162,39,0.28)',
-    borderRadius: '10px',
-    padding: '1.5rem',
-    marginTop: '1rem',
-}
+import '../../css/orderForms.scss'
 
 const goldBtn = {
     backgroundColor: '#C9A227',
@@ -43,9 +36,9 @@ const MiscForm = ({ miscItems, setMiscParticulars, handleMiscSubmit }) => {
     }
 
     return (
-        <div style={sectionStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                <p style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>
+        <div className="order-section-card">
+            <div className="order-section-header--mb-lg">
+                <p className="order-section-title order-section-title--no-margin">
                     Extras / Misc Items
                 </p>
                 <Button

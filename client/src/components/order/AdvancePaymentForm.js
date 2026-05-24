@@ -2,14 +2,7 @@ import React, { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-
-const sectionStyle = {
-    backgroundColor: 'rgba(201,162,39,0.06)',
-    border: '1px solid rgba(201,162,39,0.28)',
-    borderRadius: '10px',
-    padding: '1.5rem',
-    marginTop: '1rem',
-}
+import '../../css/orderForms.scss'
 
 const goldBtn = {
     backgroundColor: '#C9A227',
@@ -29,8 +22,8 @@ const AdvancePaymentForm = (props) => {
     }
 
     return (
-        <div style={sectionStyle}>
-            <p style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a', marginBottom: '1.25rem', marginTop: 0 }}>
+        <div className="order-section-card">
+            <p className="order-section-title--p">
                 Advance Payment
             </p>
             <form onSubmit={handleSubmit}>

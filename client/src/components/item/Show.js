@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../config/axios'
 import { Link } from 'react-router-dom'
+import '../../css/itemForm.scss'
 
 const ItemShow = () => {
     const [item, setItem] = useState({})
@@ -32,24 +33,10 @@ const ItemShow = () => {
     console.log("display item? :", display)
     console.log("category isArray? :", Array.isArray(category))
     return (
-        <div style={{
-            "border": "2px solid black",
-            "backgroundColor": "#ffe175",
-            "margin": "10px",
-            "padding": "30px",
-            "borderRadius": "10px",
-            "boxShadow": "0px 5px 5px",
-        }}>
-            <Link to='/items'><button style={{
-                "backgroundColor": "#ff881a",
-                "borderRadius": "10px",
-                "padding": "10px",
-                "marginBottom": "20px",
-                "cursor": "pointer",
-                "fontSize": "22px",
-            }}>Back</button></Link>
+        <div className="item-show-card">
+            <Link to='/items'><button className="item-show-back-btn">Back</button></Link>
             <h2>Showing item details :-</h2>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className="item-show-table">
                 <tbody>
                     <tr>
                         <td><h2>Item Name</h2></td>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../config/axios'
+import './Menu.scss'
 import CartModel from './CartModel.js'
 import noItemFound from '../images/no-item-found.svg'
 import LoadingSpinner from './LoadingSpinner.js'
@@ -127,7 +128,7 @@ const Menu = () => {
                     sx={{ bgcolor: '#dbc268', color: '#1a1a00', mx: 2, mt: 1 }}
                     onClose={() => setShowAlert(false)}>
                     Your enquiry is submitted! View status&nbsp;
-                    <Link to='/myOrders' style={{ fontWeight: 700 }}>here</Link>
+                    <Link to='/myOrders' className="menu-alert-link">here</Link>
                 </Alert>
             )}
 
@@ -227,7 +228,7 @@ const Menu = () => {
                             <Typography variant="h6" sx={{ color: '#c00', mb: 2 }}>
                                 No items found — try a different search
                             </Typography>
-                            <img src={noItemFound} alt="no-item-found" style={{ width: '50%', maxWidth: 320 }} />
+                            <img src={noItemFound} alt="no-item-found" className="menu-no-items-img" />
                         </Box>
                     ) : (
                         <Box sx={{
@@ -270,7 +271,7 @@ const Menu = () => {
                                             <img
                                                 src={`/images/food-item-images/${item.imgUrl}`}
                                                 alt={item.name}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                className="menu-item-img"
                                                 onError={e => { e.target.style.display = 'none' }}
                                             />
                                             {selected && (
@@ -281,7 +282,7 @@ const Menu = () => {
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                                                 }}>
-                                                    <span style={{ color: '#000', fontSize: 16, fontWeight: 900, lineHeight: 1 }}>✓</span>
+                                                    <span className="menu-checkmark">✓</span>
                                                 </Box>
                                             )}
                                         </Box>

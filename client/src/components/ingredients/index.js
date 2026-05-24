@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import ShowBtn from "../../assets/ShowBtn"
 import NavigationBar from "../NavigationBar"
 import { createIngredient, deleteIngredient, getAllIngredients } from "../../apis/ingredients"
+import './ingredients.scss'
 const Ingredients = () => {
     const [ingredient, setIngredient] = useState('')
     const [ingredients, setIngredients] = useState([])
@@ -52,9 +53,9 @@ const Ingredients = () => {
         getIngredients()
     }, [])
 
-    return <div style={{}}>
+    return <div>
         <ShowBtn />
-        <div style={{ display: 'flex', gap: '20px' }}>
+        <div className="ingredients-layout">
             <NavigationBar />
             <div>
                 U for Ingredients

@@ -8,14 +8,7 @@ import TableRow from '@mui/material/TableRow'
 import IconButton from '@mui/material/IconButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined'
-
-const sectionStyle = {
-    backgroundColor: 'rgba(201,162,39,0.06)',
-    border: '1px solid rgba(201,162,39,0.28)',
-    borderRadius: '10px',
-    padding: '1.5rem',
-    marginTop: '1rem',
-}
+import '../../css/orderForms.scss'
 
 const thCell = {
     backgroundColor: 'rgba(201,162,39,0.14)',
@@ -39,11 +32,11 @@ const tdCell = {
 
 const TranportTable = (props) => {
     return (
-        <div style={sectionStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="order-section-card">
+            <div className="order-section-header--mb">
+                <div className="order-section-left">
                     <LocalShippingOutlinedIcon sx={{ color: '#C9A227', fontSize: '1.4rem' }} />
-                    <span style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a' }}>Transport</span>
+                    <span className="order-section-title">Transport</span>
                 </div>
                 <IconButton
                     size="small"

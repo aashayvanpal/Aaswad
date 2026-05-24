@@ -1,0 +1,32 @@
+.add-customer-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.add-customer-form {
+    display: flex;
+    border: 1px solid black;
+    padding: 20px;
+    margin: 20px;
+    width: 100%;
+    border-radius: 16px;
+}
+
+.add-customer-error {
+    color: red;
+    font-size: 0.68rem;
+}
+
+.add-customer-gender-row {
+    display: flex;
+}
+
+.add-customer-membership-box {
+    border: 1px solid black;
+}
+
+.add-customer-profile-pic-placeholder {
+    border: 1px solid black;
+    height: 200px;
+    width: 200px;
+}

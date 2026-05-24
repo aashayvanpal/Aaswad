@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import './eventModals.scss'
 
 const CalculateTotalQuantity = (props) => {
     const {
@@ -31,13 +32,13 @@ const CalculateTotalQuantity = (props) => {
         <div>
             <Button
                 variant="contained"
-                style={{ backgroundColor: '#dbc268', color: 'black', fontSize: '22px' }}
+                className="event-modal-trigger-btn"
                 onClick={toggle}
             >
                 {buttonLabel}
             </Button>
             <Dialog open={modal} onClose={toggle} className={className} fullWidth maxWidth="sm">
-                <DialogTitle style={{ backgroundColor: '#ebc642', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <DialogTitle className="event-modal-title">
                     <div>
                         Total Item Requirements<br />
                         Event Name - {eventName}<br />
@@ -45,7 +46,7 @@ const CalculateTotalQuantity = (props) => {
                     </div>
                     <IconButton onClick={toggle} size="small"><CloseIcon /></IconButton>
                 </DialogTitle>
-                <DialogContent style={{ backgroundColor: '#fff5d2', padding: '20px' }}>
+                <DialogContent className="event-modal-content">
                     <table>
                         <thead>
                             <tr>
@@ -57,14 +58,14 @@ const CalculateTotalQuantity = (props) => {
                             {totalItems.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.name}</td>
-                                    <td style={{ textAlign: 'center' }}>{item.quantity} {item.measured}</td>
+                                    <td className="event-modal-qty-cell">{item.quantity} {item.measured}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </DialogContent>
-                <DialogActions style={{ backgroundColor: '#fff5d2', display: 'flex', gap: '320px' }}>
-                    <button style={{ backgroundColor: '#ebc642' }} onClick={toggle}>OK</button>
+                <DialogActions className="event-modal-actions">
+                    <button className="event-modal-ok-btn" onClick={toggle}>OK</button>
                 </DialogActions>
             </Dialog>
         </div>

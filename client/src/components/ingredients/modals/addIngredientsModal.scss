@@ -1,0 +1,45 @@
+.ingredient-modal-trigger-btn {
+    background-color: #dbc268;
+    color: black;
+    font-size: 1rem;
+}
+
+.ingredient-modal-title {
+    background-color: #ebc642;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ingredient-modal-content {
+    background-color: #fff5d2;
+    padding: 0px;
+}
+
+.ingredient-selected-box {
+    border: 2px solid black;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 32px;
+}
+
+.ingredient-selected-heading {
+    text-align: center;
+}
+
+.ingredient-selected-table {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.ingredient-submit-list-btn {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 16px;
+}
+
+.ingredient-add-new-btn {
+    margin: 20px;
+}

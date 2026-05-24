@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../../config/axios.js'
+import './Form.scss'
 import SubmitEnquiryModal from './SubmitEnquiryModal.js'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
@@ -245,7 +246,7 @@ const CustomerForm = (props) => {
             <Box sx={{ maxWidth: 720, mx: 'auto' }}>
 
                 {/* Back button */}
-                <Link to="/menu" style={{ textDecoration: 'none' }}>
+                <Link to="/menu" className="form-back-link">
                     <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2, color: '#5d522c', fontWeight: 600 }}>
                         Back to Menu
                     </Button>
@@ -404,7 +405,7 @@ const CustomerForm = (props) => {
                                 label={
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                         <LocalShippingIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <span style={{ fontWeight: 600 }}>Home Delivery</span>
+                                        <span className="form-label-bold">Home Delivery</span>
                                         <HDToolTip />
                                     </Box>
                                 }
@@ -420,7 +421,7 @@ const CustomerForm = (props) => {
                                 label={
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                         <RoomServiceIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <span style={{ fontWeight: 600 }}>Service</span>
+                                        <span className="form-label-bold">Service</span>
                                         <ServiceToolTip />
                                     </Box>
                                 }

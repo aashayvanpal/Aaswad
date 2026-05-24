@@ -3,7 +3,7 @@ import axios from '../config/axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setEditingOrder } from '../store/slices/cartSlice'
-import '../css/app-css.css'
+import '../css/app-css.scss'
 import ConfirmDialog from './ConfirmDialog'
 import ReportModal from './ReportModal';
 import homeDeliveryMan from '../images/home-delivery-man.png'
@@ -136,7 +136,7 @@ const OrderCard = ({ item, i, selectMode, selected, onSelect, actions, note }) =
                     <Typography variant="caption" color="text.secondary" fontWeight={700}>
                         #{i + 1} · {formatDate(item.customer.eventDate)}
                     </Typography>
-                    <Link to={`/orders/${item._id}`} style={{ textDecoration: 'none' }}>
+                    <Link to={`/orders/${item._id}`} className="link-no-decoration">
                         <Typography sx={{ fontSize: '1.15rem', fontWeight: 800, mt: 0.3, color: 'inherit' }}>
                             {item.customer.fullName}
                         </Typography>
@@ -405,7 +405,7 @@ const OrderList = () => {
                                     <TD sx={{ color: '#7a6010', fontWeight: 700 }}>{i + 1}</TD>
                                     <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
                                     <TD>
-                                        <Link to={`/orders/${item._id}`} style={{ textDecoration: 'none' }}>
+                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
                                             <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#3d2e00', '&:hover': { color: GOLD } }}>
                                                 {item.customer.fullName}
                                             </Typography>
@@ -487,7 +487,7 @@ const OrderList = () => {
                                     <TD sx={{ fontWeight: 700, color: 'text.secondary' }}>{i + 1}</TD>
                                     <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
                                     <TD>
-                                        <Link to={`/orders/${item._id}`} style={{ textDecoration: 'none' }}>
+                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
                                             <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#1b5e20', '&:hover': { color: '#2e7d32' } }}>
                                                 {item.customer.fullName}
                                             </Typography>
@@ -562,7 +562,7 @@ const OrderList = () => {
                                 <TableRow key={item._id} hover sx={{ '&:hover': { bgcolor: 'rgba(120,100,60,0.05)' } }}>
                                     <TD sx={{ fontWeight: 700, color: 'text.secondary' }}>{i + 1}</TD>
                                     <TD>
-                                        <Link to={`/orders/${item._id}`} style={{ textDecoration: 'none' }}>
+                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
                                             <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#4e3400', '&:hover': { color: '#6d4c00' } }}>
                                                 {item.customer.fullName}
                                             </Typography>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import './businessAnalyzer.scss'
 import IncomeModal from "./modals/incomeModal"
 import ExpenseModal from "./modals/expenseModal"
 import Box from '@mui/material/Box'
@@ -220,7 +221,7 @@ const BusinessAnalyzer = () => {
                             Save As
                         </Button>
                     </Tooltip>
-                    <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileInputChange} style={{ display: 'none' }} />
+                    <input ref={fileInputRef} type="file" accept=".json" onChange={handleFileInputChange} className="ba-hidden-file-input" />
                 </Box>
             </Box>
 

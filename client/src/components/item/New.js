@@ -6,6 +6,7 @@ import ShowBtn from '../../assets/ShowBtn.js'
 import NavigationBar from '../NavigationBar'
 import { Link } from 'react-router-dom'
 import { getIngredients } from './item-helpers/item-functions.js'
+import '../../css/itemForm.scss'
 const ItemNew = () => {
     const [ingredients, setIngredients] = useState([])
 
@@ -42,9 +43,9 @@ const ItemNew = () => {
     return (
         <div>
             <ShowBtn />
-            <div style={{ display: 'flex', gap: '20px' }}>
+            <div className="item-page-layout">
                 <NavigationBar />
-                <div style={{ width: '100%' }}>
+                <div className="item-page-content">
                     <Link to='/items'>Back</Link>
                     <h1>Add New Item</h1>
                     <ItemForm handleItemSubmit={handleItemSubmit}

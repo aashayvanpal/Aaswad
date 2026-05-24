@@ -3,6 +3,7 @@
 // when adding new customer , check if customer already exits in db with name and phone number and perform post query
 // bug :select tag must be set correctly ny default when editing customer 
 import { useEffect, useState } from "react"
+import './AddCustomerForm.scss'
 import { Link } from "react-router-dom"
 import PhoneNumber from "./dynamicRender/PhoneNumber"
 import Address from "./dynamicRender/Address"
@@ -231,12 +232,12 @@ const AddCustomerForm = () => {
     return <div>
         Add new Customer<br />
         <Link to={'/customers'}>Back</Link>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'flex', border: '1px solid black', padding: '20px', margin: '20px', width: '100%', borderRadius: '16px' }}>
+        <div className="add-customer-wrapper">
+            <form onSubmit={(e) => handleSubmit(e)} className="add-customer-form">
                 <div>
                     <label htmlFor="fullname">Full Name*</label>
                     <input id="fullname" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} /><br />
-                    <h4 style={{ color: 'red', fontSize: '15px' }}>{fullNameError}</h4>
+                    <h4 className="add-customer-error">{fullNameError}</h4>
 
                     <label htmlFor="email">Email</label>
                     <input id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} /><br />
@@ -253,7 +254,7 @@ const AddCustomerForm = () => {
 
 
 
-                    <div style={{ display: "flex" }}>
+                    <div className="add-customer-gender-row">
                         Gender:
                         <div onChange={(e) => handleGenderChange(e)}>
                             <input type="radio" id="gender-male" name="gender" value="male" checked={gender === 'male'} /> <label htmlFor="gender-male">Male</label>
@@ -265,7 +266,7 @@ const AddCustomerForm = () => {
 
                     <label htmlFor="language">Languages Known</label>
                     <Language languages={languages} setLanguages={setLanguages} />
-                    <div style={{ border: '1px solid black', }}>
+                    <div className="add-customer-membership-box">
                         Membership:<br />
                         Status:
                         <select onChange={e => handleStatusChange(e)} selected value={status} id="status" name="status">
@@ -290,7 +291,7 @@ const AddCustomerForm = () => {
                 </div>
                 <div>
                     Profile Picture
-                    <div style={{ border: '1px solid black', height: '200px', width: '200px' }}></div>
+                    <div className="add-customer-profile-pic-placeholder"></div>
                     {/* <button>Upload</button> */}
                     <input onChange={e => setProfilePicture(e.target.value)} placeholder="profile picture url" />
                 </div>

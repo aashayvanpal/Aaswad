@@ -3,6 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Tr, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import '../../css/itemForm.scss'
 import deleteIcon from '../../images/delete-icon.png'
 import updateIcon from '../../images/update-icon.jpg'
 
@@ -17,8 +18,7 @@ export default function DisplayList(props) {
             <Td className="listing-table">{price}</Td>
             <Td className="listing-table">
                 <Link to={`/items/edit/${id}`}>
-                    <button className="button-color4"
-                        style={{ width: "100%", fontWeight: "bold" }}
+                    <button className="button-color4 item-full-width-btn"
                     >
                         <img src={updateIcon} alt="" height="30px" width="30px" />
                         Update
@@ -40,8 +40,7 @@ export default function DisplayList(props) {
 
             </Td>
             <Td className="listing-table">
-                <button className="button-color5"
-                    style={{ width: "100%" }}
+                <button className="button-color5 item-full-width-btn--no-bold"
                     onClick={() => {
                         props.deleteItem(id)
                     }}>

@@ -17,6 +17,7 @@ import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
 import clearCartImg from '../images/clear-cart-icon.png'
 import VisibilityContext from './Context.js'
+import '../css/AdminCart.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeItem, updateQty, updatePrice, clearCart } from '../store/slices/cartSlice'
 
@@ -46,7 +47,7 @@ const AdminCart = () => {
         return (
             <Box sx={{ textAlign: 'center', py: 4 }}>
                 <Typography variant="h6" sx={{ mb: 2, color: '#5d522c' }}>No items in cart</Typography>
-                <img src={NoItemsInCart} alt="NoItemsInCart" style={{ width: '100%', maxHeight: 300, objectFit: 'cover' }} />
+                <img src={NoItemsInCart} alt="NoItemsInCart" className="cart-empty-img" />
             </Box>
         )
     }
@@ -74,7 +75,7 @@ const AdminCart = () => {
                                     <input
                                         value={item.price}
                                         onChange={(e) => dispatch(updatePrice({ id: item._id, price: e.target.value }))}
-                                        style={{ width: 56, textAlign: 'center', border: '1px solid #ddd', borderRadius: 4, padding: '2px 4px', fontSize: 13 }}
+                                        className="cart-price-input"
                                     />
                                 </TableCell>
                                 <TableCell>
@@ -82,17 +83,17 @@ const AdminCart = () => {
                                         <IconButton size="small" disabled={item.quantity <= 1}
                                             onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity - 1 }))}
                                             sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span style={{ fontSize: 16, lineHeight: 1 }}>−</span>
+                                            <span className="cart-qty-btn-icon">−</span>
                                         </IconButton>
                                         <input
                                             value={item.quantity}
                                             onChange={(e) => dispatch(updateQty({ id: item._id, qty: e.target.value }))}
-                                            style={{ width: 36, textAlign: 'center', border: '1px solid #ddd', borderRadius: 4, padding: '2px 0', fontSize: 14 }}
+                                            className="cart-qty-input"
                                         />
                                         <IconButton size="small"
                                             onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity + 1 }))}
                                             sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+                                            <span className="cart-qty-btn-icon">+</span>
                                         </IconButton>
                                     </Box>
                                 </TableCell>

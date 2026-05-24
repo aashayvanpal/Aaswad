@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import axios from "../config/axios.js"
-import "../css/LoginDetails/Signin.css"
+import "../css/LoginDetails/Signin.scss"
 import { Link } from "react-router-dom"
 import { getUserDetails } from '../assets/user-functions.js'
 const SignInForm = () => {
@@ -41,10 +41,10 @@ const SignInForm = () => {
   }
 
   return (
-    <div style={{ margin: "10px" }}>
+    <div className="signin-wrapper">
       <div className="SignUpCard">
         <div>
-          <h1 style={{ fontSize: "36px", textAlign: "center" }}>Sign In</h1>
+          <h1 className="signin-title">Sign In</h1>
           <form onSubmit={handleSubmit}>
             <input
               id="inputEmail"
@@ -63,7 +63,7 @@ const SignInForm = () => {
               value={password}
             />
             <br />
-            <div style={{ position: "relative", marginLeft: "auto", marginRight: "auto", display: "flex", width: "100%" }}>
+            <div className="signin-submit-row">
               <input type="submit" value="Log In" id="logIn" />
             </div>
           </form>

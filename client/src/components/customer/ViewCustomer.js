@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getCustomerById } from '../../apis/customers'
 import { Link } from 'react-router-dom'
 import backIcon from '../../images/back-icon.png'
+import './ViewCustomer.scss'
 const ViewCustomer = () => {
     const [customer, setCustomer] = useState(null)
 
@@ -22,13 +23,7 @@ const ViewCustomer = () => {
     return <div>
         <Link to="/customers">
 
-            <button style={{
-                "backgroundColor": "#ff881a",
-                "borderRadius": "10px",
-                "padding": "10px",
-                "marginRight": "10px",
-                "cursor": "pointer",
-            }}
+            <button className="view-customer-back-btn"
                 onClick={() => { localStorage.removeItem('order') }}
             >
                 <img src={backIcon} alt="backIcon" height="30px" width="30px" />
@@ -36,7 +31,7 @@ const ViewCustomer = () => {
         </Link>
         <Link to={`/customers/edit/${customer?._id}`}>Edit</Link>
         {
-            customer ? <div style={{ margin: "20px", padding: "20px", border: '2px solid black', borderRadius: '8px', backgroundColor: '#ffe175' }}>
+            customer ? <div className="view-customer-card">
                 <h3>FullName : {customer.fullName}</h3>
                 <h3>Phone number : {customer.phoneNumber.map(phone => <>{Object.keys(phone)[0]}:- {phone[`${Object.keys(phone)[0]}`]}</>)}</h3>
                 <h3>email : {customer.email}</h3>

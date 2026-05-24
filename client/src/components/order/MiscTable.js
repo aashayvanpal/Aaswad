@@ -9,14 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined'
-
-const sectionStyle = {
-    backgroundColor: 'rgba(201,162,39,0.06)',
-    border: '1px solid rgba(201,162,39,0.28)',
-    borderRadius: '10px',
-    padding: '1.5rem',
-    marginTop: '1rem',
-}
+import './MiscTable.scss'
 
 const thCell = {
     backgroundColor: 'rgba(201,162,39,0.14)',
@@ -40,13 +33,13 @@ const tdCell = {
 
 const MiscTable = ({ miscItems, editMiscTable, deleteMiscTable }) => {
     return (
-        <div style={sectionStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="misc-table-section">
+            <div className="misc-table-header">
+                <div className="misc-table-title-group">
                     <ReceiptLongOutlinedIcon sx={{ color: '#C9A227', fontSize: '1.4rem' }} />
-                    <span style={{ fontFamily: 'inherit', fontSize: '1.1rem', fontWeight: 700, color: '#1a1a1a' }}>Extras</span>
+                    <span className="misc-table-title">Extras</span>
                 </div>
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
+                <div className="misc-table-actions">
                     <IconButton
                         size="small"
                         onClick={editMiscTable}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from '../../config/axios.js'
+import '../../css/contact.scss'
 
 const Form = () => {
     
@@ -93,17 +94,17 @@ const Form = () => {
     return (
         <form id="messageForm" onSubmit={(e) => { formSubmit(e) }}>
             <input className="Qurrie-form" value={email} onChange={(e) => { setEmail(e.target.value) }} name="email" placeholder="Your Email" /><br />
-            {emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{emailError}</div>) : null}
+            {emailError ? (<div className="form-field-error">{emailError}</div>) : null}
 
             <input className="Qurrie-form" value={subject} onChange={(e) => { setSubject(e.target.value) }} name="subject" placeholder="Subject" /><br />
-            {subjectError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{subjectError}</div>) : null}
+            {subjectError ? (<div className="form-field-error">{subjectError}</div>) : null}
 
             <input className="Qurrie-form" value={mobile} onChange={(e) => { setMobile(e.target.value) }} name="mobile" placeholder="Phone number" /><br />
-            {mobileError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{mobileError}</div>) : null}
+            {mobileError ? (<div className="form-field-error">{mobileError}</div>) : null}
 
-            <textarea className="Qurrie-form" value={message} style={{ "height": "150px", "border": "2px solid #767676" }}
+            <textarea className="Qurrie-form contact-textarea" value={message}
                 onChange={(e) => { setMessage(e.target.value) }} name="message" placeholder="Message" /><br />
-            {messageError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{messageError}</div>) : null}
+            {messageError ? (<div className="form-field-error">{messageError}</div>) : null}
 
             <input id="sendMessage" type="submit" value="Send Message" />
         </form>
