@@ -27,10 +27,8 @@ import Contact from "./components/contact/Contact.tsx";
 import HomePage from "./components/HomePage.tsx";
 import Queries from './components/Queries.js'
 import "./css/HomePage/header.css";
-import NavigationBar from './components/NavigationBar.js'
 import SignupCenterContainer from "./components/SignupCenterContainer.js";
 import NotFoundPage from './components/NotFoundPage.js'
-import ShowBtn from "./assets/ShowBtn.js";
 import { appVersion } from './config/main.client.js'
 import MultiDateOrders from "./components/MultiDateOrders.js";
 import DisplayCustomers from "./components/customer/DisplayCustomers.js";
@@ -41,6 +39,7 @@ import EventOrders from "./components/eventOrders/index.js";
 import EventOrdersList from "./components/eventOrders/list";
 import Contacts from "./components/contacts";
 import BusinessAnalyzer from "./components/businessAnalyzer/index.js";
+import MainLayout from "./components/MainLayout.js";
 
 function App() {
   return (
@@ -54,115 +53,111 @@ function App() {
             <div className="content-showcase">
               <Routes>
 
-                    <Route path="/" element={<HomePage />} />
+                {/* Public / customer-facing routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/menu" element={<><Header /><Menu /></>} />
+                <Route path="/request" element={<><Header /><CustomerRequest /></>} />
+                <Route path="/requestEventOrder" element={<><Header /><CustomerRequest type="eventOrder" /></>} />
+                <Route path="/contact" element={<><Header /><Contact /></>} />
+                <Route path="/Register" element={
+                  <>
+                    <Header />
+                    <div className="SignUpCard">
+                      <h1 style={{ fontSize: "36px", textAlign: "center" }}>Sign Up</h1>
+                      <SignUpForm />
+                    </div>
+                  </>
+                } />
+                <Route path="/Signin" element={
+                  <div style={{ height: "100vh" }}><Header /><SignupCenterContainer /></div>
+                } />
 
-                    <Route path="/dashboard" element={
-                      <><Header /><h1 style={{ backgroundColor: "green" }}>Dashboard:</h1><Dashboard /></>
-                    } />
+                {/* Customer order pages */}
+                <Route path="/myOrders" element={
+                  <div style={{ height: "100vh" }}>
+                    <Header />
+                    <MyOrdersList />
+                  </div>
+                } />
+                <Route path="/myOrders/show/:id" element={<><Header /><MyOrdersShow /></>} />
+                <Route path="/myOrders/feedback/:id" element={<><Header /><MyOrdersShow /></>} />
 
-                    <Route path="/myOrders" element={
-                      <div style={{ height: "100vh" }}>
-                        <Header />
-                        <MyOrdersList />
-                      </div>
-                    } />
+                {/* Print pages — no layout */}
+                <Route path="/orders/:id/print" element={<OrderPrint />} />
+                <Route path="/orders/:id/printDelivery" element={<OrderPrintDelivery />} />
+                <Route path="/multiOrders/:id/printDelivery" element={<MultiOrderPrintDelivery />} />
 
-                    <Route path="/menu" element={<><Header /><Menu /></>} />
+                {/* Special */}
+                <Route path="/users/add" element={<AddUserData />} />
 
-                    <Route path="/Cart" element={
-                      <><Header /><h1 style={{ backgroundColor: "green" }}>Cart:</h1></>
-                    } />
+                {/* Admin pages — shared MainLayout (Header + collapsible sidebar) */}
+                <Route element={<MainLayout />}>
+                  <Route path="/dashboard" element={
+                    <><h1 style={{ backgroundColor: "green" }}>Dashboard:</h1><Dashboard /></>
+                  } />
 
-                    <Route path="/customers" element={<><Header /><DisplayCustomers /></>} />
-                    <Route path="/customers/add" element={<><Header /><AddCustomerForm /></>} />
-                    <Route path="/customers/edit/:id" element={<><Header /><AddCustomerForm /></>} />
-                    <Route path="/customers/:id" element={<><Header /><ViewCustomer /></>} />
+                  <Route path="/Cart" element={
+                    <h1 style={{ backgroundColor: "green" }}>Cart:</h1>
+                  } />
 
-                    <Route path="/ingredients" element={<><Header /><Ingredients /></>} />
+                  <Route path="/customers" element={<DisplayCustomers />} />
+                  <Route path="/customers/add" element={<AddCustomerForm />} />
+                  <Route path="/customers/edit/:id" element={<AddCustomerForm />} />
+                  <Route path="/customers/:id" element={<ViewCustomer />} />
 
-                    <Route path="/users/add" element={<AddUserData />} />
+                  <Route path="/ingredients" element={<Ingredients />} />
 
-                    <Route path="/request" element={<><Header /><CustomerRequest /></>} />
-                    <Route path="/requestEventOrder" element={<><Header /><CustomerRequest type="eventOrder" /></>} />
+                  <Route path="/items" element={<ItemList />} />
+                  <Route path="/items/add" element={<ItemNew />} />
+                  <Route path="/items/edit/:id" element={<ItemEdit />} />
+                  <Route path="/items/show/:id" element={<ItemShow />} />
+                  <Route path="/items/add/adddetails" element={<><h1>Listing Details :</h1><ItemDetailsForm /></>} />
 
-                    <Route path="/items" element={
-                      <><Header /><ShowBtn /><div style={{ width: "100%", display: "flex" }}><NavigationBar /><ItemList /></div></>
-                    } />
-                    <Route path="/items/add" element={<><Header /><ItemNew /></>} />
-                    <Route path="/items/edit/:id" element={<><Header /><ItemEdit /></>} />
-                    <Route path="/items/show/:id" element={<><Header /><ItemShow /></>} />
-                    <Route path="/items/add/adddetails" element={<><Header /><h1>Listing Details :</h1><ItemDetailsForm /></>} />
+                  <Route path="/Calender" element={<h1>Calender :</h1>} />
 
-                    <Route path="/Calender" element={<><Header /><h1>Calender :</h1></>} />
+                  <Route path="/orders" element={<OrderList />} />
+                  <Route path="/bulk-orders" element={<MultiDateOrders />} />
+                  <Route path="/orders/:id" element={<OrderShow />} />
 
-                    <Route path="/orders" element={<><Header /><OrderList /></>} />
-                    <Route path="/bulk-orders" element={<><Header /><MultiDateOrders /></>} />
-                    <Route path="/orders/:id/print" element={<OrderPrint />} />
-                    <Route path="/orders/:id/printDelivery" element={<OrderPrintDelivery />} />
-                    <Route path="/orders/:id" element={<><Header /><OrderShow /></>} />
+                  <Route path="/multiOrders/:id" element={<MultiOrderShow />} />
+                  <Route path="/multiOrders" element={<MultiOrder />} />
 
-                    <Route path="/multiOrders/:id/printDelivery" element={<MultiOrderPrintDelivery />} />
-                    <Route path="/multiOrders/:id" element={<><Header /><MultiOrderShow /></>} />
-                    <Route path="/multiOrders" element={<><Header /><MultiOrder /></>} />
+                  <Route path="/queries" element={<Queries />} />
 
-                    <Route path="/myOrders/show/:id" element={<><Header /><MyOrdersShow /></>} />
-                    <Route path="/myOrders/feedback/:id" element={<><Header /><MyOrdersShow /></>} />
+                  <Route path="/eventOrders/:id/customer" element={<OrderShow type="eventOrder" />} />
+                  <Route path="/eventOrders/:id" element={<EventOrdersList />} />
+                  <Route path="/eventOrders" element={<EventOrders />} />
 
-                    <Route path="/Register" element={
-                      <>
-                        <Header />
-                        <div className="SignUpCard">
-                          <h1 style={{ fontSize: "36px", textAlign: "center" }}>Sign Up</h1>
-                          <SignUpForm />
-                        </div>
-                      </>
-                    } />
+                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/profit-loss" element={<BusinessAnalyzer />} />
 
-                    <Route path="/Signin" element={
-                      <div style={{ height: "100vh" }}><Header /><SignupCenterContainer /></div>
-                    } />
+                  <Route path="/settings" element={
+                    <div style={{ textAlign: "center" }}>
+                      <h1>Settings:</h1>
+                      <h1>App Version : {appVersion}</h1>
+                      <h1>Created By : Aashay S Vanpal</h1>
+                      <h1>Contact : 9743419673 for any issues in app</h1>
+                    </div>
+                  } />
 
-                    <Route path="/contact" element={<><Header /><Contact /></>} />
+                  <Route path="/profile" element={<UserProfile />} />
 
-                    <Route path="/settings" element={
-                      <div style={{ height: "100vh" }}>
-                        <Header />
-                        <div style={{ textAlign: "center" }}>
-                          <h1>Settings:</h1>
-                          <h1>App Version : {appVersion}</h1>
-                          <h1>Created By : Aashay S Vanpal</h1>
-                          <h1>Contact : 9743419673 for any issues in app</h1>
-                        </div>
-                      </div>
-                    } />
+                  <Route path="/aboutus" element={
+                    <>
+                      <h1 style={{ backgroundColor: "gold", textAlign: "center" }}>About us Page</h1>
+                      <h2 style={{ color: "green" }}>This page is still under maintenance, please wait for the website to be functional soon...</h2>
+                    </>
+                  } />
 
-                    <Route path="/profile" element={<><Header /><UserProfile /></>} />
-                    <Route path="/contacts" element={<><Header /><Contacts /></>} />
+                  <Route path="/deals" element={
+                    <>
+                      <h1 style={{ backgroundColor: "gold", textAlign: "center" }}>Deals Page</h1>
+                      <h2 style={{ color: "green" }}>This page is still under maintenance, please wait for the website to be functional soon...</h2>
+                    </>
+                  } />
+                </Route>
 
-                    <Route path="/aboutus" element={
-                      <>
-                        <Header />
-                        <h1 style={{ backgroundColor: "gold", textAlign: "center" }}>About us Page</h1>
-                        <h2 style={{ color: "green" }}>This page is still under maintenance, please wait for the website to be functional soon...</h2>
-                      </>
-                    } />
-
-                    <Route path="/deals" element={
-                      <>
-                        <h1 style={{ backgroundColor: "gold", textAlign: "center" }}>Deals Page</h1>
-                        <h2 style={{ color: "green" }}>This page is still under maintenance, please wait for the website to be functional soon...</h2>
-                      </>
-                    } />
-
-                    <Route path="/queries" element={<><Header /><Queries /></>} />
-
-                    <Route path="/eventOrders/:id/customer" element={<><Header /><OrderShow type="eventOrder" /></>} />
-                    <Route path="/eventOrders/:id" element={<><Header /><EventOrdersList /></>} />
-                    <Route path="/eventOrders" element={<><Header /><EventOrders /></>} />
-
-                    <Route path="/profit-loss" element={<><Header /><BusinessAnalyzer /></>} />
-
-                    <Route path="*" element={<><Header /><NotFoundPage /></>} />
+                <Route path="*" element={<><Header /><NotFoundPage /></>} />
 
               </Routes>
             </div>

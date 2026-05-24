@@ -5,9 +5,9 @@ import itemsImg from '../images/items-icon.png'
 import menuImg from '../images/menu-icon.png'
 import ordersImg from '../images/orders-icon.png'
 
-export default function NavigationBar() {
+export default function NavigationBar({ onClose }) {
     return (
-        <div id="Nav-bar">
+        <div id="Nav-bar" style={{ display: 'block' }}>
             <ul style={{ listStyleImage: 'none', margin: '0px', padding: '0px' }}>
                 <button
                     style={{
@@ -19,14 +19,7 @@ export default function NavigationBar() {
                         borderRadius: "20px",
                         fontWeight: 'bold'
                     }}
-                    onClick={() => {
-                        var navBarElement = document.getElementById("Nav-bar");
-                        // navBarElement.style.width = "0%";
-                        navBarElement.style.display = "none";
-
-                        var showElement = document.getElementById("ShowButton");
-                        showElement.style.display = "block";
-                    }}
+                    onClick={onClose}
                 >
                     X
                 </button>
