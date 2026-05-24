@@ -1,329 +1,111 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
-import Button from '@mui/material/Button';
+import Button from '@mui/material/Button'
+import Table from '@mui/material/Table'
+import TableHead from '@mui/material/TableHead'
+import TableBody from '@mui/material/TableBody'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
-import { Stepper } from 'react-form-stepper'
 import clearCartImg from '../images/clear-cart-icon.png'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeItem, updateQty, clearCart } from '../store/slices/cartSlice'
 
-const Cart = (props) => {
+const Cart = () => {
+    const dispatch = useDispatch()
+    const cartItems = useSelector(state => state.cart.items)
+    const total = cartItems.reduce((sum, i) => sum + i.quantity * i.price, 0)
 
-    const [cartItems, setCartItems] = useState([])
-    const [defaultItems, setDefaultItems] = useState([])
-
-    useEffect(() => {
-        // get all orders from /menu find and display all items from that _id
-        console.log('inside componentdidmount Cart')
-        // console.log('local storage render items :')
-        // console.log(localStorage.getItem('orderItems'))
-        // console.log(localStorage.getItem('orderItems').items)
-        // console.log('fetching :', localStorage.getItem('orderItems'))
-        // // console.log(Array.isArray(JSON.parse(localStorage.getItem('orderItems'))))
-        // const parsedItems = JSON.parse(localStorage.getItem('orderItems'))
-        // console.log('parsedItems :', parsedItems)
-        // console.log('parsedItems isArray?:', Array.isArray(parsedItems))
-        // console.log('before setstate')
-
-
-        if (localStorage.getItem("cartItems")) {
-            var trueValues = JSON.parse(localStorage.getItem("cartItems")).filter(item => item.isSelected === true)
-            setCartItems(trueValues)
-            setDefaultItems(JSON.parse(localStorage.getItem("cartItems")))
-        }
-        else
-            setCartItems([])
-    }, [])
-
-    const handleRemove = (id) => {
-        console.log('clicked on remove button for id :', id)
-        setCartItems(cartItems.filter(item => item._id !== id))
-        // localStorage.setItem("cartItems", JSON.stringify([...this.state.cartItems, ...this.state.defaultItems]))
+    if (cartItems.length === 0) {
+        return (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+                <Typography variant="h6" sx={{ mb: 2, color: '#5d522c' }}>No items in cart</Typography>
+                <img src={NoItemsInCart} alt="NoItemsInCart" style={{ width: '100%', maxHeight: 300, objectFit: 'cover' }} />
+            </Box>
+        )
     }
 
-    const disableButton = (index) => {
-        console.log("disable the - button for the id :", index + 1)
-        var minusButtonId = document.getElementById(index + 1)
-        console.log("minusButton", minusButtonId)
-        minusButtonId.disabled = true
-    }
-
-    const EnableButton = (index) => {
-        console.log("Enable the - button for the id :", index + 1)
-        var minusButtonId = document.getElementById(index + 1)
-        console.log("minusButton", minusButtonId)
-        minusButtonId.disabled = false
-    }
-
-    const minusHandle = (id) => {
-        console.log('clicked on - button for id :', id)
-
-        console.log('cartItems state:', cartItems)
-        const foundItem = cartItems.find(item => item._id === id)
-
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  foundItem.quantity before:', foundItem.quantity)
-
-
-        const index = cartItems.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of cartItems :', cartItems)
-        console.log('spread :', ...cartItems)
-        console.log('spread index :', cartItems[index])
-        console.log('spread index.quantity before:', cartItems[index].quantity)
-
-        var changedItems = cartItems
-        changedItems[index].quantity = Number(changedItems[index].quantity) - 1
-
-
-        setCartItems([...changedItems])
-        // here the array is correct , it needs all the other isSelected:false 
-
-        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
-        if (changedItems[index].quantity <= 1) {
-            disableButton(index)
-            // this.handleRemove(id)
-            // this.props.resetIsSelected(id)
-            // changedItems[index].quantity = 1
-            // this.setState({ cartItems: changedItems })
-        } else {
-            EnableButton(index)
-        }
-
-
-        console.log('Items found\'s quantity after:', cartItems)
-        console.log("==DEBUG==")
-        console.log("Default items:")
-        console.log(defaultItems)
-        console.log("cartItems:")
-        console.log(cartItems)
-
-        var updatedCart = cartItems.filter(obj => defaultItems.find(p => p.id === obj.id) || obj);
-        console.log("check here")
-        console.log(updatedCart)//here is correct , the not true values are not present 
-        console.log("false filter")
-        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
-        var falseFilter = defaultItems.filter(item => item.isSelected === false)
-        var desiredResult = [...updatedCart, ...falseFilter]
-        console.log(desiredResult)
-
-        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
-        console.log('end of - Function')
-    }
-
-    const plusHandle = (id) => {
-        console.log('clicked on + button for id :', id)
-
-        console.log('cartItems state:', cartItems)
-        const foundItem = cartItems.find(item => item._id === id)
-
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s  foundItem.quantity before:', foundItem.quantity)
-
-
-        const index = cartItems.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of cartItems :', cartItems)
-        console.log('spread :', ...cartItems)
-        console.log('spread index :', cartItems[index])
-        console.log('spread index.quantity before:', cartItems[index].quantity)
-
-        var changedItems = cartItems
-        changedItems[index].quantity = Number(changedItems[index].quantity) + 1
-
-        setCartItems([...changedItems])
-        // here the array is correct , it needs all the other isSelected:false 
-
-
-        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
-        if (changedItems[index].quantity <= 0) {
-            disableButton(index)
-
-        } else {
-            EnableButton(index)
-        }
-
-
-        console.log('Items found\'s quantity after:', cartItems)
-        console.log("==DEBUG==")
-        console.log("Default items:")
-        console.log(defaultItems)
-        console.log("cartItems:")
-        console.log(cartItems)
-
-        var updatedCart = cartItems.filter(obj => defaultItems.find(p => p.id === obj.id) || obj);
-        console.log("check here")
-        console.log(updatedCart)//here is correct , the not true values are not present 
-        console.log("false filter")
-        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
-        var falseFilter = defaultItems.filter(item => item.isSelected === false)
-        var desiredResult = [...updatedCart, ...falseFilter]
-        console.log(desiredResult)
-
-        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
-        console.log('end of + Function')
-
-    }
-
-    const handleChange = (e, qty, id) => {
-        console.log('inside the new handleChange')
-        console.log('e :', e)
-        console.log('e.target :', e.target)
-        console.log('e.target.value :', e.target.value)
-        console.log('qty :', qty)
-
-        console.log('change quantity of this id:', id)
-
-        const foundItem = cartItems.find(item => item._id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s quantity before:', foundItem.quantity)
-
-        console.log('Edit item : ', foundItem)
-
-        const index = cartItems.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of cartItems :', cartItems)
-        console.log('spread :', ...cartItems)
-        // console.log('spread index 2:', this.state.items[2])
-        // console.log('spread index 2 display before:', this.state.items[2].display)
-        // console.log('spread index 2 display after:', !this.state.items[2].display)
-
-        var changedItems = cartItems
-        console.log('quantity :', qty)
-        console.log('quantity should become :', e.target.value)
-        changedItems[index].quantity = e.target.value
-
-        setCartItems([...changedItems])
-        // localStorage.setItem("cartItems", JSON.stringify(this.state.cartItems))
-        // console.log("==DEBUG==")
-        console.log("Default items:")
-        console.log(defaultItems)
-        console.log("cartItems:")
-        console.log(cartItems)
-
-        var updatedCart = cartItems.filter(obj => defaultItems.find(p => p.id === obj.id) || obj);
-        console.log("check here")
-        console.log(updatedCart)//here is correct , the not true values are not present 
-        console.log("false filter")
-        // console.log(this.state.defaultItems.filter(item => item.isSelected === false))
-        var falseFilter = defaultItems.filter(item => item.isSelected === false)
-        var desiredResult = [...updatedCart, ...falseFilter]
-        console.log(desiredResult)
-
-        localStorage.setItem("cartItems", JSON.stringify(desiredResult))
-
-
-        if (changedItems[index].quantity <= 0) {
-            disableButton(index)
-        } else {
-            EnableButton(index)
-        }
-    }
-
-    const clearCart = () => {
-        JSON.parse(localStorage.getItem("cartItems")).forEach(item => {
-            props.resetIsSelected(item._id)
-        })
-        localStorage.removeItem("cartItems")
-        setCartItems([])
-    }
-
-
-
-    // console.log("check props for cart items to show :", this.props.items.length)
-    // console.log("check props for cart items to show :", this.props.items)
-    console.log("check props for cart items to show :", cartItems)
     return (
-        <div id="inner-Cart">
-            {/* <h1 id="cart-text-style" > Cart :</h1> */}
-            {
-                cartItems.filter(item => item.isSelected === true).length === 0 ? (
-                    <>
-                        <h1 style={{
-                            "margin": "30px",
-                            "textAlign": "center",
-                            "marginTop": "70px"
-                        }}>No items in Cart</h1>
-                        <img src={NoItemsInCart} alt="NoItemsInCart" height="100%" width="100%" />
-                    </>
-                )
-                    :
-                    (
-                        <div>
-                            <Stepper style={{ "backgroundColor": "#green" }}
-                                className="stepper-color"
-                                steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
-                                activeStep={1}
-                            />
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Sl No</th>
-                                        <th>Item Name</th>
-                                        <th>Quantity</th>
-                                        {/* <th scope="row" ><h2>Price</h2></th> */}
-                                        <th>Remove</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        // this.props.items.filter(item => item.isSelected === true).map((item, i) => {
-                                        cartItems.map((item, i) => {
-                                            return (
-                                                <tr key={item._id} >
-                                                    <td style={{ "textAlign": "center" }}>{i + 1}</td>
-                                                    <td>{item.name}</td>
-                                                    <td style={{ "display": "inline-flex" }}>
-                                                        {(item.quantity <= 1) ? (
-                                                            <button disabled="true" id={i + 1} onClick={() => { minusHandle(item._id) }}>-</button>
-                                                        ) : (
-                                                            <button id={i + 1} onClick={() => { minusHandle(item._id) }}>-</button>
-                                                        )}
-                                                        <input name="quantity" onChange={(e) => { handleChange(e, item.quantity, item._id) }} value={item.quantity} style={{ "width": "35px", textAlign: "center" }} />
-                                                        <button onClick={(e) => { plusHandle(item._id) }}>+</button>
+        <Box>
+            <TableContainer component={Paper} elevation={0} sx={{ bgcolor: 'transparent' }}>
+                <Table size="small">
+                    <TableHead>
+                        <TableRow sx={{ bgcolor: 'rgba(201,162,39,0.18)' }}>
+                            <TableCell sx={{ fontWeight: 800, width: 44, fontSize: '0.95rem' }}>#</TableCell>
+                            <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem' }}>Item</TableCell>
+                            <TableCell sx={{ fontWeight: 800, textAlign: 'center', width: 130, fontSize: '0.95rem' }}>Qty</TableCell>
+                            <TableCell sx={{ fontWeight: 800, textAlign: 'right', width: 90, fontSize: '0.95rem' }}>Total</TableCell>
+                            <TableCell sx={{ width: 48 }} />
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {cartItems.map((item, i) => (
+                            <TableRow key={item._id} sx={{ '&:hover': { bgcolor: 'rgba(201,162,39,0.06)' } }}>
+                                <TableCell sx={{ color: '#888', fontSize: '0.9rem' }}>{i + 1}</TableCell>
+                                <TableCell sx={{ fontWeight: 600, fontSize: '1rem' }}>{item.name}</TableCell>
+                                <TableCell>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+                                        <IconButton size="small" disabled={item.quantity <= 1}
+                                            onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity - 1 }))}
+                                            sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
+                                            <span style={{ fontSize: 16, lineHeight: 1 }}>−</span>
+                                        </IconButton>
+                                        <input
+                                            value={item.quantity}
+                                            onChange={(e) => dispatch(updateQty({ id: item._id, qty: e.target.value }))}
+                                            style={{ width: 36, textAlign: 'center', border: '1px solid #ddd', borderRadius: 4, padding: '2px 0', fontSize: 14 }}
+                                        />
+                                        <IconButton size="small"
+                                            onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity + 1 }))}
+                                            sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
+                                            <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+                                        </IconButton>
+                                    </Box>
+                                </TableCell>
+                                <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>₹{item.price * item.quantity}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton size="small" onClick={() => dispatch(removeItem(item._id))}
+                                        sx={{ color: '#ef4444', '&:hover': { bgcolor: 'rgba(239,68,68,0.08)' } }}>
+                                        <DeleteOutlineIcon fontSize="small" />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
-                                                    </td>
-                                                    <td>
-                                                        <Button variant="contained" color="error" style={{ "height": "33px", "fontWeight": "bold", "display": "block", "margin": "auto" }} onClick={() => {
-                                                            props.resetIsSelected(item._id)
-                                                            handleRemove(item._id)
-                                                        }}>
-                                                            X
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
-                            <hr />
-                            <div style={{ "display": "flex", "justifyContent": "space-evenly" }}>
-                                <Button variant="contained" color="error" style={{ "fontWeight": "bold" }} onClick={() => clearCart()}>
-                                    <img src={clearCartImg} alt="" height="25px" width="25px" />
-                                    &nbsp;Clear Cart
-                                </Button>
-                                <Link to='/request'
-                                    onClick={() => {
-                                        // console.log('request button clicked!')
-                                        // window.alert('request button clicked')
-                                        props.requestOrder(cartItems)
-                                    }}>
+            <Divider sx={{ my: 1.5 }} />
 
-                                    <Button variant="contained" style={{
-                                        "backgroundColor": "#dbc268", "color": "black", "width": "100%", "fontWeight": "bold"
-                                    }}>
-                                        Proceed &nbsp;&nbsp;&nbsp; <img src={proceedImage} alt="proceedImage" style={{ "marginRight": "15px" }} />
-                                    </Button>
-                                </Link>
-                            </div >
-                        </div >
-                    )
-            }
-        </div >
-    );
+            <Box sx={{ px: 3, pb: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, color: '#3d2e00' }}>
+                    Total: ₹{total}
+                </Typography>
+            </Box>
+
+            <Box sx={{ display: 'flex', gap: 1.5, px: 3, pb: 3 }}>
+                <Button variant="outlined" color="error" size="small" startIcon={<img src={clearCartImg} alt="" height="16" width="16" />}
+                    onClick={() => dispatch(clearCart())} sx={{ fontWeight: 600 }}>
+                    Clear
+                </Button>
+                <Link to='/request' style={{ flex: 1 }}>
+                    <Button variant="contained" fullWidth
+                        sx={{ bgcolor: '#C9A227', color: '#000', fontWeight: 700, '&:hover': { bgcolor: '#e8c84d' } }}>
+                        Proceed &nbsp;
+                        <img src={proceedImage} alt="" height="18" />
+                    </Button>
+                </Link>
+            </Box>
+        </Box>
+    )
 }
 
 export default Cart

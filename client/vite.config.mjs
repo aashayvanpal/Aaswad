@@ -3,13 +3,20 @@ import react from '@vitejs/plugin-react'
 
 const backendRoutes = [
   '/api', '/customers', '/items', '/orders', '/myOrders',
-  '/request', '/multiOrders', '/eventOrders', '/ingredients',
+  '/multiOrders', '/eventOrders', '/ingredients',
   '/register', '/login', '/logout', '/account',
   '/contactus', '/sendEmail',
 ]
 
 const proxy = Object.fromEntries(
-  backendRoutes.map(route => [route, { target: 'http://localhost:5001', changeOrigin: true }])
+  backendRoutes.map(route => [route, {
+    target: 'http://localhost:5001',
+    changeOrigin: true,
+    bypass: (req) => {
+      if (req.headers.accept?.includes('text/html')) return '/'
+      return null
+    },
+  }])
 )
 
 export default defineConfig({

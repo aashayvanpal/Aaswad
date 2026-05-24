@@ -35,7 +35,8 @@ router.delete('/items/:id', itemController.destroy)
 router.get('/api/menu', itemController.list)
 // router.post('/Menu', approveController.createApprove)
 
-router.post('/request', approveController.createApprove)
+router.post('/request', approveController.createApprove)   // legacy keep for compatibility
+router.post('/api/orders', approveController.createApprove)
 
 
 

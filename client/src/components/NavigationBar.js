@@ -7,7 +7,7 @@ import ordersImg from '../images/orders-icon.png'
 
 export default function NavigationBar({ onClose }) {
     return (
-        <div id="Nav-bar" style={{ display: 'block' }}>
+        <div id="Nav-bar" style={onClose ? { display: 'block' } : undefined}>
             <ul style={{ listStyleImage: 'none', margin: '0px', padding: '0px' }}>
                 <button
                     style={{
@@ -19,7 +19,11 @@ export default function NavigationBar({ onClose }) {
                         borderRadius: "20px",
                         fontWeight: 'bold'
                     }}
-                    onClick={onClose}
+                    onClick={onClose || (() => {
+                        document.getElementById("Nav-bar").style.display = "none"
+                        const showBtn = document.getElementById("ShowButton")
+                        if (showBtn) showBtn.style.display = "block"
+                    })}
                 >
                     X
                 </button>

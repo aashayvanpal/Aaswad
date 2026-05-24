@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import DatePicker from "react-datepicker";
 import axios from '../../config/axios.js'
+import SubmitEnquiryModal from './SubmitEnquiryModal.js'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
+import { getUserDetails } from '../../assets/user-functions.js'
+import TransportForm from '../order/TransportForm.js'
+import AdvancePaymentForm from '../order/AdvancePaymentForm.js'
+import MiscForm from '../order/MiscForm.js'
+import { getAllCustomers } from '../../apis/customers.js'
+import CustomerModal from './CustomerModal/index.js'
+import { createCustomer, updateCustomer } from '../../apis/customers.js'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Grid from '@mui/material/Grid'
+import Divider from '@mui/material/Divider'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Chip from '@mui/material/Chip'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import LocalShippingIcon from '@mui/icons-material/LocalShipping'
+import PaymentsIcon from '@mui/icons-material/Payments'
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
+import RoomServiceIcon from '@mui/icons-material/RoomService'
+import CloseIcon from '@mui/icons-material/Close'
+
 import HDToolTip from './HDToolTip.js'
 import ServiceToolTip from './ServiceToolTip.js'
-import SubmitEnquiryModal from './SubmitEnquiryModal.js'
-
-import '../../css/CustomerRequest/request.css'
-import "react-datepicker/dist/react-datepicker.css";
-import { Stepper } from 'react-form-stepper'
-import { getUserDetails } from '../../assets/user-functions.js';
-import { getAllCustomers } from '../../apis/customers.js';
-import FilterableSelectBox from '../autoCompleteSelect/index.js';
-import CustomerModal from './CustomerModal/index.js';
-import { createCustomer, updateCustomer } from '../../apis/customers.js';
-
 
 const CustomerForm = (props) => {
+    const editingOrder = useSelector(state => state.cart.editingOrder)
     let time = String(new Date()).substr(16, 5)
 
     const [fullName, setFullName] = useState('')
@@ -25,7 +46,6 @@ const CustomerForm = (props) => {
     const [queries, setQuerries] = useState('')
     const [eventName, setEventName] = useState('')
     const [numberOfPeople, setNumberOfPeople] = useState(1)
-    const [eventDate, setEventDate] = useState('')
     const [eventTime, setEventTime] = useState(time)
     const [homeDelivery, setHomeDelivery] = useState(false)
     const [service, setService] = useState(false)
@@ -35,543 +55,538 @@ const CustomerForm = (props) => {
     const [emailError, setEmailError] = useState('')
     const [noOfPeopleError, setNoOfPeopleError] = useState('')
     const [addressError, setAddressError] = useState('')
-    const [customerId, setCustomerId] = useState('')
     const [id, setId] = useState('')
     const [userType, setUserType] = useState('')
-    const [openSubmitEnquiryModal, setOpenSubmitEnquiryModal] = useState(props.openSubmitEnquiryModal)
+    const [openSubmitEnquiryModal, setOpenSubmitEnquiryModal] = useState(false)
     const [customers, setCustomers] = useState([])
 
-    const fetchCustomers = async () => {
-        const customers = await getAllCustomers()
-        console.log("customers.data:", customers.data)
-        setCustomers(customers.data)
-    }
+    const [transport, setTransport] = useState({ medium: '', rate: '' })
+    const [showTransportForm, setShowTransportForm] = useState(false)
+    const [advanceAmount, setAdvanceAmount] = useState('')
+    const [showAdvanceForm, setShowAdvanceForm] = useState(false)
+    const [miscItems, setMiscItems] = useState([])
+    const [showMiscForm, setShowMiscForm] = useState(false)
 
+    const fetchCustomers = async () => {
+        const res = await getAllCustomers()
+        setCustomers(res.data)
+    }
 
     const getUserType = async () => {
         const user = await getUserDetails()
-        // console.log("Getting user Type and details ", user)
-        if (user.userType === "Admin") {
+        if (user.userType === 'Admin') {
             setUserType(user.userType)
             fetchCustomers()
         }
     }
 
     useEffect(() => {
-        console.log('Inside customer form')
-        console.log('Inside customer form order',localStorage.getItem('order'))
-        // Adding focus to the fullName on form load
-        // console.log('Check this ============>', this)
-        // console.log('Check this.fullName ============>', this.fullName)
-
-        // focus fix
-        // fullName.focus()
-
-
-        // Filling the form with known data , if editing ,use that localstorage.order ,else /account api
-        if (JSON.parse(localStorage.getItem('order'))) {
-            alert("yes i got an previous order customer details! working here!")
-            console.log('order found from localstorage details edit feature')
-            console.log(JSON.parse(localStorage.getItem('order')))
-            const { customer_id, numberOfPeople, email, fullName, phoneNumber, eventDate, _id, address, eventName, homeDelivery, service, queries } = JSON.parse(localStorage.getItem('order'))
-            let { eventTime } = JSON.parse(localStorage.getItem('order'))
-            eventTime = typeof (eventTime) === 'undefined' ? '12:30' : eventTime
-            //important fix: if there is eventTime Error here , set event time = '12:30'
-            console.log('eventDate:', eventDate)
-            // console.log('eventTime to set:', eventTime)
-            // console.log('eventTime to first:', eventTime.split(':')[0])
-            // console.log('eventTime to second:', eventTime.split(':')[1])
-            // also set date here , or else the default date is 12:00 am
-            var dateParts = eventDate.split("/");
-            // month is 0-based, that's why we need dataParts[1] - 1
-            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-            dateObject.setHours(eventTime.split(':')[0], eventTime.split(':')[1])
-            console.log('here is debug for dateObject:', dateObject)
-            // this.setState({
-            //     startDate: dateObject,
-            //     userId: customer_id,
-            //     fullName,
-            //     phoneNumber,
-            //     eventTime,
-            //     email,
-            //     address,
-            //     eventName,
-            //     numberOfPeople: String(numberOfPeople),
-            //     id: _id,
-            //     homeDelivery,
-            //     service,
-            //     queries
-            // })
+        if (editingOrder) {
+            const c = editingOrder.customer
+            let evtTime = c.eventTime || '12:30'
+            const dateParts = c.eventDate ? c.eventDate.split('/') : []
+            let dateObject = new Date()
+            if (dateParts.length === 3) {
+                dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0])
+                dateObject.setHours(evtTime.split(':')[0], evtTime.split(':')[1])
+            }
             setStartDate(dateObject)
-            setCustomerId(customer_id)
-            setFullName(fullName)
-            setPhoneNumber(phoneNumber)
-            setEventTime(eventTime)
-            setEmail(email)
-            setAddress(address)
-            setEventName(eventName)
-            setNumberOfPeople(String(numberOfPeople))
-            // setId(_id)
-            setId(customer_id)
-            setHomeDelivery(homeDelivery)
-            setService(service)
-            setQuerries(queries)
+            setFullName(c.fullName)
+            setPhoneNumber(c.phoneNumber)
+            setEventTime(evtTime)
+            setEmail(c.email)
+            setAddress(c.address)
+            setEventName(c.eventName)
+            setNumberOfPeople(String(c.numberOfPeople))
+            setId(c.customer_id)
+            setHomeDelivery(c.homeDelivery)
+            setService(c.service)
+            setQuerries(c.queries)
+            if (editingOrder.transport?.medium) {
+                setTransport({ ...editingOrder.transport })
+            } else if (c.homeDelivery) {
+                setShowTransportForm(true)
+            }
+            if (editingOrder.AdvanceAmount) setAdvanceAmount(editingOrder.AdvanceAmount)
+            if (editingOrder.misc?.length) setMiscItems(editingOrder.misc.map(m => ({ ...m })))
         } else {
-            console.log('getting /account api')
-            axios.get('/account', {
-                headers: { 'x-auth': localStorage.getItem('token') }
-            })
-                .then(dataRequest => {
-                    console.log("user data to fill inside form:", dataRequest)
-                    // if localstorage found user that data for edit
-                    // this.setState({
-                    //     fullName: dataRequest.data.username,
-                    //     email: dataRequest.data.email,
-                    //     address: dataRequest.data.address,
-                    //     userId: dataRequest.data.id,
-                    //     phoneNumber: dataRequest.data.phonenumber
-                    // })
-                    setFullName(dataRequest.data.username)
-                    setEmail(dataRequest.data.email)
-                    setAddress(dataRequest.data.address)
-                    setId(dataRequest.data.id)
-                    setPhoneNumber(dataRequest.data.phonenumber)
-                    // userType: dataRequest.data.userType
+            axios.get('/account', { headers: { 'x-auth': localStorage.getItem('token') } })
+                .then(res => {
+                    setFullName(res.data.username)
+                    setEmail(res.data.email)
+                    setAddress(res.data.address)
+                    setId(res.data.id)
+                    setPhoneNumber(res.data.phonenumber)
                 })
-                .catch(err => {
-                    console.log(err)
-                })
+                .catch(err => console.log(err))
         }
-
         getUserType()
-
     }, [])
 
-    const handleCheckboxChange = () => {
-        console.log('homeDelivery before:', homeDelivery)
-        let change = !homeDelivery
-        console.log('change:', change)
-        setHomeDelivery(change)
-        // console.log('this.state.homeDelivery after:', this.state)
-        console.log('homeDelivery after:', homeDelivery)
-    }
-
-
-    const handleCheckboxChangeService = () => {
-        console.log('service before:', service)
-        let change = !service
-        console.log('change:', change)
-        // this.setState({ service: change })
-        setService(change)
-        // console.log('this.state.homeDelivery after:', this.state)
-        console.log('service after:', service)
-    }
-
-
     const validate = () => {
-        let nameError = ""
-        let emailError = ""
-        let phoneNumberError = ""
-        let noOfPeopleError = ""
-        let addressError = ""
+        let nameError = '', emailError = '', phoneNumberError = '', noOfPeopleError = '', addressError = ''
+        const specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '~', '_', '`', '(', ')', '+', '-', '/', '.', ',', '[', ']', '{', '}', '?', ':', ';', "'", '"', '|', '>', '<']
+        const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-
-        let specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '~', '_', '`', '(', ')', '+', '-', '/', '.', ',', '[', ']', '{', '}', '?', ':', ';', '\'', '"', "|", ">", "<"]
-        let digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-
-        // Regex for name validation
-        // name max length 20 characters
-        if (fullName.length < 5) {
-            nameError = "Error: The full name cannot be less than 5 characters"
-        }
-
-        if (specialChars.some(char => fullName.includes(char))) {
-            nameError = "Error: The full name cannot contain special characters"
-        }
-        if (digits.some(digit => fullName.includes(digit))) {
-            nameError = "Error: The full name cannot contain numbers 0-9 "
-        }
-
-        if (email.length < 5) {
-            emailError = "Error: The email addess cannot be less than 5 characters"
-        }
-
-        if (!email.includes('@')) {
-            emailError = "Error: The email address should contain @ symbol"
-        }
-
-        if (phoneNumber.toString().length !== 10) {
-            phoneNumberError = "Error: There must be 10 digits in your number !"
-        }
-
-        let regex = /[a - z]{ 1, 10}/
-        if (regex.test(phoneNumber)) {
-            phoneNumberError = "Error: The phone number cannot contain alphabets !"
-
-        }
-
-        // if (regex.test(this.state.numberOfPeople)) {
-        //     noOfPeopleError = "Error: Number of People cannot contain alphabets !"
-        // }
-        console.log('validation check numberOfPeople:', numberOfPeople)
-        if (!digits.some(digit => numberOfPeople.toString().includes(digit))) {
-            noOfPeopleError = "Error: Number of people cannot contain alphabets"
-        }
-
-
-        if (digits.some(digit => fullName.includes(digit))) {
-            nameError = "Error: The Full Name  should not contain any numbers between 0-9 "
-        }
-
-        if (address.length === 0) {
-            addressError = "Error: The addresss cannot be left blank "
-
-        }
-
+        if (fullName.length < 5) nameError = 'Full name cannot be less than 5 characters'
+        if (specialChars.some(c => fullName.includes(c))) nameError = 'Full name cannot contain special characters'
+        if (digits.some(d => fullName.includes(d))) nameError = 'Full name cannot contain numbers'
+        if (email.length < 5) emailError = 'Email cannot be less than 5 characters'
+        if (!email.includes('@')) emailError = 'Email must contain @ symbol'
+        if (phoneNumber.toString().length !== 10) phoneNumberError = 'Phone number must be 10 digits'
+        if (!digits.some(d => numberOfPeople.toString().includes(d))) noOfPeopleError = 'Number of people must be a number'
+        if (address.length === 0) addressError = 'Address cannot be empty'
 
         if (emailError || nameError || phoneNumberError || noOfPeopleError) {
-            // this.setState({ emailError, nameError, phoneNumberError, noOfPeopleError, addressError })
             setEmailError(emailError)
             setNameError(nameError)
             setPhoneNumberError(phoneNumberError)
             setNoOfPeopleError(noOfPeopleError)
             setAddressError(addressError)
-
             return false
         }
-
         return true
-
     }
 
-    const findCustomerByName = (name) => {
+    const findCustomerByName = (name) => customers.find(c => c.fullName === name) || false
 
-        const customer = customers.find(customer => customer.fullName === name)
-        console.log("customer", customer)
-        if (customer) {
-            // if found return the customer information
-            return customer
-        }
-        else {
-            // else return false
-            return false
-        }
-    }
-
-
-    const handleSubmit = async e => {
-        e.preventDefault()
-        console.log("submit enquiry button clicked! check this ")
-
-        // Write validate() and pass the condition form information is valid 
-
-        // validation
+    const handleSubmit = async () => {
         const isValid = validate()
+        if (!isValid) return
 
-        if (isValid) {
-
-            const customer = {
-                fullName: fullName,
-                phoneNumber: phoneNumber,
-                email: email,
-                address: address,
-                queries: queries,
-                eventName: eventName,
-                numberOfPeople: numberOfPeople,
-                eventDate: startDate,
-                eventTime: eventTime,
-                homeDelivery: homeDelivery,
-                service: service,
-                customer_id: id
-
-            }
-            // this.props.item && (item.id = this.props.item._id)
-
-            console.log('props :', props)
-
-
-            console.log("customer Data: ", customer)
-            // this.setState({ openSubmitEnquiryModal: true })
-
-
-
-            const foundCustomer = findCustomerByName(fullName)
-            if (foundCustomer) {
-
-                // EDIT/PUT Api calls here
-                // Customer is found in DB
-                // check for phone number & compare
-                const DBPhoneNumber = foundCustomer.phoneNumber
-                console.log("phone number for customer found", DBPhoneNumber, foundCustomer._id, customer.phoneNumber)
-                // if new number ,add a new key value pair with save as prompt
-                const isNewNumber = DBPhoneNumber.reduce((acc, item) => {
-                    const found = Number(item[Object.keys(item)[0]]) === Number(customer.phoneNumber)
-                    if (found) { acc = 0 }
-                    return acc
-                }, 1)
-
-
-                const DBAddress = foundCustomer.address
-
-                const isNewAddress = DBAddress.reduce((acc, item) => {
-                    const found = item[Object.keys(item)[0]] === customer.address
-                    if (found) { acc = 0 }
-                    return acc
-                }, 1)
-
-                if (isNewAddress && isNewNumber) {
-                    alert("both need to be updated")
-                    const phoneKey = prompt("Save this number as ?")
-                    const phoneValue = customer.phoneNumber.toString()
-                    const phoneNumbers = [...DBPhoneNumber, { [phoneKey]: phoneValue }]
-
-                    const addressKey = prompt("Save this address as ?")
-                    const addressValue = customer.address
-                    const address = [...DBPhoneNumber, { [addressKey]: addressValue }]
-
-                    const customerBody = { ...foundCustomer, phoneNumber: phoneNumbers, address }
-                    console.log("this is a new number so PUT request here for:", customerBody, foundCustomer._id, phoneKey, phoneValue, addressKey, addressValue)
-                    try {
-
-                        await updateCustomer(foundCustomer._id, customerBody)
-                        alert("Phone number and address has been updated!")
-
-                    } catch (err) {
-                        alert("error in editing customer Phone number and address !")
-                    }
-
-                } else {
-
-                    if (isNewNumber) {
-                        // do save as prompt modal
-                        const key = prompt("Save this number as ?")
-                        const value = customer.phoneNumber.toString()
-                        const phoneNumbers = [...DBPhoneNumber, { [key]: value }]
-                        const customerBody = { ...foundCustomer, phoneNumber: phoneNumbers }
-                        console.log("this is a new number so PUT request here for:", customerBody, foundCustomer._id, key, value)
-                        try {
-
-                            await updateCustomer(foundCustomer._id, customerBody)
-                            alert("Phone number has been updated!")
-
-                        } catch (err) {
-                            alert("error in editing customer!")
-                        }
-                    } else {
-                        console.log("this is old number only do nothing")
-                    }
-
-
-                    // address part 
-                    // check for address & compare 
-                    console.log("Address for customer found", DBAddress, foundCustomer._id, customer.address)
-                    // if new address ,add a new key value pair with save as prompt
-
-
-                    if (isNewAddress) {
-                        // // do save as prompt modal
-                        const key = prompt("Save this address as ?")
-                        const value = customer.address
-                        const address = [...DBAddress, { [key]: value }]
-                        const customerBody = { ...foundCustomer, address }
-                        console.log("this is a new address so PUT request here for:", customerBody, foundCustomer._id, key, value)
-                        try {
-
-                            await updateCustomer(foundCustomer._id, customerBody)
-                            alert("Address has been updated!")
-                        } catch (err) {
-                            alert("error in editing customer!")
-                        }
-                    } else {
-                        console.log("this is old address only do nothing")
-                    }
-
-                }
-
-
-
-            } else {
-                // Customer is not found in DB
-                alert("customer is not found , a new customer will be added ")
-
-                const customer = {
-                    fullName,
-                    email: email ? email : 'test@gmail.com',
-                    phoneNumber: { primary: phoneNumber },
-                    birthday: '',
-                    gender: 'male',
-                    profilePicture: '',
-                    address: { Home: address },
-                    language: ['English'],
-                    membership: {
-                        status: 'inactive',
-                        level: 'basic',
-                        points: 0
-                    },
-
-                }
-                console.log("customer to add to db", customer)
-                // new customer should be added in DB POST api
-                // create default value of customer , add the form values , make POST request to customer DB
-                const customerCreated = await createCustomer(customer)
-                console.log("customer created!", customerCreated)
-                if (customerCreated.status === 200) {
-                    alert(`customer ${fullName} has been created successfully!`)
-                    // navigate to /customers
-                    // history.push("/customers")
-                } else {
-                    alert("there was something wrong with customer creation")
-                }
-            }
-
-
-            props.handleCustomerSubmit(customer)
+        const customer = {
+            fullName, phoneNumber, email, address, queries,
+            eventName, numberOfPeople, eventDate: startDate,
+            eventTime, homeDelivery, service, customer_id: id,
         }
+
+        const foundCustomer = findCustomerByName(fullName)
+        if (foundCustomer) {
+            const DBPhoneNumber = foundCustomer.phoneNumber
+            const isNewNumber = DBPhoneNumber.reduce((acc, item) => {
+                if (Number(item[Object.keys(item)[0]]) === Number(customer.phoneNumber)) acc = 0
+                return acc
+            }, 1)
+            const DBAddress = foundCustomer.address
+            const isNewAddress = DBAddress.reduce((acc, item) => {
+                if (item[Object.keys(item)[0]] === customer.address) acc = 0
+                return acc
+            }, 1)
+
+            if (isNewAddress && isNewNumber) {
+                const phoneKey = prompt('Save this number as?')
+                const phoneNumbers = [...DBPhoneNumber, { [phoneKey]: customer.phoneNumber.toString() }]
+                const addressKey = prompt('Save this address as?')
+                const addr = [...DBAddress, { [addressKey]: customer.address }]
+                try { await updateCustomer(foundCustomer._id, { ...foundCustomer, phoneNumber: phoneNumbers, address: addr }) } catch { }
+            } else {
+                if (isNewNumber) {
+                    const key = prompt('Save this number as?')
+                    const phoneNumbers = [...DBPhoneNumber, { [key]: customer.phoneNumber.toString() }]
+                    try { await updateCustomer(foundCustomer._id, { ...foundCustomer, phoneNumber: phoneNumbers }) } catch { }
+                }
+                if (isNewAddress) {
+                    const key = prompt('Save this address as?')
+                    const addr = [...DBAddress, { [key]: customer.address }]
+                    try { await updateCustomer(foundCustomer._id, { ...foundCustomer, address: addr }) } catch { }
+                }
+            }
+        } else {
+            const newCustomer = {
+                fullName,
+                email: email || 'test@gmail.com',
+                phoneNumber: { primary: phoneNumber },
+                birthday: '', gender: 'male', profilePicture: '',
+                address: { Home: address },
+                language: ['English'],
+                membership: { status: 'inactive', level: 'basic', points: 0 },
+            }
+            try {
+                const res = await createCustomer(newCustomer)
+                if (res.status === 200) alert(`Customer ${fullName} created successfully!`)
+            } catch { alert('Error creating customer') }
+        }
+
+        props.handleCustomerSubmit({ customer, transport, AdvanceAmount: advanceAmount, misc: miscItems })
     }
 
     const handleDateChange = date => {
-        console.log("Date Changed :", String(date))
-        console.log("Date Changed :", date)
-        let eventTime = String(date).substr(16, 5)
-        console.log("eventTime :", eventTime)
-
-        // this.setState({
-        //     startDate: date,
-        //     eventTime
-        // });
         setStartDate(date)
-        setEventTime(eventTime)
-    };
-
-    const clearForm = () => {
-        // this.setState({
-        //     fullName: '',
-        //     email: 'test@gmail.com',
-        //     phoneNumber: '',
-        //     address: '',
-        // })
-        setFullName('')
-        setEmail('test@gmail.com')
-        setPhoneNumber('')
-        setAddress('')
+        setEventTime(String(date).substr(16, 5))
     }
 
+    const clearForm = () => { setFullName(''); setEmail('test@gmail.com'); setPhoneNumber(''); setAddress('') }
+
     const setSelectedCustomerDetails = ({ selectedCustomer, selectedPhoneNumber, selectedAddress }) => {
-        // console.log("yes i need to set here", { selectedCustomer, selectedPhoneNumber, selectedAddress })
         setFullName(selectedCustomer)
         setPhoneNumber(selectedPhoneNumber)
         setAddress(selectedAddress)
     }
 
+    const inputSx = {
+        '& .MuiOutlinedInput-root': {
+            bgcolor: 'rgba(255,255,255,0.75)',
+            fontSize: '1.05rem',
+            '&:hover fieldset': { borderColor: '#C9A227' },
+            '&.Mui-focused fieldset': { borderColor: '#C9A227' },
+        },
+        '& label': { fontSize: '1rem' },
+        '& label.Mui-focused': { color: '#7a6010' },
+        '& .MuiFormHelperText-root': { fontSize: '0.85rem' },
+    }
+
+    const goldBtn = {
+        bgcolor: '#C9A227', color: '#000', fontWeight: 700,
+        '&:hover': { bgcolor: '#e8c84d' },
+    }
+
     return (
-        <form id='detailsForm' onSubmit={handleSubmit}>
-            {userType === 'Admin' ? (
-                <div>
-                    {/* <div style={{ border: '3px solid black', padding: '10px' }}> */}
-                    <CustomerModal
-                        setSelectedCustomerDetails={setSelectedCustomerDetails}
-                        customers={customers}
-                        buttonLabel={`Select from Existing ${customers.length} Customers`} />
-                    {/* </div> */}
-                    <button onClick={clearForm}>Clear form</button>
-                </div>) : null}
+        <Box id="request-div" sx={{ minHeight: '100vh', py: 4, px: { xs: 1, sm: 3 } }}>
+            <Box sx={{ maxWidth: 720, mx: 'auto' }}>
 
-            <h1 style={{ "fontSize": "28px", "textAlign": "center", "fontWeight": "bold", "color": "white", "textDecoration": "underline" }}>Add Your Event Details </h1><br />
-            <Stepper className="stepper-color"
-                steps={[{ label: 'Select Items' }, { label: 'Enter Quantity' }, { label: 'Submit Enquiry' }]}
-                activeStep={2}
-            />
-            <input name="fullName" className="form-input" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full Name"
-            // ref={(input) => { setFullName(input) }}
-            />
-            <br />
-            {nameError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{nameError}</div>) : null}
+                {/* Back button */}
+                <Link to="/menu" style={{ textDecoration: 'none' }}>
+                    <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2, color: '#5d522c', fontWeight: 600 }}>
+                        Back to Menu
+                    </Button>
+                </Link>
 
-            <input name="email" className="form-input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-            <br />
-            {emailError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{emailError}</div>) : null}
+                <Paper elevation={4} sx={{
+                    borderRadius: '20px',
+                    border: '2px solid #C9A227',
+                    overflow: 'hidden',
+                }}>
+                    {/* Header */}
+                    <Box sx={{ bgcolor: '#C9A227', py: 2.5, px: 3, textAlign: 'center' }}>
+                        <Typography variant="h5" sx={{ fontWeight: 800, color: '#3d2e00', letterSpacing: 0.5 }}>
+                            Add Your Event Details
+                        </Typography>
+                    </Box>
 
-            <input name="phoneNumber" pattern="[1-9]{1}[0-9]{9}" title="The phone number must contain 10 digit numbers only" className="form-input" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number" />
-            <br />
-            {phoneNumberError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{phoneNumberError}</div>) : null}
+                    <Box sx={{ p: { xs: 2, sm: 3 } }}>
 
-            <textarea style={{ "height": "250px", "border": "2px solid grey", }} name="address" className="form-input" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" />
-            <br />
-            {addressError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{addressError}</div>) : null}
+                        {/* Admin: customer selector */}
+                        {userType === 'Admin' && (
+                            <Box sx={{
+                                mb: 3, p: 2,
+                                bgcolor: 'rgba(201,162,39,0.08)',
+                                border: '1px solid rgba(201,162,39,0.3)',
+                                borderRadius: '12px',
+                            }}>
+                                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c' }}>
+                                    Select Customer Details
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                                    <CustomerModal
+                                        setSelectedCustomerDetails={setSelectedCustomerDetails}
+                                        customers={customers}
+                                        buttonLabel={`Select from ${customers.length} Customers`}
+                                    />
+                                    <Button variant="outlined" size="small" onClick={clearForm}
+                                        sx={{ borderColor: '#C9A227', color: '#7a6010', fontWeight: 600 }}>
+                                        Clear Form
+                                    </Button>
+                                </Box>
+                            </Box>
+                        )}
 
-            <input name="eventName" className="form-input" value={eventName} onChange={(e) => setEventName(e.target.value)} placeholder="Event Name" />
-            <br />
+                        {/* Personal Details */}
+                        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
+                            Personal Details
+                        </Typography>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid size={12}>
+                                <TextField
+                                    fullWidth label="Full Name" value={fullName}
+                                    onChange={e => setFullName(e.target.value)}
+                                    error={!!nameError} helperText={nameError}
+                                    sx={inputSx} size="small"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    fullWidth label="Email" type="email" value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                    error={!!emailError} helperText={emailError}
+                                    sx={inputSx} size="small"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    fullWidth label="Phone Number" value={phoneNumber}
+                                    onChange={e => setPhoneNumber(e.target.value)}
+                                    error={!!phoneNumberError} helperText={phoneNumberError}
+                                    slotProps={{ htmlInput: { maxLength: 10 } }}
+                                    sx={inputSx} size="small"
+                                />
+                            </Grid>
+                            <Grid size={12}>
+                                <TextField
+                                    fullWidth multiline rows={4} label="Address" value={address}
+                                    onChange={e => setAddress(e.target.value)}
+                                    error={!!addressError} helperText={addressError}
+                                    sx={inputSx}
+                                />
+                            </Grid>
+                        </Grid>
 
-            <input name="numberOfPeople" className="form-input" value={numberOfPeople} onChange={(e) => setNumberOfPeople(e.target.value)} placeholder="Number of people" />
-            <br />
-            {noOfPeopleError ? (<div style={{ "color": "red", "marginLeft": "10px" }}>{noOfPeopleError}</div>) : null}
+                        <Divider sx={{ my: 2.5 }} />
 
-            {/* <input name="eventDate" className="form-input" value={this.state.eventDate} onChange={this.handleChange} placeholder="Event Date" />
-                <br /> */}
+                        {/* Event Details */}
+                        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
+                            Event Details
+                        </Typography>
+                        <Grid container spacing={2} sx={{ mb: 2 }}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    fullWidth label="Event Name" value={eventName}
+                                    onChange={e => setEventName(e.target.value)}
+                                    sx={inputSx} size="small"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    fullWidth label="Number of People" type="number" value={numberOfPeople}
+                                    onChange={e => setNumberOfPeople(e.target.value)}
+                                    error={!!noOfPeopleError} helperText={noOfPeopleError}
+                                    sx={inputSx} size="small"
+                                />
+                            </Grid>
+                            <Grid size={12}>
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DateTimePicker
+                                        label="Event Date & Time"
+                                        value={startDate}
+                                        onChange={handleDateChange}
+                                        slotProps={{
+                                            textField: {
+                                                fullWidth: true,
+                                                size: 'small',
+                                                sx: inputSx,
+                                            },
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid size={12}>
+                                <TextField
+                                    fullWidth multiline rows={3} label="Additional Notes / Queries"
+                                    value={queries} onChange={e => setQuerries(e.target.value)}
+                                    sx={inputSx}
+                                />
+                            </Grid>
+                        </Grid>
 
-            {/* date start */}
-            {/* <DatePicker className="form-input"
-                    selected={this.state.startDate}
-                    onChange={this.handleDateChange}
-                    dateFormat="Pp"
-                    showTimeSelect
-                /> */}
-            <DatePicker className="form-input"
-                wrapperClassName="datePickerStyle"
-                selected={startDate}
-                onChange={handleDateChange}
-                dateFormat="dd/MM/yyyy h:mm aa"
-                showTimeSelect
-            />
-            <br />
-            {/* date end */}
+                        <Divider sx={{ my: 2.5 }} />
 
-            {/* <input name="eventTime" className="form-input" value={this.state.eventTime} onChange={this.handleChange} placeholder="Event Time" />
-                <br /> */}
+                        {/* Options */}
+                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
+                            Options
+                        </Typography>
+                        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 2 }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={homeDelivery}
+                                        onChange={() => {
+                                            const next = !homeDelivery
+                                            setHomeDelivery(next)
+                                            if (next) {
+                                                setShowTransportForm(true)
+                                            } else {
+                                                setShowTransportForm(false)
+                                                setTransport({ medium: '', rate: '' })
+                                            }
+                                        }}
+                                        sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
+                                    />
+                                }
+                                label={
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                        <LocalShippingIcon fontSize="small" sx={{ color: '#7a6010' }} />
+                                        <span style={{ fontWeight: 600 }}>Home Delivery</span>
+                                        <HDToolTip />
+                                    </Box>
+                                }
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={service}
+                                        onChange={() => setService(!service)}
+                                        sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
+                                    />
+                                }
+                                label={
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                        <RoomServiceIcon fontSize="small" sx={{ color: '#7a6010' }} />
+                                        <span style={{ fontWeight: 600 }}>Service</span>
+                                        <ServiceToolTip />
+                                    </Box>
+                                }
+                            />
+                        </Box>
 
-            <textarea name="queries" className="form-input" value={queries} onChange={(e) => setQuerries(e.target.value)} placeholder="Any other queries?"
-                style={{ "height": "120px" }}
-            />
-            <br />
-            <table id="request-table">
-                <tbody>
-                    <tr >
-                        <td style={{ "textAlign": "center" }}>
-                            <label style={{ "display": "inline" }}>
-                                <span className="form-input">Home Delivery   <HDToolTip /> </span>
-                            </label><br />
-                        </td>
-                        <td>
-                            <input name="homeDelivery" className="form-input" style={{ "height": "25px", "width": "25px", "display": "block", "margin": "auto" }} checked={homeDelivery} onChange={handleCheckboxChange} type="checkbox" />
-                        </td>
-                    </tr>
-                    <tr>
+                        {/* Transport Form — shown when homeDelivery is checked */}
+                        {homeDelivery && (
+                            <Box sx={{ mb: 2 }}>
+                                {showTransportForm ? (
+                                    <Box sx={{ position: 'relative' }}>
+                                    <IconButton size="small" onClick={() => setShowTransportForm(false)}
+                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon fontSize="small" />
+                                    </IconButton>
+                                    <TransportForm
+                                        medium={transport.medium}
+                                        price={transport.rate}
+                                        ShowTransportTable={(medium, rate) => {
+                                            setTransport({ medium, rate })
+                                            setShowTransportForm(false)
+                                        }}
+                                        ShowTransportForm={() => setShowTransportForm(false)}
+                                    />
+                                    </Box>
+                                ) : (
+                                    <Box sx={{
+                                        display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
+                                        bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
+                                        border: '1px solid rgba(201,162,39,0.25)',
+                                    }}>
+                                        <LocalShippingIcon fontSize="small" sx={{ color: '#7a6010' }} />
+                                        {transport.medium ? (
+                                            <>
+                                                <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
+                                                    {transport.medium} — <strong>₹{transport.rate}</strong>
+                                                </Typography>
+                                                <Button size="small" onClick={() => setShowTransportForm(true)}
+                                                    sx={{ color: '#7a6010', fontWeight: 600 }}>Edit</Button>
+                                            </>
+                                        ) : (
+                                            <Button size="small" onClick={() => setShowTransportForm(true)} sx={goldBtn}>
+                                                Add Transport Details
+                                            </Button>
+                                        )}
+                                    </Box>
+                                )}
+                            </Box>
+                        )}
 
-                        <td style={{ "textAlign": "center" }}>
-                            <label >
-                                <span className="form-input">Service <ServiceToolTip /></span>
-                            </label><br />
-                        </td>
-                        <td>
-                            <input name="service" className="form-input" style={{ "height": "25px", "width": "25px", "display": "block", "margin": "auto" }} checked={service} onChange={handleCheckboxChangeService} type="checkbox" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        {/* Advance Payment */}
+                        <Box sx={{ mb: 2 }}>
+                            {showAdvanceForm ? (
+                                <Box sx={{ position: 'relative' }}>
+                                    <IconButton size="small" onClick={() => setShowAdvanceForm(false)}
+                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon fontSize="small" />
+                                    </IconButton>
+                                    <AdvancePaymentForm
+                                        advanceAmount={advanceAmount}
+                                        ShowAdvancePaymentTable={(amount) => {
+                                            setAdvanceAmount(amount)
+                                            setShowAdvanceForm(false)
+                                        }}
+                                        ShowAdvancePaymentForm={() => setShowAdvanceForm(false)}
+                                    />
+                                </Box>
+                            ) : (
+                                <Box sx={{
+                                    display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
+                                    bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
+                                    border: '1px solid rgba(201,162,39,0.25)',
+                                }}>
+                                    <PaymentsIcon fontSize="small" sx={{ color: '#7a6010' }} />
+                                    {advanceAmount ? (
+                                        <>
+                                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
+                                                Advance: <strong>₹{advanceAmount}</strong>
+                                            </Typography>
+                                            <Button size="small" onClick={() => setShowAdvanceForm(true)}
+                                                sx={{ color: '#7a6010', fontWeight: 600 }}>Edit</Button>
+                                            <IconButton size="small" onClick={() => setAdvanceAmount('')}
+                                                sx={{ color: '#888', '&:hover': { color: '#ef4444' } }}>
+                                                <CloseIcon fontSize="small" />
+                                            </IconButton>
+                                        </>
+                                    ) : (
+                                        <Button size="small" onClick={() => setShowAdvanceForm(true)} sx={goldBtn}>
+                                            Add Advance Payment
+                                        </Button>
+                                    )}
+                                </Box>
+                            )}
+                        </Box>
 
-            {/* <input type="submit" id="submit-request" value="Submit Enquiry" /> */}
-            <button type="submit" id="submit-request">
-                Submit Enquiry
-            </button>
-            <SubmitEnquiryModal isOpen={props.openSubmitEnquiryModal}
+                        {/* Misc Items */}
+                        <Box sx={{ mb: 3 }}>
+                            {showMiscForm ? (
+                                <Box sx={{ position: 'relative' }}>
+                                    <IconButton size="small" onClick={() => setShowMiscForm(false)}
+                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon fontSize="small" />
+                                    </IconButton>
+                                    <MiscForm
+                                        miscItems={miscItems}
+                                        setMiscParticulars={setMiscItems}
+                                        handleMiscSubmit={(e) => { e.preventDefault(); setShowMiscForm(false) }}
+                                    />
+                                </Box>
+                            ) : (
+                                <Box sx={{
+                                    display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
+                                    bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
+                                    border: '1px solid rgba(201,162,39,0.25)',
+                                }}>
+                                    <ReceiptLongIcon fontSize="small" sx={{ color: '#7a6010' }} />
+                                    {miscItems.length > 0 ? (
+                                        <>
+                                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
+                                                {miscItems.length} misc item(s) added
+                                                <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
+                                                    {miscItems.map((m, i) => (
+                                                        <Chip key={i} label={`${m.particular}: ₹${m.rate}`} size="small"
+                                                            sx={{ fontSize: '0.7rem', bgcolor: 'rgba(201,162,39,0.2)' }} />
+                                                    ))}
+                                                </Box>
+                                            </Typography>
+                                            <Button size="small" onClick={() => setShowMiscForm(true)}
+                                                sx={{ color: '#7a6010', fontWeight: 600, alignSelf: 'flex-start' }}>Edit</Button>
+                                        </>
+                                    ) : (
+                                        <Button size="small" onClick={() => { setShowMiscForm(true); setMiscItems([{ particular: '', rate: '' }]) }} sx={goldBtn}>
+                                            Add Misc Items
+                                        </Button>
+                                    )}
+                                </Box>
+                            )}
+                        </Box>
+
+                        {/* Submit */}
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            size="large"
+                            onClick={handleSubmit}
+                            sx={{
+                                bgcolor: '#ff8300', color: '#fff', fontWeight: 800,
+                                fontSize: '1.1rem', py: 1.5, borderRadius: '12px',
+                                '&:hover': { bgcolor: '#e07200' },
+                            }}
+                        >
+                            Submit Enquiry
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
+
+            <SubmitEnquiryModal
+                isOpen={props.openSubmitEnquiryModal}
                 closeModal={() => {
-                    // this.setState({ openSubmitEnquiryModal: false })
                     setOpenSubmitEnquiryModal(false)
                     window.location.href = '/menu'
                 }}
             />
-        </form >
+        </Box>
     )
-
 }
+
 export default CustomerForm

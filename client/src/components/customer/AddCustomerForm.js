@@ -8,12 +8,13 @@ import PhoneNumber from "./dynamicRender/PhoneNumber"
 import Address from "./dynamicRender/Address"
 import Language from "./dynamicRender/Language"
 import { createCustomer, updateCustomer } from "../../apis/customers"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getCustomerById } from "../../apis/customers"
 
 const AddCustomerForm = () => {
 
     const navigate = useNavigate()
+    const location = useLocation()
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [gender, setGender] = useState('male')
@@ -210,13 +211,20 @@ const AddCustomerForm = () => {
         // api call for getting customer's data and populating in form
 
         if (window.location.pathname.includes("edit")) {
-            // Editing customer 
+            // Editing customer
             const id = window.location.pathname.split('/').slice(-1)[0]
             console.log("Api call useEffect", id)
             getCustomerDetails(id)
         } else {
             // Adding new customer
             console.log("Adding a new customer")
+            const prefill = location.state?.prefill
+            if (prefill) {
+                if (prefill.fullName) setFullName(prefill.fullName)
+                if (prefill.email) setEmail(prefill.email)
+                if (prefill.phoneNumber) setPhoneNumbers(prefill.phoneNumber)
+                if (prefill.address) setAddresses(prefill.address)
+            }
         }
     }, [])
 

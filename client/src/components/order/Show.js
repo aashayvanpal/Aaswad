@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
 import { motion } from 'framer-motion'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -7,8 +10,20 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Divider from '@mui/material/Divider'
+import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
 import axios from '../../config/axios.js'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setEditingOrder } from '../../store/slices/cartSlice'
+import ConfirmDialog from '../ConfirmDialog'
+import { useDeleteOrderMutation } from '../../store/services/ordersApi'
 import '../../css/myOrdersShow.scss'
 import TransportForm from './TransportForm.js'
 import MiscForm from './MiscForm.js'
@@ -79,6 +94,13 @@ const ItemShow = ({ type }) => {
     const [eventOrderRoute, setEventOrderRoute] = useState('')
     const [headingEventName, setHeadingEventName] = useState('')
     const [headingEventDate, setHeadingEventDate] = useState('')
+    const [editMode, setEditMode] = useState(false)
+    const [editFields, setEditFields] = useState({})
+    const [confirmState, setConfirmState] = useState({ open: false })
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [deleteOrder] = useDeleteOrderMutation()
 
     useEffect(() => {
         setTotal(calculateTotal)
@@ -292,56 +314,8 @@ const ItemShow = ({ type }) => {
     }
 
     const EditOrder = () => {
-        console.log("Inside EditOrder")
-        alert("EDIT ORDER :" + type)
-        switch (type) {
-            case "eventOrder": {
-                alert("Inside event order type")
-                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-                console.log("I need customer object here", orderDetails.order.customer)
-                console.log("I need customer object eventDate", moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY'))
-                console.log("I need customer object eventTime", moment(orderDetails.order.customer.eventDate).format('H:m'))
-                orderDetails.order.customer.eventTime = moment(orderDetails.order.customer.eventDate).format('H:m')
-                orderDetails.order.customer.eventDate = moment(orderDetails.order.customer.eventDate).format('DD/MM/YYYY')
-                console.log("I need customer object order", orderDetails)
-
-                localStorage.setItem('order', JSON.stringify(orderDetails.order.customer))
-
-                const eventId = window.location.href.split('/')[4]
-                localStorage.setItem('eventId', eventId)
-
-                deleteOrderFromEventOrders(id)
-
-                break;
-            } default: {
-                alert("Normal flow edit")
-                break;
-            }
-        }
-
-        axios.get('/api/menu', {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                console.log("Should use localStorage to set state here")
-                const items = response.data
-                let filteredItems = items.filter(item => item.display === true)
-                filteredItems.forEach(item => {
-                    item.isSelected = false
-                    item.quantity = 1
-                })
-                console.log("selectedItems", selectedItems)
-                console.log("filteredItems", filteredItems)
-
-                var desiredResultArray = filteredItems.map(item => selectedItems.find(i => i._id === item._id) || item)
-                console.log("desiredResultArray:", desiredResultArray)
-
-                localStorage.setItem("cartItems", JSON.stringify(desiredResultArray))
-
-            })
-        console.log('set user here')
+        dispatch(setEditingOrder(order))
+        navigate('/menu')
     }
 
     const ShowTransportForm = () => {
@@ -355,204 +329,86 @@ const ItemShow = ({ type }) => {
     }
 
     const createAdvancePayment = (amount) => {
-        console.log('id to edit', window.location.href.split('/')[4])
-        const id = window.location.href.split('/')[4]
-
-        axios.put(`/orders/${id}`, { "AdvanceAmount": amount }, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
+        console.log(`[AdvancePayment] saving | orderId: ${id} | amount: ₹${amount}`)
+        axios.put(`/orders/${id}`, { AdvanceAmount: amount }, {
+            headers: { 'x-auth': localStorage.getItem('token') }
         })
-            .then(response => {
-                const item = response.data
-
-                console.log('Edited order :', item)
+            .then(() => {
+                console.log(`[AdvancePayment] saved successfully | amount: ₹${amount}`)
                 setAdvanceAmount(amount)
-                const oldAmount = JSON.parse(localStorage.getItem('order'))
-                oldAmount.advanceAmount = advanceAmount
-                localStorage.setItem('order', JSON.stringify(oldAmount))
-                console.log('order amount to check', localStorage.getItem('order'))
-
             })
-            .catch(err => {
-                console.log(err)
-            })
+            .catch(err => console.error('[AdvancePayment] save failed:', err))
     }
-    const setAdvanceAmountinLS = (amount) => {
-        setAdvanceAmount(amount)
 
-        let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-        orderDetails.order.AdvanceAmount = amount
-        localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
-    }
     const ShowAdvancePaymentTable = (amount) => {
-
-        alert("type!:" + type)
-
-        switch (type) {
-            case "eventOrder": {
-                alert("Inside event order type")
-                updateEventOrder(id, { AdvanceAmount: amount })
-                setAdvanceAmountinLS(amount)
-
-                break;
-            } default: {
-                alert("Normal flow edit")
-                createAdvancePayment(amount)
-                break;
-
-            }
+        console.log(`[AdvancePayment] submit | flow: ${type || 'normal'} | amount: ₹${amount}`)
+        if (type === 'eventOrder') {
+            updateEventOrder(id, { AdvanceAmount: amount })
+            setAdvanceAmount(amount)
+        } else {
+            createAdvancePayment(amount)
         }
     }
 
     const updateTransport = (medium, rate) => {
-        console.log('id to edit', window.location.href.split('/')[4])
-        const id = window.location.href.split('/')[4]
-
-        axios.put(`/orders/${id}`, { "transport": { "medium": medium, "rate": rate } }, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
+        console.log(`[Transport] saving | orderId: ${id} | medium: ${medium} | rate: ₹${rate}`)
+        axios.put(`/orders/${id}`, { transport: { medium, rate } }, {
+            headers: { 'x-auth': localStorage.getItem('token') }
         })
-            .then(response => {
-                const item = response.data
-
-                console.log('Edited order :', item)
+            .then(() => {
+                console.log(`[Transport] saved successfully | medium: ${medium} | rate: ₹${rate}`)
                 setMedium(medium)
                 setRate(rate)
-                const oldmedium = JSON.parse(localStorage.getItem('order'))
-                oldmedium.medium = medium
-                oldmedium.rate = rate
-                localStorage.setItem('order', JSON.stringify(oldmedium))
-                console.log('orer to check', localStorage.getItem('order'))
-
             })
-            .catch(err => {
-                console.log(err)
-            })
+            .catch(err => console.error('[Transport] save failed:', err))
     }
 
     const ShowTransportTable = (medium, rate) => {
-
-        alert("type for entering medium:" + type)
-
-        switch (type) {
-            case "eventOrder": {
-                alert("Inside event order type" + medium + rate)
-                updateEventOrder(id, { transport: { medium, rate } })
-                setMedium(medium)
-                setRate(rate)
-                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-                orderDetails.order.transport = { medium, rate }
-                localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
-
-                break;
-            } default: {
-                alert("Normal flow edit")
-                updateTransport(medium, rate)
-                break;
-
-            }
+        console.log(`[Transport] submit | flow: ${type || 'normal'} | medium: ${medium} | rate: ₹${rate}`)
+        if (type === 'eventOrder') {
+            updateEventOrder(id, { transport: { medium, rate } })
+            setMedium(medium)
+            setRate(rate)
+        } else {
+            updateTransport(medium, rate)
         }
     }
 
 
     const deleteTransportTable = () => {
-        alert("type for deleting medium:")
-
-        switch (type) {
-            case "eventOrder": {
-                alert("Inside event order type" + id)
-                deleteFieldFromEventOrder(id, 'transport')
-
-                setMedium('')
-                let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-                delete orderDetails.order.transport
-                localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
-                break;
-            } default: {
-                alert("Normal flow edit transport")
-                console.log('inside parent to delete the transport table')
-                console.log('check for state here', order)
-                const { _id } = order
-
-                axios.put(`/orders/${_id}`, { transport: {} }, {
-                    headers: {
-                        'x-auth': localStorage.getItem('token')
-                    }
+        console.log(`[Transport] deleting | flow: ${type || 'normal'} | orderId: ${id}`)
+        if (type === 'eventOrder') {
+            deleteFieldFromEventOrder(id, 'transport')
+            setMedium('')
+            setRate('')
+        } else {
+            axios.put(`/orders/${id}`, { transport: {} }, {
+                headers: { 'x-auth': localStorage.getItem('token') }
+            })
+                .then(() => {
+                    console.log('[Transport] deleted successfully')
+                    setMedium('')
+                    setRate('')
                 })
-                    .then(response => {
-                        const item = response.data
-
-                        console.log('Edited order :', item)
-                        setMedium('')
-                        setRate('')
-                        const oldTransport = JSON.parse(localStorage.getItem('order'))
-                        delete oldTransport.transport
-                        localStorage.setItem('order', JSON.stringify(oldTransport))
-                        console.log('order amount to check', localStorage.getItem('order'))
-
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                break;
-
-            }
+                .catch(err => console.error('[Transport] delete failed:', err))
         }
-
-
     }
 
-    const deleteAdvancePayment = () => {
-        console.log('inside parent to delete the AdvancePayment table')
-        console.log('check for state here', order)
-        const { _id } = order
-
-        axios.put(`/orders/${_id}`, { AdvanceAmount: '' }, {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                const item = response.data
-
-                console.log('Edited order :', item)
-                setAdvanceAmount(null)
-
-                delete item.AdvanceAmount
-                console.log("--Debug-- latest:", { ...item.customer })
-                const newObj = { ...item.customer, items: item.items, status: item.status, ...item.transport, _id: item._id }
-                console.log("--Debug-- latest check for flat:", newObj)
-                localStorage.setItem('order', JSON.stringify(newObj))
-                console.log('order amount to check', localStorage.getItem('order'))
-
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-    const deleteAdvanceAmountinLS = () => {
-        let orderDetails = JSON.parse(localStorage.getItem('orderDetails'))
-        delete orderDetails.order.AdvanceAmount
-        localStorage.setItem('orderDetails', JSON.stringify(orderDetails))
-    }
     const deleteAdvancePaymentTable = () => {
-        switch (type) {
-            case "eventOrder": {
-                alert("Inside event order type Delete" + id)
-                deleteFieldFromEventOrder(id, 'AdvanceAmount')
-                setAdvanceAmount(null)
-                deleteAdvanceAmountinLS()
-                break;
-            } default: {
-                alert("Normal flow delete advancepayment")
-                deleteAdvancePayment()
-                break;
-            }
+        console.log(`[AdvancePayment] deleting | flow: ${type || 'normal'} | orderId: ${id}`)
+        if (type === 'eventOrder') {
+            deleteFieldFromEventOrder(id, 'AdvanceAmount')
+            setAdvanceAmount(null)
+        } else {
+            axios.put(`/orders/${id}`, { AdvanceAmount: null }, {
+                headers: { 'x-auth': localStorage.getItem('token') }
+            })
+                .then(() => {
+                    console.log('[AdvancePayment] deleted successfully')
+                    setAdvanceAmount(null)
+                })
+                .catch(err => console.error('[AdvancePayment] delete failed:', err))
         }
-
-
     }
 
     const calculateTotal = () => {
@@ -562,7 +418,7 @@ const ItemShow = ({ type }) => {
     }
 
     const calculateBalance = () => {
-        alert("misssc calc balance :", JSON.stringify(miscItems))
+        console.log('[Balance] calculating | miscItems:', JSON.stringify(miscItems))
         if (total && rate && advanceAmount) {
             const balance = rate - advanceAmount + total
             return balance
@@ -663,6 +519,92 @@ const ItemShow = ({ type }) => {
 
     }
 
+    const openEditMode = () => {
+        setEditFields({
+            fullName,
+            phoneNumber,
+            email,
+            address,
+            eventName,
+            numberOfPeople,
+            eventTime,
+            eventDate: eventDateNew ? new Date(eventDateNew) : new Date(),
+            queries,
+            homeDelivery,
+            service,
+            status,
+        })
+        setEditMode(true)
+    }
+
+    const cancelEdit = () => setEditMode(false)
+
+    const saveEdit = () => {
+        const d = editFields.eventDate instanceof Date && !isNaN(editFields.eventDate)
+            ? editFields.eventDate
+            : null
+        const savedEventDate = d ? d.toISOString() : eventDateNew
+        const savedEventTime = d
+            ? `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+            : editFields.eventTime
+
+        console.log(`[EditDetails] saving | eventDate: ${savedEventDate} | eventTime: ${savedEventTime}`)
+
+        axios.put(`/orders/${id}`, {
+            customer: {
+                fullName: editFields.fullName,
+                phoneNumber: editFields.phoneNumber,
+                email: editFields.email,
+                address: editFields.address,
+                eventName: editFields.eventName,
+                numberOfPeople: editFields.numberOfPeople,
+                eventDate: savedEventDate,
+                eventTime: savedEventTime,
+                homeDelivery: editFields.homeDelivery,
+                service: editFields.service,
+                queries: editFields.queries,
+                customer_id,
+            },
+            status: editFields.status,
+        }, {
+            headers: { 'x-auth': localStorage.getItem('token') }
+        })
+            .then(() => {
+                setFullName(editFields.fullName)
+                setPhoneNumber(editFields.phoneNumber)
+                setEmail(editFields.email)
+                setAddress(editFields.address)
+                setEventName(editFields.eventName)
+                setNumberOfPeople(editFields.numberOfPeople)
+                setEventTime(savedEventTime)
+                setEventDateNew(savedEventDate)
+                setHomeDelievery(editFields.homeDelivery)
+                setService(editFields.service)
+                setQueries(editFields.queries)
+                setStatus(editFields.status)
+                setEditMode(false)
+                console.log('[EditDetails] saved successfully')
+            })
+            .catch(err => console.error('[EditDetails] save failed:', err))
+    }
+
+    const handleDeleteOrder = () => {
+        setConfirmState({
+            open: true,
+            title: 'Delete Order',
+            message: `Delete order for ${fullName}?`,
+            onConfirm: async () => {
+                setConfirmState(s => ({ ...s, open: false }))
+                try {
+                    await deleteOrder(id).unwrap()
+                    navigate('/orders')
+                } catch (err) {
+                    console.error('[DeleteOrder] failed:', err)
+                }
+            }
+        })
+    }
+
     const meta = STATUS_META[status] ?? { label: status, className: '' }
 
     const thCell = {
@@ -707,12 +649,19 @@ const ItemShow = ({ type }) => {
                         </button>
                     </Link>
                 )}
-                <Link to="/menu">
-                    <button className="mos__nav-btn" onClick={() => EditOrder()}>
-                        <img src={updateIcon} alt="" height="20" width="20" />
-                        Edit
+                <button className="mos__nav-btn" onClick={EditOrder}>
+                    <img src={updateIcon} alt="" height="20" width="20" />
+                    Edit
+                </button>
+                <button className="mos__nav-btn" onClick={openEditMode}>
+                    <img src={updateIcon} alt="" height="20" width="20" />
+                    Edit Details
+                </button>
+                {type === undefined && (
+                    <button className="mos__nav-btn" style={{ background: '#c62828', color: '#fff', border: 'none' }} onClick={handleDeleteOrder}>
+                        Delete
                     </button>
-                </Link>
+                )}
             </div>
 
             <div className="mos__body">
@@ -741,80 +690,223 @@ const ItemShow = ({ type }) => {
                             </div>
                         )}
 
-                        <ul className="mos__detail-list">
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">👤</span>
-                                <span className="mos__detail-label">Customer</span>
-                                <span className="mos__detail-value">{fullName}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">🎉</span>
-                                <span className="mos__detail-label">Event Name</span>
-                                <span className="mos__detail-value">{eventName}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">📅</span>
-                                <span className="mos__detail-label">Event Date</span>
-                                <span className="mos__detail-value">{eventDate}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">📅</span>
-                                <span className="mos__detail-label">Event Date (raw)</span>
-                                <span className="mos__detail-value">{eventDateNew}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">⏰</span>
-                                <span className="mos__detail-label">Event Time</span>
-                                <span className="mos__detail-value">
-                                    {eventTime} — {eventTimeCalculate(eventTime)}
-                                </span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">👥</span>
-                                <span className="mos__detail-label">Guests</span>
-                                <span className="mos__detail-value">{numberOfPeople}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">📞</span>
-                                <span className="mos__detail-label">Phone</span>
-                                <span className="mos__detail-value">{phoneNumber}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">📍</span>
-                                <span className="mos__detail-label">Address</span>
-                                <span className="mos__detail-value">{address}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">✉</span>
-                                <span className="mos__detail-label">Email</span>
-                                <span className="mos__detail-value">{email}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">🍽</span>
-                                <span className="mos__detail-label">Service</span>
-                                <span className="mos__detail-value">{service ? 'Yes' : 'No'}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">🚚</span>
-                                <span className="mos__detail-label">Home Delivery</span>
-                                <span className="mos__detail-value">{homeDelivery ? 'Yes' : 'No'}</span>
-                            </li>
-                            <li className="mos__detail-item">
-                                <span className="mos__detail-icon">🪪</span>
-                                <span className="mos__detail-label">Order ID</span>
-                                <span className="mos__detail-value">{id}</span>
-                            </li>
-                        </ul>
-
-                        {queries && (
-                            <div className="mos__admin-queries">
-                                Queries: {queries}
+                        {editMode ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1rem 0' }}>
+                                <TextField
+                                    label="Full Name"
+                                    value={editFields.fullName || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, fullName: e.target.value }))}
+                                    size="small"
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <TextField
+                                    label="Phone Number"
+                                    value={editFields.phoneNumber || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, phoneNumber: e.target.value }))}
+                                    size="small"
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <TextField
+                                    label="Email"
+                                    value={editFields.email || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, email: e.target.value }))}
+                                    size="small"
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <TextField
+                                    label="Address"
+                                    value={editFields.address || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, address: e.target.value }))}
+                                    size="small"
+                                    multiline
+                                    rows={2}
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <TextField
+                                    label="Event Name"
+                                    value={editFields.eventName || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, eventName: e.target.value }))}
+                                    size="small"
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <TextField
+                                    label="Number of People"
+                                    type="number"
+                                    value={editFields.numberOfPeople || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, numberOfPeople: e.target.value }))}
+                                    size="small"
+                                    slotProps={{ htmlInput: { min: 1 } }}
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                    <DateTimePicker
+                                        label="Event Date & Time"
+                                        value={editFields.eventDate || null}
+                                        onChange={val => setEditFields(f => ({ ...f, eventDate: val }))}
+                                        slotProps={{
+                                            textField: {
+                                                size: 'small',
+                                                sx: { '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } },
+                                            },
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                                <FormControl size="small" sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}>
+                                    <InputLabel>Status</InputLabel>
+                                    <Select
+                                        label="Status"
+                                        value={editFields.status || ''}
+                                        onChange={e => setEditFields(f => ({ ...f, status: e.target.value }))}
+                                    >
+                                        <MenuItem value="approve">Approve</MenuItem>
+                                        <MenuItem value="confirmed">Confirmed</MenuItem>
+                                        <MenuItem value="completed">Completed</MenuItem>
+                                        <MenuItem value="rejected">Rejected</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={!!editFields.homeDelivery}
+                                            onChange={e => setEditFields(f => ({ ...f, homeDelivery: e.target.checked }))}
+                                            sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
+                                        />
+                                    }
+                                    label="Home Delivery"
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={!!editFields.service}
+                                            onChange={e => setEditFields(f => ({ ...f, service: e.target.checked }))}
+                                            sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
+                                        />
+                                    }
+                                    label="Service"
+                                />
+                                <TextField
+                                    label="Queries"
+                                    value={editFields.queries || ''}
+                                    onChange={e => setEditFields(f => ({ ...f, queries: e.target.value }))}
+                                    size="small"
+                                    multiline
+                                    rows={3}
+                                    sx={{ '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#C9A227' } }, '& label.Mui-focused': { color: '#7a6010' } }}
+                                />
+                                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={saveEdit}
+                                        sx={{ backgroundColor: '#C9A227', color: '#3d2e00', fontWeight: 700, '&:hover': { backgroundColor: '#e8c84d' } }}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        onClick={cancelEdit}
+                                        sx={{ borderColor: '#C9A227', color: '#7a6010', '&:hover': { borderColor: '#e8c84d', backgroundColor: 'rgba(201,162,39,0.08)' } }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
                             </div>
-                        )}
+                        ) : (
+                            <>
+                                <ul className="mos__detail-list">
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">👤</span>
+                                        <span className="mos__detail-label">Customer</span>
+                                        <span className="mos__detail-value">{fullName}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">🎉</span>
+                                        <span className="mos__detail-label">Event Name</span>
+                                        <span className="mos__detail-value">{eventName}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">📅</span>
+                                        <span className="mos__detail-label">Event Date</span>
+                                        <span className="mos__detail-value">{eventDate}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">📅</span>
+                                        <span className="mos__detail-label">Event Date (raw)</span>
+                                        <span className="mos__detail-value">{eventDateNew}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">⏰</span>
+                                        <span className="mos__detail-label">Event Time</span>
+                                        <span className="mos__detail-value">
+                                            {eventTime} — {eventTimeCalculate(eventTime)}
+                                        </span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">👥</span>
+                                        <span className="mos__detail-label">Guests</span>
+                                        <span className="mos__detail-value">{numberOfPeople}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">📞</span>
+                                        <span className="mos__detail-label">Phone</span>
+                                        <span className="mos__detail-value">{phoneNumber}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">📍</span>
+                                        <span className="mos__detail-label">Address</span>
+                                        <span className="mos__detail-value">{address}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">✉</span>
+                                        <span className="mos__detail-label">Email</span>
+                                        <span className="mos__detail-value">{email}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">🍽</span>
+                                        <span className="mos__detail-label">Service</span>
+                                        <span className="mos__detail-value">{service ? 'Yes' : 'No'}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">🚚</span>
+                                        <span className="mos__detail-label">Home Delivery</span>
+                                        <span className="mos__detail-value">{homeDelivery ? 'Yes' : 'No'}</span>
+                                    </li>
+                                    <li className="mos__detail-item">
+                                        <span className="mos__detail-icon">🪪</span>
+                                        <span className="mos__detail-label">Order ID</span>
+                                        <span className="mos__detail-value">{id}</span>
+                                    </li>
+                                </ul>
 
-                        <p className="mos__billing-note" style={{ marginTop: '1rem' }}>
-                            add this user to db link feature : navigate to user account with prefilled fields
-                        </p>
+                                {queries && (
+                                    <div className="mos__admin-queries">
+                                        Queries: {queries}
+                                    </div>
+                                )}
+
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => navigate('/customers/add', {
+                                        state: {
+                                            prefill: {
+                                                fullName,
+                                                email,
+                                                phoneNumber: [{ primary: String(phoneNumber) }],
+                                                address: [{ Home: address }]
+                                            }
+                                        }
+                                    })}
+                                    sx={{
+                                        mt: 1.5,
+                                        borderColor: '#C9A227',
+                                        color: '#7a6010',
+                                        fontWeight: 600,
+                                        '&:hover': { borderColor: '#e8c84d', backgroundColor: 'rgba(201,162,39,0.08)' }
+                                    }}
+                                >
+                                    Add to Customer DB
+                                </Button>
+                            </>
+                        )}
                     </motion.div>
 
                     {/* ── Items card ───────────────────────────────────── */}
@@ -1054,6 +1146,15 @@ const ItemShow = ({ type }) => {
                 </motion.div>
 
             </div>
+
+            <ConfirmDialog
+                open={confirmState.open}
+                title={confirmState.title}
+                message={confirmState.message}
+                confirmText="Delete"
+                onConfirm={confirmState.onConfirm}
+                onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
+            />
         </div>
     )
 }

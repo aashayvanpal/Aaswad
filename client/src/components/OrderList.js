@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../config/axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setEditingOrder } from '../store/slices/cartSlice'
 import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
 import '../css/app-css.css'
 import '../css/OrderList.css'
-import NavigationBar from './NavigationBar';
 import ConfirmDialog from './ConfirmDialog'
-import ShowBtn from '../assets/ShowBtn';
 import deleteImg from '../images/delete-icon.png'
 import approveImg from '../images/approve-icon.png'
 import homeDeliveryMan from '../images/home-delivery-man.png'
@@ -16,10 +16,13 @@ import upArrow from '../images/up-arrow.png'
 import downArrow from '../images/down-arrow.png'
 import DatePicker from "react-datepicker";
 import ReportModal from './ReportModal';
+import {
+    useGetOrdersQuery,
+    useDeleteOrderMutation,
+    useUpdateOrderMutation,
+} from '../store/services/ordersApi'
 
 const ItemList = () => {
-
-    const [orders, setOrders] = useState([])
     const [approves, setApproves] = useState([])
     const [completed, setCompleted] = useState([])
     const [confirmed, setConfirmed] = useState([])
@@ -28,285 +31,117 @@ const ItemList = () => {
     const [orderCheckBox, setOrderCheckBox] = useState(false)
     const [reportingState, setReportingState] = useState([])
     const [confirmState, setConfirmState] = useState({ open: false })
-    const [reportingOrders, setReportingOrders] = useState([
-        { name: 'abc', amount: 10, status: 'approve', isReportSelected: 'true' },
-        { name: 'abc2', amount: 10, status: 'completed', isReportSelected: 'true' },
-        // { name: 'abc3', amount: 10, status: 'approve',isReportSelected:'true' },
-    ])
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const { data: orders = [], isLoading } = useGetOrdersQuery()
+    const [deleteOrder] = useDeleteOrderMutation()
+    const [updateOrder] = useUpdateOrderMutation()
+
     useEffect(() => {
-        // get request for all items , filter approves,confirmed and completed
-        axios.get('/api/orders', {
-            headers: {
-                'x-auth': localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                console.log('Data : ', response.data)
-                const orders = response.data
-                console.log('items after request :', orders)
-                setOrders(orders)
-
-                // filter for approve 
-                const approves = orders.filter(order => order.status === 'approve').map(order => ({ ...order, isReportSelected: false }))
-                console.log('approves filtered:', approves)
-                setApproves(approves)
-
-                // filter for confirmed 
-                const confirmed = orders.filter(order => order.status === 'confirmed')
-                console.log('confirmed filtered:', confirmed)
-                setConfirmed(confirmed)
-
-                // filter for completed 
-                const completed = orders.filter(order => order.status === 'completed')
-                console.log('completed filtered:', completed)
-                setCompleted(completed)
-
-                console.log('approves state:', approves)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-
+        setApproves(orders.filter(o => o.status === 'approve').map(o => ({ ...o, isReportSelected: false })))
+        setConfirmed(orders.filter(o => o.status === 'confirmed'))
+        setCompleted(orders.filter(o => o.status === 'completed'))
         reporting()
-    }, [])
+    }, [orders])
 
     const reporting = () => {
-        console.log("now theres only emptyness ,i think im not the only one!")
         const report = JSON.parse(localStorage.getItem('report'))
-        console.log("The limits ", report)
         setReportingState(report)
     }
 
     const handleRemoveOrder = (id, name) => {
-        console.log('remove this id:', id)
-        console.log('remove this name:', name)
-
         setConfirmState({
             open: true,
             title: 'Delete Order Confirmation',
             message: `Are you sure you want to delete : ${name}??`,
-            onConfirm: () => {
+            onConfirm: async () => {
                 setConfirmState(s => ({ ...s, open: false }))
-                axios.delete(`/orders/${id}`, {
-                    headers: { 'x-auth': localStorage.getItem('token') }
-                })
-                    .then((response) => {
-                        console.log('response data', response.data)
-                        setApproves(a => a.filter(item => item._id !== response.data._id))
-                        setConfirmed(c => c.filter(item => item._id !== response.data._id))
-                        setCompleted(c => c.filter(item => item._id !== response.data._id))
-                        setOrders(o => o.filter(item => item._id !== response.data._id))
-                    })
-                    .catch((err) => console.log(err))
+                try {
+                    await deleteOrder(id).unwrap()
+                } catch (err) {
+                    console.log(err)
+                }
             }
         })
     }
 
-    const handleApproveOrder = (id) => {
-        console.log('clicked on Approve Button ')
-        console.log('Approve this order id: ', id)
-        // change status from approve to confirmed
-        // you have found the id, you have to get the whole item 
-        const foundItem = approves.find(item => item._id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s status before:', foundItem.status)
-
-        // console.log('current state id',this.state.items.id[itemToToggle])
-        console.log('Edit item : ', foundItem)
-
-        const index = approves.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of approves :', approves)
-        console.log('spread :', ...approves)
-        // console.log('spread index 2:', this.state.items[2])
-        // console.log('spread index 2 display before:', this.state.items[2].display)
-        // console.log('spread index 2 display after:', !this.state.items[2].display)
-
-        var changedItems = approves
-        changedItems[index].status = 'confirmed'
-
-        setConfirmed([changedItems[index], ...confirmed])
-
-        setApproves(changedItems.filter(item => item.status === 'approve'))
-
-
-        console.log('put request for /orders')
-        console.log('changedItems[index]:', changedItems[index])
-        // put request
-        axios.put(`/orders/${changedItems[index]._id}`, changedItems[index], {
-            headers: {
-                "x-auth": localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data.errors) {
-                    console.log('Validation Error : ', response.data.errors)
-                    window.alert(response.data.message)
-                }
-                else {
-                    console.log('success', response.data)
-                    // this.props.history.push(`/items/show/${response.data._id}`)
-                    // window.location.href = '/items'
-
-                    // order approved email notification
-                    console.log('changed items ', changedItems)
-                    axios.post('/sendEmail/orderApproved', {
-                        'fullName': changedItems[index].customer.fullName,
-                        'email': changedItems[index].customer.email,
-                        'phonenumber': changedItems[index].customer.phoneNumber
-                    })
-                }
+    const handleApproveOrder = async (id) => {
+        const order = approves.find(item => item._id === id)
+        if (!order) return
+        try {
+            await updateOrder({ id, ...order, status: 'confirmed' }).unwrap()
+            axios.post('/sendEmail/orderApproved', {
+                fullName: order.customer.fullName,
+                email: order.customer.email,
+                phonenumber: order.customer.phoneNumber,
             })
+        } catch (err) {
+            console.log(err)
+            window.alert(err?.data?.message || 'Update failed')
+        }
     }
 
-    const handleCompleteOrder = (id) => {
-        console.log('clicked on Completed Button ')
-        console.log('Approve this order id: ', id)
-        // change status from approve to confirmed
-        // you have found the id, you have to get the whole item 
-        const foundItem = confirmed.find(item => item._id === id)
-        console.log('Item found :', foundItem)
-        console.log('Item found\'s status before:', foundItem.status)
-
-        console.log('Edit item : ', foundItem)
-
-
-        const index = confirmed.findIndex(item => item._id === id)
-        console.log('the index is :', index)
-
-        console.log('state of confirmed :', confirmed)
-        console.log('spread :', ...confirmed)
-        // console.log('spread index 2:', this.state.items[2])
-        // console.log('spread index 2 display before:', this.state.items[2].display)
-        // console.log('spread index 2 display after:', !this.state.items[2].display)
-
-        var changedItems = confirmed
-        changedItems[index].status = 'completed'
-
-        setCompleted([changedItems[index], ...completed])
-
-        setConfirmed(changedItems.filter(item => item.status === 'confirmed'))
-
-
-        console.log('put request for /orders')
-        console.log('changedItems[index]:', changedItems[index])
-        // put request
-        axios.put(`/orders/${changedItems[index]._id}`, changedItems[index], {
-            headers: {
-                "x-auth": localStorage.getItem('token')
-            }
-        })
-            .then(response => {
-                if (response.data.errors) {
-                    console.log('Validation Error : ', response.data.errors)
-                    window.alert(response.data.message)
-                }
-                else {
-                    console.log('success', response.data)
-                    // this.props.history.push(`/items/show/${response.data._id}`)
-                    // window.location.href = '/items'
-
-                    // order completed email
-                    axios.post('/sendEmail/orderCompleted', { 'email': response.data.customer.email })
-
-                }
-            })
+    const handleCompleteOrder = async (id) => {
+        const order = confirmed.find(item => item._id === id)
+        if (!order) return
+        try {
+            await updateOrder({ id, ...order, status: 'completed' }).unwrap()
+            axios.post('/sendEmail/orderCompleted', { email: order.customer.email })
+        } catch (err) {
+            console.log(err)
+            window.alert(err?.data?.message || 'Update failed')
+        }
     }
 
-    // doubt - not working in mobile view
-    const sortAscending = (settingFunction, value) => {
-        // console.log('settingFunction', settingFunction)
-        console.log('valueasc', value)
-        const sorted = value.sort(function (a, b) {
-            return (a.customer.eventDate > b.customer.eventDate) ? -1 : ((a.customer.eventDate < b.customer.eventDate) ? 1 : 0);
-        })
-        console.log('sorted', sorted)
-        settingFunction([...sorted])
+    const sortAscending = (setFn, list) => {
+        const sorted = [...list].sort((a, b) =>
+            a.customer.eventDate > b.customer.eventDate ? -1 : a.customer.eventDate < b.customer.eventDate ? 1 : 0
+        )
+        setFn(sorted)
     }
 
-    // doubt - not working in mobile view
-    const sortDescending = (settingFunction, value) => {
-        // console.log('settingFunction', settingFunction)
-        console.log('valuedes', value)
-        const sorted = value.sort(function (a, b) {
-            console.log('a,b',a,b);
-            return (a.customer.eventDate < b.customer.eventDate) ? -1 : ((a.customer.eventDate > b.customer.eventDate) ? 1 : 0);
-        })
-        console.log('sorted', sorted)
-        settingFunction([...sorted])
+    const sortDescending = (setFn, list) => {
+        const sorted = [...list].sort((a, b) =>
+            a.customer.eventDate < b.customer.eventDate ? -1 : a.customer.eventDate > b.customer.eventDate ? 1 : 0
+        )
+        setFn(sorted)
     }
-    const clearOrderSearch = (id, setFunction, status) => {
-        console.log('inside clearOrderSearch')
-        // console.log('id', id)
-        // console.log(document.getElementById(id))
+
+    const clearOrderSearch = (id, setFn, status) => {
         document.getElementById(id).value = ''
-        const reset = orders.filter(order => order.status === status)
-        console.log('resset', reset)
-        setFunction(reset)
-
-
+        setFn(orders.filter(o => o.status === status))
     }
 
-
-    const handleDateChange = (date, dateString) => {
-        // console.log("Date Changed :", String(date))
-        console.log("Date Changed :", date)
-
-        dateString(date)
-
-        console.log('======finding the orders between the dates=====')
-        console.log(startDateFrom, startDateFrom.toISOString())
-        console.log(startDateTo, startDateTo.toISOString())
-        console.log('check completed state here:', completed)
-
-
-        const completedOrders = orders.filter(order => order.status === 'completed')
-        const filteredDateOrders = completedOrders.filter(order => {
-            return ((new Date(startDateFrom.toISOString()) <= new Date(order.customer.eventDate)) && (new Date(startDateTo.toISOString()) >= new Date(order.customer.eventDate)))
-        })
-        console.log('filteredDateOrders:', filteredDateOrders)
-        setCompleted(filteredDateOrders)
-    };
-
-    const selectOrders = () => {
-        console.log('clicked on order selection button before...', orderCheckBox)
-        // create checkbox state handler to show and hide the selection
-        setOrderCheckBox(!orderCheckBox)
-        console.log('after...', orderCheckBox)
-
+    const handleDateChange = (date, setFn) => {
+        setFn(date)
+        const completedOrders = orders.filter(o => o.status === 'completed')
+        const filtered = completedOrders.filter(o =>
+            new Date(startDateFrom) <= new Date(o.customer.eventDate) &&
+            new Date(startDateTo) >= new Date(o.customer.eventDate)
+        )
+        setCompleted(filtered)
     }
+
+    const selectOrders = () => setOrderCheckBox(!orderCheckBox)
 
     const selectOrder = (order) => {
-        console.log('you have selected this order=>', order)
-
-        const output = {}
-        output.id = order._id
-        output.name = order.customer.fullName
-        output.amount = 10
-        output.status = order.status
-        output.isReportSelected = !order.isReportSelected
-        const isReportingValue = approves.find(order => order._id).isReportSelected
-        approves.find(order => order._id).isReportSelected = !isReportingValue
-        console.log("yey found:", approves)
-        const newApproves = approves
-        setApproves(newApproves)
-        // setApproves()
-        // .isReportSelected = !order.isReportSelected
-        console.log('i want this output for reporting', output)
-        // get this from the localStrorage.report 
-        const testSample = [
-            { name: 'abc', amount: 10, status: 'approve' },
-            { name: 'abc2', amount: 10, status: 'completed' },
-            { name: 'abc3', amount: 10, status: 'approve' },
-        ]
-        const report = JSON.parse(localStorage.getItem('report'))
-        // const outputString = JSON.stringify(output)
-        const addedReport = [...report, output]
-        localStorage.setItem('report', JSON.stringify(addedReport))
-        console.log('report ', report)
-
+        const output = {
+            id: order._id,
+            name: order.customer.fullName,
+            amount: 10,
+            status: order.status,
+            isReportSelected: !order.isReportSelected,
+        }
+        const report = JSON.parse(localStorage.getItem('report')) || []
+        localStorage.setItem('report', JSON.stringify([...report, output]))
     }
+
+    const formatDate = (dateStr) =>
+        dateStr ? `${dateStr.substr(8, 2)}/${dateStr.substr(5, 2)}/${dateStr.substr(0, 4)}` : ''
+
+    if (isLoading) return <div style={{ textAlign: 'center', padding: '40px' }}>Loading orders...</div>
 
     return (
         <div>
@@ -318,264 +153,208 @@ const ItemList = () => {
                 onConfirm={confirmState.onConfirm}
                 onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
             />
-            <ShowBtn />
-            <div style={{ 'display': 'flex' }}>
-                <NavigationBar />
-                <div style={{ "margin": "10px", "width": "100%" }}>
-                    <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Single date orders list</h2>
-                    <button onClick={selectOrders}>Select Orders</button>
-                    <ReportModal
-                        report={reportingState}
-                        buttonLabel="Show Selected Report" />
-                    <div className='order-container' style={{ "backgroundColor": "#e3c57e" }}>
-                        <h2 style={{ 'textAlign': 'center', marginBottom: '20px', fontWeight: 'bold' }}>Approve orders - {approves.length}</h2>
+            <div style={{ margin: '10px', width: '100%' }}>
+                <h2 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>Single date orders list</h2>
+                <button onClick={selectOrders}>Select Orders</button>
+                <ReportModal report={reportingState} buttonLabel="Show Selected Report" />
 
-                        <Table className='table-styling' style={{ "fontWeight": "bold" }}>
-                            <caption>
-                                {/* <h1>Approve orders - {this.state.approves.length}</h1> */}
-
-                            </caption>
-                            <Thead>
-                                <Tr>
-                                    <Th className="listing-table" >Sl no
-                                        {
-                                            orderCheckBox && <input type={"checkbox"}
-                                                style={{ height: '25px', width: '25px' }}
-                                            ></input>
-                                        }
-
-                                    </Th>
-                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}  >
-                                        Date
-                                        <button onClick={() => sortAscending(setApproves, approves)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
-                                        <button onClick={() => sortDescending(setApproves, approves)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
-                                    </Th>
-                                    <Th className="listing-table" >Name</Th>
-                                    <Th className="listing-table" >Actions</Th>
+                {/* Approve orders */}
+                <div className='order-container' style={{ backgroundColor: '#e3c57e' }}>
+                    <h2 style={{ textAlign: 'center', marginBottom: '20px', fontWeight: 'bold' }}>
+                        Approve orders - {approves.length}
+                    </h2>
+                    <Table className='table-styling' style={{ fontWeight: 'bold' }}>
+                        <Thead>
+                            <Tr>
+                                <Th className="listing-table">
+                                    Sl no
+                                    {orderCheckBox && <input type="checkbox" style={{ height: '25px', width: '25px' }} />}
+                                </Th>
+                                <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                    Date
+                                    <button onClick={() => sortAscending(setApproves, approves)}><img src={upArrow} alt="up" height="15px" width="15px" /></button>
+                                    <button onClick={() => sortDescending(setApproves, approves)}><img src={downArrow} alt="down" height="15px" width="15px" /></button>
+                                </Th>
+                                <Th className="listing-table">Name</Th>
+                                <Th className="listing-table">Actions</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {approves.map((item, i) => (
+                                <Tr key={item._id}>
+                                    <Td className="listing-table">
+                                        {i + 1}
+                                        {orderCheckBox && (
+                                            <input type="checkbox" style={{ height: '25px', width: '25px' }}
+                                                checked={item.isReportSelected} onChange={() => selectOrder(item)} />
+                                        )}
+                                    </Td>
+                                    <Td className="listing-table">{formatDate(item.customer.eventDate)}</Td>
+                                    <Td className="listing-table">
+                                        <Link to={`/orders/${item._id}`}>
+                                            <h3>
+                                                {item.customer.fullName}
+                                                {item.customer.homeDelivery && <img src={homeDeliveryMan} alt="home delivery" height='35px' width='35px' />}
+                                                {item.customer.service && <img src={serviceGif} alt="service" height='35px' width='35px' />}
+                                            </h3>
+                                        </Link>
+                                        {item.customer.queries && <>Notes - {item.customer.queries}</>}
+                                    </Td>
+                                    <Td className="listing-table">
+                                        <button onClick={() => { dispatch(setEditingOrder(item)); navigate('/menu') }}>Update</button>
+                                        <button className="button-color5" onClick={() => handleRemoveOrder(item._id, item.customer.fullName)}>
+                                            <img src={deleteImg} alt="" style={{ filter: 'brightness(0) invert(1)', height: '30px', width: '30px' }} />
+                                        </button>
+                                        <button className="button-color6" onClick={() => handleApproveOrder(item._id)}>
+                                            <img src={approveImg} alt="" height='25px' width='25px' />
+                                        </button>
+                                    </Td>
                                 </Tr>
-                            </Thead>
-                            <Tbody>
-                                {
-                                    approves.map((item, i) => {
-                                        return (
-                                            <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}
-                                                    {
-                                                        orderCheckBox && <input type={"checkbox"}
-                                                            style={{ height: '25px', width: '25px' }}
-                                                            checked={item.isReportSelected}
-                                                            onChange={() => selectOrder(item)}
-                                                        />
-                                                    }
+                            ))}
+                        </Tbody>
+                    </Table>
+                </div>
 
-                                                </Td>
-
-                                                <Td className="listing-table" onClick={() => { console.log("selected :", item) }}>{
-                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                                }</Td>
-                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
-                                                    {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
-                                                </h3></Link>
-                                                    {item.customer.queries && <>Notes - {item.customer.queries}</>}
-
-                                                </Td>
-
-                                                <Td className="listing-table">
-                                                    {/* Responsiveness lost if displayed as flex */}
-                                                    {/* <div style={{
-                                                        "display": "flex",
-                                                        "justifyContent": "space-evenly",
-                                                    }}> */}
-                                                    {/* mobile CSS:
-                                                        display: flex;
-                                                        flex-direction: column;
-                                                    */}
-                                                    <button>Update</button>
-
-                                                    <button className="button-color5" onClick={() => {
-                                                        handleRemoveOrder(item._id, item.customer.fullName)
-                                                    }}>
-                                                        <img src={deleteImg} alt="" style={{
-                                                            "filter": "brightness(0) invert(1)", height: '30px', width: '30px'
-                                                        }} />
-                                                    </button>
-                                                    <button className="button-color6" onClick={() => {
-                                                        handleApproveOrder(item._id)
-                                                    }}>
-                                                        <img src={approveImg} alt="" height='25px' width='25px' />
-                                                    </button>
-                                                    {/* </div> */}
-                                                </Td>
-
-                                            </Tr>
-                                        )
-                                    })
-                                }
-                            </Tbody>
-                        </Table>
+                {/* Confirmed orders */}
+                <div className='order-container' style={{ backgroundColor: '#98c8ab' }}>
+                    <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Confirmed orders - {confirmed.length}</h2>
+                    <div className='order-functions'>
+                        <div>
+                            <input placeholder="Search Order" id="searchConfirmed"
+                                onChange={(e) => {
+                                    const filtered = orders.filter(o => o.status === 'confirmed')
+                                        .filter(o => o.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
+                                    setConfirmed(filtered)
+                                }}
+                                className='order-search'
+                            />
+                            <button className='order-button-styling' onClick={() => clearOrderSearch('searchConfirmed', setConfirmed, 'confirmed')}>Clear</button>
+                            <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
+                        </div>
                     </div>
+                    <Table className='table-styling'>
+                        <Thead>
+                            <Tr>
+                                <Th className="listing-table">Sl no</Th>
+                                <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                    Date
+                                    <button onClick={() => sortAscending(setConfirmed, confirmed)}><img src={upArrow} alt="up" height="15px" width="15px" /></button>
+                                    <button onClick={() => sortDescending(setConfirmed, confirmed)}><img src={downArrow} alt="down" height="15px" width="15px" /></button>
+                                </Th>
+                                <Th className="listing-table">Name</Th>
+                                <Th className="listing-table">Delete</Th>
+                                <Th className="listing-table">Completed</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {confirmed.map((item, i) => (
+                                <Tr key={item._id}>
+                                    <Td className="listing-table">
+                                        {i + 1}
+                                        {orderCheckBox && (
+                                            <input type="checkbox" style={{ height: '25px', width: '25px' }}
+                                                checked={item.isReportSelected} onChange={() => selectOrder(item)} />
+                                        )}
+                                    </Td>
+                                    <Td className="listing-table">{formatDate(item.customer.eventDate)}</Td>
+                                    <Td className="listing-table">
+                                        <Link to={`/orders/${item._id}`}>
+                                            <h3>
+                                                {item.customer.fullName}
+                                                {item.customer.homeDelivery && <img src={homeDeliveryMan} alt="home delivery" height='35px' width='35px' />}
+                                                {item.customer.service && <img src={serviceGif} alt="service" height='35px' width='35px' />}
+                                            </h3>
+                                        </Link>
+                                    </Td>
+                                    <Td className="listing-table">
+                                        <button className='button-color5' onClick={() => handleRemoveOrder(item._id, item.customer.fullName)}>
+                                            <img src={deleteImg} alt="" height='20px' width='20px' />Delete
+                                        </button>
+                                    </Td>
+                                    <Td className="listing-table">
+                                        <button className='button-color6' onClick={() => handleCompleteOrder(item._id)}>
+                                            <img src={approveImg} alt="" height='20px' width='20px' />Completed
+                                        </button>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </div>
 
-                    <div className='order-container' style={{ "backgroundColor": "#98c8ab" }}>
-                        <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Confirmed orders - {confirmed.length}</h2>
-                        <div className='order-functions'>
+                {/* Completed orders */}
+                <div className='order-container' style={{ backgroundColor: '#d7c7aa' }}>
+                    <h2 style={{ textAlign: 'center', margin: '0px', fontWeight: 'bold' }}>Completed orders - {completed.length}</h2>
+                    <div className='order-functions'>
+                        <div>
+                            <input placeholder="Search Order" id='searchCompleted' className='order-search'
+                                onChange={(e) => {
+                                    const filtered = orders.filter(o => o.status === 'completed')
+                                        .filter(o => o.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
+                                    setCompleted(filtered)
+                                }}
+                            />
+                            <button className='order-button-styling' onClick={() => clearOrderSearch('searchCompleted', setCompleted, 'completed')}>Clear</button>
+                        </div>
+                        <div style={{ display: 'flex', marginBottom: '20px' }}>
                             <div>
-                                <input placeholder="Search Order" id="searchConfirmed" onChange={(e) => {
-                                    console.log('inside search handleChange')
-                                    console.log(e.target.value)
-                                    const statusFilter = orders.filter(order => order.status === 'confirmed')
-                                    console.log('filtered:', statusFilter)
-                                    const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
-                                    setConfirmed(nameFilter)
-                                }} className='order-search' />
-                                <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchConfirmed', setConfirmed, 'confirmed')}> Clear</button>
-                                <Link to='/menu'><button className='order-button-styling'>Add new Order</button></Link>
+                                From
+                                <DatePicker wrapperClassName="datePickerStyle" selected={startDateFrom}
+                                    onChange={(e) => handleDateChange(e, setStartDateFrom)} dateFormat="dd/MM/yyyy" />
+                            </div>
+                            <div>
+                                To
+                                <DatePicker wrapperClassName="datePickerStyle" selected={startDateTo}
+                                    onChange={(e) => handleDateChange(e, setStartDateTo)} dateFormat="dd/MM/yyyy" />
                             </div>
                         </div>
-                        <Table className='table-styling'>
-                            <Thead>
-                                <Tr>
-                                    <Th className="listing-table" >Sl no</Th>
-                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }} >Date
-                                        <button onClick={() => sortAscending(setConfirmed, confirmed)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
-                                        <button onClick={() => sortDescending(setConfirmed, confirmed)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
-                                    </Th>
-                                    {/* <Th className="listing-table" >Update</Th> */}
-                                    <Th className="listing-table" >Name</Th>
-                                    <Th className="listing-table" >Delete</Th>
-                                    <Th className="listing-table" >Completed</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                {
-                                    confirmed.map((item, i) => {
-                                        return (
-                                            <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}
-                                                    {
-                                                        orderCheckBox && <input type={"checkbox"}
-                                                            style={{ height: '25px', width: '25px' }}
-                                                            checked={item.isReportSelected}
-                                                            onChange={() => selectOrder(item)}
-                                                        />
-                                                    }
-                                                </Td>
-                                                <Td className="listing-table" >{
-                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                                }</Td>
-                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
-                                                    {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
-                                                </h3></Link></Td>
-                                                {/* <Td className="listing-table" ><button>update</button></Td> */}
-
-                                                <Td className="listing-table" ><button className='button-color5' onClick={() => {
-                                                    handleRemoveOrder(item._id, item.customer.fullName)
-                                                }}>
-                                                    <img src={deleteImg} alt="" height='20px' width='20px' />
-                                                    Delete</button></Td>
-                                                <Td className="listing-table" ><button className='button-color6' onClick={() => {
-                                                    handleCompleteOrder(item._id)
-                                                }}>
-                                                    <img src={approveImg} alt="" height='20px' width='20px' />
-                                                    Completed</button></Td>
-                                            </Tr>
-                                        )
-                                    })
-                                }
-                            </Tbody>
-                        </Table>
                     </div>
-
-                    <div className='order-container' style={{ "backgroundColor": "#d7c7aa" }}>
-                        <h2 style={{ 'textAlign': 'center', margin: '0px', fontWeight: 'bold' }}>Completed orders -{completed.length}</h2>
-                        <div className='order-functions'>
-                            <div>
-                                <input placeholder="Search Order" id='searchCompleted' className='order-search' onChange={(e) => {
-                                    console.log('inside search handleChange')
-                                    console.log(e.target.value)
-                                    const statusFilter = orders.filter(order => order.status === 'completed')
-                                    console.log('filtered:', statusFilter)
-                                    const nameFilter = statusFilter.filter(order => order.customer.fullName.toLowerCase().includes(e.target.value.toLowerCase()))
-                                    setCompleted(nameFilter)
-                                }} />
-                                <button className='order-button-styling' onClick={(e) => clearOrderSearch('searchCompleted', setCompleted, 'completed')}>Clear</button>
-                            </div>
-                            <div style={{ display: 'flex', marginBottom: '20px' }}>
-                                <div>
-                                    From
-                                    <DatePicker className=""
-                                        wrapperClassName="datePickerStyle"
-                                        selected={startDateFrom}
-                                        onChange={(e) => {
-                                            handleDateChange(e, setStartDateFrom)
-                                        }}
-                                        dateFormat="dd/MM/yyyy"
-
-                                    />
-                                </div>
-                                <div>
-
-                                    To
-                                    <DatePicker className=""
-                                        wrapperClassName="datePickerStyle"
-                                        selected={startDateTo}
-                                        onChange={(e) => {
-                                            handleDateChange(e, setStartDateTo)
-                                        }}
-                                        dateFormat="dd/MM/yyyy"
-
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <Table className='table-styling'>
-                            <Thead>
-                                <Tr>
-                                    <Th className="listing-table">Sl no</Th>
-                                    <Th className="listing-table">Name</Th>
-                                    <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}>Date
-                                        <button onClick={() => sortAscending(setCompleted, completed)}><img src={upArrow} alt="upArrow" height="15px" width="15px" /></button>
-                                        <button onClick={() => sortDescending(setCompleted, completed)}><img src={downArrow} alt="downArrow" height="15px" width="15px" /></button>
-                                    </Th>
-                                    <Th className="listing-table">Delete</Th>
+                    <Table className='table-styling'>
+                        <Thead>
+                            <Tr>
+                                <Th className="listing-table">Sl no</Th>
+                                <Th className="listing-table">Name</Th>
+                                <Th style={{ padding: '10px', fontSize: '21px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                    Date
+                                    <button onClick={() => sortAscending(setCompleted, completed)}><img src={upArrow} alt="up" height="15px" width="15px" /></button>
+                                    <button onClick={() => sortDescending(setCompleted, completed)}><img src={downArrow} alt="down" height="15px" width="15px" /></button>
+                                </Th>
+                                <Th className="listing-table">Delete</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {completed.map((item, i) => (
+                                <Tr key={item._id}>
+                                    <Td className="listing-table">
+                                        {i + 1}
+                                        {orderCheckBox && (
+                                            <input type="checkbox" style={{ height: '25px', width: '25px' }}
+                                                checked={true} onChange={() => selectOrder(item)} />
+                                        )}
+                                    </Td>
+                                    <Td className="listing-table">
+                                        <Link to={`/orders/${item._id}`}>
+                                            <h3>
+                                                {item.customer.fullName}
+                                                {item.customer.homeDelivery && <img src={homeDeliveryMan} alt="home delivery" height='35px' width='35px' />}
+                                                {item.customer.service && <img src={serviceGif} alt="service" height='35px' width='35px' />}
+                                            </h3>
+                                        </Link>
+                                    </Td>
+                                    <Td className="listing-table">{formatDate(item.customer.eventDate)}</Td>
+                                    <Td className="listing-table">
+                                        <button className='button-color5' onClick={() => handleRemoveOrder(item._id, item.customer.fullName)}>
+                                            <img src={deleteImg} alt="" height='20px' width='20px' />Delete
+                                        </button>
+                                    </Td>
                                 </Tr>
-                            </Thead>
-
-                            <Tbody>
-                                {
-                                    completed.map((item, i) => {
-                                        return (
-                                            <Tr key={item._id}>
-                                                <Td className="listing-table" >{i + 1}
-                                                    {
-                                                        orderCheckBox && <input type={"checkbox"}
-                                                            style={{ height: '25px', width: '25px' }}
-                                                            checked={true}
-                                                            onChange={() => selectOrder(item)}
-                                                        />
-                                                    }
-                                                </Td>
-                                                <Td className="listing-table" ><Link to={`/orders/${item._id}`}><h3>{item.customer.fullName} {item.customer.homeDelivery ? (<img src={homeDeliveryMan} alt="homeDeliveryIcon" height='35px' width='35px' />) : null}
-                                                    {item.customer.service ? (<img src={serviceGif} alt="serviceGif" height='35px' width='35px' />) : null}
-                                                </h3></Link></Td>
-                                                <Td className="listing-table" >{
-                                                    item.customer.eventDate.substr(8, 2) + "/" + item.customer.eventDate.substr(5, 2) + "/" + item.customer.eventDate.substr(0, 4)
-                                                }</Td>
-                                                <Td className="listing-table" ><button className='button-color5' onClick={() => {
-                                                    handleRemoveOrder(item._id, item.customer.fullName)
-                                                }}>
-                                                    <img src={deleteImg} alt="" height='20px' width='20px' />
-                                                    Delete</button></Td>
-                                            </Tr>
-                                        )
-                                    })
-                                }
-                            </Tbody>
-                        </Table>
-                    </div>
+                            ))}
+                        </Tbody>
+                    </Table>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
+
 export default ItemList

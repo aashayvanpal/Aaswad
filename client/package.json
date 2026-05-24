@@ -7,6 +7,8 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
+    "@mui/x-date-pickers": "^9.3.0",
+    "@reduxjs/toolkit": "^2.12.0",
     "@types/react": "^18.3.29",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
@@ -21,10 +23,12 @@
     "react-dom": "^18.3.1",
     "react-form-stepper": "^1.4.3",
     "react-multi-date-picker": "^3.3.0",
+    "react-redux": "^9.3.0",
     "react-router": "^7.15.1",
     "react-router-dom": "^7.15.1",
     "react-spinners": "^0.17.0",
     "react-super-responsive-table": "^5.2.0",
+    "redux-persist": "^6.0.0",
     "swiper": "^12.1.4",
     "typescript": "^6.0.3",
     "uuid": "^9.0.0",
@@ -36,6 +40,18 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "sass": "^1.99.0"
+    "sass": "^1.100.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

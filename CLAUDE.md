@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## About
 
-Aaswad Caterers — a MERN stack web app for catering order management. Customers can request food orders; admins manage items, customers, orders, multi-date orders, and event orders. Email notifications are sent via Nodemailer at key order lifecycle events. The frontend uses **MUI (Material UI)** for all UI components.
+Aaswad Caterers — a MERN stack web app for catering order management. Customers can request food orders; admins manage items, customers, orders, multi-date orders, and event orders. Email notifications are sent via Nodemailer at key order lifecycle events. The frontend uses **MUI (Material UI) v9** for all UI components.
 
 ## Commands
 
@@ -16,7 +16,7 @@ npm run dev
 npm start          # node server.js
 nodemon server.js  # with auto-restart
 
-# Run frontend only
+# Run frontend only (Vite dev server)
 npm run client     # cd client && npm start
 
 # Build frontend for production
@@ -26,7 +26,7 @@ npm run build      # cd client && npm run build
 cd client && npm test
 ```
 
-There is no backend test suite. The frontend uses `react-scripts test` (Jest + Testing Library).
+There is no backend test suite. The frontend uses Vite + React.
 
 ## Architecture
 
@@ -49,34 +49,42 @@ Backend code is split between the project root and — counter-intuitively — `
 
 ```
 React component
-  → calls API wrapper from client/src/apis/
-  → axios (baseURL from client/src/config/axios.js; proxies to localhost:5001 in dev)
-  → Express (server.js)
+  → RTK Query hook (store/services/) or axios (apis/)
+  → Vite dev proxy → Express (port 5001)
   → router (client/src/config/routes.js)
   → controller (client/src/controllers/)
   → Mongoose model (models/)
 ```
 
+### Vite Proxy (development)
+
+Configured in `client/vite.config.mjs`. These path prefixes are proxied to `http://localhost:5001`:
+
+```
+/api, /customers, /items, /orders, /myOrders,
+/multiOrders, /eventOrders, /ingredients,
+/register, /login, /logout, /account,
+/contactus, /sendEmail
+```
+
+**Important:** `/request` was intentionally removed from the proxy list so browser navigation to `/request` is handled by Vite (serving `index.html`), not forwarded to Express. The order creation POST endpoint is `POST /api/orders`.
+
 ### Authentication
 
 - JWT tokens generated/verified via instance/static methods on `models/User.js`
 - Middleware in `client/src/middlewares/authentication.js` checks the `x-auth` request header
-- Frontend stores the token in `localStorage` under the key `'token'` and attaches it to all authenticated requests
-
-**`localStorage` keys:**
-
-| Key | Purpose |
-|---|---|
-| `token` | JWT auth token |
-| `business` | BusinessAnalyzer working copy (income/expense JSON) |
+- Frontend stores the token in `localStorage` under the key `'token'`
+- RTK Query attaches it automatically via `prepareHeaders` in each API service
 
 ### Frontend API Layer
 
-`client/src/apis/` contains one file per resource (e.g., `customers.js`, `eventOrders.js`). Each file exports thin async functions that call the shared axios instance and pass the auth token. Components import from here rather than calling axios directly.
+Two patterns coexist:
+1. **RTK Query** (`client/src/store/services/`) — preferred for CRUD, handles caching/invalidation automatically
+2. **axios wrappers** (`client/src/apis/`) — used for resources not yet migrated to RTK
 
 ### Config Constants
 
-`client/src/config/main.js` exports `mongodburl` and Nodemailer credentials for the backend, read from a `.env` file at the project root (see `.env.example`). `client/src/config/main.client.js` exports `appVersion` for the React frontend.
+`client/src/config/main.js` exports backend constants read from `.env`. `client/src/config/main.client.js` exports `appVersion` for the React frontend.
 
 ### Key Models
 
@@ -84,22 +92,202 @@ React component
 |---|---|
 | `User` | Auth with bcrypt passwords and JWT |
 | `Item` | Menu items (name, price, category, ingredients, image) |
-| `Customer` | Customer records |
-| `Order` | Single customer order with items, transport, misc charges |
+| `Customer` | Customer records (phoneNumber and address stored as arrays of `{label: value}` objects) |
+| `Order` | Single customer order — has `items[]`, `customer{}`, `transport{medium,rate}`, `misc[]`, `AdvanceAmount`, `status` |
 | `MultiOrder` | Orders spanning multiple dates |
 | `EventOrders` | Event-based orders that aggregate multiple sub-orders |
-| `Query` | Customer contact/query submissions (email, subject, message, reply) |
+| `Query` | Customer contact/query submissions |
 | `Ingredient` | Standalone ingredient records |
-| `BlogPost` | Blog posts (title, body, date) |
+| `BlogPost` | Blog posts |
 
 ### Email Notifications
 
-`POST /sendEmail/:type` routes handle transactional emails (welcome, orderPlaced, orderApproved, orderCompleted, orderRejected, bill, forgotPassword, etc.) via Nodemailer configured in `main.js`.
+`POST /sendEmail/:type` routes handle transactional emails via Nodemailer. Types: `orderPlaced`, `orderApproved`, `orderCompleted`, `orderRejected`, `bill`, `forgotPassword`, etc. Email calls are still direct axios (not RTK) since they are fire-and-forget side effects.
 
 ### Frontend Routing
 
-React Router v6 (`BrowserRouter` / `Routes` / `Route`) is configured in `client/src/App.js`. Protected routes check `localStorage` for a token and redirect to `/Signin` if absent.
+React Router v6 in `client/src/App.js`. Two route groups:
+
+**Admin routes** — wrapped in `<Route element={<MainLayout />}>` (persistent sidebar + header):
+`/dashboard`, `/items/*`, `/orders`, `/multiOrders`, `/customers/*`, `/ingredients`, `/eventOrders/*`, `/queries`, `/contacts`, `/profit-loss`, `/settings`, `/profile`, `/aboutus`, `/deals`, `/Cart`, `/Calender`, `/bulk-orders`
+
+**Public/customer routes** — standalone with `<Header />`:
+`/`, `/menu`, `/request`, `/requestEventOrder`, `/contact`, `/Register`, `/Signin`, `/myOrders/*`, print routes, `/users/add`
 
 ### BusinessAnalyzer
 
-`/profit-loss` — A frontend-only Profit & Loss tool (`client/src/components/businessAnalyzer/`). No backend calls. Supports New/Open/Save/Save As using the File System Access API (with `<input type="file">` fallback for unsupported browsers). Auto-saves the working copy to `localStorage` under the key `'business'`.
+`/profit-loss` — frontend-only P&L tool (`client/src/components/businessAnalyzer/`). No backend calls. Uses File System Access API with `<input type="file">` fallback.
+
+---
+
+## Layout Components
+
+### MainLayout (`client/src/components/MainLayout.js`)
+
+Shared shell for all admin pages: `Header` + collapsible sidebar + `<Outlet />`. Sidebar toggled via React state (`sidebarOpen`), not DOM manipulation.
+
+### NavigationBar (`client/src/components/NavigationBar.js`)
+
+Accepts optional `onClose` prop:
+- **With `onClose`** (MainLayout, Menu): renders with `style={{ display: 'block' }}` and X button calls `onClose`
+- **Without `onClose`** (legacy DOM usage): falls back to hiding itself via `document.getElementById`
+
+### Menu (`client/src/components/Menu.js`)
+
+Fully redesigned. Key layout points:
+- CSS Grid for item cards: 1 col (xs) → 2 (sm) → 3 (md) → 4 (lg)
+- Sidebar toggle via local `sidebarOpen` state
+- Cart bar: `position: fixed; bottom: 0; left: 0; right: 0` wrapper Box containing `<CartModel />` — do NOT add `className="cart-button"` to the CartModel button, positioning is handled by the wrapper
+- Page has `pb: '90px'` to prevent cards hiding behind the fixed cart bar
+- Item cards show gold border + checkmark overlay when selected
+
+---
+
+## State Management — Redux Toolkit
+
+The frontend uses **Redux Toolkit (RTK)** for global state. The store lives at `client/src/store/`.
+
+### Store Structure
+
+```
+client/src/store/
+  index.js                  — configureStore + redux-persist setup
+  slices/
+    cartSlice.js            — cart state (persisted to localStorage via redux-persist)
+  services/
+    ordersApi.js            — RTK Query for Orders CRUD
+```
+
+### Cart Slice (`store/slices/cartSlice.js`)
+
+The cart is **persisted** via `redux-persist` (key: `'cart'`, storage: localStorage) so it survives page refresh.
+
+| Action | Purpose |
+|---|---|
+| `addItem(item)` | Add item to cart with qty 1 (no-op if already in cart) |
+| `removeItem(id)` | Remove item by `_id` |
+| `updateQty({ id, qty })` | Update individual item quantity |
+| `updatePrice({ id, price })` | Update individual item price (admin only) |
+| `setBulkQty(qty)` | Set ALL items in cart to the same quantity |
+| `clearCart()` | Empty cart and clear `editingOrder` |
+| `setEditingOrder(order)` | Populate cart + `editingOrder` from existing order for editing (triggers PUT flow in CustomerRequest) |
+
+**Never use inline `.map()` inside `useSelector`** — it creates a new array every render and triggers the "Selector returned different result" warning. Do:
+```js
+const cartItems = useSelector(state => state.cart.items)
+const cartItemIds = cartItems.map(i => i._id)  // derived outside useSelector
+```
+
+### Orders API (`store/services/ordersApi.js`)
+
+RTK Query service. Auth token automatically attached via `prepareHeaders`.
+
+| Hook | Method | Route |
+|---|---|---|
+| `useGetOrdersQuery()` | GET | `/api/orders` |
+| `useGetOrderQuery(id)` | GET | `/api/orders/:id` |
+| `useCreateOrderMutation()` | POST | `/api/orders` |
+| `useUpdateOrderMutation()` | PUT | `/orders/:id` |
+| `useDeleteOrderMutation()` | DELETE | `/orders/:id` |
+
+All mutations invalidate the `'Order'` tag → automatic refetch in any component using `useGetOrdersQuery`.
+
+### Order Creation Flow (Menu → Cart → Submit)
+
+```
+/menu
+  → user clicks item → dispatch addItem / removeItem
+  → CartModel (fixed bottom bar) shows count
+  → "Proceed" in Cart/AdminCart navigates to /request
+
+/request (CustomerRequest → CustomerForm)
+  → reads cartItems from useSelector
+  → CustomerForm collects: customer details + transport + AdvanceAmount + misc
+  → calls props.handleCustomerSubmit({ customer, transport, AdvanceAmount, misc })
+  → CustomerRequest builds full order object and calls:
+      - useUpdateOrderMutation (PUT) if editingOrder exists
+      - useCreateOrderMutation (POST /api/orders) otherwise
+  → on success → dispatch clearCart()
+```
+
+### Order payload shape
+
+```js
+{
+  items: cartItems,          // from Redux cart
+  customer: { fullName, phoneNumber, email, address, eventName,
+               numberOfPeople, eventDate, eventTime,
+               homeDelivery, service, customer_id, queries },
+  transport: { medium, rate },   // only if homeDelivery
+  AdvanceAmount: number,         // optional
+  misc: [{ particular, rate }],  // optional array
+  status: 'approve',
+}
+```
+
+### `localStorage` Keys (current)
+
+| Key | Purpose |
+|---|---|
+| `token` | JWT auth token (read by RTK Query `prepareHeaders`) |
+| `business` | BusinessAnalyzer working copy |
+| `cart` | redux-persist serialized cart state |
+| `bulkOrders` | Multi-date order draft (Context API flow) |
+| `bulkOrderSetting` | Multi-date order settings (date/mealType/index) |
+| `eventId` | Event ID for event order flow |
+| `report` | Order reporting selection |
+
+### RTK Migration Plan (remaining resources)
+
+| Resource | File to create | Status |
+|---|---|---|
+| Orders | `store/services/ordersApi.js` | ✅ Done |
+| Items | `store/services/itemsApi.js` | ⬜ Pending |
+| Customers | `store/services/customersApi.js` | ⬜ Pending |
+| Multi Orders | `store/services/multiOrdersApi.js` | ⬜ Pending |
+| Event Orders | `store/services/eventOrdersApi.js` | ⬜ Pending |
+| Ingredients | `store/services/ingredientsApi.js` | ⬜ Pending |
+
+Each new API service must be added to `rootReducer` and `middleware` chain in `store/index.js`.
+
+---
+
+## UI Conventions
+
+### MUI Version
+
+Using **MUI v9**. Key API differences from older versions:
+- `Grid` uses `size={{ xs: 12, md: 6 }}` not `item xs={12} md={6}`
+- `Dialog` / `TextField` use `slotProps` not `PaperProps` / `inputProps`:
+  ```jsx
+  // Dialog
+  <Dialog slotProps={{ paper: { sx: { borderRadius: '16px' } } }}>
+  // TextField number input
+  <TextField slotProps={{ htmlInput: { min: 1, max: 100 } }}>
+  ```
+
+### Gold color palette
+
+| Use | Value |
+|---|---|
+| Primary gold | `#C9A227` |
+| Hover gold | `#e8c84d` |
+| Background tint | `rgba(201,162,39,0.08)` |
+| Border tint | `rgba(201,162,39,0.28)` |
+| Dark text on gold | `#3d2e00` |
+| Muted text | `#7a6010` |
+
+### Form pattern (`customer/Form.js`)
+
+The `/request` page form does **not** use a `<form>` element — it uses a `<div>` with an `onClick` submit button. This avoids nested-form issues because `TransportForm`, `AdvancePaymentForm`, and `MiscForm` each contain their own `<form>` elements.
+
+Each sub-section (transport, advance, misc) renders in two states:
+- **Collapsed**: compact summary bar with icon + saved value + Edit button
+- **Expanded**: the sub-form component with a `×` close `IconButton` in the top-right corner (absolute positioned) to dismiss without saving
+
+### CustomerModal (`customer/CustomerModal/index.js`)
+
+Two-panel MUI Dialog:
+- Left: searchable customer list with avatar initials, highlighted selection
+- Right: detail panel showing phone numbers as clickable Chips and addresses as clickable cards
+- Confirm button disabled until customer + phone + address all selected
