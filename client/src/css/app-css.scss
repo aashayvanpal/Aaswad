@@ -1,5 +1,5 @@
 .app {
-  background-color: #f5edc0;
+  /* background removed — MUI CssBaseline sets body bg from theme palette */
 }
 
 .content-primary {
@@ -43,7 +43,6 @@
 }
 
 .align {
-  background-color: #f5edc0;
   width: 100%;
   /* display: flex; */
 }
@@ -359,7 +358,6 @@
   width: 100%;
   height: auto;
   display: flex;
-  background-color: #f5edc0;
   flex-direction: row;
   justify-content: space-around;
   flex-flow: wrap;

@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
@@ -26,17 +25,54 @@ import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
+import Stack from '@mui/material/Stack'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import RoomServiceIcon from '@mui/icons-material/RoomService'
 import CloseIcon from '@mui/icons-material/Close'
+import EditIcon from '@mui/icons-material/Edit'
 
 import HDToolTip from './HDToolTip.js'
 import ServiceToolTip from './ServiceToolTip.js'
+import { useAppTheme } from '../../context/ThemeContext'
+
+const GOLD = '#C9A227'
+
+const sectionLabel = {
+    color: 'rgba(201,162,39,0.45)',
+    fontSize: '0.6rem',
+    fontWeight: 800,
+    letterSpacing: 1.8,
+    textTransform: 'uppercase',
+    mb: 1.5,
+}
 
 const CustomerForm = (props) => {
+    const { themeMode } = useAppTheme()
+    const isDark = themeMode === 'dark'
+
+    const BG      = isDark ? '#0f0e0b' : '#FDFAF4'
+    const CARD_BG = isDark ? '#1a1800' : '#ffffff'
+    const BORDER  = isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.25)'
+
+    const inputSx = {
+        '& .MuiOutlinedInput-root': {
+            bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.025)',
+            borderRadius: '7px',
+            fontSize: '0.82rem',
+            color: isDark ? '#fff' : '#1a1400',
+            '& fieldset': { borderColor: BORDER },
+            '&:hover fieldset': { borderColor: 'rgba(201,162,39,0.45)' },
+            '&.Mui-focused fieldset': { borderColor: GOLD },
+        },
+        '& label': { fontSize: '0.8rem', color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.5)' },
+        '& label.Mui-focused': { color: GOLD },
+        '& label.MuiFormLabel-filled': { color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.65)' },
+        '& .MuiFormHelperText-root': { fontSize: '0.7rem', color: '#ef4444' },
+    }
+
     const editingOrder = useSelector(state => state.cart.editingOrder)
     let time = String(new Date()).substr(16, 5)
 
@@ -129,14 +165,14 @@ const CustomerForm = (props) => {
         const specialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '~', '_', '`', '(', ')', '+', '-', '/', '.', ',', '[', ']', '{', '}', '?', ':', ';', "'", '"', '|', '>', '<']
         const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-        if (fullName.length < 5) nameError = 'Full name cannot be less than 5 characters'
-        if (specialChars.some(c => fullName.includes(c))) nameError = 'Full name cannot contain special characters'
-        if (digits.some(d => fullName.includes(d))) nameError = 'Full name cannot contain numbers'
-        if (email.length < 5) emailError = 'Email cannot be less than 5 characters'
-        if (!email.includes('@')) emailError = 'Email must contain @ symbol'
-        if (phoneNumber.toString().length !== 10) phoneNumberError = 'Phone number must be 10 digits'
-        if (!digits.some(d => numberOfPeople.toString().includes(d))) noOfPeopleError = 'Number of people must be a number'
-        if (address.length === 0) addressError = 'Address cannot be empty'
+        if (fullName.length < 5) nameError = 'Min 5 characters'
+        if (specialChars.some(c => fullName.includes(c))) nameError = 'No special characters'
+        if (digits.some(d => fullName.includes(d))) nameError = 'No numbers in name'
+        if (email.length < 5) emailError = 'Min 5 characters'
+        if (!email.includes('@')) emailError = 'Must contain @'
+        if (phoneNumber.toString().length !== 10) phoneNumberError = 'Must be 10 digits'
+        if (!digits.some(d => numberOfPeople.toString().includes(d))) noOfPeopleError = 'Must be a number'
+        if (address.length === 0) addressError = 'Required'
 
         if (emailError || nameError || phoneNumberError || noOfPeopleError) {
             setEmailError(emailError)
@@ -213,7 +249,9 @@ const CustomerForm = (props) => {
 
     const handleDateChange = date => {
         setStartDate(date)
-        setEventTime(String(date).substr(16, 5))
+        const hh = String(date.getHours()).padStart(2, '0')
+        const mm = String(date.getMinutes()).padStart(2, '0')
+        setEventTime(`${hh}:${mm}`)
     }
 
     const clearForm = () => { setFullName(''); setEmail('test@gmail.com'); setPhoneNumber(''); setAddress('') }
@@ -224,137 +262,134 @@ const CustomerForm = (props) => {
         setAddress(selectedAddress)
     }
 
-    const inputSx = {
-        '& .MuiOutlinedInput-root': {
-            bgcolor: 'rgba(255,255,255,0.75)',
-            fontSize: '1.05rem',
-            '&:hover fieldset': { borderColor: '#C9A227' },
-            '&.Mui-focused fieldset': { borderColor: '#C9A227' },
-        },
-        '& label': { fontSize: '1rem' },
-        '& label.Mui-focused': { color: '#7a6010' },
-        '& .MuiFormHelperText-root': { fontSize: '0.85rem' },
-    }
-
-    const goldBtn = {
-        bgcolor: '#C9A227', color: '#000', fontWeight: 700,
-        '&:hover': { bgcolor: '#e8c84d' },
-    }
-
     return (
-        <Box id="request-div" sx={{ minHeight: '100vh', py: 4, px: { xs: 1, sm: 3 } }}>
-            <Box sx={{ maxWidth: 720, mx: 'auto' }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Box sx={{ bgcolor: BG, minHeight: '100vh', py: 3, px: { xs: 1.5, sm: 2, md: 3 } }}>
+            <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
 
-                {/* Back button */}
+                {/* Back */}
                 <Link to="/menu" className="form-back-link">
-                    <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2, color: '#5d522c', fontWeight: 600 }}>
+                    <Button
+                        startIcon={<ArrowBackIcon sx={{ fontSize: '0.9rem !important' }} />}
+                        sx={{
+                            mb: 2, color: 'rgba(201,162,39,0.6)', fontSize: '0.75rem',
+                            '&:hover': { color: GOLD, bgcolor: 'rgba(201,162,39,0.06)' },
+                        }}
+                    >
                         Back to Menu
                     </Button>
                 </Link>
 
-                <Paper elevation={4} sx={{
-                    borderRadius: '20px',
-                    border: '2px solid #C9A227',
-                    overflow: 'hidden',
-                }}>
-                    {/* Header */}
-                    <Box sx={{ bgcolor: '#C9A227', py: 2.5, px: 3, textAlign: 'center' }}>
-                        <Typography variant="h5" sx={{ fontWeight: 800, color: '#3d2e00', letterSpacing: 0.5 }}>
-                            Add Your Event Details
-                        </Typography>
-                    </Box>
+                {/* Page title */}
+                <Box sx={{ mb: 2.5, display: 'flex', alignItems: 'baseline', gap: 1.5 }}>
+                    <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: { xs: '1.1rem', sm: '1.3rem' } }}>
+                        Event Details
+                    </Typography>
+                    {editingOrder && (
+                        <Chip
+                            label="Editing order"
+                            size="small"
+                            sx={{ bgcolor: 'rgba(201,162,39,0.12)', color: GOLD, fontSize: '0.65rem', fontWeight: 700, height: 20 }}
+                        />
+                    )}
+                </Box>
 
-                    <Box sx={{ p: { xs: 2, sm: 3 } }}>
+                <Grid container spacing={2}>
 
-                        {/* Admin: customer selector */}
+                    {/* LEFT COLUMN */}
+                    <Grid size={{ xs: 12, md: 7 }}>
+
+                        {/* Admin customer selector */}
                         {userType === 'Admin' && (
                             <Box sx={{
-                                mb: 3, p: 2,
-                                bgcolor: 'rgba(201,162,39,0.08)',
-                                border: '1px solid rgba(201,162,39,0.3)',
-                                borderRadius: '12px',
+                                mb: 2, p: 1.5,
+                                bgcolor: CARD_BG,
+                                border: `1px solid ${BORDER}`,
+                                borderRadius: '10px',
                             }}>
-                                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c' }}>
-                                    Select Customer Details
-                                </Typography>
-                                <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+                                <Typography sx={sectionLabel}>Customer</Typography>
+                                <Stack direction="row" spacing={1} flexWrap="wrap">
                                     <CustomerModal
                                         setSelectedCustomerDetails={setSelectedCustomerDetails}
                                         customers={customers}
-                                        buttonLabel={`Select from ${customers.length} Customers`}
+                                        buttonLabel={`Select from ${customers.length}`}
                                     />
-                                    <Button variant="outlined" size="small" onClick={clearForm}
-                                        sx={{ borderColor: '#C9A227', color: '#7a6010', fontWeight: 600 }}>
-                                        Clear Form
+                                    <Button
+                                        size="small"
+                                        onClick={clearForm}
+                                        sx={{
+                                            color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem',
+                                            border: `1px solid rgba(255,255,255,0.1)`,
+                                            borderRadius: '6px',
+                                            '&:hover': { color: '#fff', borderColor: 'rgba(255,255,255,0.25)' },
+                                        }}
+                                    >
+                                        Clear
                                     </Button>
-                                </Box>
+                                </Stack>
                             </Box>
                         )}
 
-                        {/* Personal Details */}
-                        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
-                            Personal Details
-                        </Typography>
-                        <Grid container spacing={2} sx={{ mb: 2 }}>
-                            <Grid size={12}>
-                                <TextField
-                                    fullWidth label="Full Name" value={fullName}
-                                    onChange={e => setFullName(e.target.value)}
-                                    error={!!nameError} helperText={nameError}
-                                    sx={inputSx} size="small"
-                                />
+                        {/* Personal details */}
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Typography sx={sectionLabel}>Personal Details</Typography>
+                            <Grid container spacing={1.5}>
+                                <Grid size={12}>
+                                    <TextField
+                                        fullWidth label="Full Name" value={fullName}
+                                        onChange={e => setFullName(e.target.value)}
+                                        error={!!nameError} helperText={nameError}
+                                        sx={inputSx} size="small"
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        fullWidth label="Phone" value={phoneNumber}
+                                        onChange={e => setPhoneNumber(e.target.value)}
+                                        error={!!phoneNumberError} helperText={phoneNumberError}
+                                        slotProps={{ htmlInput: { maxLength: 10 } }}
+                                        sx={inputSx} size="small"
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        fullWidth label="Email" type="email" value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                        error={!!emailError} helperText={emailError}
+                                        sx={inputSx} size="small"
+                                    />
+                                </Grid>
+                                <Grid size={12}>
+                                    <TextField
+                                        fullWidth multiline rows={2} label="Address" value={address}
+                                        onChange={e => setAddress(e.target.value)}
+                                        error={!!addressError} helperText={addressError}
+                                        sx={inputSx}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField
-                                    fullWidth label="Email" type="email" value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    error={!!emailError} helperText={emailError}
-                                    sx={inputSx} size="small"
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField
-                                    fullWidth label="Phone Number" value={phoneNumber}
-                                    onChange={e => setPhoneNumber(e.target.value)}
-                                    error={!!phoneNumberError} helperText={phoneNumberError}
-                                    slotProps={{ htmlInput: { maxLength: 10 } }}
-                                    sx={inputSx} size="small"
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <TextField
-                                    fullWidth multiline rows={4} label="Address" value={address}
-                                    onChange={e => setAddress(e.target.value)}
-                                    error={!!addressError} helperText={addressError}
-                                    sx={inputSx}
-                                />
-                            </Grid>
-                        </Grid>
+                        </Box>
 
-                        <Divider sx={{ my: 2.5 }} />
-
-                        {/* Event Details */}
-                        <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
-                            Event Details
-                        </Typography>
-                        <Grid container spacing={2} sx={{ mb: 2 }}>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField
-                                    fullWidth label="Event Name" value={eventName}
-                                    onChange={e => setEventName(e.target.value)}
-                                    sx={inputSx} size="small"
-                                />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <TextField
-                                    fullWidth label="Number of People" type="number" value={numberOfPeople}
-                                    onChange={e => setNumberOfPeople(e.target.value)}
-                                    error={!!noOfPeopleError} helperText={noOfPeopleError}
-                                    sx={inputSx} size="small"
-                                />
-                            </Grid>
-                            <Grid size={12}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        {/* Event details */}
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Typography sx={sectionLabel}>Event Details</Typography>
+                            <Grid container spacing={1.5}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        fullWidth label="Event Name" value={eventName}
+                                        onChange={e => setEventName(e.target.value)}
+                                        sx={inputSx} size="small"
+                                    />
+                                </Grid>
+                                <Grid size={{ xs: 12, sm: 6 }}>
+                                    <TextField
+                                        fullWidth label="No. of People" type="number" value={numberOfPeople}
+                                        onChange={e => setNumberOfPeople(e.target.value)}
+                                        error={!!noOfPeopleError} helperText={noOfPeopleError}
+                                        sx={inputSx} size="small"
+                                    />
+                                </Grid>
+                                <Grid size={12}>
                                     <DateTimePicker
                                         label="Event Date & Time"
                                         value={startDate}
@@ -363,122 +398,126 @@ const CustomerForm = (props) => {
                                             textField: {
                                                 fullWidth: true,
                                                 size: 'small',
-                                                sx: inputSx,
+                                                sx: {
+                                                    ...inputSx,
+                                                    '& .MuiSvgIcon-root': { color: 'rgba(201,162,39,0.5)', fontSize: '1rem' },
+                                                },
                                             },
                                         }}
                                     />
-                                </LocalizationProvider>
+                                </Grid>
+                                <Grid size={12}>
+                                    <TextField
+                                        fullWidth multiline rows={2} label="Notes / Queries"
+                                        value={queries} onChange={e => setQuerries(e.target.value)}
+                                        sx={inputSx}
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid size={12}>
-                                <TextField
-                                    fullWidth multiline rows={3} label="Additional Notes / Queries"
-                                    value={queries} onChange={e => setQuerries(e.target.value)}
-                                    sx={inputSx}
-                                />
-                            </Grid>
-                        </Grid>
+                        </Box>
+                    </Grid>
 
-                        <Divider sx={{ my: 2.5 }} />
+                    {/* RIGHT COLUMN */}
+                    <Grid size={{ xs: 12, md: 5 }}>
 
                         {/* Options */}
-                        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 700, color: '#5d522c', textTransform: 'uppercase', letterSpacing: 1, fontSize: '0.72rem' }}>
-                            Options
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', mb: 2 }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={homeDelivery}
-                                        onChange={() => {
-                                            const next = !homeDelivery
-                                            setHomeDelivery(next)
-                                            if (next) {
-                                                setShowTransportForm(true)
-                                            } else {
-                                                setShowTransportForm(false)
-                                                setTransport({ medium: '', rate: '' })
-                                            }
-                                        }}
-                                        sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
-                                    />
-                                }
-                                label={
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                        <LocalShippingIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <span className="form-label-bold">Home Delivery</span>
-                                        <HDToolTip />
-                                    </Box>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={service}
-                                        onChange={() => setService(!service)}
-                                        sx={{ color: '#C9A227', '&.Mui-checked': { color: '#C9A227' } }}
-                                    />
-                                }
-                                label={
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                        <RoomServiceIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <span className="form-label-bold">Service</span>
-                                        <ServiceToolTip />
-                                    </Box>
-                                }
-                            />
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Typography sx={sectionLabel}>Options</Typography>
+                            <Stack spacing={0.5}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={homeDelivery}
+                                            onChange={() => {
+                                                const next = !homeDelivery
+                                                setHomeDelivery(next)
+                                                if (next) setShowTransportForm(true)
+                                                else { setShowTransportForm(false); setTransport({ medium: '', rate: '' }) }
+                                            }}
+                                            size="small"
+                                            sx={{ color: BORDER, '&.Mui-checked': { color: GOLD }, p: 0.75 }}
+                                        />
+                                    }
+                                    label={
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                            <LocalShippingIcon sx={{ fontSize: '0.9rem', color: 'rgba(201,162,39,0.5)' }} />
+                                            <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>
+                                                Home Delivery
+                                            </Typography>
+                                            <HDToolTip />
+                                        </Box>
+                                    }
+                                />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={service}
+                                            onChange={() => setService(!service)}
+                                            size="small"
+                                            sx={{ color: BORDER, '&.Mui-checked': { color: GOLD }, p: 0.75 }}
+                                        />
+                                    }
+                                    label={
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                            <RoomServiceIcon sx={{ fontSize: '0.9rem', color: 'rgba(201,162,39,0.5)' }} />
+                                            <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>
+                                                Service
+                                            </Typography>
+                                            <ServiceToolTip />
+                                        </Box>
+                                    }
+                                />
+                            </Stack>
                         </Box>
 
-                        {/* Transport Form — shown when homeDelivery is checked */}
+                        {/* Transport */}
                         {homeDelivery && (
-                            <Box sx={{ mb: 2 }}>
+                            <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                                <Typography sx={sectionLabel}>Transport</Typography>
                                 {showTransportForm ? (
                                     <Box sx={{ position: 'relative' }}>
-                                    <IconButton size="small" onClick={() => setShowTransportForm(false)}
-                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
-                                        <CloseIcon fontSize="small" />
-                                    </IconButton>
-                                    <TransportForm
-                                        medium={transport.medium}
-                                        price={transport.rate}
-                                        ShowTransportTable={(medium, rate) => {
-                                            setTransport({ medium, rate })
-                                            setShowTransportForm(false)
-                                        }}
-                                        ShowTransportForm={() => setShowTransportForm(false)}
-                                    />
+                                        <IconButton size="small" onClick={() => setShowTransportForm(false)}
+                                            sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                            <CloseIcon sx={{ fontSize: '0.9rem' }} />
+                                        </IconButton>
+                                        <TransportForm
+                                            medium={transport.medium}
+                                            price={transport.rate}
+                                            ShowTransportTable={(medium, rate) => {
+                                                setTransport({ medium, rate })
+                                                setShowTransportForm(false)
+                                            }}
+                                            ShowTransportForm={() => setShowTransportForm(false)}
+                                        />
+                                    </Box>
+                                ) : transport.medium ? (
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                        <LocalShippingIcon sx={{ fontSize: '0.9rem', color: GOLD }} />
+                                        <Typography sx={{ flex: 1, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 600 }}>
+                                            {transport.medium} · <span style={{ color: GOLD }}>₹{transport.rate}</span>
+                                        </Typography>
+                                        <IconButton size="small" onClick={() => setShowTransportForm(true)}
+                                            sx={{ color: 'rgba(201,162,39,0.5)', '&:hover': { color: GOLD } }}>
+                                            <EditIcon sx={{ fontSize: '0.85rem' }} />
+                                        </IconButton>
                                     </Box>
                                 ) : (
-                                    <Box sx={{
-                                        display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
-                                        bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
-                                        border: '1px solid rgba(201,162,39,0.25)',
-                                    }}>
-                                        <LocalShippingIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        {transport.medium ? (
-                                            <>
-                                                <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
-                                                    {transport.medium} — <strong>₹{transport.rate}</strong>
-                                                </Typography>
-                                                <Button size="small" onClick={() => setShowTransportForm(true)}
-                                                    sx={{ color: '#7a6010', fontWeight: 600 }}>Edit</Button>
-                                            </>
-                                        ) : (
-                                            <Button size="small" onClick={() => setShowTransportForm(true)} sx={goldBtn}>
-                                                Add Transport Details
-                                            </Button>
-                                        )}
-                                    </Box>
+                                    <Button size="small" onClick={() => setShowTransportForm(true)}
+                                        sx={{ color: GOLD, border: `1px solid ${BORDER}`, borderRadius: '6px', fontSize: '0.75rem', '&:hover': { bgcolor: 'rgba(201,162,39,0.07)' } }}>
+                                        + Add Transport
+                                    </Button>
                                 )}
                             </Box>
                         )}
 
-                        {/* Advance Payment */}
-                        <Box sx={{ mb: 2 }}>
+                        {/* Advance payment */}
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Typography sx={sectionLabel}>Advance Payment</Typography>
                             {showAdvanceForm ? (
                                 <Box sx={{ position: 'relative' }}>
                                     <IconButton size="small" onClick={() => setShowAdvanceForm(false)}
-                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
-                                        <CloseIcon fontSize="small" />
+                                        sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon sx={{ fontSize: '0.9rem' }} />
                                     </IconButton>
                                     <AdvancePaymentForm
                                         advanceAmount={advanceAmount}
@@ -489,41 +528,37 @@ const CustomerForm = (props) => {
                                         ShowAdvancePaymentForm={() => setShowAdvanceForm(false)}
                                     />
                                 </Box>
-                            ) : (
-                                <Box sx={{
-                                    display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
-                                    bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
-                                    border: '1px solid rgba(201,162,39,0.25)',
-                                }}>
-                                    <PaymentsIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                    {advanceAmount ? (
-                                        <>
-                                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
-                                                Advance: <strong>₹{advanceAmount}</strong>
-                                            </Typography>
-                                            <Button size="small" onClick={() => setShowAdvanceForm(true)}
-                                                sx={{ color: '#7a6010', fontWeight: 600 }}>Edit</Button>
-                                            <IconButton size="small" onClick={() => setAdvanceAmount('')}
-                                                sx={{ color: '#888', '&:hover': { color: '#ef4444' } }}>
-                                                <CloseIcon fontSize="small" />
-                                            </IconButton>
-                                        </>
-                                    ) : (
-                                        <Button size="small" onClick={() => setShowAdvanceForm(true)} sx={goldBtn}>
-                                            Add Advance Payment
-                                        </Button>
-                                    )}
+                            ) : advanceAmount ? (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <PaymentsIcon sx={{ fontSize: '0.9rem', color: GOLD }} />
+                                    <Typography sx={{ flex: 1, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 600 }}>
+                                        <span style={{ color: GOLD }}>₹{advanceAmount}</span> advance
+                                    </Typography>
+                                    <IconButton size="small" onClick={() => setShowAdvanceForm(true)}
+                                        sx={{ color: 'rgba(201,162,39,0.5)', '&:hover': { color: GOLD } }}>
+                                        <EditIcon sx={{ fontSize: '0.85rem' }} />
+                                    </IconButton>
+                                    <IconButton size="small" onClick={() => setAdvanceAmount('')}
+                                        sx={{ color: 'rgba(255,255,255,0.25)', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon sx={{ fontSize: '0.85rem' }} />
+                                    </IconButton>
                                 </Box>
+                            ) : (
+                                <Button size="small" onClick={() => setShowAdvanceForm(true)}
+                                    sx={{ color: GOLD, border: `1px solid ${BORDER}`, borderRadius: '6px', fontSize: '0.75rem', '&:hover': { bgcolor: 'rgba(201,162,39,0.07)' } }}>
+                                    + Add Advance
+                                </Button>
                             )}
                         </Box>
 
-                        {/* Misc Items */}
-                        <Box sx={{ mb: 3 }}>
+                        {/* Misc items */}
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Typography sx={sectionLabel}>Misc Items</Typography>
                             {showMiscForm ? (
                                 <Box sx={{ position: 'relative' }}>
                                     <IconButton size="small" onClick={() => setShowMiscForm(false)}
-                                        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1, color: '#888', '&:hover': { color: '#ef4444' } }}>
-                                        <CloseIcon fontSize="small" />
+                                        sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                        <CloseIcon sx={{ fontSize: '0.9rem' }} />
                                     </IconButton>
                                     <MiscForm
                                         miscItems={miscItems}
@@ -531,33 +566,24 @@ const CustomerForm = (props) => {
                                         handleMiscSubmit={(e) => { e.preventDefault(); setShowMiscForm(false) }}
                                     />
                                 </Box>
-                            ) : (
-                                <Box sx={{
-                                    display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
-                                    bgcolor: 'rgba(201,162,39,0.08)', borderRadius: '10px',
-                                    border: '1px solid rgba(201,162,39,0.25)',
-                                }}>
-                                    <ReceiptLongIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                    {miscItems.length > 0 ? (
-                                        <>
-                                            <Typography variant="body2" sx={{ flex: 1, fontWeight: 600 }}>
-                                                {miscItems.length} misc item(s) added
-                                                <Box sx={{ display: 'flex', gap: 0.5, mt: 0.5, flexWrap: 'wrap' }}>
-                                                    {miscItems.map((m, i) => (
-                                                        <Chip key={i} label={`${m.particular}: ₹${m.rate}`} size="small"
-                                                            sx={{ fontSize: '0.7rem', bgcolor: 'rgba(201,162,39,0.2)' }} />
-                                                    ))}
-                                                </Box>
-                                            </Typography>
-                                            <Button size="small" onClick={() => setShowMiscForm(true)}
-                                                sx={{ color: '#7a6010', fontWeight: 600, alignSelf: 'flex-start' }}>Edit</Button>
-                                        </>
-                                    ) : (
-                                        <Button size="small" onClick={() => { setShowMiscForm(true); setMiscItems([{ particular: '', rate: '' }]) }} sx={goldBtn}>
-                                            Add Misc Items
-                                        </Button>
-                                    )}
+                            ) : miscItems.length > 0 ? (
+                                <Box>
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 0.75 }}>
+                                        {miscItems.map((m, i) => (
+                                            <Chip key={i} label={`${m.particular}: ₹${m.rate}`} size="small"
+                                                sx={{ fontSize: '0.65rem', bgcolor: 'rgba(201,162,39,0.1)', color: GOLD, height: 20 }} />
+                                        ))}
+                                    </Box>
+                                    <Button size="small" onClick={() => setShowMiscForm(true)}
+                                        sx={{ color: 'rgba(201,162,39,0.6)', fontSize: '0.72rem', '&:hover': { color: GOLD } }}>
+                                        Edit misc
+                                    </Button>
                                 </Box>
+                            ) : (
+                                <Button size="small" onClick={() => { setShowMiscForm(true); setMiscItems([{ particular: '', rate: '' }]) }}
+                                    sx={{ color: GOLD, border: `1px solid ${BORDER}`, borderRadius: '6px', fontSize: '0.75rem', '&:hover': { bgcolor: 'rgba(201,162,39,0.07)' } }}>
+                                    + Add Misc Items
+                                </Button>
                             )}
                         </Box>
 
@@ -565,18 +591,22 @@ const CustomerForm = (props) => {
                         <Button
                             fullWidth
                             variant="contained"
-                            size="large"
                             onClick={handleSubmit}
                             sx={{
-                                bgcolor: '#ff8300', color: '#fff', fontWeight: 800,
-                                fontSize: '1.1rem', py: 1.5, borderRadius: '12px',
-                                '&:hover': { bgcolor: '#e07200' },
+                                bgcolor: GOLD,
+                                color: '#1a1400',
+                                fontWeight: 800,
+                                fontSize: '0.9rem',
+                                py: 1.25,
+                                borderRadius: '10px',
+                                letterSpacing: 0.5,
+                                '&:hover': { bgcolor: '#e8c84d' },
                             }}
                         >
-                            Submit Enquiry
+                            {editingOrder ? 'Update Order' : 'Submit Enquiry'}
                         </Button>
-                    </Box>
-                </Paper>
+                    </Grid>
+                </Grid>
             </Box>
 
             <SubmitEnquiryModal
@@ -587,6 +617,7 @@ const CustomerForm = (props) => {
                 }}
             />
         </Box>
+        </LocalizationProvider>
     )
 }
 

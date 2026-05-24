@@ -285,6 +285,51 @@ Each new API service must be added to `rootReducer` and `middleware` chain in `s
 
 ---
 
+## Theme System
+
+The app supports **dark** and **light** themes switchable from `/settings`. Preference is stored in `localStorage` under the key `aaswad-theme`.
+
+### Architecture
+
+| File | Role |
+|---|---|
+| `client/src/theme.js` | Exports `darkTheme`, `lightTheme` (both via `createTheme`), and `createAppTheme` helpers. Shared typography + component overrides extracted into `sharedComponents`. Date picker overrides generated per-mode via `pickerOverrides(mode)`. |
+| `client/src/context/ThemeContext.js` | `AppThemeProvider` — reads `localStorage`, provides `{ themeMode, toggleTheme, setThemeMode }` via `useAppTheme()` hook. Wraps MUI `ThemeProvider` + `CssBaseline` internally. |
+| `client/src/index.js` | Wraps the app in `<AppThemeProvider>` instead of a static `<ThemeProvider>`. |
+| `client/src/components/SettingsPage.js` | Exposes a `ToggleButtonGroup` (Dark / Light) that calls `setThemeMode`. |
+
+### Dark theme design (current)
+
+- **Sidebar**: `#100f0b` always-dark — brand constant, never changes with theme
+- **Content bg**: `#0f0e0b`
+- **Cards / bars**: `#1a1800`
+- **Borders**: `rgba(201,162,39,0.18)`
+- **Text**: `rgba(255,255,255,0.78)` primary, `rgba(255,255,255,0.4)` muted
+
+### Light theme design
+
+- **Sidebar**: `#100f0b` (stays dark — intentional, looks great with gold)
+- **Top bar**: `#ffffff` with gold border
+- **Content bg**: `#FDFAF4` (warm ivory)
+- **Cards**: `#ffffff`
+- **Borders**: `rgba(201,162,39,0.25)`
+- **Text**: `#1a1400` primary, `rgba(0,0,0,0.5)` muted
+
+### Adding theme-awareness to a component
+
+```jsx
+import { useAppTheme } from '../context/ThemeContext'
+
+const { themeMode } = useAppTheme()
+const isDark = themeMode === 'dark'
+
+const cardBg = isDark ? '#1a1800' : '#ffffff'
+```
+
+Never hardcode dark-only colours in components that appear in both themes. The sidebar (`NavigationBar`) is the only component exempt — it stays dark in both modes.
+
+---
+
 ## Display & Responsiveness
 
 - **Design philosophy**: **Mobile-first**. Write base styles for mobile (xs), then layer up with `sm`, `md`, `lg` breakpoints. Never design desktop-first and patch mobile after.
