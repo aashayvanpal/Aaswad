@@ -285,7 +285,44 @@ Each new API service must be added to `rootReducer` and `middleware` chain in `s
 
 ---
 
+## Display & Responsiveness
+
+- **Design philosophy**: **Mobile-first**. Write base styles for mobile (xs), then layer up with `sm`, `md`, `lg` breakpoints. Never design desktop-first and patch mobile after.
+- **Target screen**: 2560×1440 @ 60Hz (Linux). Chrome viewport is ~2553×1317 (scrollbar + taskbar offset — normal).
+- **Font scaling**: `html { font-size: 22px }` in `client/src/index.css` is the rem anchor for 2560×1440. MUI theme (`client/src/theme.js`) has `htmlFontSize: 22, fontSize: 18` to match. **Both must stay in sync** — if the html font-size changes, update `htmlFontSize` in theme too. Do **not** hardcode small `fontSize` values in `sx` — let the rem cascade do the work. After changing `index.css`, always fully restart the dev server (CSS base font-size changes do NOT hot-reload).
+- **Responsive patterns to use**:
+  - Layout: `Stack direction={{ xs: 'column', sm: 'row' }}`, `Grid size={{ xs: 12, md: 6 }}`
+  - Typography: `sx={{ fontSize: { xs: '0.9rem', md: '1rem' } }}`
+  - Spacing: `sx={{ p: { xs: 1, md: 2 } }}`, `sx={{ gap: { xs: 1, md: 2 } }}`
+  - Tables: on mobile (xs/sm) render **cards** instead of tables — tables are unreadable on small screens. Switch to MUI `Table` at `md+` using `sx={{ display: { xs: 'none', md: 'block' } }}` on `TableContainer` and a card list with `sx={{ display: { xs: 'flex', md: 'none' } }}`.
+  - Buttons: full width on mobile (`fullWidth` or `sx={{ width: { xs: '100%', sm: 'auto' } }}`), auto on desktop.
+  - Touch targets: minimum 44×44px on mobile (use `size="large"` for IconButton on mobile).
+- **Never** use fixed pixel widths for layout containers — use `%`, `maxWidth`, or MUI breakpoints.
+- **ThemeProvider** is in `client/src/index.js` wrapping the entire app. Any theme changes go in `client/src/theme.js`.
+
 ## UI Conventions
+
+### MUI v9 prop rules (avoid React DOM warnings)
+
+**Layout props must go inside `sx`, never as direct props on MUI components:**
+```jsx
+// WRONG — leaks to DOM, React warns
+<Stack alignItems="center" justifyContent="space-between" flexWrap="wrap">
+<Typography textAlign="center">
+
+// CORRECT — stays in sx
+<Stack sx={{ alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+<Typography sx={{ textAlign: 'center' }}>
+```
+
+**`InputProps` is removed in MUI v9 — use `slotProps` instead:**
+```jsx
+// WRONG
+<TextField InputProps={{ startAdornment: <SearchIcon /> }} />
+
+// CORRECT
+<TextField slotProps={{ input: { startAdornment: <SearchIcon /> } }} />
+```
 
 ### MUI Version
 

@@ -45,7 +45,7 @@
 .align {
   background-color: #f5edc0;
   width: 100%;
-  display: flex;
+  /* display: flex; */
 }
 
 /* .content-showcase {
