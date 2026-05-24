@@ -30,6 +30,10 @@ const ItemNew = () => {
                     window.location.href = '/items'
                 }
             })
+            .catch(err => {
+                console.error('[ItemNew] create failed:', err)
+                window.alert(err?.response?.data?.message || 'Failed to add item. Please try again.')
+            })
     }
 
     const fetchIngredients = async () => {

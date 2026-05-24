@@ -36,7 +36,9 @@ const CustomerRequest = ({ type = "default" }) => {
 
     const emailNotify = (order) => {
         axios.post('/sendEmail/orderPlaced', { 'email': order.customer.email })
+            .catch(err => console.error('[CustomerRequest] orderPlaced email failed:', err))
         axios.post('/sendEmail/newOrderNotify', { 'username': order.customer.fullName })
+            .catch(err => console.error('[CustomerRequest] newOrderNotify email failed:', err))
     }
 
     const handleCustomerSubmit = async ({ customer: customerData, transport, AdvanceAmount, misc }) => {
@@ -53,9 +55,14 @@ const CustomerRequest = ({ type = "default" }) => {
                     orderId,
                 }
                 const id = localStorage.getItem('eventId')
-                await addEventOrder(id, order)
-                localStorage.removeItem('eventId')
-                dispatch(clearCart())
+                try {
+                    await addEventOrder(id, order)
+                    localStorage.removeItem('eventId')
+                    dispatch(clearCart())
+                } catch (err) {
+                    console.error('[CustomerRequest] addEventOrder failed:', err)
+                    window.alert(err?.response?.data?.message || 'Failed to submit event order. Please try again.')
+                }
                 break
             }
             default: {

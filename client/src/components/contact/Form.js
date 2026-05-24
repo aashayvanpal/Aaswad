@@ -88,6 +88,10 @@ const Form = () => {
                         setMobile('')
                     }
                 })
+                .catch(err => {
+                    console.error('[ContactForm] submit failed:', err)
+                    window.alert('Failed to submit query. Please try again.')
+                })
         }
     }
 

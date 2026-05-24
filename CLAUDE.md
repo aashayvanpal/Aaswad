@@ -398,3 +398,61 @@ Two-panel MUI Dialog:
 - Left: searchable customer list with avatar initials, highlighted selection
 - Right: detail panel showing phone numbers as clickable Chips and addresses as clickable cards
 - Confirm button disabled until customer + phone + address all selected
+
+---
+
+## Error Handling
+
+Every component that makes API calls must handle errors so the app never breaks silently.
+
+### RTK Query (preferred)
+
+Destructure `isError` and `error` from every query/mutation hook:
+
+```jsx
+const { data, isLoading, isError, error } = useGetOrdersQuery()
+const [createOrder, { isLoading: saving, isError: saveFailed, error: saveError }] = useCreateOrderMutation()
+
+if (isError) return <Alert severity="error">{error?.data?.message || 'Failed to load. Please try again.'}</Alert>
+```
+
+For mutations, show feedback inline — never `alert()`:
+
+```jsx
+const handleSubmit = async () => {
+  try {
+    await createOrder(payload).unwrap()
+    // success path
+  } catch (err) {
+    console.error('[CreateOrder]', err)
+    setErrorMsg(err?.data?.message || 'Something went wrong.')
+  }
+}
+```
+
+### axios calls
+
+Wrap in `try/catch`. Store the error message in local state and render it with MUI `<Alert severity="error">`:
+
+```jsx
+const [errorMsg, setErrorMsg] = useState(null)
+
+try {
+  const res = await axios.post('/sendEmail/orderPlaced', payload)
+} catch (err) {
+  console.error('[SendEmail]', err)
+  setErrorMsg(err?.response?.data?.message || 'Email failed to send.')
+}
+
+// in JSX
+{errorMsg && <Alert severity="error" onClose={() => setErrorMsg(null)}>{errorMsg}</Alert>}
+```
+
+### Rules
+
+- **Never let an API error throw uncaught** — always `try/catch` or handle `isError`.
+- **Never use `alert()`** for error feedback — use MUI `<Alert>` or `<Snackbar>`.
+- Show a loading state (`isLoading` / `CircularProgress`) whenever a fetch is in flight.
+- Log errors with a `[ComponentName]` prefix for easy filtering: `console.error('[OrderList]', err)`.
+- Error messages shown to users must be human-readable; fall back to a generic message if the server sends nothing useful.
+- Do **not** add error handling for impossible cases — only handle real failure paths (network errors, 4xx/5xx responses).

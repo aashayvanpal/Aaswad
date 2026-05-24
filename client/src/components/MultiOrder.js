@@ -99,9 +99,6 @@ const MultiOrder = () => {
                 }
                 else {
                     console.log('success', response.data)
-                    // this.props.history.push(`/items/show/${response.data._id}`)
-                    // window.location.href = '/items'
-
                     // order approved email notification
                     console.log('changed items ', changedItems)
                     axios.post('/sendEmail/orderApproved', {
@@ -109,10 +106,12 @@ const MultiOrder = () => {
                         'email': changedItems[index].customer.email,
                         'phonenumber': changedItems[index].customer.phoneNumber
                     })
+                        .catch(err => console.error('[MultiOrder] orderApproved email failed:', err))
                     console.log('completed Sending email!')
 
                 }
             })
+            .catch(err => console.error('[MultiOrder] approve order failed:', err))
     }
 
     const handleCompleteOrder = (id) => {
@@ -164,9 +163,11 @@ const MultiOrder = () => {
 
                     // order completed email
                     axios.post('/sendEmail/orderCompleted', { 'email': response.data.customer.email })
+                        .catch(err => console.error('[MultiOrder] orderCompleted email failed:', err))
 
                 }
             })
+            .catch(err => console.error('[MultiOrder] complete order failed:', err))
     }
 
     const handleRemoveOrder = (id, name) => {

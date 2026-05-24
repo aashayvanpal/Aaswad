@@ -78,12 +78,12 @@ const SignUpForm = () => {
     }
 
     const notifyUserAccountCreation = () => {
-        // send welcome email to new user
         axios.post('/sendEmail/welcome', {
             'fullName': name,
             'email': email,
             'phonenumber': phonenumber
         })
+            .catch(err => console.error('[SignUp] welcome email failed:', err))
     }
 
     const handleSubmit = (e) => {
@@ -125,6 +125,10 @@ const SignUpForm = () => {
                         notifyUserAccountCreation()
 
                     }
+                })
+                .catch(err => {
+                    console.error('[SignUp] registration failed:', err)
+                    window.alert(err?.response?.data?.message || 'Registration failed. Please try again.')
                 })
 
 
