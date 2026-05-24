@@ -48,5 +48,18 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router', 'react-router-dom'],
+          'vendor-mui': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+          'vendor-mui-x': ['@mui/x-date-pickers', 'date-fns'],
+          'vendor-redux': ['@reduxjs/toolkit', 'react-redux', 'redux-persist'],
+          'vendor-charts': ['d3'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-misc': ['axios', 'lodash', 'moment', 'swiper', 'uuid'],
+        },
+      },
+    },
   },
 })
