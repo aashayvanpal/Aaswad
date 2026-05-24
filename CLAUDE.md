@@ -67,7 +67,9 @@ Configured in `client/vite.config.mjs`. These path prefixes are proxied to `http
 /contactus, /sendEmail
 ```
 
-**Important:** `/request` was intentionally removed from the proxy list so browser navigation to `/request` is handled by Vite (serving `index.html`), not forwarded to Express. The order creation POST endpoint is `POST /api/orders`.
+**Important:** All proxied routes use a `bypass` function — requests with `Accept: text/html` (browser navigation / page refresh) are served by Vite's SPA fallback instead of being forwarded to Express. This prevents `Cannot GET /orders` on refresh. Only API calls (non-HTML `Accept` header) are proxied.
+
+`/request` was intentionally never added to the proxy list — browser navigation to `/request` is always handled by Vite. The order creation POST endpoint is `POST /api/orders`.
 
 ### Authentication
 
@@ -121,6 +123,10 @@ React Router v6 in `client/src/App.js`. Two route groups:
 ---
 
 ## Layout Components
+
+### Header (`client/src/components/Header.js`)
+
+MUI `AppBar` with dark `#1a1400` background and gold bottom border. Sticky positioned. Logo left, nav links + "Order Now" button right. Replaced the old anime.js-animated div-based header.
 
 ### MainLayout (`client/src/components/MainLayout.js`)
 
@@ -178,6 +184,16 @@ const cartItems = useSelector(state => state.cart.items)
 const cartItemIds = cartItems.map(i => i._id)  // derived outside useSelector
 ```
 
+**Redux state is frozen by Immer.** Never pass Redux objects directly to local `useState` that will be mutated. Always shallow-clone first:
+```js
+// BAD — editingOrder.misc items are frozen, MiscForm will crash on mutation
+setMiscItems(editingOrder.misc)
+
+// GOOD
+setMiscItems(editingOrder.misc.map(m => ({ ...m })))
+setTransport({ ...editingOrder.transport })
+```
+
 ### Orders API (`store/services/ordersApi.js`)
 
 RTK Query service. Auth token automatically attached via `prepareHeaders`.
@@ -191,6 +207,23 @@ RTK Query service. Auth token automatically attached via `prepareHeaders`.
 | `useDeleteOrderMutation()` | DELETE | `/orders/:id` |
 
 All mutations invalidate the `'Order'` tag → automatic refetch in any component using `useGetOrdersQuery`.
+
+### Order Edit Flow (order detail / order list → /menu → /request)
+
+Both the Edit button on `/orders/:id` (Show.js) and the Update button on `/orders` (OrderList.js) use the same flow:
+
+```
+dispatch(setEditingOrder(order))  // populates cart items + stores full order
+navigate('/menu')                  // user can add/remove items
+
+/menu → CartModel "Proceed" → /request
+
+/request (CustomerRequest → CustomerForm)
+  → editingOrder detected → form pre-fills all customer fields, transport,
+    advanceAmount, misc (all deep-cloned from Redux to allow mutation)
+  → on submit → useUpdateOrderMutation (PUT /orders/:id)
+  → on success → dispatch clearCart()
+```
 
 ### Order Creation Flow (Menu → Cart → Submit)
 
@@ -218,8 +251,8 @@ All mutations invalidate the `'Order'` tag → automatic refetch in any componen
   customer: { fullName, phoneNumber, email, address, eventName,
                numberOfPeople, eventDate, eventTime,
                homeDelivery, service, customer_id, queries },
-  transport: { medium, rate },   // only if homeDelivery
-  AdvanceAmount: number,         // optional
+  transport: { medium, rate },   // only if homeDelivery; cleared when homeDelivery unchecked
+  AdvanceAmount: number,         // optional; removable via × button in Form.js
   misc: [{ particular, rate }],  // optional array
   status: 'approve',
 }
@@ -266,6 +299,27 @@ Using **MUI v9**. Key API differences from older versions:
   <TextField slotProps={{ htmlInput: { min: 1, max: 100 } }}>
   ```
 
+### Date / Time Picker
+
+Using `@mui/x-date-pickers` v9 with **`AdapterDateFnsV2`** (not `AdapterDateFns`) — the project has `date-fns` v2.x installed, which uses default exports. `AdapterDateFns` expects v3's named subpath exports and will fail to build.
+
+```jsx
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'  // ← V2, not AdapterDateFns
+
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+  <DateTimePicker value={date} onChange={setDate} slotProps={{ textField: { size: 'small' } }} />
+</LocalizationProvider>
+```
+
+To extract HH:MM from a Date object reliably (avoids locale/timezone issues with `String(date).substr(...)`):
+```js
+const hh = String(d.getHours()).padStart(2, '0')
+const mm = String(d.getMinutes()).padStart(2, '0')
+const eventTime = `${hh}:${mm}`
+```
+
 ### Gold color palette
 
 | Use | Value |
@@ -282,8 +336,22 @@ Using **MUI v9**. Key API differences from older versions:
 The `/request` page form does **not** use a `<form>` element — it uses a `<div>` with an `onClick` submit button. This avoids nested-form issues because `TransportForm`, `AdvancePaymentForm`, and `MiscForm` each contain their own `<form>` elements.
 
 Each sub-section (transport, advance, misc) renders in two states:
-- **Collapsed**: compact summary bar with icon + saved value + Edit button
+- **Collapsed**: compact summary bar with icon + saved value + Edit button (advance payment also has a `×` remove button)
 - **Expanded**: the sub-form component with a `×` close `IconButton` in the top-right corner (absolute positioned) to dismiss without saving
+
+Unchecking **Home Delivery** clears the `transport` state (`{ medium: '', rate: '' }`) so stale transport data is never submitted.
+
+### Order Detail Page (`order/Show.js`)
+
+Three admin features on the order detail page:
+
+1. **Edit Details** (inline) — "Edit Details" button in the nav bar toggles `editMode`. All customer fields + status become MUI TextFields/Select/Checkboxes/DateTimePicker. Save PUTs to `/orders/:id` and syncs all local state including `eventDateNew`. Cancel reverts without saving.
+
+2. **Add to Customer DB** — Button navigates to `/customers/add` with `state.prefill` containing `{ fullName, email, phoneNumber: [{primary: '...'}], address: [{Home: '...'}] }`. `AddCustomerForm` reads `useLocation().state?.prefill` on mount and pre-populates fields.
+
+3. **Delete Order** — Delete button (only for normal orders, not eventOrder type) opens `ConfirmDialog`. On confirm, calls `useDeleteOrderMutation` then navigates to `/orders`.
+
+Transport and advance payment on the order detail page save directly to the backend via `PUT /orders/:id`. All `alert()` debug calls have been removed — use `console.log('[Transport] ...')` / `console.log('[AdvancePayment] ...')` prefixed logs instead. Never read/write `localStorage` for order data — the backend is the single source of truth.
 
 ### CustomerModal (`customer/CustomerModal/index.js`)
 

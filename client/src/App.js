@@ -39,6 +39,7 @@ import EventOrders from "./components/eventOrders/index.js";
 import EventOrdersList from "./components/eventOrders/list";
 import Contacts from "./components/contacts";
 import BusinessAnalyzer from "./components/businessAnalyzer/index.js";
+import SettingsPage from "./components/SettingsPage.js";
 import MainLayout from "./components/MainLayout.js";
 
 function App() {
@@ -131,14 +132,7 @@ function App() {
                   <Route path="/contacts" element={<Contacts />} />
                   <Route path="/profit-loss" element={<BusinessAnalyzer />} />
 
-                  <Route path="/settings" element={
-                    <div style={{ textAlign: "center" }}>
-                      <h1>Settings:</h1>
-                      <h1>App Version : {appVersion}</h1>
-                      <h1>Created By : Aashay S Vanpal</h1>
-                      <h1>Contact : 9743419673 for any issues in app</h1>
-                    </div>
-                  } />
+                  <Route path="/settings" element={<SettingsPage />} />
 
                   <Route path="/profile" element={<UserProfile />} />
 

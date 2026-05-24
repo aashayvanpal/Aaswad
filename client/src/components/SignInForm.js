@@ -3,15 +3,11 @@ import axios from "../config/axios.js"
 import "../css/LoginDetails/Signin.css"
 import { Link } from "react-router-dom"
 import { getUserDetails } from '../assets/user-functions.js'
-import anime from 'animejs'
-
 const SignInForm = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    anime({ targets: '.SignUpCard', easing: 'easeInOutSine', opacity: [0, 1], delay: 100 })
-
     getUserDetails()
       .then(() => {
         console.log("Already logged in, redirecting to /menu")

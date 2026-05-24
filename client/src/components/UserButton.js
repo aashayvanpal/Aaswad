@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import MuiButton from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import axios from '../config/axios'
 import { Link } from 'react-router-dom'
-import anime from 'animejs'
-
 import '../css/UserButton.css'
 import profileImg from '../images/profile-icon.png'
 import myOrdersImg from '../images/myOrders-icon.png'
@@ -19,9 +17,6 @@ const UserButton = (props) => {
   const handleOpen = (e) => setAnchorEl(e.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
-  useEffect(() => {
-    anime({ targets: '.user', translateX: [10, 0], easing: 'easeInOutSine', opacity: [0, 1], delay: 500 })
-  }, [])
 
   const logout = () => {
     handleClose()

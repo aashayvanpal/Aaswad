@@ -6,7 +6,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import DatePicker from "react-datepicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
 import moment from 'moment'
 import { createEventOrder } from '../../../apis/eventOrders';
 
@@ -55,12 +57,14 @@ const CreateEventModal = (props) => {
                         Event Name <input value={eventName} onChange={(e) => setEventName(e.target.value)} style={{ width: '248px' }} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        Event Date <DatePicker
-                            showIcon
-                            selected={eventDate}
-                            onChange={(date) => setEventDate(date)}
-                            dateFormat="dd/MM/yyyy"
-                        />
+                        Event Date
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                value={eventDate}
+                                onChange={(date) => setEventDate(date)}
+                                slotProps={{ textField: { size: 'small' } }}
+                            />
+                        </LocalizationProvider>
                     </div>
                 </DialogContent>
                 <DialogActions style={{ backgroundColor: '#fff5d2', display: 'flex', gap: '320px' }}>

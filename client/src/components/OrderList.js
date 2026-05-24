@@ -14,7 +14,9 @@ import homeDeliveryMan from '../images/home-delivery-man.png'
 import serviceGif from '../images/service.gif'
 import upArrow from '../images/up-arrow.png'
 import downArrow from '../images/down-arrow.png'
-import DatePicker from "react-datepicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
 import ReportModal from './ReportModal';
 import {
     useGetOrdersQuery,
@@ -296,17 +298,21 @@ const ItemList = () => {
                             />
                             <button className='order-button-styling' onClick={() => clearOrderSearch('searchCompleted', setCompleted, 'completed')}>Clear</button>
                         </div>
-                        <div style={{ display: 'flex', marginBottom: '20px' }}>
-                            <div>
-                                From
-                                <DatePicker wrapperClassName="datePickerStyle" selected={startDateFrom}
-                                    onChange={(e) => handleDateChange(e, setStartDateFrom)} dateFormat="dd/MM/yyyy" />
-                            </div>
-                            <div>
-                                To
-                                <DatePicker wrapperClassName="datePickerStyle" selected={startDateTo}
-                                    onChange={(e) => handleDateChange(e, setStartDateTo)} dateFormat="dd/MM/yyyy" />
-                            </div>
+                        <div style={{ display: 'flex', marginBottom: '20px', gap: '12px', alignItems: 'center' }}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    label="From"
+                                    value={startDateFrom}
+                                    onChange={(e) => handleDateChange(e, setStartDateFrom)}
+                                    slotProps={{ textField: { size: 'small' } }}
+                                />
+                                <DatePicker
+                                    label="To"
+                                    value={startDateTo}
+                                    onChange={(e) => handleDateChange(e, setStartDateTo)}
+                                    slotProps={{ textField: { size: 'small' } }}
+                                />
+                            </LocalizationProvider>
                         </div>
                     </div>
                     <Table className='table-styling'>
