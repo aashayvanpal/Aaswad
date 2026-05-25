@@ -12,8 +12,6 @@ import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Alert from '@mui/material/Alert'
@@ -44,19 +42,25 @@ const Menu = () => {
     const isDark = themeMode === 'dark'
 
     // ── colour tokens ──────────────────────────────────────────────
-    const pageBg    = isDark ? '#0f0e0b' : '#FDFAF4'
-    const barBg     = isDark ? '#1a1800' : '#ffffff'
-    const barBorder = isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.25)'
-    const cardBg    = isDark ? 'rgba(255,255,255,0.025)' : '#ffffff'
-    const cardBorder = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(201,162,39,0.22)'
+    const pageBg         = isDark ? '#0f0e0b'                    : '#E8DCC8'
+    const barBg          = isDark ? '#1a1800'                    : '#F5ECD8'
+    const barBorder      = isDark ? 'rgba(201,162,39,0.18)'      : 'rgba(139,95,10,0.3)'
+    const cardBg         = isDark ? 'rgba(255,255,255,0.025)'    : '#FFFDF7'
+    const cardBorder     = isDark ? 'rgba(255,255,255,0.06)'     : 'rgba(139,95,10,0.2)'
+    const cardShadow     = isDark ? 'none'                       : '0 2px 12px rgba(100,65,0,0.12)'
     const cardBorderActive = '#C9A227'
-    const cardBgActive = isDark ? 'rgba(201,162,39,0.07)' : 'rgba(201,162,39,0.08)'
-    const nameColor = isDark ? 'rgba(255,255,255,0.78)' : '#2a1f00'
-    const catColor  = isDark ? 'rgba(201,162,39,0.38)' : 'rgba(201,162,39,0.65)'
-    const searchInputColor = isDark ? '#fff' : '#1a1400'
-    const searchPlaceholder = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.35)'
-    const searchBorder = isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.3)'
-    const cartBarBg = isDark ? 'rgba(15,14,11,0.97)' : 'rgba(253,250,244,0.97)'
+    const cardBgActive   = isDark ? 'rgba(201,162,39,0.07)'      : 'rgba(201,162,39,0.12)'
+    const nameColor      = isDark ? 'rgba(255,255,255,0.78)'     : '#2a1500'
+    const catColor       = isDark ? 'rgba(201,162,39,0.38)'      : '#8B5F0A'
+    const searchInputColor = isDark ? '#fff'                     : '#1a0f00'
+    const searchPlaceholder = isDark ? 'rgba(255,255,255,0.25)'  : 'rgba(60,35,0,0.4)'
+    const searchBorder   = isDark ? 'rgba(201,162,39,0.18)'      : 'rgba(139,95,10,0.35)'
+    const cartBarBg      = isDark ? 'rgba(15,14,11,0.97)'        : 'rgba(232,220,200,0.97)'
+    // light-mode text tokens — solid and readable on parchment
+    const adminText      = isDark ? 'rgba(201,162,39,0.55)'      : '#5a3e00'
+    const mutedAction    = isDark ? 'rgba(201,162,39,0.65)'      : '#7a5500'
+    const mutedBorder    = isDark ? 'rgba(201,162,39,0.18)'      : 'rgba(139,95,10,0.35)'
+    const iconColor      = isDark ? 'rgba(201,162,39,0.65)'      : '#7a5500'
 
     const dispatch = useDispatch()
     const cartItems = useSelector(state => state.cart.items)
@@ -95,7 +99,7 @@ const Menu = () => {
     const applyFilters = (search, cat) => {
         let filtered = items
         if (search) filtered = filtered.filter(i => i.name.toLowerCase().includes(search.toLowerCase()))
-        if (cat !== 'all') filtered = filtered.filter(i => i.category.includes(cat.toLowerCase()))
+        if (cat !== 'all') filtered = filtered.filter(i => Array.isArray(i.category) ? i.category.some(c => c.toLowerCase() === cat.toLowerCase()) : String(i.category).toLowerCase() === cat.toLowerCase())
         setSearchFilter(filtered)
     }
 
@@ -124,13 +128,16 @@ const Menu = () => {
                 onClose={() => setNavOpen(false)}
                 variant="temporary"
                 ModalProps={{ keepMounted: true }}
-                sx={{ '& .MuiDrawer-paper': { width: 240, border: 'none' } }}
+                sx={{ '& .MuiDrawer-paper': { width: 240, border: 'none', bgcolor: '#100f0b' } }}
             >
                 <NavigationBar onClose={() => setNavOpen(false)} />
             </Drawer>
 
-            {/* Top bar */}
+            {/* Top bar — sticky so hamburger is always accessible */}
             <Box sx={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 1100,
                 bgcolor: barBg,
                 borderBottom: `1px solid ${barBorder}`,
                 px: { xs: 2, sm: 3 },
@@ -140,7 +147,7 @@ const Menu = () => {
                 {/* Admin strip */}
                 {userType === 'Admin' && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, flexWrap: 'wrap' }}>
-                        <Typography sx={{ color: 'rgba(201,162,39,0.55)', fontSize: '0.68rem', fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase' }}>
+                        <Typography sx={{ color: adminText, fontSize: '0.68rem', fontWeight: 700, letterSpacing: 1.2, textTransform: 'uppercase' }}>
                             Admin · {username}
                         </Typography>
                         <Button
@@ -148,8 +155,8 @@ const Menu = () => {
                             onClick={() => dispatch(clearCart())}
                             startIcon={<DeleteSweepIcon sx={{ fontSize: '0.85rem !important' }} />}
                             sx={{
-                                color: 'rgba(201,162,39,0.65)', fontSize: '0.68rem',
-                                border: '1px solid rgba(201,162,39,0.18)',
+                                color: mutedAction, fontSize: '0.68rem',
+                                border: `1px solid ${mutedBorder}`,
                                 borderRadius: '6px', py: 0.25, px: 0.75,
                                 '&:hover': { bgcolor: 'rgba(201,162,39,0.07)' },
                             }}
@@ -164,7 +171,7 @@ const Menu = () => {
                     <IconButton
                         onClick={() => setNavOpen(true)}
                         size="small"
-                        sx={{ color: 'rgba(201,162,39,0.65)', '&:hover': { color: '#C9A227' }, flexShrink: 0 }}
+                        sx={{ color: iconColor, '&:hover': { color: '#C9A227' }, flexShrink: 0 }}
                     >
                         <MenuIcon sx={{ fontSize: '1.1rem' }} />
                     </IconButton>
@@ -185,7 +192,7 @@ const Menu = () => {
                             flex: 1,
                             maxWidth: 340,
                             '& .MuiOutlinedInput-root': {
-                                bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+                                bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,253,247,0.9)',
                                 borderRadius: '8px',
                                 fontSize: '0.8rem',
                                 color: searchInputColor,
@@ -204,7 +211,7 @@ const Menu = () => {
                                 ),
                                 endAdornment: inputSearch ? (
                                     <InputAdornment position="end">
-                                        <IconButton size="small" onClick={clearSearch} sx={{ color: 'rgba(255,255,255,0.25)', p: 0.25 }}>
+                                        <IconButton size="small" onClick={clearSearch} sx={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(60,35,0,0.4)', p: 0.25 }}>
                                             <ClearIcon sx={{ fontSize: '0.8rem' }} />
                                         </IconButton>
                                     </InputAdornment>
@@ -216,8 +223,8 @@ const Menu = () => {
                         label={searchFilter.length}
                         size="small"
                         sx={{
-                            bgcolor: 'rgba(201,162,39,0.1)',
-                            color: 'rgba(201,162,39,0.7)',
+                            bgcolor: isDark ? 'rgba(201,162,39,0.1)' : 'rgba(139,95,10,0.12)',
+                            color: isDark ? 'rgba(201,162,39,0.7)' : '#5a3e00',
                             fontWeight: 700,
                             fontSize: '0.68rem',
                             height: 20,
@@ -226,37 +233,50 @@ const Menu = () => {
                     />
                 </Box>
 
-                {/* Category tabs */}
-                <Tabs
-                    value={category}
-                    onChange={handleCategory}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    sx={{
-                        minHeight: 36,
-                        '& .MuiTabs-indicator': { bgcolor: '#C9A227', height: 2 },
-                        '& .MuiTabs-scrollButtons': { color: 'rgba(201,162,39,0.45)' },
-                    }}
-                >
-                    {CATEGORIES.map(cat => (
-                        <Tab
-                            key={cat}
-                            value={cat}
-                            label={cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                            sx={{
-                                minHeight: 36,
-                                fontSize: '0.72rem',
-                                fontWeight: 600,
-                                textTransform: 'none',
-                                letterSpacing: 0.2,
-                                color: 'rgba(255,255,255,0.38)',
-                                px: 1.5,
-                                py: 0,
-                                '&.Mui-selected': { color: '#C9A227' },
-                            }}
-                        />
-                    ))}
-                </Tabs>
+                {/* Category chips */}
+                <Box sx={{
+                    display: 'flex',
+                    gap: 0.75,
+                    pb: 1.5,
+                    overflowX: 'auto',
+                    '&::-webkit-scrollbar': { display: 'none' },
+                    scrollbarWidth: 'none',
+                }}>
+                    {CATEGORIES.map(cat => {
+                        const isActive = category === cat
+                        const label = cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)
+                        return (
+                            <Chip
+                                key={cat}
+                                label={label}
+                                onClick={() => handleCategory(null, cat)}
+                                size="small"
+                                sx={{
+                                    fontWeight: 700,
+                                    fontSize: '0.72rem',
+                                    letterSpacing: 0.3,
+                                    cursor: 'pointer',
+                                    flexShrink: 0,
+                                    height: 28,
+                                    bgcolor: isActive
+                                        ? '#C9A227'
+                                        : isDark ? 'rgba(201,162,39,0.08)' : 'rgba(139,95,10,0.08)',
+                                    color: isActive
+                                        ? '#1a1400'
+                                        : isDark ? 'rgba(255,255,255,0.55)' : '#5a3e00',
+                                    border: isActive
+                                        ? '1.5px solid #C9A227'
+                                        : isDark ? '1.5px solid rgba(201,162,39,0.2)' : '1.5px solid rgba(139,95,10,0.3)',
+                                    '&:hover': {
+                                        bgcolor: isActive ? '#e8c84d' : 'rgba(201,162,39,0.15)',
+                                        color: isActive ? '#1a1400' : '#C9A227',
+                                    },
+                                    transition: 'all 0.15s ease',
+                                }}
+                            />
+                        )
+                    })}
+                </Box>
             </Box>
 
             {showAlert && (
@@ -276,7 +296,7 @@ const Menu = () => {
                     <LoadingSpinner LoadingSpinner={spinnerLoading} />
                 ) : searchFilter.length === 0 ? (
                     <Box sx={{ textAlign: 'center', py: 8 }}>
-                        <Typography sx={{ color: 'rgba(255,255,255,0.35)', mb: 2, fontSize: '0.85rem' }}>
+                        <Typography sx={{ color: isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.4)', mb: 2, fontSize: '0.85rem' }}>
                             No items found
                         </Typography>
                         <img src={noItemFound} alt="no-item-found" className="menu-no-items-img" style={{ opacity: 0.4 }} />
@@ -305,6 +325,7 @@ const Menu = () => {
                                             ? `1.5px solid ${cardBorderActive}`
                                             : `1.5px solid ${cardBorder}`,
                                         bgcolor: selected ? cardBgActive : cardBg,
+                                        boxShadow: selected ? 'none' : cardShadow,
                                         cursor: 'pointer',
                                         overflow: 'hidden',
                                         transition: 'all 0.14s ease',
@@ -348,27 +369,37 @@ const Menu = () => {
                                     </Box>
 
                                     {/* Info */}
-                                    <Box sx={{ p: { xs: 0.75, sm: 0.875 } }}>
+                                    <Box sx={{ p: { xs: 0.875, sm: 1 } }}>
                                         <Typography sx={{
                                             fontWeight: 600,
-                                            fontSize: { xs: '0.68rem', sm: '0.73rem' },
+                                            fontSize: { xs: '0.82rem', sm: '0.9rem' },
                                             color: selected ? '#C9A227' : nameColor,
                                             lineHeight: 1.3,
+                                            mb: 0.5,
                                         }}>
                                             {item.name}
                                         </Typography>
-                                        {item.category && (
-                                            <Typography sx={{
-                                                fontSize: '0.58rem',
-                                                color: catColor,
-                                                textTransform: 'capitalize',
-                                                fontWeight: 600,
-                                                letterSpacing: 0.4,
-                                                mt: 0.25,
-                                            }}>
-                                                {item.category}
-                                            </Typography>
-                                        )}
+                                        {(() => {
+                                            const cat = Array.isArray(item.category) ? item.category[0] : item.category
+                                            if (!cat || String(cat).toLowerCase() === 'all') return null
+                                            const label = String(cat).charAt(0).toUpperCase() + String(cat).slice(1)
+                                            return (
+                                            <Chip
+                                                label={label}
+                                                size="small"
+                                                sx={{
+                                                    height: 18,
+                                                    fontSize: '0.6rem',
+                                                    fontWeight: 700,
+                                                    letterSpacing: 0.3,
+                                                    bgcolor: isDark ? 'rgba(201,162,39,0.1)' : 'rgba(139,95,10,0.1)',
+                                                    color: catColor,
+                                                    border: `1px solid ${isDark ? 'rgba(201,162,39,0.2)' : 'rgba(139,95,10,0.25)'}`,
+                                                    '& .MuiChip-label': { px: 0.75 },
+                                                }}
+                                            />
+                                            )
+                                        })()}
                                     </Box>
                                 </Box>
                             )

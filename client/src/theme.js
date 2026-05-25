@@ -4,14 +4,12 @@ const typography = {
     // Must match html { font-size } in index.css so MUI rem math is correct
     htmlFontSize: 22,
     fontSize: 22,
-    fontFamily: [
-        '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto',
-        '"Helvetica Neue"', 'Arial', 'sans-serif',
-    ].join(','),
-    h1: { fontSize: '3.6rem',  fontWeight: 700 },
-    h2: { fontSize: '3rem',    fontWeight: 700 },
-    h3: { fontSize: '2.6rem',  fontWeight: 700 },
-    h4: { fontSize: '2.2rem',  fontWeight: 700 },
+    // DM Sans for UI/body, Cormorant Garamond for headings via variant overrides below
+    fontFamily: ['"DM Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'].join(','),
+    h1: { fontSize: '3.6rem',  fontWeight: 700, fontFamily: '"Cormorant Garamond", Georgia, serif' },
+    h2: { fontSize: '3rem',    fontWeight: 700, fontFamily: '"Cormorant Garamond", Georgia, serif' },
+    h3: { fontSize: '2.6rem',  fontWeight: 600, fontFamily: '"Cormorant Garamond", Georgia, serif' },
+    h4: { fontSize: '2.2rem',  fontWeight: 600, fontFamily: '"Cormorant Garamond", Georgia, serif' },
     h5: { fontSize: '1.9rem',  fontWeight: 700 },
     h6: { fontSize: '1.6rem',  fontWeight: 700 },
     body1:    { fontSize: '1.5rem'  },
@@ -261,7 +259,7 @@ export const lightTheme = createTheme({
     palette: {
         mode: 'light',
         primary:    { main: '#C9A227', light: '#e8c84d', dark: '#9a7a1a' },
-        background: { default: '#FDFAF4', paper: '#ffffff' },
+        background: { default: '#E8DCC8', paper: '#FFFDF7' },
         text:       { primary: '#1a1400', secondary: 'rgba(26,20,0,0.58)' },
         divider:    'rgba(201,162,39,0.2)',
     },

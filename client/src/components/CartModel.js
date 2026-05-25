@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useAppTheme } from '../context/ThemeContext'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -6,7 +7,6 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import TextField from '@mui/material/TextField'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
@@ -21,6 +21,14 @@ const CartModel = ({ buttonLabel, userType }) => {
     const dispatch = useDispatch()
     const cartItems = useSelector(state => state.cart.items)
     const cartCount = cartItems.length
+    const { themeMode } = useAppTheme()
+    const isDark = themeMode === 'dark'
+    const MODAL_BG   = isDark ? '#1a1800' : '#fffbee'
+    const TABLE_HEAD = isDark ? 'rgba(201,162,39,0.15)' : 'rgba(201,162,39,0.18)'
+    const ROW_HOVER  = isDark ? 'rgba(201,162,39,0.08)' : 'rgba(201,162,39,0.06)'
+    const TEXT       = isDark ? 'rgba(255,255,255,0.87)' : '#1a1400'
+    const TEXT_MUTED = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)'
+    const TOTAL_COLOR = isDark ? '#e8c84d' : '#3d2e00'
 
     const toggle = () => setModal(!modal)
 
@@ -65,10 +73,10 @@ const CartModel = ({ buttonLabel, userType }) => {
                 open={modal}
                 onClose={toggle}
                 fullWidth
-                maxWidth="md"
+                maxWidth="xl"
                 slotProps={{
                     paper: {
-                        sx: { borderRadius: '20px', overflow: 'hidden', minHeight: '60vh' }
+                        sx: { borderRadius: '20px', minHeight: '70vh' }
                     }
                 }}
             >
@@ -76,69 +84,38 @@ const CartModel = ({ buttonLabel, userType }) => {
                     bgcolor: '#C9A227',
                     color: '#000',
                     fontWeight: 800,
-                    fontSize: '1.3rem',
+                    fontSize: '1.6rem',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    py: 2,
-                    px: 3,
+                    py: 2.5,
+                    px: 4,
                 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <ShoppingCartIcon />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <ShoppingCartIcon sx={{ fontSize: '1.8rem' }} />
                         <span>Review your Selections</span>
                         {userType === 'Admin' && (
                             <Chip label="Admin" size="small"
-                                sx={{ bgcolor: '#000', color: '#C9A227', fontWeight: 700, fontSize: '0.8rem' }} />
+                                sx={{ bgcolor: '#000', color: '#C9A227', fontWeight: 700, fontSize: '0.9rem' }} />
                         )}
                         {cartCount > 0 && (
                             <Chip label={`${cartCount} item${cartCount > 1 ? 's' : ''}`} size="small"
-                                sx={{ bgcolor: 'rgba(0,0,0,0.15)', fontWeight: 700, fontSize: '0.8rem' }} />
+                                sx={{ bgcolor: 'rgba(0,0,0,0.15)', fontWeight: 700, fontSize: '0.9rem' }} />
                         )}
                     </Box>
                     <IconButton onClick={toggle} sx={{ color: '#000', '&:hover': { bgcolor: 'rgba(0,0,0,0.1)' } }}>
-                        <CloseIcon />
+                        <CloseIcon sx={{ fontSize: '1.6rem' }} />
                     </IconButton>
                 </DialogTitle>
 
-                <DialogContent sx={{ bgcolor: '#fffbee', p: 0 }}>
-                    {cartItems.length > 0 && (
-                        <Box sx={{
-                            px: 3, pt: 2.5, pb: 2,
-                            bgcolor: 'rgba(201,162,39,0.1)',
-                            borderBottom: '1px solid rgba(201,162,39,0.25)',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            gap: 3,
-                        }}>
-                            <Box>
-                                <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5, color: '#5d522c' }}>
-                                    Set quantity for all items
-                                </Typography>
-                                <TextField
-                                    placeholder="e.g. 50"
-                                    type="number"
-                                    size="small"
-                                    value={bulkQtyInput}
-                                    onChange={handleBulkQtyChange}
-                                    slotProps={{ htmlInput: { min: 1 } }}
-                                    sx={{
-                                        width: 200,
-                                        '& .MuiOutlinedInput-root': {
-                                            fontSize: '1rem', bgcolor: '#fff', borderRadius: '8px',
-                                            '&:hover fieldset': { borderColor: '#C9A227' },
-                                            '&.Mui-focused fieldset': { borderColor: '#C9A227' },
-                                        },
-                                    }}
-                                />
-                            </Box>
-                            <Typography variant="caption" sx={{ color: '#888', fontStyle: 'italic', pb: 0.5 }}>
-                                Updates every item at once
-                            </Typography>
-                        </Box>
-                    )}
-
-                    <Box sx={{ px: 1, pt: 1 }}>
-                        {userType === 'Admin' ? <AdminCart /> : <Cart />}
+                <DialogContent sx={{ bgcolor: MODAL_BG, p: 0, overflowX: 'hidden' }}>
+                    <Box sx={{ px: 2, pt: 1.5 }}>
+                        {userType === 'Admin'
+                            ? <AdminCart bulkQtyInput={bulkQtyInput} onBulkQtyChange={handleBulkQtyChange}
+                                tableHead={TABLE_HEAD} rowHover={ROW_HOVER} text={TEXT} textMuted={TEXT_MUTED} totalColor={TOTAL_COLOR} />
+                            : <Cart bulkQtyInput={bulkQtyInput} onBulkQtyChange={handleBulkQtyChange}
+                                tableHead={TABLE_HEAD} rowHover={ROW_HOVER} text={TEXT} textMuted={TEXT_MUTED} totalColor={TOTAL_COLOR} />
+                        }
                     </Box>
                 </DialogContent>
             </Dialog>

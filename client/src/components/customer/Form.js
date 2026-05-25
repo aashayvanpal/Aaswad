@@ -41,8 +41,8 @@ import { useAppTheme } from '../../context/ThemeContext'
 const GOLD = '#C9A227'
 
 const sectionLabel = {
-    color: 'rgba(201,162,39,0.45)',
-    fontSize: '0.6rem',
+    color: 'rgba(201,162,39,0.6)',
+    fontSize: '0.75rem',
     fontWeight: 800,
     letterSpacing: 1.8,
     textTransform: 'uppercase',
@@ -53,24 +53,28 @@ const CustomerForm = (props) => {
     const { themeMode } = useAppTheme()
     const isDark = themeMode === 'dark'
 
-    const BG      = isDark ? '#0f0e0b' : '#FDFAF4'
-    const CARD_BG = isDark ? '#1a1800' : '#ffffff'
-    const BORDER  = isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.25)'
+    const BG        = isDark ? '#0f0e0b' : '#E8DCC8'
+    const CARD_BG   = isDark ? '#1a1800' : '#ffffff'
+    const BORDER    = isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.28)'
+    const SHADOW    = isDark ? '0 2px 16px rgba(0,0,0,0.4)' : '0 2px 16px rgba(201,162,39,0.12)'
+    const TEXT      = isDark ? 'rgba(255,255,255,0.87)' : '#1a1400'
+    const TEXT_MED  = isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'
+    const TEXT_MUTED = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.35)'
 
     const inputSx = {
         '& .MuiOutlinedInput-root': {
             bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.025)',
-            borderRadius: '7px',
-            fontSize: '0.82rem',
+            borderRadius: '8px',
+            fontSize: '1rem',
             color: isDark ? '#fff' : '#1a1400',
             '& fieldset': { borderColor: BORDER },
-            '&:hover fieldset': { borderColor: 'rgba(201,162,39,0.45)' },
+            '&:hover fieldset': { borderColor: 'rgba(201,162,39,0.5)' },
             '&.Mui-focused fieldset': { borderColor: GOLD },
         },
-        '& label': { fontSize: '0.8rem', color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.5)' },
+        '& label': { fontSize: '0.95rem', color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.5)' },
         '& label.Mui-focused': { color: GOLD },
-        '& label.MuiFormLabel-filled': { color: isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.65)' },
-        '& .MuiFormHelperText-root': { fontSize: '0.7rem', color: '#ef4444' },
+        '& label.MuiFormLabel-filled': { color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.65)' },
+        '& .MuiFormHelperText-root': { fontSize: '0.8rem', color: '#ef4444' },
     }
 
     const editingOrder = useSelector(state => state.cart.editingOrder)
@@ -282,7 +286,7 @@ const CustomerForm = (props) => {
 
                 {/* Page title */}
                 <Box sx={{ mb: 2.5, display: 'flex', alignItems: 'baseline', gap: 1.5 }}>
-                    <Typography sx={{ color: '#fff', fontWeight: 800, fontSize: { xs: '1.1rem', sm: '1.3rem' } }}>
+                    <Typography sx={{ color: TEXT, fontWeight: 800, fontSize: { xs: '1.4rem', sm: '1.8rem' } }}>
                         Event Details
                     </Typography>
                     {editingOrder && (
@@ -302,10 +306,11 @@ const CustomerForm = (props) => {
                         {/* Admin customer selector */}
                         {userType === 'Admin' && (
                             <Box sx={{
-                                mb: 2, p: 1.5,
+                                mb: 2, p: 2,
                                 bgcolor: CARD_BG,
                                 border: `1px solid ${BORDER}`,
-                                borderRadius: '10px',
+                                borderRadius: '12px',
+                                boxShadow: SHADOW,
                             }}>
                                 <Typography sx={sectionLabel}>Customer</Typography>
                                 <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -318,10 +323,10 @@ const CustomerForm = (props) => {
                                         size="small"
                                         onClick={clearForm}
                                         sx={{
-                                            color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem',
-                                            border: `1px solid rgba(255,255,255,0.1)`,
+                                            color: TEXT_MED, fontSize: '0.72rem',
+                                            border: `1px solid ${TEXT_MUTED}`,
                                             borderRadius: '6px',
-                                            '&:hover': { color: '#fff', borderColor: 'rgba(255,255,255,0.25)' },
+                                            '&:hover': { color: TEXT, borderColor: TEXT_MED },
                                         }}
                                     >
                                         Clear
@@ -331,15 +336,15 @@ const CustomerForm = (props) => {
                         )}
 
                         {/* Personal details */}
-                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                             <Typography sx={sectionLabel}>Personal Details</Typography>
-                            <Grid container spacing={1.5}>
+                            <Grid container spacing={2}>
                                 <Grid size={12}>
                                     <TextField
                                         fullWidth label="Full Name" value={fullName}
                                         onChange={e => setFullName(e.target.value)}
                                         error={!!nameError} helperText={nameError}
-                                        sx={inputSx} size="small"
+                                        sx={inputSx}
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -348,7 +353,7 @@ const CustomerForm = (props) => {
                                         onChange={e => setPhoneNumber(e.target.value)}
                                         error={!!phoneNumberError} helperText={phoneNumberError}
                                         slotProps={{ htmlInput: { maxLength: 10 } }}
-                                        sx={inputSx} size="small"
+                                        sx={inputSx}
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -356,12 +361,12 @@ const CustomerForm = (props) => {
                                         fullWidth label="Email" type="email" value={email}
                                         onChange={e => setEmail(e.target.value)}
                                         error={!!emailError} helperText={emailError}
-                                        sx={inputSx} size="small"
+                                        sx={inputSx}
                                     />
                                 </Grid>
                                 <Grid size={12}>
                                     <TextField
-                                        fullWidth multiline rows={2} label="Address" value={address}
+                                        fullWidth multiline rows={3} label="Address" value={address}
                                         onChange={e => setAddress(e.target.value)}
                                         error={!!addressError} helperText={addressError}
                                         sx={inputSx}
@@ -371,14 +376,14 @@ const CustomerForm = (props) => {
                         </Box>
 
                         {/* Event details */}
-                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                             <Typography sx={sectionLabel}>Event Details</Typography>
-                            <Grid container spacing={1.5}>
+                            <Grid container spacing={2}>
                                 <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
                                         fullWidth label="Event Name" value={eventName}
                                         onChange={e => setEventName(e.target.value)}
-                                        sx={inputSx} size="small"
+                                        sx={inputSx}
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -386,7 +391,7 @@ const CustomerForm = (props) => {
                                         fullWidth label="No. of People" type="number" value={numberOfPeople}
                                         onChange={e => setNumberOfPeople(e.target.value)}
                                         error={!!noOfPeopleError} helperText={noOfPeopleError}
-                                        sx={inputSx} size="small"
+                                        sx={inputSx}
                                     />
                                 </Grid>
                                 <Grid size={12}>
@@ -397,18 +402,20 @@ const CustomerForm = (props) => {
                                         slotProps={{
                                             textField: {
                                                 fullWidth: true,
-                                                size: 'small',
                                                 sx: {
                                                     ...inputSx,
-                                                    '& .MuiSvgIcon-root': { color: 'rgba(201,162,39,0.5)', fontSize: '1rem' },
+                                                    '& .MuiSvgIcon-root': { color: 'rgba(201,162,39,0.5)', fontSize: '1.2rem' },
                                                 },
+                                            },
+                                            desktopPaper: {
+                                                sx: { transform: 'scale(1.25)', transformOrigin: 'top left' }
                                             },
                                         }}
                                     />
                                 </Grid>
                                 <Grid size={12}>
                                     <TextField
-                                        fullWidth multiline rows={2} label="Notes / Queries"
+                                        fullWidth multiline rows={3} label="Notes / Queries"
                                         value={queries} onChange={e => setQuerries(e.target.value)}
                                         sx={inputSx}
                                     />
@@ -421,7 +428,7 @@ const CustomerForm = (props) => {
                     <Grid size={{ xs: 12, md: 5 }}>
 
                         {/* Options */}
-                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                             <Typography sx={sectionLabel}>Options</Typography>
                             <Stack spacing={0.5}>
                                 <FormControlLabel
@@ -441,7 +448,7 @@ const CustomerForm = (props) => {
                                     label={
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                             <LocalShippingIcon sx={{ fontSize: '0.9rem', color: 'rgba(201,162,39,0.5)' }} />
-                                            <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>
+                                            <Typography sx={{ fontSize: '0.8rem', color: TEXT, fontWeight: 600 }}>
                                                 Home Delivery
                                             </Typography>
                                             <HDToolTip />
@@ -460,7 +467,7 @@ const CustomerForm = (props) => {
                                     label={
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                                             <RoomServiceIcon sx={{ fontSize: '0.9rem', color: 'rgba(201,162,39,0.5)' }} />
-                                            <Typography sx={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.75)', fontWeight: 600 }}>
+                                            <Typography sx={{ fontSize: '0.8rem', color: TEXT, fontWeight: 600 }}>
                                                 Service
                                             </Typography>
                                             <ServiceToolTip />
@@ -472,12 +479,12 @@ const CustomerForm = (props) => {
 
                         {/* Transport */}
                         {homeDelivery && (
-                            <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                            <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                                 <Typography sx={sectionLabel}>Transport</Typography>
                                 {showTransportForm ? (
                                     <Box sx={{ position: 'relative' }}>
                                         <IconButton size="small" onClick={() => setShowTransportForm(false)}
-                                            sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                            sx={{ position: 'absolute', top: -4, right: -4, color: TEXT_MUTED, '&:hover': { color: '#ef4444' } }}>
                                             <CloseIcon sx={{ fontSize: '0.9rem' }} />
                                         </IconButton>
                                         <TransportForm
@@ -493,7 +500,7 @@ const CustomerForm = (props) => {
                                 ) : transport.medium ? (
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <LocalShippingIcon sx={{ fontSize: '0.9rem', color: GOLD }} />
-                                        <Typography sx={{ flex: 1, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 600 }}>
+                                        <Typography sx={{ flex: 1, color: TEXT_MED, fontSize: '1rem', fontWeight: 600 }}>
                                             {transport.medium} · <span style={{ color: GOLD }}>₹{transport.rate}</span>
                                         </Typography>
                                         <IconButton size="small" onClick={() => setShowTransportForm(true)}
@@ -511,12 +518,12 @@ const CustomerForm = (props) => {
                         )}
 
                         {/* Advance payment */}
-                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                             <Typography sx={sectionLabel}>Advance Payment</Typography>
                             {showAdvanceForm ? (
                                 <Box sx={{ position: 'relative' }}>
                                     <IconButton size="small" onClick={() => setShowAdvanceForm(false)}
-                                        sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                        sx={{ position: 'absolute', top: -4, right: -4, color: TEXT_MUTED, '&:hover': { color: '#ef4444' } }}>
                                         <CloseIcon sx={{ fontSize: '0.9rem' }} />
                                     </IconButton>
                                     <AdvancePaymentForm
@@ -531,7 +538,7 @@ const CustomerForm = (props) => {
                             ) : advanceAmount ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                     <PaymentsIcon sx={{ fontSize: '0.9rem', color: GOLD }} />
-                                    <Typography sx={{ flex: 1, color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 600 }}>
+                                    <Typography sx={{ flex: 1, color: TEXT_MED, fontSize: '1rem', fontWeight: 600 }}>
                                         <span style={{ color: GOLD }}>₹{advanceAmount}</span> advance
                                     </Typography>
                                     <IconButton size="small" onClick={() => setShowAdvanceForm(true)}
@@ -539,7 +546,7 @@ const CustomerForm = (props) => {
                                         <EditIcon sx={{ fontSize: '0.85rem' }} />
                                     </IconButton>
                                     <IconButton size="small" onClick={() => setAdvanceAmount('')}
-                                        sx={{ color: 'rgba(255,255,255,0.25)', '&:hover': { color: '#ef4444' } }}>
+                                        sx={{ color: TEXT_MUTED, '&:hover': { color: '#ef4444' } }}>
                                         <CloseIcon sx={{ fontSize: '0.85rem' }} />
                                     </IconButton>
                                 </Box>
@@ -552,12 +559,12 @@ const CustomerForm = (props) => {
                         </Box>
 
                         {/* Misc items */}
-                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '10px', p: 2, mb: 2 }}>
+                        <Box sx={{ bgcolor: CARD_BG, border: `1px solid ${BORDER}`, borderRadius: '12px', p: 2.5, mb: 2, boxShadow: SHADOW }}>
                             <Typography sx={sectionLabel}>Misc Items</Typography>
                             {showMiscForm ? (
                                 <Box sx={{ position: 'relative' }}>
                                     <IconButton size="small" onClick={() => setShowMiscForm(false)}
-                                        sx={{ position: 'absolute', top: -4, right: -4, color: 'rgba(255,255,255,0.3)', '&:hover': { color: '#ef4444' } }}>
+                                        sx={{ position: 'absolute', top: -4, right: -4, color: TEXT_MUTED, '&:hover': { color: '#ef4444' } }}>
                                         <CloseIcon sx={{ fontSize: '0.9rem' }} />
                                     </IconButton>
                                     <MiscForm

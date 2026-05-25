@@ -4,7 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## About
 
-Aaswad Caterers — a MERN stack web app for catering order management. Customers can request food orders; admins manage items, customers, orders, multi-date orders, and event orders. Email notifications are sent via Nodemailer at key order lifecycle events. The frontend uses **MUI (Material UI) v9** for all UI components.
+**Aaswad Caterers** — a homely, tasty, healthy, pure-veg catering business. Tagline: *Homely. Tasty. Healthy. Pure Veg.*
+
+This is a MERN stack web app for internal catering order management. There is **one user: the admin (the caterer)**. The customer-facing UI exists but is a lower priority — all active development targets the admin experience.
+
+### Business Context
+
+| | |
+|---|---|
+| **Users** | Single admin (the caterer). No multi-user or role-based access needed for now. |
+| **Scale** | ~350 customers in DB. Order volume varies — daily/monthly cadence. Not a high-throughput system; reliability and clarity matter more than raw performance. |
+| **Order types** | Single orders, multi-date orders (recurring), event orders (large events with sub-orders) |
+| **Brand personality** | Warm, homely, trustworthy. Premium but approachable — not corporate. Gold + dark palette reflects this. |
+| **Pure veg** | The business is strictly pure vegetarian. UI copy, item categories, and any food-related labels must reflect this. |
+
+### Design North Star
+
+The admin UI should feel like a **well-crafted internal tool built for a single power user** — fast to navigate, information-dense but not cluttered, with the warmth of the gold-dark brand. Every screen the caterer uses daily (orders list, order detail, customers) should be optimized for speed and clarity over decoration.
+
+The frontend uses **MUI (Material UI) v9** for all UI components. Email notifications are sent via Nodemailer at key order lifecycle events.
 
 ## Commands
 
@@ -501,3 +519,172 @@ try {
 - Log errors with a `[ComponentName]` prefix for easy filtering: `console.error('[OrderList]', err)`.
 - Error messages shown to users must be human-readable; fall back to a generic message if the server sends nothing useful.
 - Do **not** add error handling for impossible cases — only handle real failure paths (network errors, 4xx/5xx responses).
+
+---
+
+## Frontend Engineering Standards
+
+Act as a Senior UX/UI Engineer and master of frontend aesthetics building production-grade interfaces for **Aaswad Caterers** — a catering business management app.
+
+**Before writing any frontend code**, output your reasoning in `<design_rationale>` tags covering:
+- Design choices (color, spacing, typography) and why they fit the existing gold `#C9A227` + dark aesthetic
+- Component structure and MUI v9 API choices
+- Responsive strategy (mobile-first: xs → sm → md → lg)
+- Any micro-interactions or animations planned
+
+**Then wait for confirmation before writing code.**
+
+### Constraints
+
+1. **Design language**: Bold, intentional aesthetics aligned with the existing dark-gold brand. Do not introduce new color palettes, random gradients, or styles that clash with `#C9A227` gold + `#1a1400` dark. No generic "clean white SaaS" defaults.
+2. **Tooling**: Use only what is in `package.json` — MUI v9 + SCSS. Do not introduce styled-components, Tailwind, or any new CSS methodology.
+3. **Motion**: Add micro-interactions (CSS keyframe animations or MUI `sx` transitions) that feel tactile — hover states, subtle scale, fade-ins. Keep them smooth and purposeful, not decorative noise.
+4. **Accessibility**: Every component must be WAI-ARIA compliant with proper semantic HTML tags. Keyboard-navigable where applicable.
+5. **Responsive**: Mobile-first always. Test mentally across xs (360px), sm (600px), md (900px), lg (2560×1440). Tables → cards on mobile per the patterns in this file.
+6. **No inline styles** for static values — SCSS classes only. MUI `sx` is fine. Dynamic values (computed from state/props) may stay inline.
+
+---
+
+## Backend Engineering Standards
+
+Act as a Principal Backend Architect designing secure, scalable APIs for a Node.js + Express + MongoDB (Mongoose) stack.
+
+**Before building or refactoring any API, database query, or business logic**, output analysis in `<system_architecture>` tags covering:
+1. **Three architectural approaches** for the task — compare tradeoffs in latency, complexity, and maintainability
+2. **Three most likely failure points** (e.g., race conditions, N+1 queries, memory leaks) and how the chosen design mitigates them
+
+**Then wait for confirmation before writing code.**
+
+### Constraints
+
+- **Error handling**: Every async function, API route, and Mongoose query must have structured `try/catch` with descriptive `console.error('[ControllerName]', err)` logging
+- **Security**: Rate-limiting on sensitive routes, strict input validation/sanitization, proper JWT auth scope checks via `authentication.js` middleware
+- **MongoDB/Mongoose**: Use proper indexing, avoid unbounded queries (always paginate list endpoints), use `.lean()` for read-only queries, avoid N+1 by using `.populate()` selectively
+- **Performance**: No synchronous blocking operations. Avoid loading entire collections into memory
+- **Testability**: Write modular controller functions that are easy to unit test in isolation. Include comments marking edge cases that would need test stubs
+- **No raw string interpolation** in queries — Mongoose schema typing handles injection prevention; never bypass it with `$where` or `eval`
+
+---
+
+## TODO List (priority order)
+
+### 1. Layout & Font Family
+- [x] Font family set: **Cormorant Garamond** (h1–h4, headings) + **DM Sans** (body, UI, buttons)
+- [x] Google Fonts import added to `client/src/index.css`
+- [x] `theme.js` typography updated — Cormorant on h1–h4 variants, DM Sans as base `fontFamily`
+- [ ] Audit all components for layout breakage: overflow, misaligned flex/grid, wrong spacing at xs/sm/md/lg
+- [ ] Fix any `px`-based font sizes — convert to `rem` anchored to the 22px base in `index.css`
+- [ ] Verify layout on mobile (xs), tablet (sm/md), and 2560×1440 (lg)
+
+### 1a. /menu Page — Light Mode Color Scheme Fix
+- [x] Category tab text hardcoded — fixed to theme-aware chips
+- [x] "No items found" text — fixed to theme-aware
+- [x] Item cards — shadow + stronger borders in light mode added
+- [x] Entire Menu.js audited for dark-only colors — all fixed
+- [x] Item card name font size increased (0.82–0.9rem)
+- [x] Item card category: hide "all", display as chip badge
+- [x] Left nav Drawer paper bg fixed to `#100f0b` (dark sidebar in light mode)
+- [x] /request page background updated to `#E8DCC8` parchment
+
+### 1b. /menu Page — Hamburger & Layout Fixes
+- [x] Hamburger icon repositioned — sticky top bar, left-aligned with search row
+- [x] Sidebar toggle does not overlap item grid or cart bar
+
+### 1c. /request Page — Input Field Sizes
+- [x] Font sizes bumped to 1rem for inputs, 0.95rem for labels
+- [ ] Personal Details + Event Details fields: increase height (use medium size, not small)
+- [ ] Event Date & Time picker popup: make calendar cells and text larger via slotProps/theme overrides
+
+### 1d. /request Page — CustomerModal Phone Number Style
+- [x] Phone numbers now use card-style Box matching address cards (not Chip pills)
+
+### 1e. /request Page — Tooltip Redesign
+- [x] HDToolTip and ServiceToolTip rewritten with MUI InfoOutlinedIcon + branded Tooltip
+
+### 1f. CartModel (Review Your Selections Modal) — Overhaul
+- [x] Modal maxWidth='xl', minHeight: 70vh — very large
+- [x] All font sizes increased throughout modal
+- [x] Removed +/- quantity buttons per item
+- [x] Bulk qty input moved into Qty column heading
+- [x] Price and qty input sizes increased
+
+### 2. Light & Dark Theme — Root-level Audit & Fix
+- [ ] Audit every component for hardcoded dark-only hex colors (replace with `isDark ? ... : ...` or MUI `palette` tokens)
+- [ ] Verify `CssBaseline` + body background switches correctly on theme toggle
+- [ ] Ensure MUI `palette.text.primary / secondary` and `palette.background.default / paper` are used instead of raw hex where possible
+- [ ] Check scrollbar, input, and select styling in both themes
+- [ ] Test toggle at `/settings` end-to-end — no flash, no stuck colors
+
+### 2b. /request Page — Light Mode Fix
+- [ ] Audit /request page in light mode — fix all hardcoded dark colors
+- [ ] Ensure form fields, labels, backgrounds all switch correctly with theme
+
+### 2c. Event Details — Color Fix
+- [ ] Audit Event Details component/page for dark-only hardcoded colors
+- [ ] Fix all colors to be theme-aware (dark + light both correct)
+
+### 2d. MUI Date Picker — Fix
+- [ ] Date picker not rendering/styling correctly — audit and fix in both themes
+- [ ] Ensure AdapterDateFnsV2 is used (not AdapterDateFns) — date-fns v2.x installed
+- [ ] Verify picker works on /request page and any other page that uses it
+
+### 2e. Dark Mode — Full Consistency Audit
+- [ ] All admin pages must be consistent in dark mode — no mixed backgrounds or leftover light colors
+- [ ] Check sidebar, header, cards, tables, dialogs, inputs all match dark palette
+
+### 3. Generate Bills — Fix
+- [ ] Discuss current state with user before starting
+- [ ] Fix bill print view — correct page margins, font, item table
+- [ ] Ensure bill shows transport, misc charges, advance amount, totals correctly
+- [ ] Test print / PDF export flow
+
+### 3b. /orders/:id (Show) — Map for Delivery Address
+- [ ] Add embedded map (OpenStreetMap iframe — no API key needed) showing delivery address
+- [ ] Add "Open in Google Maps" button alongside the map
+- [ ] Only show map when homeDelivery is true and address is present
+- [ ] Map must be theme-aware (works in both dark and light)
+
+### 3c. /items Page — Complete Redesign
+- [ ] Full visual redesign — all functionality (CRUD) already works, just needs redesign
+- [ ] Apply gold/dark brand, card grid layout, responsive design
+
+### 3d. /items/:item_id — 500 Error Fix
+- [ ] Investigate and fix 500 internal server error on individual item page
+- [ ] Check controller, route, and model for this endpoint
+
+### 3e. /items/:item_id — Display Redesign
+- [ ] Redesign the item detail page — show all fields clearly
+- [ ] Image, name, price, category, ingredients displayed professionally
+
+### 3f. /items/add and /items/edit/:item_id — Redesign
+- [ ] Redesign add/edit item forms to match the gold/dark brand
+- [ ] Category input has a known bug — to be fixed when working on this
+
+### 4. CRUD Orders Workflow
+- [ ] Audit current order list, create, edit, delete — identify broken flows
+- [ ] Migrate remaining axios calls to RTK Query (`ordersApi.js` already exists)
+- [ ] Add loading states (`CircularProgress`) and error states (`<Alert>`) throughout
+- [ ] Make order list responsive (cards on xs/sm, table on md+)
+- [ ] Verify full order edit flow: OrderList/Show → setEditingOrder → /menu → /request → PUT
+
+### 5. CRUD Multi-Orders Workflow
+- [ ] Audit multi-order list, create, edit, delete — identify broken flows
+- [ ] Create `store/services/multiOrdersApi.js` (RTK Query)
+- [ ] Register in `store/index.js` (rootReducer + middleware)
+- [ ] Replace axios calls with RTK hooks
+- [ ] Add loading/error states and responsive layout
+
+### 6. CRUD Event Orders Workflow
+- [ ] Audit event order list, create, edit, delete — identify broken flows
+- [ ] Create `store/services/eventOrdersApi.js` (RTK Query)
+- [ ] Register in `store/index.js`
+- [ ] Replace axios calls with RTK hooks
+- [ ] Add loading/error states and responsive layout
+
+### 7. CRUD Customers Workflow
+- [ ] Audit customer list, add, edit, delete — identify broken flows
+- [ ] Create `store/services/customersApi.js` (RTK Query)
+- [ ] Register in `store/index.js`
+- [ ] Replace axios calls with RTK hooks
+- [ ] Add loading/error states and responsive layout
+- [ ] Verify CustomerModal search + prefill flows still work after migration

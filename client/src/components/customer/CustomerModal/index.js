@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useAppTheme } from '../../../context/ThemeContext'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -19,6 +20,15 @@ import HomeIcon from '@mui/icons-material/Home'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 
 const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) => {
+    const { themeMode } = useAppTheme()
+    const isDark = themeMode === 'dark'
+    const MODAL_BG   = isDark ? '#1a1800' : '#fffbee'
+    const CARD_BG    = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.7)'
+    const BORDER     = isDark ? 'rgba(201,162,39,0.25)' : 'rgba(201,162,39,0.25)'
+    const TEXT       = isDark ? 'rgba(255,255,255,0.87)' : '#1a1400'
+    const TEXT_MED   = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.55)'
+    const LABEL_COLOR = isDark ? 'rgba(201,162,39,0.7)' : '#7a6010'
+
     const [open, setOpen] = useState(false)
     const [filter, setFilter] = useState('')
     const [selectedCustomer, setSelectedCustomer] = useState(null)
@@ -100,7 +110,7 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                     </IconButton>
                 </DialogTitle>
 
-                <DialogContent sx={{ bgcolor: '#fffbee', p: 0, display: 'flex', flexDirection: 'column' }}>
+                <DialogContent sx={{ bgcolor: MODAL_BG, p: 0, display: 'flex', flexDirection: 'column' }}>
                     {/* Search bar */}
                     <Box sx={{ px: 3, pt: 2.5, pb: 1.5, bgcolor: 'rgba(201,162,39,0.08)', borderBottom: '1px solid rgba(201,162,39,0.2)' }}>
                         <TextField
@@ -167,8 +177,8 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                                         {initials(selectedCustomer.fullName)}
                                     </Avatar>
                                     <Box>
-                                        <Typography sx={{ fontWeight: 800, fontSize: '1.1rem' }}>{selectedCustomer.fullName}</Typography>
-                                        <Typography variant="caption" sx={{ color: '#888' }}>{selectedCustomer.email}</Typography>
+                                        <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: TEXT }}>{selectedCustomer.fullName}</Typography>
+                                        <Typography variant="caption" sx={{ color: TEXT_MED }}>{selectedCustomer.email}</Typography>
                                     </Box>
                                 </Box>
 
@@ -177,27 +187,34 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                                 {/* Phone numbers */}
                                 <Box sx={{ mb: 2 }}>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
-                                        <PhoneIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#5d522c' }}>Phone Numbers</Typography>
+                                        <PhoneIcon fontSize="small" sx={{ color: LABEL_COLOR }} />
+                                        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: LABEL_COLOR }}>Phone Numbers</Typography>
                                     </Box>
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                         {selectedCustomer.phoneNumber.map((numObj, i) => {
                                             const key = Object.keys(numObj)[0]
                                             const val = numObj[key]
                                             const isSelected = selectedPhone === val
                                             return (
-                                                <Chip
+                                                <Box
                                                     key={i}
-                                                    label={`${key}: ${val}`}
                                                     onClick={() => setSelectedPhone(val)}
-                                                    icon={isSelected ? <CheckCircleIcon /> : undefined}
                                                     sx={{
-                                                        fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer',
-                                                        bgcolor: isSelected ? '#C9A227' : 'rgba(201,162,39,0.15)',
-                                                        border: isSelected ? '2px solid #C9A227' : '2px solid transparent',
-                                                        '&:hover': { bgcolor: '#e8c84d' },
+                                                        p: 1.5, borderRadius: '10px', cursor: 'pointer',
+                                                        border: isSelected ? '2px solid #C9A227' : `2px solid ${BORDER}`,
+                                                        bgcolor: isSelected ? 'rgba(201,162,39,0.12)' : CARD_BG,
+                                                        '&:hover': { bgcolor: 'rgba(201,162,39,0.08)' },
+                                                        transition: 'all 0.15s',
                                                     }}
-                                                />
+                                                >
+                                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <Typography variant="caption" sx={{ fontWeight: 700, color: LABEL_COLOR, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                                            {key}
+                                                        </Typography>
+                                                        {isSelected && <CheckCircleIcon sx={{ color: '#C9A227', fontSize: 16 }} />}
+                                                    </Box>
+                                                    <Typography variant="body2" sx={{ mt: 0.3, fontSize: '0.9rem', color: TEXT }}>{val}</Typography>
+                                                </Box>
                                             )
                                         })}
                                     </Box>
@@ -206,8 +223,8 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                                 {/* Addresses */}
                                 <Box>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
-                                        <HomeIcon fontSize="small" sx={{ color: '#7a6010' }} />
-                                        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#5d522c' }}>Addresses</Typography>
+                                        <HomeIcon fontSize="small" sx={{ color: LABEL_COLOR }} />
+                                        <Typography variant="subtitle2" sx={{ fontWeight: 700, color: LABEL_COLOR }}>Addresses</Typography>
                                     </Box>
                                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                                         {selectedCustomer.address.map((addrObj, i) => {
@@ -221,17 +238,17 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                                                     sx={{
                                                         p: 1.5, borderRadius: '10px', cursor: 'pointer',
                                                         border: isSelected ? '2px solid #C9A227' : '2px solid rgba(201,162,39,0.25)',
-                                                        bgcolor: isSelected ? 'rgba(201,162,39,0.12)' : 'rgba(255,255,255,0.7)',
+                                                        bgcolor: isSelected ? 'rgba(201,162,39,0.12)' : CARD_BG,
                                                         '&:hover': { bgcolor: 'rgba(201,162,39,0.08)' },
                                                     }}
                                                 >
                                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Typography variant="caption" sx={{ fontWeight: 700, color: '#7a6010', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                                        <Typography variant="caption" sx={{ fontWeight: 700, color: LABEL_COLOR, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                                                             {key}
                                                         </Typography>
                                                         {isSelected && <CheckCircleIcon sx={{ color: '#C9A227', fontSize: 16 }} />}
                                                     </Box>
-                                                    <Typography variant="body2" sx={{ mt: 0.3, fontSize: '0.9rem' }}>{val}</Typography>
+                                                    <Typography variant="body2" sx={{ mt: 0.3, fontSize: '0.9rem', color: TEXT }}>{val}</Typography>
                                                 </Box>
                                             )
                                         })}
@@ -242,8 +259,8 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                     </Box>
                 </DialogContent>
 
-                <DialogActions sx={{ bgcolor: '#fffbee', px: 3, py: 2, borderTop: '1px solid rgba(201,162,39,0.2)' }}>
-                    <Button onClick={toggle} sx={{ color: '#888', fontWeight: 600 }}>Cancel</Button>
+                <DialogActions sx={{ bgcolor: MODAL_BG, px: 3, py: 2, borderTop: '1px solid rgba(201,162,39,0.2)' }}>
+                    <Button onClick={toggle} sx={{ color: TEXT_MED, fontWeight: 600 }}>Cancel</Button>
                     <Button
                         variant="contained"
                         onClick={handleConfirm}

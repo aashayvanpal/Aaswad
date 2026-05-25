@@ -10,8 +10,8 @@ import TableContainer from '@mui/material/TableContainer'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
+import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
 import NoItemsInCart from '../images/2.jpg'
 import proceedImage from '../images/proceed.svg'
@@ -20,7 +20,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import '../css/AdminCart.scss'
 import { removeItem, updateQty, clearCart } from '../store/slices/cartSlice'
 
-const Cart = () => {
+const Cart = ({ bulkQtyInput, onBulkQtyChange, tableHead, rowHover, text, textMuted, totalColor }) => {
     const dispatch = useDispatch()
     const cartItems = useSelector(state => state.cart.items)
     const total = cartItems.reduce((sum, i) => sum + i.quantity * i.price, 0)
@@ -36,42 +36,42 @@ const Cart = () => {
 
     return (
         <Box>
-            <TableContainer component={Paper} elevation={0} sx={{ bgcolor: 'transparent' }}>
-                <Table size="small">
+            <TableContainer component={Paper} elevation={0} sx={{ bgcolor: 'transparent', overflowX: 'hidden' }}>
+                <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
                     <TableHead>
-                        <TableRow sx={{ bgcolor: 'rgba(201,162,39,0.18)' }}>
-                            <TableCell sx={{ fontWeight: 800, width: 44, fontSize: '0.95rem' }}>#</TableCell>
-                            <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem' }}>Item</TableCell>
-                            <TableCell sx={{ fontWeight: 800, textAlign: 'center', width: 130, fontSize: '0.95rem' }}>Qty</TableCell>
-                            <TableCell sx={{ fontWeight: 800, textAlign: 'right', width: 90, fontSize: '0.95rem' }}>Total</TableCell>
-                            <TableCell sx={{ width: 48 }} />
+                        <TableRow sx={{ bgcolor: tableHead || 'rgba(201,162,39,0.18)' }}>
+                            <TableCell sx={{ fontWeight: 800, width: 52, fontSize: '1.1rem' }}>#</TableCell>
+                            <TableCell sx={{ fontWeight: 800, fontSize: '1.1rem' }}>Item</TableCell>
+                            <TableCell sx={{ fontWeight: 800, textAlign: 'center', width: '25%', fontSize: '1.1rem' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                    <span>Qty</span>
+                                    <input
+                                        value={bulkQtyInput}
+                                        onChange={onBulkQtyChange}
+                                        type="number"
+                                        min="1"
+                                        placeholder="all"
+                                        className="cart-bulk-qty-input"
+                                    />
+                                </Box>
+                            </TableCell>
+                            <TableCell sx={{ fontWeight: 800, textAlign: 'right', width: '20%', fontSize: '1.1rem' }}>Total</TableCell>
+                            <TableCell sx={{ width: 56 }} />
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {cartItems.map((item, i) => (
-                            <TableRow key={item._id} sx={{ '&:hover': { bgcolor: 'rgba(201,162,39,0.06)' } }}>
-                                <TableCell sx={{ color: '#888', fontSize: '0.9rem' }}>{i + 1}</TableCell>
-                                <TableCell sx={{ fontWeight: 600, fontSize: '1rem' }}>{item.name}</TableCell>
-                                <TableCell>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
-                                        <IconButton size="small" disabled={item.quantity <= 1}
-                                            onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity - 1 }))}
-                                            sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span className="cart-qty-btn-icon">−</span>
-                                        </IconButton>
-                                        <input
-                                            value={item.quantity}
-                                            onChange={(e) => dispatch(updateQty({ id: item._id, qty: e.target.value }))}
-                                            className="cart-qty-input"
-                                        />
-                                        <IconButton size="small"
-                                            onClick={() => dispatch(updateQty({ id: item._id, qty: item.quantity + 1 }))}
-                                            sx={{ width: 26, height: 26, border: '1px solid #ddd' }}>
-                                            <span className="cart-qty-btn-icon">+</span>
-                                        </IconButton>
-                                    </Box>
+                            <TableRow key={item._id} sx={{ '&:hover': { bgcolor: rowHover || 'rgba(201,162,39,0.06)' } }}>
+                                <TableCell sx={{ color: textMuted || '#888', fontSize: '1.05rem' }}>{i + 1}</TableCell>
+                                <TableCell sx={{ fontWeight: 600, fontSize: '1.15rem', color: text }}>{item.name}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <input
+                                        value={item.quantity}
+                                        onChange={(e) => dispatch(updateQty({ id: item._id, qty: e.target.value }))}
+                                        className="cart-qty-input"
+                                    />
                                 </TableCell>
-                                <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>₹{item.price * item.quantity}</TableCell>
+                                <TableCell sx={{ textAlign: 'right', fontWeight: 600, fontSize: '1.1rem' }}>₹{item.price * item.quantity}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>
                                     <IconButton size="small" onClick={() => dispatch(removeItem(item._id))}
                                         sx={{ color: '#ef4444', '&:hover': { bgcolor: 'rgba(239,68,68,0.08)' } }}>
@@ -87,7 +87,7 @@ const Cart = () => {
             <Divider sx={{ my: 1.5 }} />
 
             <Box sx={{ px: 3, pb: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography variant="h6" sx={{ fontWeight: 800, color: '#3d2e00' }}>
+                <Typography sx={{ fontWeight: 800, color: totalColor || '#3d2e00', fontSize: '1.4rem' }}>
                     Total: ₹{total}
                 </Typography>
             </Box>
