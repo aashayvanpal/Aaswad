@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef, memo } from 'react'
 import axios from '../config/axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setEditingOrder } from '../store/slices/cartSlice'
 import '../css/app-css.scss'
+import '../css/OrderList.scss'
 import ConfirmDialog from './ConfirmDialog'
-import ReportModal from './ReportModal';
+import ReportModal from './ReportModal'
 import homeDeliveryMan from '../images/home-delivery-man.png'
 import serviceGif from '../images/service.gif'
 import { useAppTheme } from '../context/ThemeContext'
@@ -20,25 +21,36 @@ import {
     Box, Paper, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Typography, TextField, IconButton,
     Button, Chip, Checkbox, Tooltip, InputAdornment, Stack,
-    Card, CardContent, CardActions,
 } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
-import DeleteIcon from '@mui/icons-material/Delete'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import EditIcon from '@mui/icons-material/Edit'
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import SearchIcon from '@mui/icons-material/Search'
-import AddIcon from '@mui/icons-material/Add'
-import AssessmentIcon from '@mui/icons-material/Assessment'
 
-const GOLD = '#C9A227'
-const GOLD_HOVER = '#e8c84d'
-const GOLD_BG = 'rgba(201,162,39,0.08)'
-const GOLD_BORDER = 'rgba(201,162,39,0.28)'
+import DeleteIcon          from '@mui/icons-material/Delete'
+import CheckCircleIcon     from '@mui/icons-material/CheckCircle'
+import EditIcon            from '@mui/icons-material/Edit'
+import ArrowUpwardIcon     from '@mui/icons-material/ArrowUpward'
+import ArrowDownwardIcon   from '@mui/icons-material/ArrowDownward'
+import SearchIcon          from '@mui/icons-material/Search'
+import AddIcon             from '@mui/icons-material/Add'
+import AssessmentIcon      from '@mui/icons-material/Assessment'
+import HourglassEmptyIcon  from '@mui/icons-material/HourglassEmpty'
+import TaskAltIcon         from '@mui/icons-material/TaskAlt'
+import InventoryIcon       from '@mui/icons-material/Inventory'
+import InboxIcon           from '@mui/icons-material/Inbox'
 
+// ── palette ───────────────────────────────────────────────────────────────────
+const GOLD        = '#C9A227'
+const GOLD_HOVER  = '#e8c84d'
+
+const ACCENT = {
+    pending:   '#C9A227',
+    confirmed: '#43a047',
+    completed: '#78909c',
+}
+
+// ── helpers ───────────────────────────────────────────────────────────────────
 const calcOrderTotal = (order) => {
     const itemsTotal = (order.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0)
     const miscTotal  = (order.misc  || []).reduce((s, m) => s + (m.rate  || 0), 0)
@@ -48,119 +60,237 @@ const calcOrderTotal = (order) => {
 const formatDate = (d) =>
     d ? `${d.substr(8,2)}/${d.substr(5,2)}/${d.substr(0,4)}` : '—'
 
-// ── icon sizes ────────────────────────────────────────────────────────────────
-const ICON_SZ = { fontSize: { xs: '1.8rem', md: '2rem' } }
+const initials = (name = '') =>
+    name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
-const SortButtons = ({ onAsc, onDesc }) => (
-    <Stack direction="row">
-        <Tooltip title="Newest first">
-            <IconButton size="small" onClick={onAsc}>
-                <ArrowUpwardIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-        <Tooltip title="Oldest first">
-            <IconButton size="small" onClick={onDesc}>
-                <ArrowDownwardIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-    </Stack>
-)
-
+// ── sub-components ────────────────────────────────────────────────────────────
 const DeliveryBadges = ({ order }) => (
-    <Stack direction="row" spacing={0.5} alignItems="center">
+    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
         {order.customer.homeDelivery && (
             <Tooltip title="Home Delivery">
-                <img src={homeDeliveryMan} alt="home delivery" height="28" width="28" />
+                <img src={homeDeliveryMan} alt="home delivery" height="24" width="24" />
             </Tooltip>
         )}
         {order.customer.service && (
             <Tooltip title="Service">
-                <img src={serviceGif} alt="service" height="28" width="28" />
+                <img src={serviceGif} alt="service" height="24" width="24" />
             </Tooltip>
         )}
     </Stack>
 )
 
-// shared table-header cell style
-const TH = ({ children, color, border }) => (
+const SortButtons = ({ onAsc, onDesc, accent, isDark }) => (
+    <Stack direction="row">
+        <Tooltip title="Newest first">
+            <IconButton size="small" onClick={onAsc}
+                sx={{ color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)', '&:hover': { color: accent } }}>
+                <ArrowUpwardIcon sx={{ fontSize: '1.5rem' }} />
+            </IconButton>
+        </Tooltip>
+        <Tooltip title="Oldest first">
+            <IconButton size="small" onClick={onDesc}
+                sx={{ color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)', '&:hover': { color: accent } }}>
+                <ArrowDownwardIcon sx={{ fontSize: '1.5rem' }} />
+            </IconButton>
+        </Tooltip>
+    </Stack>
+)
+
+const TH = ({ children, accent }) => (
     <TableCell sx={{
-        fontWeight: 800,
-        fontSize: { xs: '1.1rem', md: '1.3rem' },
-        color,
-        borderBottom: `2px solid ${border}`,
-        py: { xs: 2, md: 2.5 },
-        px: { xs: 2, md: 3 },
+        fontWeight: 700,
+        fontSize: { xs: '0.95rem', md: '1rem' },
+        color: accent,
+        borderBottom: `1px solid ${alpha(accent, 0.25)}`,
+        py: { xs: 1.8, md: 2 },
+        px: { xs: 1.5, md: 2.5 },
         whiteSpace: 'nowrap',
+        letterSpacing: '0.04em',
+        textTransform: 'uppercase',
     }}>
         {children}
     </TableCell>
 )
 
-// shared table-body cell style
 const TD = ({ children, sx = {} }) => (
     <TableCell sx={{
-        fontSize: { xs: '1rem', md: '1.2rem' },
-        py: { xs: 2, md: 2.5 },
-        px: { xs: 2, md: 3 },
+        fontSize: { xs: '1rem', md: '1.15rem' },
+        py: { xs: 1.8, md: 2 },
+        px: { xs: 1.5, md: 2.5 },
+        borderBottom: 'none',
         ...sx,
     }}>
         {children}
     </TableCell>
 )
 
-const SectionHeader = ({ label, count, color }) => (
-    <Stack direction="row" sx={{ alignItems: 'center' }} spacing={1.5}>
-        <Typography sx={{ fontSize: { xs: '1.4rem', md: '1.8rem' }, fontWeight: 800, color }}>
-            {label}
-        </Typography>
-        <Chip label={count} sx={{
-            bgcolor: color, color: '#fff', fontWeight: 800,
-            fontSize: { xs: '1rem', md: '1.1rem' },
-            height: { xs: 30, md: 34 },
-        }} />
-    </Stack>
+const EmptyState = ({ label }) => (
+    <Box sx={{ textAlign: 'center', py: { xs: 4, md: 6 } }}>
+        <InboxIcon sx={{ fontSize: '3rem', color: 'text.disabled', mb: 1 }} />
+        <Typography color="text.disabled" sx={{ fontSize: '1rem' }}>{label}</Typography>
+    </Box>
 )
 
-// Mobile card per order
-const OrderCard = ({ item, i, selectMode, selected, onSelect, actions, note, isDark }) => (
-    <Card variant="outlined" sx={{ mb: 1.5, borderRadius: 2, borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.12)', bgcolor: isDark ? 'rgba(255,255,255,0.03)' : undefined }}>
-        <CardContent sx={{ pb: 0.5, pt: 2, px: 2 }}>
-            <Stack direction="row" alignItems="flex-start" spacing={1}>
+const InitialsAvatar = ({ name, accent }) => (
+    <Box sx={{
+        width: 44, height: 44, borderRadius: '50%',
+        bgcolor: alpha(accent, 0.15),
+        border: `2px solid ${alpha(accent, 0.35)}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0,
+    }}>
+        <Typography sx={{ fontSize: '1rem', fontWeight: 800, color: accent, lineHeight: 1 }}>
+            {initials(name)}
+        </Typography>
+    </Box>
+)
+
+const ActionBtn = ({ title, onClick, icon, color, hoverColor }) => (
+    <Tooltip title={title}>
+        <IconButton onClick={onClick} size="small" sx={{
+            color,
+            transition: 'color 0.15s, transform 0.15s',
+            '&:hover': { color: hoverColor, transform: 'scale(1.15)' },
+        }}>
+            {icon}
+        </IconButton>
+    </Tooltip>
+)
+
+// Mobile card
+const OrderCard = memo(({ item, i, accent, selectMode, isSelected, onSelect, note, isDark,
+    onEdit, onApprove, onComplete, onDelete }) => (
+    <Box sx={{
+        mb: 1.5,
+        borderRadius: 2,
+        border: `1px solid ${alpha(accent, isDark ? 0.25 : 0.2)}`,
+        borderLeft: `4px solid ${accent}`,
+        bgcolor: isDark ? alpha(accent, 0.04) : '#fff',
+        overflow: 'hidden',
+        transition: 'box-shadow 0.2s',
+        '&:hover': { boxShadow: `0 4px 20px ${alpha(accent, 0.15)}` },
+    }}>
+        <Box sx={{ px: 2, pt: 2, pb: 1 }}>
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
                 {selectMode && (
                     <Checkbox
-                        checked={!!selected[item._id]}
+                        checked={isSelected}
                         onChange={() => onSelect(item)}
-                        sx={{ p: 0, mt: 0.3 }}
+                        sx={{ p: 0, mt: 0.3, color: accent, '&.Mui-checked': { color: accent } }}
                     />
                 )}
-                <Box sx={{ flex: 1 }}>
-                    <Typography variant="caption" color="text.secondary" fontWeight={700}>
+                <InitialsAvatar name={item.customer.fullName} accent={accent} />
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="caption" sx={{ color: alpha(accent, 0.8), fontWeight: 700, letterSpacing: '0.04em' }}>
                         #{i + 1} · {formatDate(item.customer.eventDate)}
                     </Typography>
                     <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                        <Typography sx={{ fontSize: '1.15rem', fontWeight: 800, mt: 0.3, color: 'inherit' }}>
+                        <Typography sx={{
+                            fontSize: '1.1rem', fontWeight: 800, mt: 0.2,
+                            color: isDark ? 'rgba(255,255,255,0.9)' : '#1a1400',
+                            '&:hover': { color: accent },
+                            transition: 'color 0.15s',
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
                             {item.customer.fullName}
                         </Typography>
                     </Link>
-                    <DeliveryBadges order={item} />
-                    {note && (
-                        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                            Notes: {note}
-                        </Typography>
-                    )}
+                    <Stack direction="row" spacing={0.5} sx={{ mt: 0.5, alignItems: 'center' }}>
+                        <DeliveryBadges order={item} />
+                        {note && (
+                            <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                                {note}
+                            </Typography>
+                        )}
+                    </Stack>
                 </Box>
             </Stack>
-        </CardContent>
-        <CardActions sx={{ px: 2, pb: 1.5, pt: 0, gap: 0.5 }}>
-            {actions}
-        </CardActions>
-    </Card>
+        </Box>
+        <Stack direction="row" sx={{ px: 1.5, pb: 1, pt: 0 }}>
+            {onEdit    && <ActionBtn title="Edit order"     onClick={() => onEdit(item)}                                  icon={<EditIcon sx={{ fontSize: '1.6rem' }} />}         color={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)'} hoverColor={GOLD} />}
+            {onApprove && <ActionBtn title="Approve"        onClick={() => onApprove(item._id)}                           icon={<CheckCircleIcon sx={{ fontSize: '1.6rem' }} />}  color={ACCENT.confirmed} hoverColor="#66bb6a" />}
+            {onComplete && <ActionBtn title="Mark completed" onClick={() => onComplete(item._id)}                          icon={<CheckCircleIcon sx={{ fontSize: '1.6rem' }} />}  color={ACCENT.confirmed} hoverColor="#66bb6a" />}
+            {onDelete  && <ActionBtn title="Delete"         onClick={() => onDelete(item._id, item.customer.fullName)}    icon={<DeleteIcon sx={{ fontSize: '1.6rem' }} />}        color="#c62828" hoverColor="#ef5350" />}
+        </Stack>
+    </Box>
+))
+
+// Section panel wrapper
+const SectionPanel = ({ accent, icon, label, count, controls, children, isDark, animDelay, cardBg }) => (
+    <Paper
+        elevation={0}
+        className="order-section-panel"
+        sx={{
+            mb: { xs: 2.5, md: 3.5 },
+            borderRadius: 3,
+            border: `1px solid ${alpha(accent, isDark ? 0.2 : 0.18)}`,
+            borderLeft: `5px solid ${accent}`,
+            bgcolor: cardBg,
+            overflow: 'hidden',
+            animationDelay: `${animDelay}s`,
+            boxShadow: isDark
+                ? `0 2px 24px ${alpha(accent, 0.06)}`
+                : `0 2px 16px ${alpha(accent, 0.08)}`,
+        }}
+    >
+        {/* Section header strip */}
+        <Box sx={{
+            px: { xs: 2, md: 3 },
+            py: { xs: 1.5, md: 2 },
+            background: `linear-gradient(90deg, ${alpha(accent, isDark ? 0.12 : 0.07)} 0%, transparent 70%)`,
+            borderBottom: `1px solid ${alpha(accent, isDark ? 0.15 : 0.12)}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 1,
+        }}>
+            <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+                <Box sx={{
+                    color: accent,
+                    display: 'flex',
+                    bgcolor: alpha(accent, 0.12),
+                    borderRadius: 1.5,
+                    p: 0.7,
+                }}>
+                    {icon}
+                </Box>
+                <Typography sx={{
+                    fontSize: { xs: '1.15rem', md: '1.35rem' },
+                    fontWeight: 800,
+                    color: isDark ? 'rgba(255,255,255,0.9)' : '#1a1400',
+                    letterSpacing: '-0.01em',
+                }}>
+                    {label}
+                </Typography>
+                <Chip
+                    label={count}
+                    size="small"
+                    sx={{
+                        bgcolor: accent,
+                        color: '#fff',
+                        fontWeight: 800,
+                        fontSize: '0.85rem',
+                        height: 24,
+                        '& .MuiChip-label': { px: 1 },
+                    }}
+                />
+            </Stack>
+            <Box>{controls}</Box>
+        </Box>
+
+        {/* Section body */}
+        <Box sx={{ px: { xs: 1.5, md: 2.5 }, py: { xs: 1.5, md: 2 } }}>
+            {children}
+        </Box>
+    </Paper>
 )
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 const OrderList = () => {
     const { themeMode } = useAppTheme()
     const isDark = themeMode === 'dark'
+
     const [approves,   setApproves]   = useState([])
     const [confirmed,  setConfirmed]  = useState([])
     const [completed,  setCompleted]  = useState([])
@@ -177,8 +307,10 @@ const OrderList = () => {
     const navigate = useNavigate()
 
     const { data: ordersData, isLoading } = useGetOrdersQuery()
-    const [deleteOrder] = useDeleteOrderMutation()
-    const [updateOrder] = useUpdateOrderMutation()
+    const [deleteOrder]  = useDeleteOrderMutation()
+    const [updateOrder]  = useUpdateOrderMutation()
+    const ordersRef = useRef(ordersData)
+    useEffect(() => { ordersRef.current = ordersData }, [ordersData])
 
     useEffect(() => {
         if (!ordersData) return
@@ -196,7 +328,7 @@ const OrderList = () => {
         }
     }, [selectMode])
 
-    const toggleSelect = (order) => {
+    const toggleSelect = useCallback((order) => {
         setSelected(prev => {
             const next = { ...prev }
             if (next[order._id]) delete next[order._id]
@@ -211,20 +343,20 @@ const OrderList = () => {
             setReportingState(report)
             return next
         })
-    }
+    }, [])
 
-    const handleRemoveOrder = (id, name) => setConfirmState({
+    const handleRemoveOrder = useCallback((id, name) => setConfirmState({
         open: true,
         title: 'Delete Order',
         message: `Delete order for ${name}?`,
         onConfirm: async () => {
             setConfirmState(s => ({ ...s, open: false }))
-            try { await deleteOrder(id).unwrap() } catch (e) { console.log(e) }
+            try { await deleteOrder(id).unwrap() } catch (e) { console.error('[OrderList] delete', e) }
         },
-    })
+    }), [deleteOrder])
 
-    const handleApproveOrder = async (id) => {
-        const order = (ordersData || []).find(o => o._id === id)
+    const handleApproveOrder = useCallback(async (id) => {
+        const order = (ordersRef.current || []).find(o => o._id === id)
         if (!order) return
         try {
             await updateOrder({ id, ...order, status: 'confirmed' }).unwrap()
@@ -233,17 +365,22 @@ const OrderList = () => {
                 email: order.customer.email,
                 phonenumber: order.customer.phoneNumber,
             })
-        } catch (e) { console.log(e) }
-    }
+        } catch (e) { console.error('[OrderList] approve', e) }
+    }, [updateOrder])
 
-    const handleCompleteOrder = async (id) => {
-        const order = (ordersData || []).find(o => o._id === id)
+    const handleCompleteOrder = useCallback(async (id) => {
+        const order = (ordersRef.current || []).find(o => o._id === id)
         if (!order) return
         try {
             await updateOrder({ id, ...order, status: 'completed' }).unwrap()
             axios.post('/sendEmail/orderCompleted', { email: order.customer.email })
-        } catch (e) { console.log(e) }
-    }
+        } catch (e) { console.error('[OrderList] complete', e) }
+    }, [updateOrder])
+
+    const handleEdit = useCallback((item) => {
+        dispatch(setEditingOrder(item))
+        navigate('/menu')
+    }, [dispatch, navigate])
 
     const sortList = (setFn, list, dir) =>
         setFn([...list].sort((a, b) => {
@@ -266,64 +403,16 @@ const OrderList = () => {
         o.customer.fullName.toLowerCase().includes(searchCompleted.toLowerCase()))
 
     if (isLoading) return (
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-            <Typography sx={{ fontSize: '1.2rem' }} color="text.secondary">Loading orders…</Typography>
+        <Box sx={{ textAlign: 'center', py: 10 }}>
+            <Typography color="text.secondary" sx={{ fontSize: '1.1rem' }}>Loading orders…</Typography>
         </Box>
     )
 
-    // action icon buttons
-    const btnEdit    = (item) => (
-        <Tooltip title="Edit order">
-            <IconButton onClick={() => { dispatch(setEditingOrder(item)); navigate('/menu') }}
-                sx={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#555', '&:hover': { color: GOLD } }}>
-                <EditIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-    )
-    const btnApprove = (item) => (
-        <Tooltip title="Approve">
-            <IconButton onClick={() => handleApproveOrder(item._id)}
-                sx={{ color: '#2e7d32', '&:hover': { bgcolor: 'rgba(46,125,50,0.1)' } }}>
-                <CheckCircleIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-    )
-    const btnComplete = (item) => (
-        <Tooltip title="Mark completed">
-            <IconButton onClick={() => handleCompleteOrder(item._id)}
-                sx={{ color: '#2e7d32', '&:hover': { bgcolor: 'rgba(46,125,50,0.1)' } }}>
-                <CheckCircleIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-    )
-    const btnDelete  = (item) => (
-        <Tooltip title="Delete">
-            <IconButton onClick={() => handleRemoveOrder(item._id, item.customer.fullName)}
-                sx={{ color: '#c62828', '&:hover': { bgcolor: 'rgba(198,40,40,0.1)' } }}>
-                <DeleteIcon sx={ICON_SZ} />
-            </IconButton>
-        </Tooltip>
-    )
-
-    const sectionPaper = (borderColor, bgColor) => ({
-        mb: { xs: 2, md: 3 },
-        p: { xs: 1.5, md: 3 },
-        borderRadius: 3,
-        border: `1px solid ${borderColor}`,
-        bgcolor: bgColor,
-    })
-
-    const emptyRow = (cols) => (
-        <TableRow>
-            <TableCell colSpan={cols} align="center"
-                sx={{ color: 'text.secondary', py: 4, fontSize: '1rem' }}>
-                No orders
-            </TableCell>
-        </TableRow>
-    )
+    // ── theme-aware card backgrounds ────────────────────────────────────────
+    const cardBg = isDark ? '#1a1800' : '#fff'
 
     return (
-        <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 } }}>
+        <Box sx={{ p: { xs: 1.5, sm: 2, md: 3 }, maxWidth: 1400, mx: 'auto' }}>
             <ConfirmDialog
                 open={confirmState.open}
                 title={confirmState.title}
@@ -333,53 +422,94 @@ const OrderList = () => {
                 onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
             />
 
-            <Typography sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, fontWeight: 800, textAlign: 'center', mb: { xs: 2, md: 3 }, color: isDark ? GOLD : '#3d2e00' }}>
-                Orders
-            </Typography>
-
-            {/* Toolbar */}
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: { xs: 2, md: 3 } }}>
-                <Button
-                    variant={selectMode ? 'contained' : 'outlined'}
-                    startIcon={<AssessmentIcon sx={{ fontSize: '1.4rem !important' }} />}
-                    onClick={() => setSelectMode(v => !v)}
-                    sx={{
-                        width: { xs: '100%', sm: 'auto' },
-                        fontSize: { xs: '1rem', md: '1.1rem' },
-                        py: { xs: 1.2, md: 1.4 },
-                        px: 3,
-                        borderColor: GOLD,
-                        color: selectMode ? '#3d2e00 !important' : GOLD,
-                        bgcolor: selectMode ? GOLD : 'transparent',
-                        fontWeight: 700,
-                        '&:hover': { bgcolor: GOLD_HOVER, color: '#3d2e00', borderColor: GOLD_HOVER },
-                    }}
-                >
-                    {selectMode ? `Selecting (${Object.keys(selected).length})` : 'Select Orders'}
-                </Button>
-                {selectMode && (
-                    <Box sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                        <ReportModal report={reportingState} buttonLabel="Show Report" />
+            {/* ── Page header ─────────────────────────────────────────────── */}
+            <Box className="order-stat-bar" sx={{ mb: { xs: 2.5, md: 3.5 } }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ alignItems: { sm: 'center' }, justifyContent: 'space-between', gap: 2 }}>
+                    <Box>
+                        <Typography sx={{
+                            fontSize: { xs: '2rem', md: '2.6rem' },
+                            fontWeight: 800,
+                            color: isDark ? 'rgba(255,255,255,0.92)' : '#1a1400',
+                            letterSpacing: '-0.02em',
+                            lineHeight: 1,
+                            mb: 1,
+                        }}>
+                            Orders
+                        </Typography>
+                        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.8 }}>
+                            {[
+                                { label: 'Pending',   count: approves.length,  accent: ACCENT.pending },
+                                { label: 'Confirmed', count: confirmed.length, accent: ACCENT.confirmed },
+                                { label: 'Completed', count: completed.length, accent: ACCENT.completed },
+                            ].map(({ label, count, accent }) => (
+                                <Box key={label} sx={{
+                                    display: 'flex', alignItems: 'center', gap: 0.7,
+                                    px: 1.5, py: 0.5,
+                                    borderRadius: 10,
+                                    border: `1px solid ${alpha(accent, 0.3)}`,
+                                    bgcolor: alpha(accent, isDark ? 0.1 : 0.07),
+                                }}>
+                                    <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: accent, flexShrink: 0 }} />
+                                    <Typography sx={{ fontSize: '0.88rem', fontWeight: 700, color: isDark ? alpha(accent, 0.9) : alpha(accent, 0.85) }}>
+                                        {count} {label}
+                                    </Typography>
+                                </Box>
+                            ))}
+                        </Stack>
                     </Box>
-                )}
-            </Stack>
 
-            {/* ══ APPROVE ══════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper(GOLD_BORDER, isDark ? 'rgba(201,162,39,0.07)' : 'rgba(255,243,200,0.45)')}>
-                <Stack direction="row" sx={{ mb: 2, justifyContent: 'space-between', alignItems: 'center' }}>
-                    <SectionHeader label="Pending Approval" count={approves.length} color={isDark ? '#d4a800' : '#b07d00'} />
-                    <SortButtons onAsc={() => sortList(setApproves, approves, 'asc')} onDesc={() => sortList(setApproves, approves, 'desc')} />
+                    {/* Toolbar */}
+                    <Stack direction="row" spacing={1.5} sx={{ flexShrink: 0 }}>
+                        <Button
+                            variant={selectMode ? 'contained' : 'outlined'}
+                            startIcon={<AssessmentIcon />}
+                            onClick={() => setSelectMode(v => !v)}
+                            sx={{
+                                borderRadius: 3,
+                                borderColor: GOLD,
+                                color: selectMode ? '#1a1400 !important' : GOLD,
+                                bgcolor: selectMode ? GOLD : 'transparent',
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                py: 1,
+                                px: 2.5,
+                                transition: 'all 0.2s',
+                                '&:hover': { bgcolor: GOLD_HOVER, color: '#1a1400 !important', borderColor: GOLD_HOVER, transform: 'translateY(-1px)' },
+                            }}
+                        >
+                            {selectMode ? `Selecting (${Object.keys(selected).length})` : 'Select'}
+                        </Button>
+                        {selectMode && <ReportModal report={reportingState} buttonLabel="Report" />}
+                    </Stack>
                 </Stack>
+            </Box>
 
+            {/* ══ PENDING APPROVAL ══════════════════════════════════════════ */}
+            <SectionPanel
+                accent={ACCENT.pending}
+                icon={<HourglassEmptyIcon sx={{ fontSize: '1.3rem' }} />}
+                label="Pending Approval"
+                count={approves.length}
+                isDark={isDark}
+                animDelay={0.04}
+                cardBg={cardBg}
+                controls={
+                    <SortButtons
+                        accent={ACCENT.pending} isDark={isDark}
+                        onAsc={() => sortList(setApproves, approves, 'asc')}
+                        onDesc={() => sortList(setApproves, approves, 'desc')}
+                    />
+                }
+            >
                 {/* Mobile */}
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                     {approves.length === 0
-                        ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>No pending orders</Typography>
+                        ? <EmptyState label="No pending orders" />
                         : approves.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
-                                selectMode={selectMode} selected={selected} onSelect={toggleSelect}
+                            <OrderCard key={item._id} item={item} i={i} accent={ACCENT.pending} isDark={isDark}
+                                selectMode={selectMode} isSelected={!!selected[item._id]} onSelect={toggleSelect}
                                 note={item.customer.queries}
-                                actions={<>{btnEdit(item)}{btnApprove(item)}{btnDelete(item)}</>}
+                                onEdit={handleEdit} onApprove={handleApproveOrder} onDelete={handleRemoveOrder}
                             />
                         ))
                     }
@@ -388,80 +518,70 @@ const OrderList = () => {
                 {/* Desktop */}
                 <TableContainer sx={{ display: { xs: 'none', md: 'block' } }}>
                     <Table>
-                        <TableHead>
-                            <TableRow sx={{ bgcolor: GOLD_BG }}>
-                                {selectMode && <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Select</TH>}
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>#</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Date</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Customer</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Actions</TH>
-                            </TableRow>
-                        </TableHead>
+                        <TableHd accent={ACCENT.pending} showSelect={selectMode} cols={['#', 'Date', 'Customer', 'Actions']} isDark={isDark} />
                         <TableBody>
-                            {approves.length === 0 && emptyRow(selectMode ? 5 : 4)}
-                            {approves.map((item, i) => (
-                                <TableRow key={item._id} hover sx={{ '&:hover': { bgcolor: GOLD_BG } }}>
-                                    {selectMode && (
-                                        <TD><Checkbox checked={!!selected[item._id]} onChange={() => toggleSelect(item)}
-                                            sx={{ color: GOLD, '&.Mui-checked': { color: GOLD }, transform: 'scale(1.3)' }} /></TD>
-                                    )}
-                                    <TD sx={{ color: isDark ? GOLD_HOVER : '#7a6010', fontWeight: 700 }}>{i + 1}</TD>
-                                    <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
-                                    <TD>
-                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#3d2e00', '&:hover': { color: GOLD } }}>
-                                                {item.customer.fullName}
-                                            </Typography>
-                                        </Link>
-                                        <Stack direction="row" spacing={1} sx={{ mt: 0.5, alignItems: 'center' }}>
-                                            <DeliveryBadges order={item} />
-                                            {item.customer.queries && (
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Notes: {item.customer.queries}
-                                                </Typography>
-                                            )}
-                                        </Stack>
-                                    </TD>
-                                    <TD>
-                                        <Stack direction="row">
-                                            {btnEdit(item)}{btnApprove(item)}{btnDelete(item)}
-                                        </Stack>
-                                    </TD>
-                                </TableRow>
-                            ))}
+                            {approves.length === 0
+                                ? <TableRow><TableCell colSpan={selectMode ? 5 : 4}><EmptyState label="No pending orders" /></TableCell></TableRow>
+                                : approves.map((item, i) => (
+                                    <OrderRow key={item._id} item={item} i={i} accent={ACCENT.pending}
+                                        isDark={isDark} isSelected={!!selected[item._id]} onSelect={toggleSelect}
+                                        showSelect={selectMode}
+                                        onEdit={handleEdit} onApprove={handleApproveOrder} onDelete={handleRemoveOrder}
+                                    />
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+            </SectionPanel>
 
-            {/* ══ CONFIRMED ════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper('rgba(46,125,50,0.35)', isDark ? 'rgba(46,125,50,0.08)' : 'rgba(232,245,233,0.5)')}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5} sx={{ mb: 2, justifyContent: { sm: 'space-between' }, alignItems: { sm: 'center' } }}>
-                    <SectionHeader label="Confirmed" count={confirmed.length} color={isDark ? '#66bb6a' : '#2e7d32'} />
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', sm: 'auto' } }}>
-                        <TextField
-                            placeholder="Search by name…"
+            {/* ══ CONFIRMED ════════════════════════════════════════════════ */}
+            <SectionPanel
+                accent={ACCENT.confirmed}
+                icon={<TaskAltIcon sx={{ fontSize: '1.3rem' }} />}
+                label="Confirmed"
+                count={confirmed.length}
+                isDark={isDark}
+                animDelay={0.14}
+                cardBg={cardBg}
+                controls={
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 1 }}>
+                        <SearchField
                             value={searchConfirmed}
                             onChange={e => setSearchConfirmed(e.target.value)}
-                            slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> } }}
-                            sx={{ width: { xs: '100%', sm: 260 }, '& input': { fontSize: '1rem', py: 1.2 } }}
+                            accent={ACCENT.confirmed}
                         />
-                        <Button variant="outlined" startIcon={<AddIcon />} component={Link} to="/menu"
-                            sx={{ width: { xs: '100%', sm: 'auto' }, fontSize: '1rem', py: 1.2, px: 2.5, borderColor: '#2e7d32', color: '#2e7d32', fontWeight: 700, '&:hover': { bgcolor: 'rgba(46,125,50,0.1)' } }}>
+                        <Button
+                            variant="outlined" startIcon={<AddIcon />}
+                            component={Link} to="/menu"
+                            sx={{
+                                borderRadius: 2,
+                                borderColor: ACCENT.confirmed,
+                                color: ACCENT.confirmed,
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                py: 0.8,
+                                '&:hover': { bgcolor: alpha(ACCENT.confirmed, 0.08) },
+                            }}
+                        >
                             New Order
                         </Button>
-                        <SortButtons onAsc={() => sortList(setConfirmed, confirmed, 'asc')} onDesc={() => sortList(setConfirmed, confirmed, 'desc')} />
+                        <SortButtons
+                            accent={ACCENT.confirmed} isDark={isDark}
+                            onAsc={() => sortList(setConfirmed, confirmed, 'asc')}
+                            onDesc={() => sortList(setConfirmed, confirmed, 'desc')}
+                        />
                     </Stack>
-                </Stack>
-
+                }
+            >
                 {/* Mobile */}
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                     {filteredConfirmed.length === 0
-                        ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>{searchConfirmed ? 'No results' : 'No confirmed orders'}</Typography>
+                        ? <EmptyState label={searchConfirmed ? 'No results' : 'No confirmed orders'} />
                         : filteredConfirmed.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
-                                selectMode={selectMode} selected={selected} onSelect={toggleSelect}
-                                actions={<>{btnComplete(item)}{btnDelete(item)}</>}
+                            <OrderCard key={item._id} item={item} i={i} accent={ACCENT.confirmed} isDark={isDark}
+                                selectMode={selectMode} isSelected={!!selected[item._id]} onSelect={toggleSelect}
+                                onComplete={handleCompleteOrder} onDelete={handleRemoveOrder}
                             />
                         ))
                     }
@@ -470,79 +590,65 @@ const OrderList = () => {
                 {/* Desktop */}
                 <TableContainer sx={{ display: { xs: 'none', md: 'block' } }}>
                     <Table>
-                        <TableHead>
-                            <TableRow sx={{ bgcolor: 'rgba(46,125,50,0.08)' }}>
-                                {selectMode && <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Select</TH>}
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">#</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Date</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Customer</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Actions</TH>
-                            </TableRow>
-                        </TableHead>
+                        <TableHd accent={ACCENT.confirmed} showSelect={selectMode} cols={['#', 'Date', 'Customer', 'Actions']} isDark={isDark} />
                         <TableBody>
-                            {filteredConfirmed.length === 0 && emptyRow(selectMode ? 5 : 4)}
-                            {filteredConfirmed.map((item, i) => (
-                                <TableRow key={item._id} hover sx={{ '&:hover': { bgcolor: 'rgba(46,125,50,0.05)' } }}>
-                                    {selectMode && (
-                                        <TD><Checkbox checked={!!selected[item._id]} onChange={() => toggleSelect(item)}
-                                            sx={{ color: '#2e7d32', '&.Mui-checked': { color: '#2e7d32' }, transform: 'scale(1.3)' }} /></TD>
-                                    )}
-                                    <TD sx={{ fontWeight: 700, color: 'text.secondary' }}>{i + 1}</TD>
-                                    <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
-                                    <TD>
-                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#1b5e20', '&:hover': { color: isDark ? '#66bb6a' : '#2e7d32' } }}>
-                                                {item.customer.fullName}
-                                            </Typography>
-                                        </Link>
-                                        <DeliveryBadges order={item} />
-                                    </TD>
-                                    <TD>
-                                        <Stack direction="row">
-                                            {btnComplete(item)}{btnDelete(item)}
-                                        </Stack>
-                                    </TD>
-                                </TableRow>
-                            ))}
+                            {filteredConfirmed.length === 0
+                                ? <TableRow><TableCell colSpan={selectMode ? 5 : 4}><EmptyState label={searchConfirmed ? 'No results' : 'No confirmed orders'} /></TableCell></TableRow>
+                                : filteredConfirmed.map((item, i) => (
+                                    <OrderRow key={item._id} item={item} i={i} accent={ACCENT.confirmed}
+                                        isDark={isDark} isSelected={!!selected[item._id]} onSelect={toggleSelect}
+                                        showSelect={selectMode}
+                                        onComplete={handleCompleteOrder} onDelete={handleRemoveOrder}
+                                    />
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+            </SectionPanel>
 
-            {/* ══ COMPLETED ════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper('rgba(201,162,39,0.2)', isDark ? 'rgba(120,100,60,0.1)' : 'rgba(245,240,230,0.5)')}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5} sx={{ mb: 2, justifyContent: { sm: 'space-between' }, alignItems: { sm: 'center' } }}>
-                    <SectionHeader label="Completed" count={completed.length} color={isDark ? GOLD : '#6d4c00'} />
-                    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', sm: 'auto' }, flexWrap: 'wrap' }}>
-                        <TextField
-                            placeholder="Search by name…"
+            {/* ══ COMPLETED ════════════════════════════════════════════════ */}
+            <SectionPanel
+                accent={ACCENT.completed}
+                icon={<InventoryIcon sx={{ fontSize: '1.3rem' }} />}
+                label="Completed"
+                count={completed.length}
+                isDark={isDark}
+                animDelay={0.24}
+                cardBg={cardBg}
+                controls={
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 1 }}>
+                        <SearchField
                             value={searchCompleted}
                             onChange={e => setSearchCompleted(e.target.value)}
-                            slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment> } }}
-                            sx={{ width: { xs: '100%', sm: 260 }, '& input': { fontSize: '1rem', py: 1.2 } }}
+                            accent={ACCENT.completed}
                         />
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker label="From" value={startDateFrom}
                                 onChange={e => handleDateChange(e, setStartDateFrom)}
-                                slotProps={{ textField: { sx: { width: { xs: '100%', sm: 'auto' }, '& input': { fontSize: '1rem' } } } }}
+                                slotProps={{ textField: { size: 'small', sx: { width: { xs: '100%', sm: 150 }, '& .MuiOutlinedInput-root': { borderRadius: 2, fontSize: '0.9rem' } } } }}
                             />
                             <DatePicker label="To" value={startDateTo}
                                 onChange={e => handleDateChange(e, setStartDateTo)}
-                                slotProps={{ textField: { sx: { width: { xs: '100%', sm: 'auto' }, '& input': { fontSize: '1rem' } } } }}
+                                slotProps={{ textField: { size: 'small', sx: { width: { xs: '100%', sm: 150 }, '& .MuiOutlinedInput-root': { borderRadius: 2, fontSize: '0.9rem' } } } }}
                             />
                         </LocalizationProvider>
-                        <SortButtons onAsc={() => sortList(setCompleted, completed, 'asc')} onDesc={() => sortList(setCompleted, completed, 'desc')} />
+                        <SortButtons
+                            accent={ACCENT.completed} isDark={isDark}
+                            onAsc={() => sortList(setCompleted, completed, 'asc')}
+                            onDesc={() => sortList(setCompleted, completed, 'desc')}
+                        />
                     </Stack>
-                </Stack>
-
+                }
+            >
                 {/* Mobile */}
                 <Box sx={{ display: { xs: 'block', md: 'none' } }}>
                     {filteredCompleted.length === 0
-                        ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>{searchCompleted ? 'No results' : 'No completed orders'}</Typography>
+                        ? <EmptyState label={searchCompleted ? 'No results' : 'No completed orders'} />
                         : filteredCompleted.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
-                                selectMode={false} selected={{}} onSelect={() => {}}
-                                actions={btnDelete(item)}
+                            <OrderCard key={item._id} item={item} i={i} accent={ACCENT.completed} isDark={isDark}
+                                selectMode={false} isSelected={false} onSelect={toggleSelect}
+                                onDelete={handleRemoveOrder}
                             />
                         ))
                     }
@@ -551,37 +657,109 @@ const OrderList = () => {
                 {/* Desktop */}
                 <TableContainer sx={{ display: { xs: 'none', md: 'block' } }}>
                     <Table>
-                        <TableHead>
-                            <TableRow sx={{ bgcolor: 'rgba(120,100,60,0.08)' }}>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">#</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Customer</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Date</TH>
-                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Delete</TH>
-                            </TableRow>
-                        </TableHead>
+                        <TableHd accent={ACCENT.completed} showSelect={false} cols={['#', 'Date', 'Customer', 'Actions']} isDark={isDark} />
                         <TableBody>
-                            {filteredCompleted.length === 0 && emptyRow(4)}
-                            {filteredCompleted.map((item, i) => (
-                                <TableRow key={item._id} hover sx={{ '&:hover': { bgcolor: 'rgba(120,100,60,0.05)' } }}>
-                                    <TD sx={{ fontWeight: 700, color: 'text.secondary' }}>{i + 1}</TD>
-                                    <TD>
-                                        <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#4e3400', '&:hover': { color: isDark ? GOLD : '#6d4c00' } }}>
-                                                {item.customer.fullName}
-                                            </Typography>
-                                        </Link>
-                                        <DeliveryBadges order={item} />
-                                    </TD>
-                                    <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
-                                    <TD>{btnDelete(item)}</TD>
-                                </TableRow>
-                            ))}
+                            {filteredCompleted.length === 0
+                                ? <TableRow><TableCell colSpan={4}><EmptyState label={searchCompleted ? 'No results' : 'No completed orders'} /></TableCell></TableRow>
+                                : filteredCompleted.map((item, i) => (
+                                    <OrderRow key={item._id} item={item} i={i} accent={ACCENT.completed}
+                                        isDark={isDark} isSelected={false} onSelect={toggleSelect}
+                                        showSelect={false}
+                                        onDelete={handleRemoveOrder}
+                                    />
+                                ))
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+            </SectionPanel>
         </Box>
     )
 }
+
+// ── Module-level sub-components (must not be defined inside OrderList) ────────
+
+const OrderRow = memo(({ item, i, accent, showSelect, isDark, isSelected, onSelect,
+    onEdit, onApprove, onComplete, onDelete }) => (
+    <TableRow sx={{
+        transition: 'background 0.15s',
+        '&:hover': { bgcolor: alpha(accent, isDark ? 0.07 : 0.05) },
+        '&:not(:last-child) td': {
+            borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'}`,
+        },
+        '&:last-child td': { borderBottom: 'none' },
+    }}>
+        {showSelect && (
+            <TD>
+                <Checkbox
+                    checked={isSelected}
+                    onChange={() => onSelect(item)}
+                    sx={{ color: accent, '&.Mui-checked': { color: accent }, p: 0.5 }}
+                />
+            </TD>
+        )}
+        <TD sx={{ fontWeight: 700, color: alpha(accent, 0.7), minWidth: 40 }}>{i + 1}</TD>
+        <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap', color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)', fontSize: '0.95rem' }}>
+            {formatDate(item.customer.eventDate)}
+        </TD>
+        <TD sx={{ width: '100%' }}>
+            <Link to={`/orders/${item._id}`} className="link-no-decoration">
+                <Typography sx={{
+                    fontSize: '1.2rem', fontWeight: 800,
+                    color: isDark ? 'rgba(255,255,255,0.9)' : '#1a1400',
+                    transition: 'color 0.15s',
+                    '&:hover': { color: accent },
+                }}>
+                    {item.customer.fullName}
+                </Typography>
+            </Link>
+            <Stack direction="row" spacing={1} sx={{ mt: 0.4, alignItems: 'center' }}>
+                <DeliveryBadges order={item} />
+                {item.customer.queries && (
+                    <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                        {item.customer.queries}
+                    </Typography>
+                )}
+            </Stack>
+        </TD>
+        <TD>
+            <Stack direction="row" spacing={0.5}>
+                {onEdit    && <ActionBtn title="Edit order"      onClick={() => onEdit(item)}                                 icon={<EditIcon sx={{ fontSize: '1.6rem' }} />}        color={isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)'} hoverColor={GOLD} />}
+                {onApprove && <ActionBtn title="Approve"         onClick={() => onApprove(item._id)}                          icon={<CheckCircleIcon sx={{ fontSize: '1.6rem' }} />} color={ACCENT.confirmed} hoverColor="#66bb6a" />}
+                {onComplete && <ActionBtn title="Mark completed" onClick={() => onComplete(item._id)}                         icon={<CheckCircleIcon sx={{ fontSize: '1.6rem' }} />} color={ACCENT.confirmed} hoverColor="#66bb6a" />}
+                {onDelete  && <ActionBtn title="Delete"          onClick={() => onDelete(item._id, item.customer.fullName)}   icon={<DeleteIcon sx={{ fontSize: '1.6rem' }} />}       color="#c62828" hoverColor="#ef5350" />}
+            </Stack>
+        </TD>
+    </TableRow>
+))
+
+const TableHd = ({ accent, showSelect, cols, isDark }) => (
+    <TableHead>
+        <TableRow sx={{ bgcolor: alpha(accent, isDark ? 0.1 : 0.06) }}>
+            {showSelect && <TH accent={accent}>Select</TH>}
+            {cols.map(c => <TH key={c} accent={accent}>{c}</TH>)}
+        </TableRow>
+    </TableHead>
+)
+
+const SearchField = ({ value, onChange, accent }) => (
+    <TextField
+        placeholder="Search by name…"
+        value={value}
+        onChange={onChange}
+        size="small"
+        slotProps={{ input: { startAdornment: <InputAdornment position="start"><SearchIcon sx={{ color: alpha(accent, 0.6), fontSize: '1.2rem' }} /></InputAdornment> } }}
+        sx={{
+            width: { xs: '100%', sm: 220 },
+            '& .MuiOutlinedInput-root': {
+                fontSize: '0.95rem',
+                borderRadius: 2,
+                '& fieldset': { borderColor: alpha(accent, 0.3) },
+                '&:hover fieldset': { borderColor: alpha(accent, 0.5) },
+                '&.Mui-focused fieldset': { borderColor: accent },
+            },
+        }}
+    />
+)
 
 export default OrderList

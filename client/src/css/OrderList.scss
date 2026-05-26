@@ -1,78 +1,17 @@
-.order-container{
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 5px;
-}
-
-.order-functions{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    align-items: center;
-    padding:10px;
-}
-
-.order-search{
-    padding: 10px;
-    border-radius: 10px;
-    margin: 5px;
-    text-align:center;
-}
-
-.order-button-styling{
-    padding: 10px;
-    border-radius: 10px;
-    margin: 5px;
-    cursor: pointer;
-}
-
-.table-styling{
-    border-collapse: collapse;
-    border-radius: 10px;
-    border-style: hidden;
-    box-shadow: 0 0 0 2px #000;
-}
+.order-section-panel {}
+.order-stat-bar {}
 
 .link-no-decoration {
     text-decoration: none;
 }
 
-/* MultiOrder layout */
-.multiorder-layout {
-    display: flex;
-}
-
-.multiorder-content {
-    margin: 10px;
-    width: 100%;
-}
-
-.multiorder-section-heading {
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.multiorder-table {
-    font-weight: bold;
-}
-
-.order-container--approve {
-    background-color: rgb(227, 197, 126);
-}
-
-.order-container--confirmed {
-    background-color: #98c8ab;
-}
-
-.order-container--completed {
-    background-color: #d7c7aa;
-}
-
-.delete-btn-icon {
-    filter: brightness(0) invert(1);
-    height: 30px;
-    width: 30px;
-}
+/* legacy — kept so old references don't break */
+.order-container            { margin-bottom: 20px; padding: 20px; border-radius: 10px; }
+.order-container--approve   { background-color: rgb(227, 197, 126); }
+.order-container--confirmed { background-color: #98c8ab; }
+.order-container--completed { background-color: #d7c7aa; }
+.multiorder-layout          { display: flex; }
+.multiorder-content         { margin: 10px; width: 100%; }
+.multiorder-section-heading { text-align: center; margin-bottom: 20px; font-weight: bold; }
+.multiorder-table           { font-weight: bold; }
+.delete-btn-icon            { filter: brightness(0) invert(1); height: 30px; width: 30px; }
