@@ -8,6 +8,7 @@ import ConfirmDialog from './ConfirmDialog'
 import ReportModal from './ReportModal';
 import homeDeliveryMan from '../images/home-delivery-man.png'
 import serviceGif from '../images/service.gif'
+import { useAppTheme } from '../context/ThemeContext'
 
 import {
     useGetOrdersQuery,
@@ -121,8 +122,8 @@ const SectionHeader = ({ label, count, color }) => (
 )
 
 // Mobile card per order
-const OrderCard = ({ item, i, selectMode, selected, onSelect, actions, note }) => (
-    <Card variant="outlined" sx={{ mb: 1.5, borderRadius: 2 }}>
+const OrderCard = ({ item, i, selectMode, selected, onSelect, actions, note, isDark }) => (
+    <Card variant="outlined" sx={{ mb: 1.5, borderRadius: 2, borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.12)', bgcolor: isDark ? 'rgba(255,255,255,0.03)' : undefined }}>
         <CardContent sx={{ pb: 0.5, pt: 2, px: 2 }}>
             <Stack direction="row" alignItems="flex-start" spacing={1}>
                 {selectMode && (
@@ -158,6 +159,8 @@ const OrderCard = ({ item, i, selectMode, selected, onSelect, actions, note }) =
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 const OrderList = () => {
+    const { themeMode } = useAppTheme()
+    const isDark = themeMode === 'dark'
     const [approves,   setApproves]   = useState([])
     const [confirmed,  setConfirmed]  = useState([])
     const [completed,  setCompleted]  = useState([])
@@ -272,7 +275,7 @@ const OrderList = () => {
     const btnEdit    = (item) => (
         <Tooltip title="Edit order">
             <IconButton onClick={() => { dispatch(setEditingOrder(item)); navigate('/menu') }}
-                sx={{ color: '#555', '&:hover': { color: GOLD } }}>
+                sx={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#555', '&:hover': { color: GOLD } }}>
                 <EditIcon sx={ICON_SZ} />
             </IconButton>
         </Tooltip>
@@ -330,7 +333,7 @@ const OrderList = () => {
                 onCancel={() => setConfirmState(s => ({ ...s, open: false }))}
             />
 
-            <Typography sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, fontWeight: 800, textAlign: 'center', mb: { xs: 2, md: 3 }, color: '#3d2e00' }}>
+            <Typography sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, fontWeight: 800, textAlign: 'center', mb: { xs: 2, md: 3 }, color: isDark ? GOLD : '#3d2e00' }}>
                 Orders
             </Typography>
 
@@ -346,7 +349,7 @@ const OrderList = () => {
                         py: { xs: 1.2, md: 1.4 },
                         px: 3,
                         borderColor: GOLD,
-                        color: selectMode ? '#3d2e00' : GOLD,
+                        color: selectMode ? '#3d2e00 !important' : GOLD,
                         bgcolor: selectMode ? GOLD : 'transparent',
                         fontWeight: 700,
                         '&:hover': { bgcolor: GOLD_HOVER, color: '#3d2e00', borderColor: GOLD_HOVER },
@@ -362,9 +365,9 @@ const OrderList = () => {
             </Stack>
 
             {/* ══ APPROVE ══════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper(GOLD_BORDER, 'rgba(255,243,200,0.45)')}>
+            <Paper elevation={3} sx={sectionPaper(GOLD_BORDER, isDark ? 'rgba(201,162,39,0.07)' : 'rgba(255,243,200,0.45)')}>
                 <Stack direction="row" sx={{ mb: 2, justifyContent: 'space-between', alignItems: 'center' }}>
-                    <SectionHeader label="Pending Approval" count={approves.length} color="#b07d00" />
+                    <SectionHeader label="Pending Approval" count={approves.length} color={isDark ? '#d4a800' : '#b07d00'} />
                     <SortButtons onAsc={() => sortList(setApproves, approves, 'asc')} onDesc={() => sortList(setApproves, approves, 'desc')} />
                 </Stack>
 
@@ -373,7 +376,7 @@ const OrderList = () => {
                     {approves.length === 0
                         ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>No pending orders</Typography>
                         : approves.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i}
+                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
                                 selectMode={selectMode} selected={selected} onSelect={toggleSelect}
                                 note={item.customer.queries}
                                 actions={<>{btnEdit(item)}{btnApprove(item)}{btnDelete(item)}</>}
@@ -387,11 +390,11 @@ const OrderList = () => {
                     <Table>
                         <TableHead>
                             <TableRow sx={{ bgcolor: GOLD_BG }}>
-                                {selectMode && <TH color="#3d2e00" border={GOLD_BORDER}>Select</TH>}
-                                <TH color="#3d2e00" border={GOLD_BORDER}>#</TH>
-                                <TH color="#3d2e00" border={GOLD_BORDER}>Date</TH>
-                                <TH color="#3d2e00" border={GOLD_BORDER}>Customer</TH>
-                                <TH color="#3d2e00" border={GOLD_BORDER}>Actions</TH>
+                                {selectMode && <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Select</TH>}
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>#</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Date</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Customer</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#3d2e00'} border={GOLD_BORDER}>Actions</TH>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -402,11 +405,11 @@ const OrderList = () => {
                                         <TD><Checkbox checked={!!selected[item._id]} onChange={() => toggleSelect(item)}
                                             sx={{ color: GOLD, '&.Mui-checked': { color: GOLD }, transform: 'scale(1.3)' }} /></TD>
                                     )}
-                                    <TD sx={{ color: '#7a6010', fontWeight: 700 }}>{i + 1}</TD>
+                                    <TD sx={{ color: isDark ? GOLD_HOVER : '#7a6010', fontWeight: 700 }}>{i + 1}</TD>
                                     <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
                                     <TD>
                                         <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#3d2e00', '&:hover': { color: GOLD } }}>
+                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#3d2e00', '&:hover': { color: GOLD } }}>
                                                 {item.customer.fullName}
                                             </Typography>
                                         </Link>
@@ -432,9 +435,9 @@ const OrderList = () => {
             </Paper>
 
             {/* ══ CONFIRMED ════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper('rgba(46,125,50,0.25)', 'rgba(232,245,233,0.5)')}>
+            <Paper elevation={3} sx={sectionPaper('rgba(46,125,50,0.35)', isDark ? 'rgba(46,125,50,0.08)' : 'rgba(232,245,233,0.5)')}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5} sx={{ mb: 2, justifyContent: { sm: 'space-between' }, alignItems: { sm: 'center' } }}>
-                    <SectionHeader label="Confirmed" count={confirmed.length} color="#2e7d32" />
+                    <SectionHeader label="Confirmed" count={confirmed.length} color={isDark ? '#66bb6a' : '#2e7d32'} />
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', sm: 'auto' } }}>
                         <TextField
                             placeholder="Search by name…"
@@ -456,7 +459,7 @@ const OrderList = () => {
                     {filteredConfirmed.length === 0
                         ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>{searchConfirmed ? 'No results' : 'No confirmed orders'}</Typography>
                         : filteredConfirmed.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i}
+                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
                                 selectMode={selectMode} selected={selected} onSelect={toggleSelect}
                                 actions={<>{btnComplete(item)}{btnDelete(item)}</>}
                             />
@@ -469,11 +472,11 @@ const OrderList = () => {
                     <Table>
                         <TableHead>
                             <TableRow sx={{ bgcolor: 'rgba(46,125,50,0.08)' }}>
-                                {selectMode && <TH color="#1b5e20" border="rgba(46,125,50,0.2)">Select</TH>}
-                                <TH color="#1b5e20" border="rgba(46,125,50,0.2)">#</TH>
-                                <TH color="#1b5e20" border="rgba(46,125,50,0.2)">Date</TH>
-                                <TH color="#1b5e20" border="rgba(46,125,50,0.2)">Customer</TH>
-                                <TH color="#1b5e20" border="rgba(46,125,50,0.2)">Actions</TH>
+                                {selectMode && <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Select</TH>}
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">#</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Date</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Customer</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#1b5e20'} border="rgba(46,125,50,0.25)">Actions</TH>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -488,7 +491,7 @@ const OrderList = () => {
                                     <TD sx={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{formatDate(item.customer.eventDate)}</TD>
                                     <TD>
                                         <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#1b5e20', '&:hover': { color: '#2e7d32' } }}>
+                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#1b5e20', '&:hover': { color: isDark ? '#66bb6a' : '#2e7d32' } }}>
                                                 {item.customer.fullName}
                                             </Typography>
                                         </Link>
@@ -507,9 +510,9 @@ const OrderList = () => {
             </Paper>
 
             {/* ══ COMPLETED ════════════════════════════════════════════════════ */}
-            <Paper elevation={3} sx={sectionPaper('rgba(120,100,60,0.2)', 'rgba(245,240,230,0.5)')}>
+            <Paper elevation={3} sx={sectionPaper('rgba(201,162,39,0.2)', isDark ? 'rgba(120,100,60,0.1)' : 'rgba(245,240,230,0.5)')}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5} sx={{ mb: 2, justifyContent: { sm: 'space-between' }, alignItems: { sm: 'center' } }}>
-                    <SectionHeader label="Completed" count={completed.length} color="#6d4c00" />
+                    <SectionHeader label="Completed" count={completed.length} color={isDark ? GOLD : '#6d4c00'} />
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', sm: 'auto' }, flexWrap: 'wrap' }}>
                         <TextField
                             placeholder="Search by name…"
@@ -537,7 +540,7 @@ const OrderList = () => {
                     {filteredCompleted.length === 0
                         ? <Typography color="text.secondary" sx={{ textAlign: 'center' }} py={2}>{searchCompleted ? 'No results' : 'No completed orders'}</Typography>
                         : filteredCompleted.map((item, i) => (
-                            <OrderCard key={item._id} item={item} i={i}
+                            <OrderCard key={item._id} item={item} i={i} isDark={isDark}
                                 selectMode={false} selected={{}} onSelect={() => {}}
                                 actions={btnDelete(item)}
                             />
@@ -550,10 +553,10 @@ const OrderList = () => {
                     <Table>
                         <TableHead>
                             <TableRow sx={{ bgcolor: 'rgba(120,100,60,0.08)' }}>
-                                <TH color="#6d4c00" border="rgba(120,100,60,0.2)">#</TH>
-                                <TH color="#6d4c00" border="rgba(120,100,60,0.2)">Customer</TH>
-                                <TH color="#6d4c00" border="rgba(120,100,60,0.2)">Date</TH>
-                                <TH color="#6d4c00" border="rgba(120,100,60,0.2)">Delete</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">#</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Customer</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Date</TH>
+                                <TH color={isDark ? 'rgba(255,255,255,0.85)' : '#6d4c00'} border="rgba(201,162,39,0.25)">Delete</TH>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -563,7 +566,7 @@ const OrderList = () => {
                                     <TD sx={{ fontWeight: 700, color: 'text.secondary' }}>{i + 1}</TD>
                                     <TD>
                                         <Link to={`/orders/${item._id}`} className="link-no-decoration">
-                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: '#4e3400', '&:hover': { color: '#6d4c00' } }}>
+                                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800, color: isDark ? 'rgba(255,255,255,0.9)' : '#4e3400', '&:hover': { color: isDark ? GOLD : '#6d4c00' } }}>
                                                 {item.customer.fullName}
                                             </Typography>
                                         </Link>
