@@ -26,6 +26,8 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ContactsIcon from '@mui/icons-material/Contacts'
 import BarChartIcon from '@mui/icons-material/BarChart'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import MenuIcon from '@mui/icons-material/Menu'
+import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 
 const SIDEBAR_BG = '#100f0b'
 const GOLD = '#C9A227'
@@ -73,7 +75,7 @@ const GROUPS = [
     },
 ]
 
-export default function NavigationBar({ onClose, collapsed = false }) {
+export default function NavigationBar({ onClose, onToggle, collapsed = false }) {
     const location = useLocation()
 
     return (
@@ -97,6 +99,7 @@ export default function NavigationBar({ onClose, collapsed = false }) {
                 py: 1.5,
                 borderBottom: '1px solid rgba(201,162,39,0.12)',
                 minHeight: 56,
+                flexShrink: 0,
             }}>
                 {!collapsed && (
                     <Typography sx={{
@@ -109,7 +112,18 @@ export default function NavigationBar({ onClose, collapsed = false }) {
                         Aaswad
                     </Typography>
                 )}
-                {onClose && (
+                {/* Toggle button (desktop expand/collapse) */}
+                {onToggle && (
+                    <IconButton
+                        onClick={onToggle}
+                        size="small"
+                        sx={{ color: 'rgba(201,162,39,0.55)', '&:hover': { color: GOLD } }}
+                    >
+                        {collapsed ? <MenuIcon sx={{ fontSize: '1.1rem' }} /> : <MenuOpenIcon sx={{ fontSize: '1.1rem' }} />}
+                    </IconButton>
+                )}
+                {/* Close button (mobile drawer) */}
+                {onClose && !onToggle && (
                     <IconButton
                         onClick={onClose}
                         size="small"

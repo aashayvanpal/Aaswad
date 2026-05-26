@@ -111,7 +111,7 @@ Two patterns coexist:
 | Model | Purpose |
 |---|---|
 | `User` | Auth with bcrypt passwords and JWT |
-| `Item` | Menu items (name, price, category, ingredients, image) |
+| `Item` | Menu items (name, price, category, ingredients, image) — `category` is `Array` type, not String |
 | `Customer` | Customer records (phoneNumber and address stored as arrays of `{label: value}` objects) |
 | `Order` | Single customer order — has `items[]`, `customer{}`, `transport{medium,rate}`, `misc[]`, `AdvanceAmount`, `status` |
 | `MultiOrder` | Orders spanning multiple dates |
@@ -148,22 +148,29 @@ MUI `AppBar` with dark `#1a1400` background and gold bottom border. Sticky posit
 
 ### MainLayout (`client/src/components/MainLayout.js`)
 
-Shared shell for all admin pages: `Header` + collapsible sidebar + `<Outlet />`. Sidebar toggled via React state (`sidebarOpen`), not DOM manipulation.
+Shared shell for all admin pages: `Header` + collapsible sidebar + `<Outlet />`. Sidebar state: `collapsed` (desktop, 240 ↔ 64px) + `mobileOpen` (temporary Drawer). **The hamburger toggle button lives inside `NavigationBar` itself** (via `onToggle` prop) — not in the AppBar. The AppBar only shows a hamburger on mobile to open the temporary drawer.
 
 ### NavigationBar (`client/src/components/NavigationBar.js`)
 
-Accepts optional `onClose` prop:
-- **With `onClose`** (MainLayout, Menu): renders with `style={{ display: 'block' }}` and X button calls `onClose`
-- **Without `onClose`** (legacy DOM usage): falls back to hiding itself via `document.getElementById`
+Props:
+- **`onToggle`** — shows a `MenuIcon`/`MenuOpenIcon` button in the sidebar header that expands/collapses the sidebar. Pass from both `MainLayout` (desktop) and `Menu`.
+- **`onClose`** — shows a `ChevronLeft` button; used for mobile temporary drawers. If both props are provided, `onToggle` takes priority and `onClose` is ignored.
+- **`collapsed`** — controls icon-only (64px) vs full (240px) mode.
+
+The sidebar always uses `#100f0b` background in both light and dark themes — it is the only component exempt from theme switching.
 
 ### Menu (`client/src/components/Menu.js`)
 
-Fully redesigned. Key layout points:
-- CSS Grid for item cards: 1 col (xs) → 2 (sm) → 3 (md) → 4 (lg)
-- Sidebar toggle via local `sidebarOpen` state
-- Cart bar: `position: fixed; bottom: 0; left: 0; right: 0` wrapper Box containing `<CartModel />` — do NOT add `className="cart-button"` to the CartModel button, positioning is handled by the wrapper
-- Page has `pb: '90px'` to prevent cards hiding behind the fixed cart bar
-- Item cards show gold border + checkmark overlay when selected
+Standalone page (not wrapped in `<Header />` or `MainLayout`). Has its own full-page layout: persistent sidebar + content column, identical pattern to MainLayout.
+
+Key layout points:
+- `/menu` route in `App.js` renders `<Menu />` alone — no `<Header />` wrapper
+- Persistent sidebar on desktop (240 ↔ 64px), temporary Drawer on mobile — same as MainLayout
+- Sidebar toggle is inside `NavigationBar` via `onToggle` prop; no hamburger in the top bar
+- Top bar contains: "Menu" title · search field · item count chip · [spacer] · Contact (phone icon) · UserOptions avatar
+- Cart bar: `position: fixed; bottom: 0; left: sidebarW; right: 0` — **`left` tracks sidebar width** with a CSS transition so it never overlaps the nav. On mobile `left: 0`.
+- Content column has `pb: '80px'` to prevent cards hiding behind the fixed cart bar
+- Item cards: CSS Grid (2 col xs → 3 sm → 4 md → 5 lg → 6 xl), gold border + checkmark overlay when selected
 
 ---
 
@@ -588,7 +595,7 @@ Act as a Principal Backend Architect designing secure, scalable APIs for a Node.
 
 ### 1b. /menu Page — Hamburger & Layout Fixes
 - [x] Hamburger icon repositioned — sticky top bar, left-aligned with search row
-- [x] Sidebar toggle does not overlap item grid or cart bar
+- [x] Sidebar toggle does not overlap item grid or cart bar — cart bar left tracks sidebarW
 
 ### 1c. /request Page — Input Field Sizes
 - [x] Font sizes bumped to 1rem for inputs, 0.95rem for labels

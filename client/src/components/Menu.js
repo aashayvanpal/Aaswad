@@ -18,13 +18,20 @@ import Alert from '@mui/material/Alert'
 import Chip from '@mui/material/Chip'
 import Drawer from '@mui/material/Drawer'
 import InputAdornment from '@mui/material/InputAdornment'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
 import CheckIcon from '@mui/icons-material/Check'
-import MenuIcon from '@mui/icons-material/Menu'
+import Tooltip from '@mui/material/Tooltip'
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined'
 import NavigationBar from './NavigationBar'
+import UserOptions from './UserOptions'
 import { useAppTheme } from '../context/ThemeContext'
+
+const SIDEBAR_W = 240
+const SIDEBAR_COLLAPSED_W = 64
 
 const CATEGORIES = ['all', 'breakfast', 'lunch', 'dinner', 'sweets', 'snacks', 'special']
 
@@ -37,7 +44,10 @@ const Menu = () => {
     const [spinnerLoading, setSpinnerLoading] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [category, setCategory] = useState('all')
-    const [navOpen, setNavOpen] = useState(false)
+    const [collapsed, setCollapsed] = useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
+    const muiTheme = useTheme()
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'))
     const { themeMode } = useAppTheme()
     const isDark = themeMode === 'dark'
 
@@ -119,19 +129,49 @@ const Menu = () => {
         setSearchFilter(items)
     }
 
-    return (
-        <Box sx={{ bgcolor: pageBg, minHeight: '100vh', pb: '80px', display: 'flex', flexDirection: 'column' }}>
+    const sidebarW = collapsed ? SIDEBAR_COLLAPSED_W : SIDEBAR_W
 
-            {/* Nav drawer */}
-            <Drawer
-                open={navOpen}
-                onClose={() => setNavOpen(false)}
-                variant="temporary"
-                ModalProps={{ keepMounted: true }}
-                sx={{ '& .MuiDrawer-paper': { width: 240, border: 'none', bgcolor: '#100f0b' } }}
-            >
-                <NavigationBar onClose={() => setNavOpen(false)} />
-            </Drawer>
+    return (
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: pageBg }}>
+
+            {/* Desktop: persistent sidebar — same pattern as MainLayout */}
+            {!isMobile && (
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    height: '100vh',
+                    zIndex: 1200,
+                    width: sidebarW,
+                    transition: 'width 0.22s cubic-bezier(.4,0,.2,1)',
+                }}>
+                    <NavigationBar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
+                </Box>
+            )}
+
+            {/* Mobile: temporary drawer */}
+            {isMobile && (
+                <Drawer
+                    open={mobileOpen}
+                    onClose={() => setMobileOpen(false)}
+                    variant="temporary"
+                    ModalProps={{ keepMounted: true }}
+                    sx={{ '& .MuiDrawer-paper': { width: SIDEBAR_W, border: 'none' } }}
+                >
+                    <NavigationBar onClose={() => setMobileOpen(false)} />
+                </Drawer>
+            )}
+
+            {/* Main content column */}
+            <Box sx={{
+                flex: 1,
+                ml: isMobile ? 0 : `${sidebarW}px`,
+                transition: 'margin-left 0.22s cubic-bezier(.4,0,.2,1)',
+                display: 'flex',
+                flexDirection: 'column',
+                minWidth: 0,
+                pb: '80px',
+            }}>
 
             {/* Top bar — sticky so hamburger is always accessible */}
             <Box sx={{
@@ -168,13 +208,6 @@ const Menu = () => {
 
                 {/* Search row */}
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                    <IconButton
-                        onClick={() => setNavOpen(true)}
-                        size="small"
-                        sx={{ color: iconColor, '&:hover': { color: '#C9A227' }, flexShrink: 0 }}
-                    >
-                        <MenuIcon sx={{ fontSize: '1.1rem' }} />
-                    </IconButton>
                     <Typography sx={{
                         color: '#C9A227', fontWeight: 800,
                         fontSize: { xs: '1rem', sm: '1.1rem' },
@@ -231,13 +264,45 @@ const Menu = () => {
                             '& .MuiChip-label': { px: 1 },
                         }}
                     />
+
+                    {/* Spacer */}
+                    <Box sx={{ flex: 1 }} />
+
+                    {/* Contact Us */}
+                    <Tooltip title="Contact Us" placement="bottom">
+                        <IconButton
+                            component={Link}
+                            to="/contact"
+                            size="small"
+                            sx={{
+                                color: isDark ? 'rgba(201,162,39,0.55)' : '#7a5500',
+                                border: `1px solid ${isDark ? 'rgba(201,162,39,0.2)' : 'rgba(139,95,10,0.3)'}`,
+                                borderRadius: '8px',
+                                p: 0.6,
+                                '&:hover': {
+                                    color: '#C9A227',
+                                    bgcolor: 'rgba(201,162,39,0.08)',
+                                    borderColor: 'rgba(201,162,39,0.5)',
+                                },
+                                transition: 'all 0.15s ease',
+                                flexShrink: 0,
+                            }}
+                        >
+                            <PhoneOutlinedIcon sx={{ fontSize: '1.1rem' }} />
+                        </IconButton>
+                    </Tooltip>
+
+                    {/* User account */}
+                    <UserOptions />
                 </Box>
 
                 {/* Category chips */}
                 <Box sx={{
                     display: 'flex',
                     gap: 0.75,
+                    pt: 0.5,
                     pb: 1.5,
+                    px: 0.5,
                     overflowX: 'auto',
                     '&::-webkit-scrollbar': { display: 'none' },
                     scrollbarWidth: 'none',
@@ -408,13 +473,14 @@ const Menu = () => {
                 )}
             </Box>
 
-            {/* Fixed cart bar */}
+            {/* Fixed cart bar — left tracks sidebar width so it never overlaps the nav */}
             <Box sx={{
                 position: 'fixed',
                 bottom: 0,
-                left: 0,
+                left: isMobile ? 0 : sidebarW,
                 right: 0,
                 zIndex: 1200,
+                transition: 'left 0.22s cubic-bezier(.4,0,.2,1)',
                 px: { xs: 2, sm: 3 },
                 py: 1,
                 bgcolor: cartBarBg,
@@ -428,6 +494,8 @@ const Menu = () => {
                     userType={userType}
                 />
             </Box>
+
+            </Box>{/* end main content column */}
         </Box>
     )
 }

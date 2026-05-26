@@ -9,7 +9,6 @@ import Toolbar from '@mui/material/Toolbar'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import MenuIcon from '@mui/icons-material/Menu'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import logo from '../images/aaswad-logo.svg'
 import NavigationBar from './NavigationBar'
 import UserOptions from './UserOptions'
@@ -43,7 +42,7 @@ export default function MainLayout() {
                     width: sidebarW,
                     transition: 'width 0.22s cubic-bezier(.4,0,.2,1)',
                 }}>
-                    <NavigationBar collapsed={collapsed} />
+                    <NavigationBar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
                 </Box>
             )}
 
@@ -86,13 +85,15 @@ export default function MainLayout() {
                     }}
                 >
                     <Toolbar sx={{ gap: 1, minHeight: { xs: 52, sm: 56 }, px: { xs: 1.5, sm: 2 } }}>
-                        <IconButton
-                            onClick={isMobile ? () => setMobileOpen(true) : () => setCollapsed(c => !c)}
-                            size="small"
-                            sx={{ color: 'rgba(201,162,39,0.65)', '&:hover': { color: '#C9A227' } }}
-                        >
-                            {!isMobile && !collapsed ? <MenuOpenIcon /> : <MenuIcon />}
-                        </IconButton>
+                        {isMobile && (
+                            <IconButton
+                                onClick={() => setMobileOpen(true)}
+                                size="small"
+                                sx={{ color: 'rgba(201,162,39,0.65)', '&:hover': { color: '#C9A227' } }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        )}
 
                         <Link to="/" className="header-logo-link" style={{ marginLeft: 4 }}>
                             <img src={logo} alt="Aaswad" className="header-logo-img" style={{ height: 30 }} />

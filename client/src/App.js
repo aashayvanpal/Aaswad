@@ -61,7 +61,7 @@ function App() {
 
                   {/* Public / customer-facing routes */}
                   <Route path="/" element={<HomePage />} />
-                  <Route path="/menu" element={<><Header /><Menu /></>} />
+                  <Route path="/menu" element={<Menu />} />
                   <Route path="/request" element={<><Header /><CustomerRequest /></>} />
                   <Route path="/requestEventOrder" element={<><Header /><CustomerRequest type="eventOrder" /></>} />
                   <Route path="/contact" element={<><Header /><Contact /></>} />
