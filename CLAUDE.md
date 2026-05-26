@@ -408,6 +408,30 @@ Using **MUI v9**. Key API differences from older versions:
   <TextField slotProps={{ htmlInput: { min: 1, max: 100 } }}>
   ```
 
+### TextField with custom background (theme-aware)
+
+When overriding `bgcolor` on a `TextField` or `MuiOutlinedInput-root`, you **must** also set `color` (text) and `::placeholder` color explicitly. MUI's theme injects its own text color (white in dark mode, near-black in light) which will fight a hardcoded background and make text invisible.
+
+```jsx
+sx={{
+  '& .MuiOutlinedInput-root': {
+    bgcolor: isDark ? 'rgba(255,255,255,0.07)' : '#fff',
+    color: TEXT,           // always set explicitly
+  },
+  '& .MuiOutlinedInput-input::placeholder': { color: TEXT_MED, opacity: 1 },
+}}
+```
+
+Never hardcode `bgcolor: '#fff'` on an input without pairing it with explicit `color` — it will render invisible text in dark mode.
+
+### Button text color on gold background
+
+MUI `contained` Button computes its text color from the theme, overriding `color` set in `sx`. Always use `!important` when setting text color on gold-background buttons:
+
+```jsx
+sx={{ bgcolor: '#C9A227', color: '#1a1400 !important', '&:hover': { color: '#1a1400 !important' } }}
+```
+
 ### Date / Time Picker
 
 Using `@mui/x-date-pickers` v9 with **`AdapterDateFnsV2`** (not `AdapterDateFns`) — the project has `date-fns` v2.x installed, which uses default exports. `AdapterDateFns` expects v3's named subpath exports and will fail to build.
@@ -418,9 +442,23 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'  // ← V2, not AdapterDateFns
 
 <LocalizationProvider dateAdapter={AdapterDateFns}>
-  <DateTimePicker value={date} onChange={setDate} slotProps={{ textField: { size: 'small' } }} />
+  <DateTimePicker value={date} onChange={setDate} slotProps={{ textField: { size: 'medium' } }} />
 </LocalizationProvider>
 ```
+
+**All picker styling is root-level** — `pickerOverrides(mode)` in `client/src/theme.js` handles dark/light theming, sizing, and brand colors for every picker in the app. Do not add `desktopPaper` or other popup overrides via `slotProps` on individual pickers — put them in `pickerOverrides` instead.
+
+**MUI v9 picker component names** — several internal component names differ from what the docs suggest. Use these exact keys in `styleOverrides`, confirmed against live DOM class names:
+
+| What you're styling | Correct key | Wrong (doesn't land) |
+|---|---|---|
+| Day cells | `MuiPickerDay` | `MuiPickersDay` |
+| Year buttons | `MuiYearCalendar` slot `button` | `MuiPickersYear` |
+| Month buttons | `MuiMonthCalendar` slot `button` | `MuiPickersMonth` |
+| Popup paper | `MuiPickersPopper` — use `width`, not `minWidth` | `minWidth` is ignored |
+| Calendar height | Set `height: 'auto'` + `maxHeight: 'none'` on `MuiDateCalendar` or content gets clipped | |
+
+**Day cell / week label alignment** — both must have the same `width` and `margin: 0` so `justifyContent: center` centers them identically in the 460px calendar column. If margins differ, columns drift.
 
 To extract HH:MM from a Date object reliably (avoids locale/timezone issues with `String(date).substr(...)`):
 ```js
@@ -600,7 +638,7 @@ Act as a Principal Backend Architect designing secure, scalable APIs for a Node.
 ### 1c. /request Page — Input Field Sizes
 - [x] Font sizes bumped to 1rem for inputs, 0.95rem for labels
 - [ ] Personal Details + Event Details fields: increase height (use medium size, not small)
-- [ ] Event Date & Time picker popup: make calendar cells and text larger via slotProps/theme overrides
+- [x] Event Date & Time picker popup: styled via root-level pickerOverrides in theme.js — 750px wide, 60px day cells, gold brand
 
 ### 1d. /request Page — CustomerModal Phone Number Style
 - [x] Phone numbers now use card-style Box matching address cards (not Chip pills)
@@ -631,9 +669,9 @@ Act as a Principal Backend Architect designing secure, scalable APIs for a Node.
 - [ ] Fix all colors to be theme-aware (dark + light both correct)
 
 ### 2d. MUI Date Picker — Fix
-- [ ] Date picker not rendering/styling correctly — audit and fix in both themes
-- [ ] Ensure AdapterDateFnsV2 is used (not AdapterDateFns) — date-fns v2.x installed
-- [ ] Verify picker works on /request page and any other page that uses it
+- [x] Date picker not rendering/styling correctly — audit and fix in both themes
+- [x] Ensure AdapterDateFnsV2 is used (not AdapterDateFns) — date-fns v2.x installed
+- [x] Verify picker works on /request page and any other page that uses it
 
 ### 2e. Dark Mode — Full Consistency Audit
 - [ ] All admin pages must be consistent in dark mode — no mixed backgrounds or leftover light colors

@@ -62,8 +62,8 @@ function App() {
                   {/* Public / customer-facing routes */}
                   <Route path="/" element={<HomePage />} />
                   <Route path="/menu" element={<Menu />} />
-                  <Route path="/request" element={<><Header /><CustomerRequest /></>} />
-                  <Route path="/requestEventOrder" element={<><Header /><CustomerRequest type="eventOrder" /></>} />
+                  <Route path="/request" element={<CustomerRequest />} />
+                  <Route path="/requestEventOrder" element={<CustomerRequest type="eventOrder" />} />
                   <Route path="/contact" element={<><Header /><Contact /></>} />
                   <Route path="/Register" element={
                     <>

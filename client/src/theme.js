@@ -93,10 +93,12 @@ const pickerOverrides = (mode) => {
             styleOverrides: {
                 paper: {
                     backgroundColor: popperBg,
-                    border: '1px solid rgba(201,162,39,0.25)',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+                    border: `1px solid ${isDark ? 'rgba(201,162,39,0.25)' : 'rgba(201,162,39,0.35)'}`,
+                    borderRadius: '16px',
+                    boxShadow: isDark ? '0 8px 40px rgba(0,0,0,0.65)' : '0 8px 40px rgba(201,162,39,0.18)',
                     color: isDark ? '#fff' : '#1a1400',
+                    width: '750px',
+                    overflow: 'hidden',
                 },
             },
         },
@@ -107,12 +109,19 @@ const pickerOverrides = (mode) => {
             },
         },
         MuiDateCalendar: {
-            styleOverrides: { root: { backgroundColor: popperBg } },
+            styleOverrides: {
+                root: {
+                    backgroundColor: popperBg,
+                    width: '460px',
+                    height: 'auto',
+                    maxHeight: 'none',
+                },
+            },
         },
         MuiPickersCalendarHeader: {
             styleOverrides: {
-                root:             { color: '#C9A227' },
-                label:            { color: '#C9A227', fontWeight: 700 },
+                root:             { color: '#C9A227', paddingLeft: '24px', paddingRight: '16px' },
+                label:            { color: '#C9A227', fontWeight: 700, fontSize: '18px' },
                 switchViewButton: { color: '#C9A227' },
             },
         },
@@ -120,22 +129,27 @@ const pickerOverrides = (mode) => {
             styleOverrides: {
                 button: {
                     color: 'rgba(201,162,39,0.7)',
-                    '&:hover':    { color: '#C9A227', backgroundColor: 'rgba(201,162,39,0.1)' },
+                    '&:hover':        { color: '#C9A227', backgroundColor: 'rgba(201,162,39,0.1)' },
                     '&.Mui-disabled': { color: 'rgba(201,162,39,0.2)' },
                 },
             },
         },
         MuiDayCalendar: {
             styleOverrides: {
-                weekDayLabel: { color: 'rgba(201,162,39,0.55)', fontWeight: 700 },
+                weekDayLabel: { color: 'rgba(201,162,39,0.55)', fontWeight: 700, fontSize: '15px', width: '60px', margin: 0 },
+                slideTransition: { minHeight: '320px' },
             },
         },
-        MuiPickersDay: {
+        MuiPickerDay: {
             styleOverrides: {
                 root: {
                     backgroundColor: 'transparent',
                     color: dayColor,
-                    fontSize: '0.8rem',
+                    fontSize: '15px',
+                    width: '60px',
+                    height: '60px',
+                    margin: '0px',
+                    borderRadius: '10px',
                     '&:hover': { backgroundColor: 'rgba(201,162,39,0.12)', color: '#C9A227' },
                     '&.Mui-selected': {
                         backgroundColor: '#C9A227 !important',
@@ -143,22 +157,79 @@ const pickerOverrides = (mode) => {
                         fontWeight: 800,
                         '&:hover': { backgroundColor: '#e8c84d !important' },
                     },
-                    '&.MuiPickersDay-today:not(.Mui-selected)': {
-                        border: '1px solid rgba(201,162,39,0.5)',
+                    '&.MuiPickerDay-today:not(.Mui-selected)': {
+                        border: '2px solid rgba(201,162,39,0.6)',
                         color: '#C9A227',
                     },
                     '&.Mui-disabled': { color: disabledDay },
                 },
             },
         },
+        // ── Year picker ──────────────────────────────────────────────────────────
+        MuiYearCalendar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: popperBg,
+                    width: '460px',
+                    maxHeight: '340px',
+                    padding: '8px 16px',
+                    overflowY: 'auto',
+                },
+                button: {
+                    width: '96px',
+                    height: '40px',
+                    margin: '3px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    borderRadius: '10px',
+                    color: isDark ? 'rgba(255,255,255,0.75)' : 'rgba(26,20,0,0.75)',
+                    '&:hover': { backgroundColor: 'rgba(201,162,39,0.12)', color: '#C9A227' },
+                    '&.Mui-selected': {
+                        backgroundColor: '#C9A227 !important',
+                        color: '#1a1400 !important',
+                        fontWeight: 800,
+                        '&:hover': { backgroundColor: '#e8c84d !important' },
+                    },
+                    '&.Mui-disabled': { color: disabledDay },
+                },
+            },
+        },
+        // ── Month picker ─────────────────────────────────────────────────────────
+        MuiMonthCalendar: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: popperBg,
+                    width: '460px',
+                    padding: '8px 16px',
+                },
+                button: {
+                    width: '120px',
+                    height: '44px',
+                    margin: '4px 3px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    borderRadius: '10px',
+                    color: isDark ? 'rgba(255,255,255,0.75)' : 'rgba(26,20,0,0.75)',
+                    '&:hover': { backgroundColor: 'rgba(201,162,39,0.12)', color: '#C9A227' },
+                    '&.Mui-selected': {
+                        backgroundColor: '#C9A227 !important',
+                        color: '#1a1400 !important',
+                        fontWeight: 800,
+                        '&:hover': { backgroundColor: '#e8c84d !important' },
+                    },
+                    '&.Mui-disabled': { color: disabledDay },
+                },
+            },
+        },
+        // ── Clock ────────────────────────────────────────────────────────────────
         MuiTimeClock: {
             styleOverrides: { root: { backgroundColor: popperBg } },
         },
         MuiClock: {
             styleOverrides: {
-                root:  { backgroundColor: popperBg },
-                clock: { backgroundColor: clockBg, border: clockBorder },
-                pin:   { backgroundColor: '#C9A227' },
+                root:     { backgroundColor: popperBg },
+                clock:    { backgroundColor: clockBg, border: clockBorder },
+                pin:      { backgroundColor: '#C9A227' },
                 amButton: { color: isDark ? '#fff' : '#1a1400', '&.Mui-selected': { backgroundColor: '#C9A227', color: '#1a1400' } },
                 pmButton: { color: isDark ? '#fff' : '#1a1400', '&.Mui-selected': { backgroundColor: '#C9A227', color: '#1a1400' } },
             },
@@ -167,6 +238,7 @@ const pickerOverrides = (mode) => {
             styleOverrides: {
                 root: {
                     color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.65)',
+                    fontSize: '15px',
                     '&.Mui-selected': { backgroundColor: '#C9A227', color: '#1a1400', fontWeight: 800 },
                 },
             },
@@ -177,6 +249,7 @@ const pickerOverrides = (mode) => {
                 thumb: { backgroundColor: '#C9A227', border: '2px solid #C9A227' },
             },
         },
+        // ── Toolbar ──────────────────────────────────────────────────────────────
         MuiPickersToolbar: {
             styleOverrides: {
                 root: {
@@ -200,6 +273,7 @@ const pickerOverrides = (mode) => {
                 root: { color: 'rgba(201,162,39,0.6)', '&.Mui-selected': { color: '#C9A227' } },
             },
         },
+        // ── Dialog actions (Cancel / OK) ─────────────────────────────────────────
         MuiDialogActions: {
             styleOverrides: {
                 root: {
@@ -213,20 +287,42 @@ const pickerOverrides = (mode) => {
                 },
             },
         },
+        // ── Digital time scroller ────────────────────────────────────────────────
         MuiMultiSectionDigitalClock: {
             styleOverrides: {
                 root: {
                     backgroundColor: digitalBg,
                     borderTop: '1px solid rgba(201,162,39,0.15)',
+                    // 750px total − 460px calendar = 290px for time section
+                    width: '290px',
+                    '& .MuiMultiSectionDigitalClockSection-root': {
+                        flex: 1,
+                    },
                     '& .MuiMenuItem-root': {
                         color: isDark ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,0.7)',
-                        '&:hover': { backgroundColor: 'rgba(201,162,39,0.1)', color: '#C9A227' },
+                        fontSize: '17px',
+                        justifyContent: 'center',
+                        '&:hover':        { backgroundColor: 'rgba(201,162,39,0.1)', color: '#C9A227' },
                         '&.Mui-selected': {
                             backgroundColor: 'rgba(201,162,39,0.18)',
                             color: '#C9A227',
                             fontWeight: 700,
                         },
                     },
+                },
+            },
+        },
+        // ── Tabs (Date / Time toggle) ─────────────────────────────────────────────
+        MuiDateTimePickerTabs: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: isDark ? '#100f0b' : '#f5edd6',
+                    borderBottom: `1px solid ${isDark ? 'rgba(201,162,39,0.15)' : 'rgba(201,162,39,0.25)'}`,
+                    '& .MuiTab-root': {
+                        color: isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
+                        '&.Mui-selected': { color: '#C9A227' },
+                    },
+                    '& .MuiTabs-indicator': { backgroundColor: '#C9A227' },
                 },
             },
         },

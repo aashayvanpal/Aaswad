@@ -33,6 +33,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong'
 import RoomServiceIcon from '@mui/icons-material/RoomService'
 import CloseIcon from '@mui/icons-material/Close'
 import EditIcon from '@mui/icons-material/Edit'
+import ClearIcon from '@mui/icons-material/Clear'
 
 import HDToolTip from './HDToolTip.js'
 import ServiceToolTip from './ServiceToolTip.js'
@@ -275,9 +276,17 @@ const CustomerForm = (props) => {
                 <Link to="/menu" className="form-back-link">
                     <Button
                         startIcon={<ArrowBackIcon sx={{ fontSize: '0.9rem !important' }} />}
+                        variant="outlined"
                         sx={{
-                            mb: 2, color: 'rgba(201,162,39,0.6)', fontSize: '0.75rem',
-                            '&:hover': { color: GOLD, bgcolor: 'rgba(201,162,39,0.06)' },
+                            mb: 2,
+                            color: isDark ? GOLD : '#1a1400',
+                            fontSize: '0.75rem',
+                            borderColor: isDark ? 'rgba(201,162,39,0.5)' : 'rgba(26,20,0,0.4)',
+                            '&:hover': {
+                                color: isDark ? GOLD : '#1a1400',
+                                bgcolor: isDark ? 'rgba(201,162,39,0.08)' : 'rgba(26,20,0,0.06)',
+                                borderColor: isDark ? GOLD : '#1a1400',
+                            },
                         }}
                     >
                         Back to Menu
@@ -322,6 +331,7 @@ const CustomerForm = (props) => {
                                     <Button
                                         size="small"
                                         onClick={clearForm}
+                                        startIcon={<ClearIcon sx={{ fontSize: '0.85rem !important' }} />}
                                         sx={{
                                             color: TEXT_MED, fontSize: '0.72rem',
                                             border: `1px solid ${TEXT_MUTED}`,
@@ -402,13 +412,11 @@ const CustomerForm = (props) => {
                                         slotProps={{
                                             textField: {
                                                 fullWidth: true,
+                                                size: 'medium',
                                                 sx: {
                                                     ...inputSx,
-                                                    '& .MuiSvgIcon-root': { color: 'rgba(201,162,39,0.5)', fontSize: '1.2rem' },
+                                                    '& .MuiSvgIcon-root': { color: GOLD },
                                                 },
-                                            },
-                                            desktopPaper: {
-                                                sx: { transform: 'scale(1.25)', transformOrigin: 'top left' }
                                             },
                                         }}
                                     />

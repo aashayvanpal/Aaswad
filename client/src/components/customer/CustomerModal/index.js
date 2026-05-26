@@ -79,9 +79,9 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                 onClick={toggle}
                 startIcon={<PeopleAltIcon />}
                 sx={{
-                    bgcolor: '#C9A227', color: '#000', fontWeight: 700,
+                    bgcolor: '#C9A227', color: '#1a1400 !important', fontWeight: 700,
                     fontSize: '0.95rem', borderRadius: '10px', px: 2.5,
-                    '&:hover': { bgcolor: '#e8c84d' },
+                    '&:hover': { bgcolor: '#e8c84d', color: '#1a1400 !important' },
                 }}
             >
                 {buttonLabel}
@@ -122,10 +122,13 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                             autoFocus
                             sx={{
                                 '& .MuiOutlinedInput-root': {
-                                    bgcolor: '#fff', fontSize: '1rem', borderRadius: '10px',
+                                    bgcolor: isDark ? 'rgba(255,255,255,0.07)' : '#fff',
+                                    fontSize: '1rem', borderRadius: '10px',
+                                    color: TEXT,
                                     '&:hover fieldset': { borderColor: '#C9A227' },
                                     '&.Mui-focused fieldset': { borderColor: '#C9A227' },
-                                }
+                                },
+                                '& .MuiOutlinedInput-input::placeholder': { color: TEXT_MED, opacity: 1 },
                             }}
                         />
                     </Box>
@@ -266,10 +269,13 @@ const CustomerModal = ({ buttonLabel, customers, setSelectedCustomerDetails }) =
                         onClick={handleConfirm}
                         disabled={!selectedCustomer || !selectedPhone || !selectedAddress}
                         sx={{
-                            bgcolor: '#C9A227', color: '#000', fontWeight: 700,
+                            bgcolor: '#C9A227', color: '#1a1400 !important', fontWeight: 700,
                             borderRadius: '10px', px: 3,
-                            '&:hover': { bgcolor: '#e8c84d' },
-                            '&.Mui-disabled': { bgcolor: 'rgba(201,162,39,0.3)' },
+                            '&:hover': { bgcolor: '#e8c84d', color: isDark ? '#fff !important' : '#1a1400 !important' },
+                            '&.Mui-disabled': {
+                                bgcolor: isDark ? 'rgba(201,162,39,0.18)' : 'rgba(201,162,39,0.35)',
+                                color: isDark ? 'rgba(255,255,255,0.25) !important' : 'rgba(0,0,0,0.3) !important',
+                            },
                         }}
                     >
                         Confirm Customer
