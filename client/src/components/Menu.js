@@ -22,6 +22,8 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
+import MicIcon from '@mui/icons-material/Mic'
+import MicOffIcon from '@mui/icons-material/MicOff'
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
 import CheckIcon from '@mui/icons-material/Check'
 import Tooltip from '@mui/material/Tooltip'
@@ -46,6 +48,7 @@ const Menu = () => {
     const [category, setCategory] = useState('all')
     const [collapsed, setCollapsed] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
+    const [listening, setListening] = useState(false)
     const muiTheme = useTheme()
     const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'))
     const { themeMode } = useAppTheme()
@@ -127,6 +130,28 @@ const Menu = () => {
         setInputSearch('')
         setCategory('all')
         setSearchFilter(items)
+    }
+
+    const toggleMic = () => {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition
+        if (!SR) return
+        if (listening) {
+            setListening(false)
+            return
+        }
+        const rec = new SR()
+        rec.lang = 'en-IN'
+        rec.interimResults = true
+        rec.maxAlternatives = 1
+        setListening(true)
+        rec.onresult = (e) => {
+            const transcript = e.results[0][0].transcript
+            setInputSearch(transcript)
+            applyFilters(transcript, category)
+        }
+        rec.onend = () => setListening(false)
+        rec.onerror = () => setListening(false)
+        rec.start()
     }
 
     const sidebarW = collapsed ? SIDEBAR_COLLAPSED_W : SIDEBAR_W
@@ -223,7 +248,6 @@ const Menu = () => {
                         size="small"
                         sx={{
                             flex: 1,
-                            maxWidth: 340,
                             '& .MuiOutlinedInput-root': {
                                 bgcolor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(255,253,247,0.9)',
                                 borderRadius: '8px',
@@ -242,13 +266,32 @@ const Menu = () => {
                                         <SearchIcon sx={{ color: 'rgba(201,162,39,0.45)', fontSize: '0.95rem' }} />
                                     </InputAdornment>
                                 ),
-                                endAdornment: inputSearch ? (
-                                    <InputAdornment position="end">
-                                        <IconButton size="small" onClick={clearSearch} sx={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(60,35,0,0.4)', p: 0.25 }}>
-                                            <ClearIcon sx={{ fontSize: '0.8rem' }} />
-                                        </IconButton>
+                                endAdornment: (
+                                    <InputAdornment position="end" sx={{ gap: 0.25 }}>
+                                        {inputSearch && (
+                                            <IconButton size="small" onClick={clearSearch} sx={{ color: isDark ? 'rgba(255,255,255,0.25)' : 'rgba(60,35,0,0.4)', p: 0.25 }}>
+                                                <ClearIcon sx={{ fontSize: '0.85rem' }} />
+                                            </IconButton>
+                                        )}
+                                        <Tooltip title={listening ? 'Stop listening' : 'Search by voice'}>
+                                            <IconButton size="small" onClick={toggleMic} sx={{
+                                                p: 0.25,
+                                                color: listening ? '#C9A227' : (isDark ? 'rgba(255,255,255,0.3)' : 'rgba(60,35,0,0.4)'),
+                                                '@keyframes micPulse': {
+                                                    '0%': { boxShadow: '0 0 0 0 rgba(201,162,39,0.5)' },
+                                                    '70%': { boxShadow: '0 0 0 6px rgba(201,162,39,0)' },
+                                                    '100%': { boxShadow: '0 0 0 0 rgba(201,162,39,0)' },
+                                                },
+                                                ...(listening && { animation: 'micPulse 1.2s infinite', borderRadius: '50%' }),
+                                            }}>
+                                                {listening
+                                                    ? <MicIcon sx={{ fontSize: '0.95rem' }} />
+                                                    : <MicOffIcon sx={{ fontSize: '0.95rem' }} />
+                                                }
+                                            </IconButton>
+                                        </Tooltip>
                                     </InputAdornment>
-                                ) : null,
+                                ),
                             },
                         }}
                     />

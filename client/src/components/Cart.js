@@ -13,9 +13,9 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined'
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
 import NoItemsInCart from '../images/2.jpg'
-import proceedImage from '../images/proceed.svg'
-import clearCartImg from '../images/clear-cart-icon.png'
 import { useSelector, useDispatch } from 'react-redux'
 import '../css/AdminCart.scss'
 import { removeItem, updateQty, clearCart } from '../store/slices/cartSlice'
@@ -93,15 +93,14 @@ const Cart = ({ bulkQtyInput, onBulkQtyChange, tableHead, rowHover, text, textMu
             </Box>
 
             <Box sx={{ display: 'flex', gap: 1.5, px: 3, pb: 3 }}>
-                <Button variant="outlined" color="error" size="small" startIcon={<img src={clearCartImg} alt="" height="16" width="16" />}
+                <Button variant="outlined" color="error" size="small" startIcon={<DeleteSweepIcon />}
                     onClick={() => dispatch(clearCart())} sx={{ fontWeight: 600 }}>
                     Clear
                 </Button>
                 <Link to='/request' className="cart-proceed-link">
-                    <Button variant="contained" fullWidth
+                    <Button variant="contained" fullWidth endIcon={<ArrowForwardRoundedIcon />}
                         sx={{ bgcolor: '#C9A227', color: '#000', fontWeight: 700, '&:hover': { bgcolor: '#e8c84d' } }}>
-                        Proceed &nbsp;
-                        <img src={proceedImage} alt="" height="18" />
+                        Proceed
                     </Button>
                 </Link>
             </Box>
